@@ -15,11 +15,11 @@ public class Usuario {
     this.nombre = nombre;
   }
 
-  public void cambiarSecreto(String secreto) {
+  public void cambiarSecreto(String secreto, ValidadorDeSecretosMemorizados validador) throws RuntimeException{
     String secretoAuxiliar = this.secretoMemorizado;
     this.setSecretoMemorizado(secreto);
     if(!validador.validar(this)) {
-    this.setSecretoMemorizado(secretoAuxiliar);
+      this.setSecretoMemorizado(secretoAuxiliar);
     }
   }
 
