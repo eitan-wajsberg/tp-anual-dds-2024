@@ -19,7 +19,6 @@ public class Usuario {
     String secretoAuxiliar = this.secretoMemorizado;
     this.setSecretoMemorizado(secreto);
     if(!validador.validar(this)) {
-    // excepción de secreto invalido
     this.setSecretoMemorizado(secretoAuxiliar);
     }
   }

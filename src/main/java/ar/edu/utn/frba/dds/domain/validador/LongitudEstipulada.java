@@ -14,9 +14,14 @@ public class LongitudEstipulada implements TipoValidacion {
     this.longitudMinima = longitudMinima;
   }
 
+  @Override
   public boolean validar(Usuario usuario) {
     int longitud = usuario.getSecretoMemorizado().length();
     return (longitud >= longitudMinima && longitud <= longitudMaxima);
   }
+  @Override
+  public String getMensajeError() {
+    return "La longitud del secreto debe estar entre 8 y 64 caracteres";
+  }
+
 }
-//TODO: Hacer la logica de las excepciones
