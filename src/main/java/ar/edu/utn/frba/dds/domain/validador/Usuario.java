@@ -11,6 +11,10 @@ public class Usuario {
   @Getter @Setter
   private String secretoMemorizado;
 
+  public Usuario(String nombre) {
+    this.nombre = nombre;
+  }
+
   public void cambiarSecreto(String secreto) {
     String secretoAuxiliar = this.secretoMemorizado;
     this.setSecretoMemorizado(secreto);
