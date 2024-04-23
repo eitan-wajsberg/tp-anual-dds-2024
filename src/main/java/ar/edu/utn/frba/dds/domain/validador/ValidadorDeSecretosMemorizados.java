@@ -1,8 +1,26 @@
 package ar.edu.utn.frba.dds.domain.validador;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Set;
+
 public class ValidadorDeSecretosMemorizados {
+    @Getter @Setter
+    private Set<TipoValidacion> validadores;
+
     public boolean validar(Usuario usuario){
-        return false;
+        /*
+         utilizo reduce para evaluar cada validador
+         Alternativa sin evaluar todos
+         return this.validadores.stream().allMatch(validador -> validador.validar(usuario))
+        */
+        return this.validadores.stream().reduce(true,
+                                                (resultadoParcial, validador) ->
+                                                 resultadoParcial && validador.validar(usuario),
+                                                Boolean::logicalAnd
+                                                );
+
     }
 
 }
