@@ -4,23 +4,27 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 public class ValidadorDeSecretosMemorizados {
-  @Getter @Setter
   private Set<TipoValidacion> validadores;
 
   public boolean validar(Usuario usuario) {
-    /*
-      utilizo reduce para evaluar cada validador
-      Alternativa sin evaluar todos
-      return this.validadores.stream().allMatch(validador -> validador.validar(usuario))
-    */
-    return this.validadores.stream().reduce(true,
-        (resultadoParcial, validador) ->
-        resultadoParcial && validador.validar(usuario),
-        Boolean::logicalAnd
-        );
+    String errores = "";
+    boolean esValido = true;
 
+    for (TipoValidacion validador : validadores) {
+      if (!validador.validar(usuario)) {
+        errores += validador.getMensajeError();
+        esValido = false;
+      }
+    }
+    final String erroresFinales = errores;
+
+    if (!esValido) {
+      throw new RuntimeException(erroresFinales);
     }
 
+    return esValido;
+  }
 }
-//TODO:
