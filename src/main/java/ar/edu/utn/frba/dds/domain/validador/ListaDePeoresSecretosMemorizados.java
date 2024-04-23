@@ -6,15 +6,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ListaDePeoresSecretosMemorizados {
-    public boolean validar(Usuario usuario){
-        Path path = Paths.get("10milSecretosMasUtilizados.txt");
-       String secreto = usuario.getSecretoMemorizado();
-        try {
-            return Files.lines(path).anyMatch(linea -> linea.equals(secreto));
-        }
-        catch(IOException e){
-            e.printStackTrace();// manejar excepcion TODO
-            return false;
-        }
+  public boolean validar(Usuario usuario) {
+    Path path = Paths.get("10milSecretosMasUtilizados.txt");
+    String secreto = usuario.getSecretoMemorizado();
+    try {
+      return Files.lines(path).anyMatch(linea -> linea.equals(secreto));
+    } catch(IOException e) {
+      e.printStackTrace(); //TODO: manejar excepcion
+      return false;
     }
+  }
 }
