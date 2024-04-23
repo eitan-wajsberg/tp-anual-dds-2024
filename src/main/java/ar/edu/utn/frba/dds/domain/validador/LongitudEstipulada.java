@@ -3,15 +3,15 @@ package ar.edu.utn.frba.dds.domain.validador;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
+
 @Getter
 public class LongitudEstipulada implements TipoValidacion {
+  @Setter
   private int longitudMaxima;
-  private int longitudMinima;
+  private final int longitudMinima = 8;
 
-  public LongitudEstipulada(int longitudMaxima, int longitudMinima) {
+  public LongitudEstipulada(int longitudMaxima) {
     this.longitudMaxima = longitudMaxima;
-    this.longitudMinima = longitudMinima;
   }
 
   @Override
@@ -21,7 +21,7 @@ public class LongitudEstipulada implements TipoValidacion {
   }
   @Override
   public String getMensajeError() {
-    return "La longitud del secreto debe estar entre 8 y 64 caracteres";
+    return "La longitud del secreto debe estar entre 8 y " + longitudMaxima + " caracteres";
   }
 
 }
