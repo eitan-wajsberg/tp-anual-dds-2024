@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class ListaDePeoresSecretosMemorizados {
+public class ListaDePeoresSecretosMemorizados implements TipoValidacion {
   public boolean validar(Usuario usuario) {
     Path path = Paths.get("10milSecretosMasUtilizados.txt");
     String secreto = usuario.getSecretoMemorizado();
