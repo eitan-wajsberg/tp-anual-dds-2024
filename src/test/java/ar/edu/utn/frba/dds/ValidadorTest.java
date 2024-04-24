@@ -58,8 +58,6 @@ public class ValidadorTest {
             validador.validar(usuario);
         }catch(RuntimeException excepcion){
             Assertions.assertTrue(excepcion.getMessage().contains(mensajeEsperado));
-
-            System.out.println(excepcion.getMessage());
         }
     }
 
