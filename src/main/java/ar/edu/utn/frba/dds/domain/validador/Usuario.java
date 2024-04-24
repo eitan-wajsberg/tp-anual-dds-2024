@@ -15,7 +15,7 @@ public class Usuario {
     this.nombre = nombre;
   }
 
-  public void cambiarSecreto(String secreto, ValidadorDeSecretosMemorizados validador) throws RuntimeException{
+  public void cambiarSecreto(String secreto, ValidadorDeSecretosMemorizados validador) throws RuntimeException {
     String secretoAuxiliar = this.secretoMemorizado;
     this.setSecretoMemorizado(secreto);
     if(!validador.validar(this)) {
