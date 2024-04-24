@@ -15,7 +15,7 @@ public class ValidadorDeSecretosMemorizados {
 
     for (TipoValidacion validador : validadores) {
       if (!validador.validar(usuario)) {
-        errores += validador.getMensajeError();
+        errores += validador.getMensajeError() +'\n';
         esValido = false;
       }
     }

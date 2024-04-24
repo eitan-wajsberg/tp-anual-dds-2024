@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.domain.validador.TipoValidacion;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ public class ValidadorTest {
         usuario = new Usuario("Juan");
 
         validador = new ValidadorDeSecretosMemorizados();
-        LongitudEstipulada restriccionLongitud = new LongitudEstipulada(16, 8);
+        LongitudEstipulada restriccionLongitud = new LongitudEstipulada(16);
         ListaDePeoresSecretosMemorizados restriccionLista = new ListaDePeoresSecretosMemorizados();
         AusenciaDeCredencialesPorDefecto restriccionCredenciales = new AusenciaDeCredencialesPorDefecto();
 
@@ -34,27 +35,32 @@ public class ValidadorTest {
     }
 
     @Test
-    public void fallaValidador(){
+    public void cambioDeSecretoFalla(){
         String secretoCorto = "corto";
-        usuario.setSecretoMemorizado(secretoCorto);
-        Assertions.assertThrows(RuntimeException.class, () -> validador.validar(usuario));
+        Assertions.assertThrows(RuntimeException.class, () -> usuario.cambiarSecreto(secretoCorto, validador));
+    }
+
+    @Test
+    public void cambioDeSecretoExitoso(){
+        String secreto = "hoalgajr9!!!";
+        usuario.setSecretoMemorizado(secreto);
+        usuario.cambiarSecreto(secreto, validador);
+
+        Assertions.assertEquals(usuario.getSecretoMemorizado(), secreto);
     }
 
     @Test
     public void fallaValidadorPorLongitud(){
-        String secretoCorto = "corto";
+        String secretoCorto = "admin";
+        String mensajeEsperado = new LongitudEstipulada(16).getMensajeError();
         usuario.setSecretoMemorizado(secretoCorto);
         try {
             validador.validar(usuario);
         }catch(RuntimeException excepcion){
-            Assertions.assertTrue(excepcion.getMessage().contains(new LongitudEstipulada(1,2).getMensajeError()));
+            Assertions.assertTrue(excepcion.getMessage().contains(mensajeEsperado));
+
+            System.out.println(excepcion.getMessage());
         }
     }
 
-    @Test
-    public void secretoValido(){
-        String secreto = "hoalgajr9!!!";
-        usuario.setSecretoMemorizado(secreto);
-        Assertions.assertTrue(validador.validar(usuario));
-    }
 }
