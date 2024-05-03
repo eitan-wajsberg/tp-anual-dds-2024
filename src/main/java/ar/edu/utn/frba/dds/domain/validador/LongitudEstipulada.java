@@ -15,8 +15,8 @@ public class LongitudEstipulada implements TipoValidacion {
   }
 
   @Override
-  public boolean validar(Usuario usuario) {
-    int longitud = usuario.getSecretoMemorizado().length();
+  public boolean validar(String nombreUsuario, String secreto) {
+    int longitud = secreto.length();
     return (longitud >= longitudMinima && longitud <= longitudMaxima);
   }
   @Override

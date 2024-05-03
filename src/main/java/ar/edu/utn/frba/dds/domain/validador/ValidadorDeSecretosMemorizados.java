@@ -9,12 +9,12 @@ import lombok.Setter;
 public class ValidadorDeSecretosMemorizados {
   private Set<TipoValidacion> validadores;
 
-  public boolean validar(Usuario usuario) {
+  public boolean validar(String nombreUsuario, String secreto) {
     String errores = "";
     boolean esValido = true;
 
     for (TipoValidacion validador : validadores) {
-      if (!validador.validar(usuario)) {
+      if (!validador.validar(nombreUsuario,secreto)) {
         errores += validador.getMensajeError() +'\n';
         esValido = false;
       }
