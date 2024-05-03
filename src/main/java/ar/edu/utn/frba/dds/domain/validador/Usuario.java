@@ -1,14 +1,12 @@
 package ar.edu.utn.frba.dds.domain.validador;
 
-import static ar.edu.utn.frba.dds.domain.validador.Main.validador;
-
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 public class Usuario {
-  @Getter @Setter
   private String nombre;
-  @Getter @Setter
   private String secretoMemorizado;
 
   public Usuario(String nombre) {
@@ -18,7 +16,7 @@ public class Usuario {
   public void cambiarSecreto(String secreto, ValidadorDeSecretosMemorizados validador) throws RuntimeException {
     String secretoAuxiliar = this.secretoMemorizado;
     this.setSecretoMemorizado(secreto);
-    if(!validador.validar(this)) {
+    if(!validador.validar(this.nombre,this.secretoMemorizado)) {
       this.setSecretoMemorizado(secretoAuxiliar);
     }
   }

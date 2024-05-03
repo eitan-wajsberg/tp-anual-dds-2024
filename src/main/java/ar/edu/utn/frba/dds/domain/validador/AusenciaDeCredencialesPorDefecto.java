@@ -2,8 +2,8 @@ package ar.edu.utn.frba.dds.domain.validador;
 
 public class AusenciaDeCredencialesPorDefecto implements TipoValidacion {
   @Override
-  public boolean validar(Usuario usuario) {
-    return !usuario.getSecretoMemorizado().equals(usuario.getNombre());
+  public boolean validar(String nombreUsuario, String secreto) {
+    return !nombreUsuario.equals(secreto);
     }
   @Override
   public String getMensajeError() {

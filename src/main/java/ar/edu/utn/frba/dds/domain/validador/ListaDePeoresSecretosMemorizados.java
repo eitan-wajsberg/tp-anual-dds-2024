@@ -7,9 +7,8 @@ import java.nio.file.Paths;
 
 public class ListaDePeoresSecretosMemorizados implements TipoValidacion {
   @Override
-  public boolean validar(Usuario usuario) {
+  public boolean validar(String nombreUsuario, String secreto) {
     Path path = Paths.get("src/main/java/ar/edu/utn/frba/dds/domain/validador/ListaDeSecretosComunes.txt");
-    String secreto = usuario.getSecretoMemorizado();
     try {
       return !Files.lines(path).anyMatch(linea -> linea.equals(secreto));
     } catch(IOException|SecurityException e) {
