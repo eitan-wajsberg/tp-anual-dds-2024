@@ -53,9 +53,8 @@ public class ValidadorTest {
     public void fallaValidadorPorLongitud(){
         String secretoCorto = "admin";
         String mensajeEsperado = new LongitudEstipulada(16).getMensajeError();
-        usuario.setSecretoMemorizado(secretoCorto);
         try {
-            validador.validar(usuario);
+            validador.validar(usuario.getNombre(),secretoCorto);
         }catch(RuntimeException excepcion){
             Assertions.assertTrue(excepcion.getMessage().contains(mensajeEsperado));
         }
