@@ -15,13 +15,13 @@ public class LongitudEstipulada implements TipoValidacion {
   }
 
   @Override
-  public boolean validar(String nombreUsuario, String secreto) {
-    int longitud = secreto.length();
+  public boolean validar(String nombreUsuario, String clave) {
+    int longitud = clave.length();
     return (longitud >= longitudMinima && longitud <= longitudMaxima);
   }
   @Override
   public String getMensajeError() {
-    return "La longitud del secreto debe estar entre 8 y " + longitudMaxima + " caracteres";
+    return "La longitud de la clave debe estar entre 8 y " + longitudMaxima + " caracteres";
   }
 
 }
