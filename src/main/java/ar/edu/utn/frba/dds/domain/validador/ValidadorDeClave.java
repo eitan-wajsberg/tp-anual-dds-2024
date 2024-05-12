@@ -6,16 +6,16 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ValidadorDeSecretosMemorizados {
+public class ValidadorDeClave {
   private Set<TipoValidacion> validadores;
 
-  public boolean validar(String nombreUsuario, String secreto) {
+  public boolean validar(String nombreUsuario, String clave) {
     String errores = "";
     boolean esValido = true;
 
     for (TipoValidacion validador : validadores) {
-      if (!validador.validar(nombreUsuario,secreto)) {
-        errores += validador.getMensajeError() +'\n';
+      if (!validador.validar(nombreUsuario, clave)) {
+        errores += validador.getMensajeError() + '\n';
         esValido = false;
       }
     }

@@ -7,17 +7,17 @@ import lombok.Setter;
 @Getter
 public class Usuario {
   private String nombre;
-  private String secretoMemorizado;
+  private String clave;
 
   public Usuario(String nombre) {
     this.nombre = nombre;
   }
 
-  public void cambiarSecreto(String secreto, ValidadorDeSecretosMemorizados validador) throws RuntimeException {
-    String secretoAuxiliar = this.secretoMemorizado;
-    this.setSecretoMemorizado(secreto);
-    if(!validador.validar(this.nombre,this.secretoMemorizado)) {
-      this.setSecretoMemorizado(secretoAuxiliar);
+  public void cambiarClave(String clave, ValidadorDeClave validador) throws RuntimeException {
+    String claveAuxiliar = this.clave;
+    this.setClave(clave);
+    if (!validador.validar(this.nombre, this.clave)) {
+      this.setClave(claveAuxiliar);
     }
   }
 
