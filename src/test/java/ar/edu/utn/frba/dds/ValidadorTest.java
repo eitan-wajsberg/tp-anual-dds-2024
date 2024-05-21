@@ -1,10 +1,10 @@
 package ar.edu.utn.frba.dds;
 
 import ar.edu.utn.frba.dds.domain.validador.AusenciaDeCredencialesPorDefecto;
-import ar.edu.utn.frba.dds.domain.validador.ListaDePeoresSecretosMemorizados;
+import ar.edu.utn.frba.dds.domain.validador.ListaDePeoresClavesMemorizadas;
 import ar.edu.utn.frba.dds.domain.validador.LongitudEstipulada;
 import ar.edu.utn.frba.dds.domain.validador.Usuario;
-import ar.edu.utn.frba.dds.domain.validador.ValidadorDeSecretosMemorizados;
+import ar.edu.utn.frba.dds.domain.validador.ValidadorDeClave;
 import ar.edu.utn.frba.dds.domain.validador.TipoValidacion;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,15 +16,15 @@ import org.junit.jupiter.api.Test;
 public class ValidadorTest {
 
     private Usuario usuario;
-    private ValidadorDeSecretosMemorizados validador;
+    private ValidadorDeClave validador;
 
     @BeforeEach
     public void antesDeTestear(){
         usuario = new Usuario("Juan");
 
-        validador = new ValidadorDeSecretosMemorizados();
+        validador = new ValidadorDeClave();
         LongitudEstipulada restriccionLongitud = new LongitudEstipulada(16);
-        ListaDePeoresSecretosMemorizados restriccionLista = new ListaDePeoresSecretosMemorizados();
+        ListaDePeoresClavesMemorizadas restriccionLista = new ListaDePeoresClavesMemorizadas();
         AusenciaDeCredencialesPorDefecto restriccionCredenciales = new AusenciaDeCredencialesPorDefecto();
 
         Set<TipoValidacion> restricciones = new HashSet<>();
@@ -37,16 +37,16 @@ public class ValidadorTest {
     @Test
     public void cambioDeSecretoFalla(){
         String secretoCorto = "corto";
-        Assertions.assertThrows(RuntimeException.class, () -> usuario.cambiarSecreto(secretoCorto, validador));
+        Assertions.assertThrows(RuntimeException.class, () -> usuario.cambiarClave(secretoCorto, validador));
     }
 
     @Test
     public void cambioDeSecretoExitoso(){
         String secreto = "hoalgajr9!!!";
-        usuario.setSecretoMemorizado(secreto);
-        usuario.cambiarSecreto(secreto, validador);
+        usuario.setClave(secreto);
+        usuario.cambiarClave(secreto, validador);
 
-        Assertions.assertEquals(usuario.getSecretoMemorizado(), secreto);
+        Assertions.assertEquals(usuario.getClave(), secreto);
     }
 
     @Test
