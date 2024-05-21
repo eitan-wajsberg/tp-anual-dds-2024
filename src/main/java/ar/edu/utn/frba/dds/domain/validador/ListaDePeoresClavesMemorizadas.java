@@ -11,7 +11,7 @@ public class ListaDePeoresClavesMemorizadas implements TipoValidacion {
     Path path = Paths.get("src/main/java/ar/edu/utn/frba/dds/domain/validador/ListaDeClavesComunes.txt");
     try {
       return !Files.lines(path).anyMatch(linea -> linea.equals(clave));
-    } catch(IOException|SecurityException e) {
+    } catch (IOException | SecurityException e) {
       return false;
     }
   }
