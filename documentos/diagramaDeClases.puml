@@ -1,0 +1,361 @@
+@startuml
+
+' -----------------------------------------
+
+class PersonaHumana {
+ - contacto: Contacto
+ - direccion: Direccion
+ - nombre: String
+ - apellido: String
+ - documento: Documento
+ - fechaNacimiento: LocalDate
+ - contribuciones: Collection<Contribucion>
+ - contribucionesElegidas: Set<FormasContribucionHumanas>
+ + calcularPuntajeNeto(): float
+}
+
+PersonaHumana --> " * " Contribucion
+PersonaHumana --> Contacto
+PersonaHumana --> Direccion
+PersonaHumana --> Documento
+PersonaHumana --> " * " FormasContribucionHumanas
+
+' -----------------------------------------
+
+class Vianda {
+ - fechaCaducidad: LocalDate
+ - entregada: boolean
+ - comida: String
+ - peso: float
+ - fechaDonacion: LocalDate
+ + calcularPuntaje(): int
+}
+
+Vianda ..|> Contribucion
+
+' -----------------------------------------
+
+class Heladera {
+ - nombre: String
+ - direccion: Direccion
+ - fechaRegistro: LocalDate
+ - capacidadMaximaViandas: int
+ - activa: boolean
+ - modelo: Modelo
+ - viandas: Set<Vianda>
+ + ingresarViandas(viandas: ...Vianda): void
+ + quitarViandas(viandas: ...Vianda): void
+ + temperatura(): float
+ + calcularPuntaje(): int
+}
+
+Heladera --> " * " Vianda
+Heladera --> Modelo
+
+' -----------------------------------------
+
+class Modelo {
+ - modelo: String
+ - temperaturaMinima: float
+ - temperaturaMaxima: float
+}
+
+' -----------------------------------------
+
+class DistribucionVianda {
+ - heladeraOrigen: Heladera
+ - heladeraDestino: Heladera
+ - cantidadViandas: int
+ - motivo: String
+ - fecha: LocalDate
+ + distribuir(viandas: List<Vianda>): void
+ + calcularPuntaje(): int
+}
+
+DistribucionVianda --> Heladera
+DistribucionVianda --> Heladera
+DistribucionVianda ..> " * " Vianda
+DistribucionVianda ..|> Contribucion
+
+' -----------------------------------------
+
+interface Contribucion {
+ + calcularPuntaje(): int
+}
+
+class DonacionDinero {
+ - monto: float
+ - frecuencia: Integer
+ - unidadFrecuencia: String
+ - fecha: LocalDate
+ + calcularPuntaje(): int
+}
+
+DonacionDinero ..|> Contribucion
+
+' -----------------------------------------
+
+class Oferta {
+ - nombre: String
+ - cantidadPuntosNecesarios: float
+ - imagen: ???
+ - rubro: Rubro
+ - organizacion: PersonaJuridica
+ - comprador: PersonaHumana
+ + canjear(): void
+}
+
+Oferta --> PersonaJuridica
+
+' -----------------------------------------
+
+class Rubro {
+ - nombre: String
+}
+
+class Documento {
+ - tipo: TipoDocumento
+ - documento: String
+}
+
+Documento --> TipoDocumento
+
+' -----------------------------------------
+
+interface MedioDeContacto {
+ + enviar(mensaje: Mensaje)
+}
+
+MedioDeContacto ..> Mensaje
+
+' -----------------------------------------
+
+class WhatsApp {
+ - numero: String
+ + enviar(mensaje: Mensaje)
+}
+
+MedioDeContacto <|.. WhatsApp
+
+' -----------------------------------------
+
+class Telefono {
+ - numero: String
+ + enviar(mensaje: Mensaje)
+}
+
+MedioDeContacto <|.. Telefono
+
+' -----------------------------------------
+
+class Mail {
+ - correo: String
+ - adapterMail: AdapterMail
+ + enviar(mensaje: Mensaje)
+}
+
+Mail..|> MedioDeContacto
+Mail --> AdapterMail
+
+' -----------------------------------------
+
+class AdapterMail {
+ + enviar(mensaje: Mensaje, correo: String)
+}
+
+' -----------------------------------------
+
+class Tecnico {
+ - nombre: String
+ - apellido: String
+ - tipoDocumento: String
+ - nroDocumento: String
+ - cuil: String
+ - contacto: Contacto
+ - areasDeCobertura: Set<Area>
+}
+
+Tecnico --> Contacto
+Tecnico --> Area
+
+' -----------------------------------------
+
+class Area {
+ - area: String
+}
+
+' -----------------------------------------
+
+class Mensaje {
+ - asunto: String
+ - cuerpo: String
+ - fecha: LocalDateTime
+}
+
+' -----------------------------------------
+
+class Contacto {
+ - mediosDeContacto: Set<MedioDeContacto>
+ + agregarMedioDeContacto(medioDeContacto: MedioDeContacto): void
+ + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
+}
+
+' -----------------------------------------
+
+class Rubro {
+ - nombre: String
+}
+
+' -----------------------------------------
+
+class Respuesta {
+ - pregunta: Pregunta
+ - encuestado: PersonaHumana
+ - contenido: String
+}
+
+Respuesta --> PersonaHumana
+
+' -----------------------------------------
+
+class Pregunta {
+ - campo: String
+ - activa: boolean
+ - opciones: Set<String>
+ - tipo: String
+}
+
+Pregunta --o Respuesta
+
+' -----------------------------------------
+
+class ReconocimientoTrabajoRealizado {
+ - static coeficientes: Map<String, float>
+ + calcularPuntaje(contribuciones: Set<Contribucion>): float
+}
+
+ReconocimientoTrabajoRealizado ..> " * " Contribucion
+
+' -----------------------------------------
+
+class Tarjeta {
+ - codigo: String
+ - historialUsos: List<UsoDeTarjeta>
+ - titular: PersonaVulnerable
+ + calcularPuntaje(): int
+}
+
+Tarjeta --> PersonaVulnerable
+Tarjeta --> " * " UsoDeTarjeta
+Tarjeta ..|> Contribucion
+
+' -----------------------------------------
+
+class UsoDeTarjeta {
+ - fecha: LocalDateTime
+ - heladera: Heladera
+}
+
+UsoDeTarjeta --> Heladera
+
+' -----------------------------------------
+
+class PersonaVulnerable {
+ - nombre: String
+ - fechaDeNacimiento:  LocalDate
+ - fechaDeRegistro: LocalDate
+ - dirección: String
+ - menoresACargo: Integer
+ - documento: Documento
+ - donanteQueLoRegistro: PersonaHumana
+}
+
+PersonaVulnerable --> PersonaHumana
+PersonaVulnerable --> Documento
+
+' -----------------------------------------
+
+class PersonaJuridica {
+ - usuario: String
+ - contacto: Contacto
+ - dirección: Direccion
+ - razonSocial: String
+ - tipo: TipoPersonaJuridica
+ - rubro: Rubro
+ - contribucionesElegidas: Set<FormasContribucionJuridicas>
+ - heladerasACargo: Set<Heladera>
+ - contribuciones: Collection<Contribucion>
+ + hacerseCargoDeHeladera(heladera: Heladera): void
+ + darDeBajaHeladera(heladera: Heladera): void
+}
+
+PersonaJuridica --> " * " FormasContribucionJuridica
+PersonaJuridica --> Rubro
+PersonaJuridica --> Contacto
+PersonaJuridica --> TipoPersonaJuridica
+
+' -----------------------------------------
+
+class Direccion {
+ - direccion: String
+ - coordenada: Coordenada
+}
+
+Direccion --> Coordenada
+
+' -----------------------------------------
+
+
+class Coordenada {
+ - latitud: String
+ - longitud: String
+}
+
+' -----------------------------------------
+
+
+class AdapterRecomendacionPuntosHeladera {
+ + recomendacion(latitud: String, longitud: String, radio: float): Set<Coordenada>
+}
+
+AdapterRecomendacionPuntosHeladera ..> " * " Coordenada
+
+' -----------------------------------------
+
+
+class CargaMasivaColaboraciones {
+ - adapterCSV: ??
+ + importarArchivoCSV(archivoCSV: File): void
+}
+
+' -----------------------------------------
+
+enum FormasContribucionHumanas {
+ DISTRIBUCION_VIANDAS
+ DONACION_DINERO
+ DONACION_VIANDA
+ ENTREGA_TARGETAS
+}
+
+enum FormasContribucionJuridica {
+ DONACION_DINERO
+ ENCARGARSE_DE_HELADERA
+ OFRECER_OFERTA
+}
+
+enum TipoPersonaJuridica {
+ GUBERNAMENTAL
+ ONG
+ EMPRESA
+ INSTITUCION
+}
+
+enum TipoDocumento {
+ LC
+ LE
+ DNI
+}
+
+' -----------------------------------------
+
+@enduml
