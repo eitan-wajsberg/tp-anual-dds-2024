@@ -1,10 +1,8 @@
 @startuml diagramaDeClasesControladores
-!theme reddress-darkblue
 
 class ControladorCargaColaboraciones {
     + cargarColaboraciones(usuario: Usuario, dataCSV: File): void
 }
-
 
 /'
 void cargarColaboraciones(usuario: Usuario, archivoCSV: String){
@@ -25,18 +23,16 @@ void cargarColaboraciones(usuario: Usuario, archivoCSV: String){
         String TipoDocumento = record.get(0);
         Int DNI = record.get(1);
         Documento doc = new Documento(TipoDocumento, DNI);
-        PersonaHumana persona = RepositorioPersonaHumana.buscar(doc);
-        if(persona == NULL) {
-            crear usuario
-            crear persona humana y ponerle el usuario
-            
-            mandar Mail
+        // lleno DataPersona con tipo doc, nro, nombre, apellido y mail
+        controladorPersona.descubrirPersonaHumana(doc);
+        ...
+        TipoColaboracion colaboracion;
+        switch(record.get("forma de colaboracion")){
+          case "dinero":
+            colaboracion = new DonacionDinero(cantidad); break;
+          ...
         }
-
-        crear instancias de contribuciones
-        asignarlas a la persona
-
-        actualizar persona en repositorio
+        controladorPersona.agregarColaboracionAPersona(usuario, DataPersona, colaboracion);
     }
 }
 tipo doc    documento   fecha colaboracion      forma colab         cantidad
@@ -45,11 +41,28 @@ dni         120         25/5/2024               dinero              50
 dni         111         25/5/2024               entraga_tarjetas    3
 '/
 
-
 class ControladorPersonaHumana {
-    + descubrirPersonaHumana(usuario: Usuario, data: DataPersonaHumana): PersonaHumana
-    + mandarMail(data: DataPersonaHumana): void
+    + descubrirPersonaHumana(doc: Documento): void
+    + agregarColaboracion(Usuario: usuario, data: DataPersonaHumana, tipoColaboracion: TipoColaboracion)
 }
+
+/'
+PersonaHumana descubrirPersonaHumana(doc: Documento) {
+        PersonaHumana persona = RepositorioPersonaHumana.buscar(doc);
+
+        if(persona == NULL) {
+            crear usuario
+            crear persona humana y ponerle el usuario
+
+            mandar Mail
+        }
+
+        crear instancias de contribuciones
+        asignarlas a la persona
+
+        actualizar persona en repositorio
+}
+'/
 
 ControladorPersonaHumana ..> DataPersonaHumana
 

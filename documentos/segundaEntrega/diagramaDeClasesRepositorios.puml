@@ -1,5 +1,4 @@
 @startuml diagramaDeClasesRepositorios
-!theme reddress-darkblue
 
 class RepositorioPersonaHumana {
     + agregar(persona: PersonaHumana): void
