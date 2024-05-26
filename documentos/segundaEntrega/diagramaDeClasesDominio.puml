@@ -45,9 +45,10 @@ class Heladera {
  - modelo: Modelo
  - viandas: Set<Vianda>
  - estado: EstadoHeladera
+ - temperaturaEsperada: float
  + ingresarViandas(viandas: ...Vianda): void
  + quitarViandas(viandas: ...Vianda): void
- + temperatura(): float
+ + temperaturaReal(): float
  + calcularPuntaje(): int
 }
 
