@@ -9,7 +9,7 @@ class PersonaHumana {
  - apellido: String
  - documento: Documento
  - fechaNacimiento: LocalDate
- - contribuciones: Collection<Contribucion>
+ - contribuciones: Set<Contribucion>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  + calcularPuntajeNeto(): float
 }
@@ -19,6 +19,7 @@ PersonaHumana --> Contacto
 PersonaHumana --> Direccion
 PersonaHumana --> Documento
 PersonaHumana --> " * " FormasContribucionHumanas
+PersonaHumana --> Usuario
 
 ' -----------------------------------------
 
@@ -49,8 +50,10 @@ class Heladera {
  + calcularPuntaje(): int
 }
 
-Heladera --> " * " Vianda
+Heladera --> "*" Vianda
 Heladera --> Modelo
+Heladera --> Direccion
+Heladera ..|> Contribucion
 
 ' -----------------------------------------
 
@@ -106,12 +109,15 @@ class Oferta {
 }
 
 Oferta --> PersonaJuridica
+Oferta --> Rubro
 
 ' -----------------------------------------
 
 class Rubro {
  - nombre: String
 }
+
+' -----------------------------------------
 
 class Documento {
  - tipo: TipoDocumento
@@ -135,7 +141,7 @@ class WhatsApp {
  + enviar(mensaje: Mensaje)
 }
 
-MedioDeContacto <|.. WhatsApp
+WhatsApp ..|> MedioDeContacto
 
 ' -----------------------------------------
 
@@ -144,7 +150,7 @@ class Telefono {
  + enviar(mensaje: Mensaje)
 }
 
-MedioDeContacto <|.. Telefono
+Telefono ..|> MedioDeContacto
 
 ' -----------------------------------------
 
@@ -154,7 +160,7 @@ class Mail {
  + enviar(mensaje: Mensaje)
 }
 
-Mail..|> MedioDeContacto
+Mail ..|> MedioDeContacto
 Mail --> AdapterMail
 
 ' -----------------------------------------
@@ -168,8 +174,7 @@ class AdapterMail {
 class Tecnico {
  - nombre: String
  - apellido: String
- - tipoDocumento: String
- - nroDocumento: String
+ - documento: Documento
  - cuil: String
  - contacto: Contacto
  - areasDeCobertura: Set<Area>
@@ -177,11 +182,13 @@ class Tecnico {
 
 Tecnico --> Contacto
 Tecnico --> Area
+Tecnico --> Documento
+Tecnico --> Usuario
 
 ' -----------------------------------------
 
 class Area {
- - area: String
+ - nombre: String
 }
 
 ' -----------------------------------------
@@ -200,11 +207,7 @@ class Contacto {
  + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
 }
 
-' -----------------------------------------
-
-class Rubro {
- - nombre: String
-}
+Contacto --> "*" MedioDeContacto
 
 ' -----------------------------------------
 
@@ -262,10 +265,10 @@ UsoDeTarjeta --> Heladera
 
 class PersonaVulnerable {
  - nombre: String
- - fechaDeNacimiento:  LocalDate
+ - fechaDeNacimiento: LocalDate
  - fechaDeRegistro: LocalDate
  - dirección: String
- - menoresACargo: Integer
+ - menoresACargo: int
  - documento: Documento
  - donanteQueLoRegistro: PersonaHumana
 }
@@ -284,7 +287,7 @@ class PersonaJuridica {
  - rubro: Rubro
  - contribucionesElegidas: Set<FormasContribucionJuridicas>
  - heladerasACargo: Set<Heladera>
- - contribuciones: Collection<Contribucion>
+ - contribuciones: Set<Contribucion>
  + hacerseCargoDeHeladera(heladera: Heladera): void
  + darDeBajaHeladera(heladera: Heladera): void
 }
@@ -292,7 +295,10 @@ class PersonaJuridica {
 PersonaJuridica --> " * " FormasContribucionJuridica
 PersonaJuridica --> Rubro
 PersonaJuridica --> Contacto
+PersonaJuridica --> Direccion
+PersonaJuridica --> "*" Heladera
 PersonaJuridica --> TipoPersonaJuridica
+PersonaJuridica --> Usuario
 
 ' -----------------------------------------
 
@@ -358,4 +364,77 @@ enum TipoDocumento {
 
 ' -----------------------------------------
 
+class Usuario {
+- nombre: String
+- clave: String
+- rol: Rol
++ cambiarClave(clave: String, validador: ValidadorDeClave): void
+}
+
+Usuario --> Rol
+Usuario ..> ValidadorDeClave
+
+' -----------------------------------------
+
+class ValidadorDeClave{
+- validadores: Set<TipoValidacion>
++ esValido(clave: String): boolean
+}
+
+ValidadorDeClave --> " * " TipoValidacion
+
+' -----------------------------------------
+
+interface TipoValidacion{
++ validar(clave: String): boolean
++ getMensajeError(): String
+}
+
+' -----------------------------------------
+
+class LongitudEstipulada{
+- longitudMaxima: int
+- longitudMinima: int
++ validar(clave: String): boolean
++ getMensajeError(): String
+}
+
+LongitudEstipulada ..|> TipoValidacion
+
+' -----------------------------------------
+
+class ListaDePeoresClavesMemorizados{
++ validar(clave: String): boolean
++ getMensajeError(): String
+}
+
+ListaDePeoresClavesMemorizados ..|> TipoValidacion
+
+' -----------------------------------------
+
+class AusenciaDeCredencialesPorDefecto{
+- usuario: Stering
++ validar(clave: String): boolean
++ getMensajeError(): String
+}
+
+AusenciaDeCredencialesPorDefecto ..|> TipoValidacion
+
+' -----------------------------------------
+
+class Rol {
+- nombre: String
+- permiso: Set<Permiso>
++ tenesPermiso(permiso: Permiso): boolean
+}
+
+Rol --> " * "Permiso
+
+' -----------------------------------------
+
+class Permiso {
+- nombre: String
+}
+
+' -----------------------------------------
 @enduml
