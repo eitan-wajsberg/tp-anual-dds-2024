@@ -1,4 +1,5 @@
 @startuml diagramaDeClasesControladores
+!theme reddress-darkblue
 
 class ControladorCargaColaboraciones {
     + cargarColaboraciones(usuario: Usuario, dataCSV: File): void

@@ -9,9 +9,10 @@ class PersonaHumana {
  - apellido: String
  - documento: Documento
  - fechaNacimiento: LocalDate
+ - ofertasCanjeadas: List<OfertaCanjeada>
  - contribuciones: Set<Contribucion>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
- + calcularPuntajeNeto(): float
+ + calcularPuntosCanjeados(): float
 }
 
 PersonaHumana --> " * " Contribucion
@@ -20,6 +21,7 @@ PersonaHumana --> Direccion
 PersonaHumana --> Documento
 PersonaHumana --> " * " FormasContribucionHumanas
 PersonaHumana --> Usuario
+PersonaHumana --> " * " OfertaCanjeada
 
 ' -----------------------------------------
 
@@ -127,12 +129,18 @@ class Oferta {
  - imagen: ???
  - rubro: Rubro
  - organizacion: PersonaJuridica
- - comprador: PersonaHumana
  + canjear(): void
 }
 
 Oferta --> PersonaJuridica
 Oferta --> Rubro
+
+class OfertaCanjeada {
+   oferta: Oferta
+   fechaCanje: LocalDateTime
+}
+
+OfertaCanjeada --> Oferta
 
 ' -----------------------------------------
 
@@ -262,7 +270,7 @@ end note
 
 class ReconocimientoTrabajoRealizado {
  - static coeficientes: Map<String, float>
- + calcularPuntaje(contribuciones: Set<Contribucion>): float
+ + calcularPuntaje(contribuciones: Set<Contribucion>, puntajeGastado: float): float
 }
 
 ReconocimientoTrabajoRealizado ..> " * " Contribucion
