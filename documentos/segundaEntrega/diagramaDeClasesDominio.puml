@@ -1,5 +1,5 @@
 @startuml diagramaDeClasesDominio
-
+!theme reddress-darkblue
 ' -----------------------------------------
 
 class PersonaHumana {
@@ -46,17 +46,30 @@ class Heladera {
  - viandas: Set<Vianda>
  - estado: EstadoHeladera
  - temperaturaEsperada: float
+ - adapterTemperatura: AdapterSensorTemperatura
+ - adapterMovimiento: AdapterSensorMovimiento
  + ingresarViandas(viandas: ...Vianda): void
  + quitarViandas(viandas: ...Vianda): void
  + temperaturaReal(): float
  + calcularPuntaje(): int
+ + recalcularEstado(): void
 }
+
+note right
+recalcularEstado() se actualiza cada cierto tiempo 
+para consultar: 
+ Si hubo fraude
+ La heladera sobrepaso la temperatura maxima
+ La heladera no supera la temperatura minima
+end note
 
 Heladera --> "*" Vianda
 Heladera --> Modelo
 Heladera --> Direccion
 Heladera ..|> Contribucion
 Heladera --> EstadoHeladera
+Heladera --> AdapterSensorTemperatura
+Heladera --> AdapterSensorMovimiento
 
 ' -----------------------------------------
 
@@ -383,6 +396,11 @@ enum EstadoHeladera {
  FRAUDE
 }
 
+note bottom
+En un futuro esto puede ser resuelto mediante clases, 
+pero todavia no le encontramos una funcionalidad.
+end note
+
 ' -----------------------------------------
 
 class Usuario {
@@ -459,5 +477,15 @@ class Permiso {
 
 ' -----------------------------------------
 
+interface AdapterSensorTemperatura {
+ + detectarTemperatura(): float 
+}
+
+interface AdapterSensorMovimiento {
+ + detectarFraude(): boolean 
+}
+
+
+' -----------------------------------------
 
 @enduml
