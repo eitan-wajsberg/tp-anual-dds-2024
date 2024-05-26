@@ -96,6 +96,13 @@ class DonacionDinero {
 
 DonacionDinero ..|> Contribucion
 
+note bottom
+unidadFrecuencia podría tener los valores:
+   S: Semanal
+   M: Mensual
+   A: Anual
+end note
+
 ' -----------------------------------------
 
 class Oferta {
@@ -229,6 +236,11 @@ class Pregunta {
 }
 
 Pregunta --o Respuesta
+note left
+Posibles tipos:
+   Multiple choice
+   Pregunta abierta
+end note
 
 ' -----------------------------------------
 
@@ -238,6 +250,7 @@ class ReconocimientoTrabajoRealizado {
 }
 
 ReconocimientoTrabajoRealizado ..> " * " Contribucion
+note bottom: Los coeficientes se encuentran en un archivo de configuración
 
 ' -----------------------------------------
 
