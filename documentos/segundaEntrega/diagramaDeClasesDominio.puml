@@ -1,4 +1,5 @@
-@startuml
+@startuml diagramaDeClasesDominio
+!theme reddress-darkblue
 
 ' -----------------------------------------
 
@@ -341,10 +342,9 @@ AdapterRecomendacionPuntosHeladera ..> " * " Coordenada
 
 ' -----------------------------------------
 
-
 class CargaMasivaColaboraciones {
- - adapterCSV: ??
  + importarArchivoCSV(archivoCSV: File): void
+ 
 }
 
 ' -----------------------------------------
@@ -450,4 +450,6 @@ class Permiso {
 }
 
 ' -----------------------------------------
+
+
 @enduml

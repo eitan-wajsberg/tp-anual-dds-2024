@@ -1,0 +1,20 @@
+@startuml diagramaDeClasesRepositorios
+!theme reddress-darkblue
+
+class RepositorioPersonaHumana {
+    + agregar(persona: PersonaHumana): void
+    + modificar(persona: PersonaHumana): void
+    + eliminar(persona: PersonaHumana): void
+    + buscar(documento: Documento): PersonaHumana
+    + listar(): List<PersonaHumana>
+}
+
+class RepositorioPermisos {
+    + agregar(persona: Permiso): void
+    + modificar(persona: Permiso): void
+    + eliminar(persona: Permiso): void
+    + buscar(documento: Documento): Permiso
+    + listar(): List<Permiso>
+}
+
+@enduml
