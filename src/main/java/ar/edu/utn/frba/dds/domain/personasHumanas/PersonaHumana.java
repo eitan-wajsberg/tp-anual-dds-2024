@@ -1,6 +1,8 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain.personasHumanas;
 
-import ar.edu.utn.frba.dds.domain.definirPackages.contribuciones.DonacionDinero;
+import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
+import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
+import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Set;

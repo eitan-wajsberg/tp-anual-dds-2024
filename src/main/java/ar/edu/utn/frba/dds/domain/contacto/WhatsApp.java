@@ -1,7 +1,4 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
-
-import lombok.Getter;
-import lombok.Setter;
+package ar.edu.utn.frba.dds.domain.contacto;
 
 public class WhatsApp implements MedioDeContacto {
 

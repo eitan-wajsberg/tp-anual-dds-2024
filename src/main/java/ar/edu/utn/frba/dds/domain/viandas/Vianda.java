@@ -1,0 +1,28 @@
+package ar.edu.utn.frba.dds.domain.viandas;
+
+import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
+import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+public class Vianda {
+  private LocalDateTime fechaCaducidad;
+  private boolean entregada;
+  private String comida;
+  private float calorias;
+  private float peso;
+  private PersonaHumana colaborador;
+  private LocalDateTime fechaDonacion;
+
+  public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float peso, PersonaHumana colaborador, LocalDateTime fechaDonacion) {
+    this.fechaCaducidad = fechaCaducidad;
+    this.entregada = entregada;
+    this.comida = comida;
+    this.calorias = calorias;
+    this.peso = peso;
+    this.colaborador = colaborador;
+    this.fechaDonacion = fechaDonacion;
+  }
+}

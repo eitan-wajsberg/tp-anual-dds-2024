@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain.contacto;
 
 import java.time.LocalDateTime;
 import lombok.Getter;

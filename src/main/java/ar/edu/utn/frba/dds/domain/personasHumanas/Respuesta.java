@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain.personasHumanas;
 
 import lombok.Getter;
 import lombok.Setter;

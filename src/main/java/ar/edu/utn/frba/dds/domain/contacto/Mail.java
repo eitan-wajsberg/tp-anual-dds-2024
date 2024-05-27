@@ -1,7 +1,6 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain.contacto;
 
-import lombok.Getter;
-import lombok.Setter;
+import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 
 public class Mail implements MedioDeContacto {
 
