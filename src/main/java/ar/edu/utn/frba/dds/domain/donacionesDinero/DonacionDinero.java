@@ -12,6 +12,6 @@ public class DonacionDinero implements Contribucion {
   private LocalDate fecha;
   public float calcularPuntaje(){
     Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
-    return (monto * coeficientes.get("DONACION_DINERO"));
+    return (monto * coeficientes.get("coeficientePesosDonados"));
   }
 }

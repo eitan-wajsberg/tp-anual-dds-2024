@@ -26,7 +26,7 @@ public class ValidadorTest {
         validador = new ValidadorDeClave();
         LongitudEstipulada restriccionLongitud = new LongitudEstipulada(16);
         ListaDePeoresClavesMemorizadas restriccionLista = new ListaDePeoresClavesMemorizadas();
-        AusenciaDeCredencialesPorDefecto restriccionCredenciales = new AusenciaDeCredencialesPorDefecto();
+        AusenciaDeCredencialesPorDefecto restriccionCredenciales = new AusenciaDeCredencialesPorDefecto("Juan");
 
         Set<TipoValidacion> restricciones = new HashSet<>();
         restricciones.add(restriccionLongitud);

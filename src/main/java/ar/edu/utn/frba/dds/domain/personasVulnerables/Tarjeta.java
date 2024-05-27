@@ -12,6 +12,6 @@ public class Tarjeta implements Contribucion {
   private PersonaVulnerable titular;
   public float calcularPuntaje(){
     Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
-    return coeficientes.get("TARJETA_REPARTIDA");
+    return coeficientes.get("coeficienteTarjetasRepartidas");
   }
 }

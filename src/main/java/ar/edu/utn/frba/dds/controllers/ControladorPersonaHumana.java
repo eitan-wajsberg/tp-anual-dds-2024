@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.controllers;
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.usuarios.Permiso;
+import ar.edu.utn.frba.dds.dtos.DataPersonaHumana;
 import ar.edu.utn.frba.dds.repositories.imp.RepositorioPermisos;
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 
