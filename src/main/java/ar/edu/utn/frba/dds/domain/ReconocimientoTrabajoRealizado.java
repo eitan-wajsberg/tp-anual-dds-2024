@@ -1,6 +1,5 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain;
 
-import ar.edu.utn.frba.dds.domain.definirPackages.contribuciones.Contribucion;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +19,7 @@ public class ReconocimientoTrabajoRealizado {
   public static Map<String, Float> obtenerCoeficientes(){
     return coeficientes;
   }
-  public float calcularPuntaje(Set<Contribucion> contribuciones, Float puntajeGastado){
+  public float calcularPuntaje(Set<Contribucion> contribuciones, float puntajeGastado){
     float puntajeBruto = (float) 0;
     for(Contribucion contribucion : contribuciones){
       puntajeBruto+=contribucion.calcularPuntaje();
