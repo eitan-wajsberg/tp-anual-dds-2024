@@ -1,8 +1,10 @@
 package ar.edu.utn.frba.dds.domain.viandas;
 
+import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,8 +20,8 @@ public class DistribucionVianda {
     //TODO:
   }
 
-  public float calcularPuntaje() {
-    // TODO
-    return 0;
+  public float calcularPuntaje(){
+    Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
+    return cantidadViandas * coeficientes.get("DISTRIBUCION_VIANDAS");
   }
 }
