@@ -19,24 +19,24 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 public class Heladera implements Contribucion {
-  @Getter @Setter
+  @Setter
   private String nombre;
-  @Getter @Setter
+  @Setter
   private Direccion direccion;
-  @Getter @Setter
+  @Setter
   private LocalDateTime fechaRegistro;
-  @Getter @Setter
+  @Setter
   private int capacidadMaximaViandas;
-  @Getter @Setter
+  @Setter
   private boolean activa;
-  @Getter @Setter
+  @Setter
   private Modelo modelo;
-  @Getter
   private Set<Vianda> viandas;
-  @Getter @Setter
+  @Setter
   private EstadoHeladera estado;
-  @Getter @Setter
+  @Setter
   private float temperaturaEsperada;
   private AdapterSensorTemperatura adapterTemperatura;
   private AdapterSensorMovimiento adapterSensorMovimiento;
@@ -88,7 +88,6 @@ public class Heladera implements Contribucion {
       }
     }
 
-    // Consider the current period if the current state is active
     if (estado == EstadoHeladera.ACTIVA) {
       mesesActiva += Period.between(LocalDate.from(fechaInicio), LocalDate.now()).getMonths();
     }
