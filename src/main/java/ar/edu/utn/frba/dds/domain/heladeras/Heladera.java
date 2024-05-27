@@ -114,6 +114,6 @@ public class Heladera implements Contribucion {
 
   public float calcularPuntaje() {
     Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
-    return coeficientes.get("HELADERA_A_CARGO") * this.calcularMesesActiva();
+    return coeficientes.get("coeficienteCantidadHeladerasActivas") * this.calcularMesesActiva();
   }
 }
