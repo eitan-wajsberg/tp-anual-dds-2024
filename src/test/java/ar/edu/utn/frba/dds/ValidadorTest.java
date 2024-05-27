@@ -46,7 +46,6 @@ public class ValidadorTest {
     @DisplayName("El cambio de secreto es exitoso cuando se cumplen todas las condiciones")
     public void cambioDeSecretoExitoso(){
         String secreto = "hoalgajr9!!!";
-        usuario.setClave(secreto);
         usuario.cambiarClave(secreto, validador);
 
         Assertions.assertEquals(usuario.getClave(), secreto);
@@ -58,10 +57,9 @@ public class ValidadorTest {
         String secretoCorto = "admin";
         String mensajeEsperado = new LongitudEstipulada(16).getMensajeError();
         try {
-            validador.validar(usuario.getNombre(),secretoCorto);
+            validador.validar(secretoCorto);
         }catch(RuntimeException excepcion){
             Assertions.assertTrue(excepcion.getMessage().contains(mensajeEsperado));
         }
     }
-
 }
