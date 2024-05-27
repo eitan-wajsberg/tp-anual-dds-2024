@@ -2,6 +2,9 @@ package ar.edu.utn.frba.dds.domain;
 
 import java.util.Map;
 import java.util.Set;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class ReconocimientoTrabajoRealizado {
   private static ReconocimientoTrabajoRealizado instancia;
@@ -13,8 +16,17 @@ public class ReconocimientoTrabajoRealizado {
     }
     return instancia;
   }
-  public static void cargarCoeficientes(){
-    //TODO
+  public static void cargarCoeficientesDesdeArchivo(String filePath) {
+    Properties propiedades = new Properties();
+    try (FileInputStream input = new FileInputStream(filePath)) {
+      propiedades.load(input);
+      for (String nombreClave : propiedades.stringPropertyNames()) {
+        String valor = propiedades.getProperty(nombreClave);
+        coeficientes.put(nombreClave, Float.parseFloat(valor));
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
   public static Map<String, Float> obtenerCoeficientes(){
     return coeficientes;
@@ -27,3 +39,4 @@ public class ReconocimientoTrabajoRealizado {
     return puntajeBruto - puntajeGastado;
   }
 }
+
