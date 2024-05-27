@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ValidadorTest {
@@ -35,12 +36,14 @@ public class ValidadorTest {
     }
 
     @Test
+    @DisplayName("El cambio de secreto falla cuando es mas corto que la longitud minima esperada")
     public void cambioDeSecretoFalla(){
         String secretoCorto = "corto";
         Assertions.assertThrows(RuntimeException.class, () -> usuario.cambiarClave(secretoCorto, validador));
     }
 
     @Test
+    @DisplayName("El cambio de secreto es exitoso cuando se cumplen todas las condiciones")
     public void cambioDeSecretoExitoso(){
         String secreto = "hoalgajr9!!!";
         usuario.setClave(secreto);
@@ -50,6 +53,7 @@ public class ValidadorTest {
     }
 
     @Test
+    @DisplayName("El validador falla por no cumplir la longitud minima esperada")
     public void fallaValidadorPorLongitud(){
         String secretoCorto = "admin";
         String mensajeEsperado = new LongitudEstipulada(16).getMensajeError();

@@ -1,8 +1,7 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain.tecnicos;
 
+import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
 public class Tecnico {
 

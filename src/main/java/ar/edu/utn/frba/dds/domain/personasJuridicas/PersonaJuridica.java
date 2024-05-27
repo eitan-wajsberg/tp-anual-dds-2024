@@ -1,7 +1,9 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain.personasJuridicas;
 
-import ar.edu.utn.frba.dds.domain.definirPackages.contribuciones.DonacionDinero;
-import ar.edu.utn.frba.dds.domain.definirPackages.contribuciones.Heladera;
+import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
+import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
+import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
 import java.util.Set;
 
 public class PersonaJuridica {

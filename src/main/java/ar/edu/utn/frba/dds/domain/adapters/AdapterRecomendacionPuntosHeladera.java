@@ -1,5 +1,6 @@
-package ar.edu.utn.frba.dds.domain.definirPackages;
+package ar.edu.utn.frba.dds.domain.adapters;
 
+import ar.edu.utn.frba.dds.domain.ubicacion.Coordenada;
 import java.util.Set;
 
 public interface AdapterRecomendacionPuntosHeladera {
