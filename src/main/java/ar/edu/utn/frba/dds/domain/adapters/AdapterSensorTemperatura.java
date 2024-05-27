@@ -1,4 +1,5 @@
 package ar.edu.utn.frba.dds.domain.adapters;
 
-public class AdapterSensorTemperatura {
+public interface AdapterSensorTemperatura {
+  public float detectarTemperatura();
 }
