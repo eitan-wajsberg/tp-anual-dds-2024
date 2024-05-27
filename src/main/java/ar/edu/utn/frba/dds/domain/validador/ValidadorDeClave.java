@@ -9,12 +9,12 @@ import lombok.Setter;
 public class ValidadorDeClave {
   private Set<TipoValidacion> validadores;
 
-  public boolean validar(String nombreUsuario, String clave) {
+  public boolean validar(String clave) {
     String errores = "";
     boolean esValido = true;
 
     for (TipoValidacion validador : validadores) {
-      if (!validador.validar(nombreUsuario, clave)) {
+      if (!validador.validar(clave)) {
         errores += validador.getMensajeError() + '\n';
         esValido = false;
       }

@@ -43,8 +43,8 @@ dni         111         25/5/2024               entraga_tarjetas    3
 '/
 
 class ControladorPersonaHumana {
-    + descubrirPersonaHumana(doc: Documento): void
-    + agregarColaboracion(Usuario: usuario, data: DataPersonaHumana, tipoColaboracion: TipoColaboracion)
+    + descubrirPersonaHumana(data: DataPersonaHumana): void
+    + agregarColaboracion(usuario: Usuario, data: DataPersonaHumana, contribucion: Contribucion)
 }
 
 /'
