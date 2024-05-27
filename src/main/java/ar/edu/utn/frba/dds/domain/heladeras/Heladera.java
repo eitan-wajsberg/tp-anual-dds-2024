@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,12 +47,12 @@ public class Heladera {
     this.viandas = new HashSet<>();
   }
 
-  public void ingresarViandas(Vianda ...viandas) {
-    Collections.addAll(this.viandas, viandas);
+  public void ingresarViandas(List<Vianda> viandas) {
+    this.viandas.addAll(viandas);
   }
 
-  public void quitarViandas(Vianda ...viandas) {
-    Arrays.stream(viandas).toList().forEach(this.viandas::remove);
+  public void quitarViandas(List<Vianda> viandas) {
+    viandas.forEach(this.viandas::remove);
   }
 
   public float temperaturaReal() {

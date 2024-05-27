@@ -15,7 +15,8 @@ public class DistribucionVianda {
   private LocalDate fecha;
 
   public void distribuir(List<Vianda> viandas) {
-    //TODO:
+    heladeraOrigen.quitarViandas(viandas);
+    heladeraDestino.ingresarViandas(viandas);
   }
 
   public float calcularPuntaje() {
