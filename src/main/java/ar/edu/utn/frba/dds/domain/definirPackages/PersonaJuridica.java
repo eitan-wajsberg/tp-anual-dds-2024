@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.dds.domain.definirPackages;
 
+import ar.edu.utn.frba.dds.domain.definirPackages.contribuciones.DonacionDinero;
+import ar.edu.utn.frba.dds.domain.definirPackages.contribuciones.Heladera;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
 public class PersonaJuridica {
 
