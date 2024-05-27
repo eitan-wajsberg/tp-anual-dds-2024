@@ -8,12 +8,12 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 public class Tarjeta implements Contribucion {
-  @Getter @Setter
+  @Setter
   private String codigo;
-  @Getter
   private List<UsoDeTarjeta> historialUsos;
-  @Getter @Setter
+  @Setter
   private PersonaVulnerable titular;
 
   public Tarjeta(String codigo, PersonaVulnerable titular) {
