@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.definirPackages;
 
+import ar.edu.utn.frba.dds.domain.definirPackages.contribuciones.DonacionDinero;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Set;
