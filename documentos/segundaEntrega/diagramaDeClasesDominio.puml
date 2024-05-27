@@ -31,7 +31,7 @@ class Vianda {
  - comida: String
  - peso: float
  - fechaDonacion: LocalDate
- + calcularPuntaje(): int
+ + calcularPuntaje(): float
 }
 
 Vianda ..|> Contribucion
@@ -53,7 +53,7 @@ class Heladera {
  + ingresarViandas(viandas: ...Vianda): void
  + quitarViandas(viandas: ...Vianda): void
  + temperaturaReal(): float
- + calcularPuntaje(): int
+ + calcularPuntaje(): float
  + recalcularEstado(): void
 }
 
@@ -90,7 +90,7 @@ class DistribucionVianda {
  - motivo: String
  - fecha: LocalDate
  + distribuir(viandas: List<Vianda>): void
- + calcularPuntaje(): int
+ + calcularPuntaje(): float
 }
 
 DistribucionVianda --> Heladera
@@ -101,7 +101,7 @@ DistribucionVianda ..|> Contribucion
 ' -----------------------------------------
 
 interface Contribucion {
- + calcularPuntaje(): int
+ + calcularPuntaje(): float
 }
 
 class DonacionDinero {
@@ -109,7 +109,7 @@ class DonacionDinero {
  - frecuencia: Integer
  - unidadFrecuencia: String
  - fecha: LocalDate
- + calcularPuntaje(): int
+ + calcularPuntaje(): float
 }
 
 DonacionDinero ..|> Contribucion
@@ -282,7 +282,7 @@ class Tarjeta {
  - codigo: String
  - historialUsos: List<UsoDeTarjeta>
  - titular: PersonaVulnerable
- + calcularPuntaje(): int
+ + calcularPuntaje(): float
 }
 
 Tarjeta --> PersonaVulnerable
