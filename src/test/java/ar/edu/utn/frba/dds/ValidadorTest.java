@@ -3,7 +3,7 @@ package ar.edu.utn.frba.dds;
 import ar.edu.utn.frba.dds.domain.validador.AusenciaDeCredencialesPorDefecto;
 import ar.edu.utn.frba.dds.domain.validador.ListaDePeoresClavesMemorizadas;
 import ar.edu.utn.frba.dds.domain.validador.LongitudEstipulada;
-import ar.edu.utn.frba.dds.domain.validador.Usuario;
+import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.validador.ValidadorDeClave;
 import ar.edu.utn.frba.dds.domain.validador.TipoValidacion;
 import java.util.HashSet;

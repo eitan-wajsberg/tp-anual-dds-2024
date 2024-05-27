@@ -460,7 +460,7 @@ ListaDePeoresClavesMemorizados ..|> TipoValidacion
 ' -----------------------------------------
 
 class AusenciaDeCredencialesPorDefecto{
-- usuario: Stering
+- usuario: String
 + validar(clave: String): boolean
 + getMensajeError(): String
 }
@@ -471,7 +471,7 @@ AusenciaDeCredencialesPorDefecto ..|> TipoValidacion
 
 class Rol {
 - nombre: String
-- permiso: Set<Permiso>
+- permisos: Set<Permiso>
 + tenesPermiso(permiso: Permiso): boolean
 }
 

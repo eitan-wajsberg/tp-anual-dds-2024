@@ -1,13 +1,16 @@
-package ar.edu.utn.frba.dds.domain.validador;
+package ar.edu.utn.frba.dds.domain.usuarios;
 
+import ar.edu.utn.frba.dds.domain.validador.ValidadorDeClave;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
 public class Usuario {
+  @Setter
   private String nombre;
   private String clave;
+  @Setter
+  private Rol rol;
 
   public Usuario(String nombre) {
     this.nombre = nombre;
@@ -15,9 +18,9 @@ public class Usuario {
 
   public void cambiarClave(String clave, ValidadorDeClave validador) throws RuntimeException {
     String claveAuxiliar = this.clave;
-    this.setClave(clave);
-    if (!validador.validar(this.nombre, this.clave)) {
-      this.setClave(claveAuxiliar);
+    this.clave = clave;
+    if (!validador.validar(clave)) {
+      this.clave = claveAuxiliar;
     }
   }
 
