@@ -6,20 +6,15 @@ import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 public class PersonaVulnerable {
-  @Getter @Setter
   private String nombre;
-  @Getter @Setter
   private LocalDate fechaDeNacimiento;
-  @Getter @Setter
   private LocalDate fechaDeRegistro;
-  @Getter @Setter
   private String direccion;
-  @Getter @Setter
   private Integer menoresAcargo;
-  @Getter @Setter
   private Documento documento;
-  @Getter @Setter
   private PersonaHumana donanteQueLoRegistro; // hace falta esto?? creeria que no porque la persona tiene las tarjetas que registro
 
   public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, String direccion, Integer menoresAcargo, Documento documento, PersonaHumana donanteQueLoRegistro) {
