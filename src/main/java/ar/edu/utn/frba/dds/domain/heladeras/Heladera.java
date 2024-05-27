@@ -41,7 +41,7 @@ public class Heladera {
     this.capacidadMaximaViandas = capacidadMaximaViandas;
     this.activa = activa;
     this.modelo = modelo;
-    this.estado = estado;
+    this.estado = EstadoHeladera.ACTIVA; // Se inicializa activa??
     this.temperaturaEsperada = temperaturaEsperada;
     this.viandas = new HashSet<>();
   }
@@ -55,17 +55,29 @@ public class Heladera {
   }
 
   public float temperaturaReal() {
-    //TODO: Llamar al adapter de temperatura
-    return 0;
+    return adapterTemperatura.detectarTemperatura();
   }
 
   public float calcularPuntaje() {
-    // TODO:
+    // TODO: Hay que obtenerlo del archivo de configuracion supongo
     return 0;
   }
 
   public void recalcularEstado() {
-    // TODO:
+    if(adapterSensorMovimiento.detectarFraude())
+      setEstado(EstadoHeladera.FRAUDE);
+    else if (this.noSuperaTemperaturaMinima() || this.superaTemperaturaMaxima())
+      setEstado(EstadoHeladera.DESPERFECTO);
+    else
+      setEstado(EstadoHeladera.ACTIVA);
+  }
+
+  public boolean superaTemperaturaMaxima() {
+    return adapterTemperatura.detectarTemperatura() > modelo.getTemperaturaMaxima();
+  }
+
+  public boolean noSuperaTemperaturaMinima() {
+    return adapterTemperatura.detectarTemperatura() < modelo.getTemperaturaMinima();
   }
 
 }
