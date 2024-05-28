@@ -51,8 +51,9 @@ class Heladera {
  - temperaturaEsperada: float
  - adapterTemperatura: AdapterSensorTemperatura
  - adapterMovimiento: AdapterSensorMovimiento
- + ingresarViandas(viandas: ...Vianda): void
- + quitarViandas(viandas: ...Vianda): void
+ - historialEstados: List<CambioEstado>
+ + ingresarViandas(viandas: List<Vianda>): void
+ + quitarViandas(viandas: List<Vianda>): void
  + temperaturaReal(): float
  + calcularPuntaje(): float
  + recalcularEstado(): void
@@ -73,6 +74,17 @@ Heladera ..|> Contribucion
 Heladera --> EstadoHeladera
 Heladera --> AdapterSensorTemperatura
 Heladera --> AdapterSensorMovimiento
+Heladera --> " * " CambioEstado
+
+' -----------------------------------------
+
+class CambioEstado {
+ - fechaCambio: LocalDate
+ - estado: EstadoHeladera
+
+}
+
+CambioEstado --> EstadoHeladera
 
 ' -----------------------------------------
 
