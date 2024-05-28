@@ -1,20 +1,20 @@
-Tipo Doc;Documento;Nombre;Apellido;Mail;Fecha de colaboración;Forma de colaboración;Cantidad;;
-DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;25/05/2024;DONACION_VIANDAS;1;;
-DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;26/05/2024;REDISTRIBUCION_VIANDAS;5;;
-DNI;43225217;Eitan;;f1f2f3f4@f5f6f7.com;27/05/2024;ENTREGA_TARJETAS;1;;
-DNI;43225217;Eitan;;f1f2f3f4@f5f6f7.com;28/05/2024;DINERO;12;;
-DNI;43225217;Eitan;;f1f2f3f4@f5f6f7.com;29/05/2024;REDISTRIBUCION_VIANDAS;3;;
-DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;30/05/2024;DONACION_VIANDAS;1;;
-DNI;45478895;Nero;Bot;nero@bot.com;31/05/2024;ENTREGA_TARJETAS;5;;
-DNI;45478895;Nero;Bot;nero@bot.com;01/06/2024;DONACION_VIANDAS;1;;
-DNI;41235976;Teal;Music;teal@music.com;02/06/2024;DONACION_VIANDAS;2;;
-DNI;41365749;Teal;Music;teal@music.com;03/06/2024;ENTREGA_TARJETAS;3;;
-DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;04/06/2024;ENTREGA_TARJETAS;1;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;05/06/2024;DINERO;1;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;06/06/2024;DINERO;2;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;07/06/2024;DINERO;3;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;08/06/2024;DINERO;4;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;09/06/2024;DINERO;5;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;10/06/2024;DINERO;10;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;11/06/2024;DINERO;7;;
-DNI;44651389;Rocío;Ochoa Charlín;rochoacharlin@frba.utn.edu.ar;12/06/2024;DINERO;8;;
+Tipo Doc;Documento;Nombre;Apellido;Mail;Fecha de colaboracion;Forma de colaboracion;Cantidad
+DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;25/05/2024;DONACION_VIANDAS;1
+DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;26/05/2024;REDISTRIBUCION_VIANDAS;5
+DNI;43225217;Eitan;;f1f2f3f4@f5f6f7.com;27/05/2024;ENTREGA_TARJETAS;1
+DNI;43225217;Eitan;;f1f2f3f4@f5f6f7.com;28/05/2024;DINERO;12
+DNI;43225217;Eitan;;f1f2f3f4@f5f6f7.com;29/05/2024;REDISTRIBUCION_VIANDAS;3
+DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;30/05/2024;DONACION_VIANDAS;1
+DNI;45478895;Nero;Bot;nero@bot.com;31/05/2024;ENTREGA_TARJETAS;5
+DNI;45478895;Nero;Bot;nero@bot.com;01/06/2024;DONACION_VIANDAS;1
+DNI;41235976;Teal;Music;teal@music.com;02/06/2024;DONACION_VIANDAS;2
+DNI;41365749;Teal 2;Music2;teal@music.com;03/06/2024;ENTREGA_TARJETAS;3
+DNI;44125678;Marco;Bravo;nosequepasa@sielmailnoesvalido.com;04/06/2024;ENTREGA_TARJETAS;1
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;05/06/2024;DINERO;1
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;06/06/2024;DINERO;2
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;07/06/2024;DINERO;3
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;08/06/2024;DINERO;4
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;09/06/2024;DINERO;5
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;10/06/2024;DINERO;10
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;11/06/2024;DINERO;7
+DNI;44651389;Rocio;Ochoa Charlin;rochoacharlin@frba.utn.edu.ar;12/06/2024;DINERO;8

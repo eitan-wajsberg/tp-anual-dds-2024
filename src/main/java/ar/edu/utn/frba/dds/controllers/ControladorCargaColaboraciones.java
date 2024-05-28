@@ -47,18 +47,25 @@ public class ControladorCargaColaboraciones {
     // Crear un parser CSV con el formato predeterminado
     CSVParser csvParser = null;
     try {
-      csvParser = CSVFormat.DEFAULT.parse(reader);
+      //csvParser = CSVFormat.DEFAULT.parse(reader);
+      csvParser = CSVFormat.DEFAULT.builder()
+          .setDelimiter(';')
+          .setHeader()
+          .setSkipHeaderRecord(true)  // skip header
+          .build().parse(reader);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
 
     for (CSVRecord record : csvParser) {
+      System.out.println(record);
+
       // Aseguro existencia del documento
       String tipoDocumento = record.get(0);
       String nroDocumento = record.get(1);
       DocumentoInputDTO documentoIDTO = new DocumentoInputDTO();
       documentoIDTO.setTipoDocumento(tipoDocumento);
-      documentoIDTO.setTipoDocumento(nroDocumento);
+      documentoIDTO.setNroDocumento(nroDocumento);
       DocumentoOutputDTO documentoOutDTO = this.documentoServices.descubrirDocumento(documentoIDTO, usuario);
 
       // Aseguro existencia de la persona humana
@@ -73,7 +80,7 @@ public class ControladorCargaColaboraciones {
       // Le agrego la o las contribuciones a la persona
       List<Contribucion> contribuciones = new ArrayList<>();
       int cantidad = Integer.parseInt(record.get(7));
-      LocalDate fecha = LocalDate.parse(record.get(6), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+      LocalDate fecha = LocalDate.parse(record.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
       switch(record.get(6)){
         case "DINERO":
           DonacionDinero donacionDinero = new DonacionDinero();
