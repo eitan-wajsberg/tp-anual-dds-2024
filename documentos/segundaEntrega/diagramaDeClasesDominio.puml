@@ -216,6 +216,14 @@ interface AdapterMail {
 
 ' -----------------------------------------
 
+class MailSender {
+ + enviar(mensaje: Mensaje, destinatario: String)
+}
+
+MailSender ..|> AdapterMail
+
+' -----------------------------------------
+
 class Tecnico {
  - nombre: String
  - apellido: String
