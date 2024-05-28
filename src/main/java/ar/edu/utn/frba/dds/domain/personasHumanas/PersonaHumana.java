@@ -12,8 +12,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PersonaHumana {
-
+  private Long id;
   private String usuario;
+  private Documento documento;
   private Set<MedioDeContacto> mediosDeContacto;
   private Direccion direccion;
   private String nombre;
