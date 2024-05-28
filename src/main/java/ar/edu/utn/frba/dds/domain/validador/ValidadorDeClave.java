@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.validador;
 
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,10 @@ import lombok.Setter;
 @Getter
 public class ValidadorDeClave {
   private Set<TipoValidacion> validadores;
+
+  public ValidadorDeClave(){
+    validadores = new HashSet<>();
+  }
 
   public boolean validar(String clave) {
     String errores = "";

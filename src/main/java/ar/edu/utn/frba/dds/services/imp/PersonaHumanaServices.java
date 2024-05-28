@@ -86,7 +86,6 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
       output = crear(personaInputDTO, usuario);
       // TODO: lo siguiente es provisional y una idea para futuro. La creación y asignación de usuario no debería ser hecha de un tiro
       verificadorDePermisos.verificarSiUsuarioPuede("CREAR-USUARIO", usuario);
-      verificadorDePermisos.verificarSiUsuarioPuede("CAMBIAR-CLAVE", usuario);
       Usuario usuarioDePersona = new Usuario(personaInputDTO.getMail());
       usuarioDePersona.cambiarClave("nuevaClave2024", new ValidadorDeClave());
 
