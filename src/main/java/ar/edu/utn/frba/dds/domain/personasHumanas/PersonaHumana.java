@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.domain.personasHumanas;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
+import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
 import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
@@ -13,13 +14,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class PersonaHumana {
+  @Getter @Setter
   private Long id;
   @Getter @Setter
   private Usuario usuario;
   @Getter @Setter
   private Documento documento;
-  @Getter
-  private Set<MedioDeContacto> mediosDeContacto;
+  @Getter @Setter
+  private Contacto contacto;
   @Getter @Setter
   private Direccion direccion;
   @Getter @Setter
@@ -36,18 +38,6 @@ public class PersonaHumana {
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
-  }
-
-  public void agregarMedioDeContacto(MedioDeContacto medioDeContacto) {
-    this.mediosDeContacto.add(medioDeContacto);
-  }
-
-  public void quitarMedioDeContacto(MedioDeContacto medioDeContacto) {
-    try {
-      this.mediosDeContacto.remove(medioDeContacto);
-    } catch (NoSuchElementException e) {
-      System.out.println("Medio de contacto inexistente");
-    }
   }
 
   public void donarDinero(DonacionDinero donacion) {
