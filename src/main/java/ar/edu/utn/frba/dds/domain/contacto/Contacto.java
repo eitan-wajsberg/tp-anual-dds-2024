@@ -5,7 +5,11 @@ import java.util.HashSet;
 import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
 
 public class Contacto {
-  private Set<MedioDeContacto> mediosDeContacto = new HashSet<>();
+  private Set<MedioDeContacto> mediosDeContacto;
+  public Contacto() {
+    this.mediosDeContacto = new HashSet<>();
+
+  }
 
   public void agregarMedioDeContacto(MedioDeContacto medioDeContacto) {
     mediosDeContacto.add(medioDeContacto);

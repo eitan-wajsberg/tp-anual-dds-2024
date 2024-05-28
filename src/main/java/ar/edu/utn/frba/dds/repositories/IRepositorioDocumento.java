@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IRepositorioDocumento {
   void guardar(Documento documento);
-  public Optional<Documento> buscar(Long id);
-  public Optional<Documento> buscarPorNro(TipoDocumento tipo, String nro);
+  Optional<Documento> buscar(Long id);
+  Optional<Documento> buscarPorNro(TipoDocumento tipo, String nro);
 
 }

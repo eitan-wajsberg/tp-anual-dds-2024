@@ -4,6 +4,8 @@ import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import lombok.Getter;
@@ -16,17 +18,20 @@ public class Vianda implements Contribucion {
   private String comida;
   private float calorias;
   private float peso;
-  private PersonaHumana colaborador;
-  private LocalDateTime fechaDonacion;
+  private LocalDate fechaDonacion;
 
-  public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float peso, PersonaHumana colaborador, LocalDateTime fechaDonacion) {
+  public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float peso, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;
     this.entregada = entregada;
     this.comida = comida;
     this.calorias = calorias;
     this.peso = peso;
-    this.colaborador = colaborador;
     this.fechaDonacion = fechaDonacion;
+  }
+
+  public Vianda(LocalDate fechaDonacion){
+    this.fechaDonacion = fechaDonacion;
+    this.entregada = true;
   }
 
   public float calcularPuntaje(){
