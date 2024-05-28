@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.dds;
 
-import ar.edu.utn.frba.dds.domain.ListadoPuntosRecomendados;
-import ar.edu.utn.frba.dds.domain.ServicioRecomendacionPuntos;
+import ar.edu.utn.frba.dds.domain.puntosRecomendados.ListadoPuntosRecomendados;
+import ar.edu.utn.frba.dds.domain.puntosRecomendados.ServicioRecomendacionPuntos;
 import ar.edu.utn.frba.dds.domain.ubicacion.Coordenada;
 import ar.edu.utn.frba.dds.domain.ubicacion.PuntoRecomendado;
 import java.io.IOException;
