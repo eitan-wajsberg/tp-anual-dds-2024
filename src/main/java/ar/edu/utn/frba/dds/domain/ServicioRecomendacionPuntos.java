@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServicioRecomendacionPuntos {
   private static ServicioRecomendacionPuntos instancia = null;
-  private static final String urlAPI = "https://52d49f8e-4e4d-4233-8610-c727a6cc27e9.mock.pstmn.io/api/recomendacion";
+  private static final String urlAPI = "https://52d49f8e-4e4d-4233-8610-c727a6cc27e9.mock.pstmn.io/api/recomendacion/";
   private Retrofit retrofit;
 
   private ServicioRecomendacionPuntos() {
