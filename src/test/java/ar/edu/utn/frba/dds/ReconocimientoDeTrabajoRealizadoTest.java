@@ -37,6 +37,7 @@ public class ReconocimientoDeTrabajoRealizadoTest {
   @Test
   @DisplayName("Una persona que dona dos viandas tiene puntaje tres")
   public void unaPersonaQueDonaDosViandasTienePuntajeTres() {
+    PersonaHumana persona = new PersonaHumana();
     // TODO: falta que este completo el resto de clases para hacer este test
   }
 

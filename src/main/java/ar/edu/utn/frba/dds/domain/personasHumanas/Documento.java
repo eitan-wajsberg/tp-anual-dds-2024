@@ -1,7 +1,10 @@
 package ar.edu.utn.frba.dds.domain.personasHumanas;
 
-public class Documento {
+import lombok.Getter;
 
+@Getter
+public class Documento {
+  private Long id;
   private TipoDocumento tipo;
   private String nroDocumento;
 

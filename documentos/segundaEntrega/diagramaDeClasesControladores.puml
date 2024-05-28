@@ -69,7 +69,7 @@ ControladorPersonaHumana ..> DataPersonaHumana
 
 class DataPersonaHumana {
     tipoDoc: String
-    documento: int
+    nroDoc: String
     nombre: String
     apellido: String
     mail: String
