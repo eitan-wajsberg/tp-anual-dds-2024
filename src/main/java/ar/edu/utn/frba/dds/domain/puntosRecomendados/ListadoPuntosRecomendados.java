@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.domain;
+package ar.edu.utn.frba.dds.domain.puntosRecomendados;
 
 import ar.edu.utn.frba.dds.domain.ubicacion.PuntoRecomendado;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.domain;
+package ar.edu.utn.frba.dds.domain.puntosRecomendados;
 
 import java.io.IOException;
 import retrofit2.Call;
