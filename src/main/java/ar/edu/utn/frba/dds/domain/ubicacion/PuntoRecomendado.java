@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter @Setter
 public class PuntoRecomendado {
-  private Coordenada coordenada;
-  private String radio;
+  public Coordenada coordenada;
+  public String radio;
 }

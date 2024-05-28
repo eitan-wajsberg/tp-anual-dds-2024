@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Coordenada {
-  String latitud;
-  String longitud;
+  public String latitud;
+  public String longitud;
 }
 
