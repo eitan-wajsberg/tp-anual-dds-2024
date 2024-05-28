@@ -7,12 +7,12 @@ class ControladorCargaColaboraciones {
 
 /'
 void cargarColaboraciones(usuario: Usuario, archivoCSV: String){
-    
+
     Permiso permisoCargarColaboraciones = RepositorioPermisos.buscar("CARGAR_COLABORACION");
     if(!usuario.getRol().tenesPermiso(permisoCargarColaboraciones)) {
         throw new PermisoInsuficienteException(permisoCargarColaboraciones);
     }
-    
+
     // Crear un objeto Reader para el archivo CSV
     Reader reader = new FileReader(archivoCSV);
 

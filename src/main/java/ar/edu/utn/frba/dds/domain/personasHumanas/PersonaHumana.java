@@ -60,5 +60,5 @@ public class PersonaHumana {
     contribuciones.add(contribucion);
   }
   public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada){ofertasCanjeadas.add(ofertaCanjeada);}
-  
+
 }
