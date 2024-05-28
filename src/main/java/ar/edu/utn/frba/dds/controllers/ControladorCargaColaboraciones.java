@@ -30,12 +30,10 @@ import org.apache.commons.csv.CSVRecord;
 public class ControladorCargaColaboraciones {
   private IPersonaHumanaServices personaHumanaServices;
   private IDocumentoServices documentoServices;
-  private IRepositorioDocumento repoDocumento;
 
-  public ControladorCargaColaboraciones(IPersonaHumanaServices personaHumanaServices, IDocumentoServices documentoServices, IRepositorioDocumento repoDocumento) {
+  public ControladorCargaColaboraciones(IPersonaHumanaServices personaHumanaServices, IDocumentoServices documentoServices) {
     this.personaHumanaServices = personaHumanaServices;
     this.documentoServices = documentoServices;
-      this.repoDocumento = repoDocumento;
   }
 
   public void cargarColaboraciones(Usuario usuario, File dataCSV){

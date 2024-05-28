@@ -33,6 +33,11 @@ public class RepositorioPersonaHumana implements IRepositorioPersonaHumana {
   }
 
   @Override
+  public List<PersonaHumana> listar() {
+    return personas;
+  }
+
+  @Override
   public Optional<PersonaHumana> buscarPorDocumento(Long documentoId) {
     return this.personas
         .stream()
