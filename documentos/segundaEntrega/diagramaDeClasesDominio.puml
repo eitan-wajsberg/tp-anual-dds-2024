@@ -14,6 +14,7 @@ class PersonaHumana {
  - contribuciones: Set<Contribucion>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  + calcularPuntosCanjeados(): float
+ + calcularPuntajeNeto(): float
 }
 
 PersonaHumana --> " * " Contribucion
@@ -23,6 +24,7 @@ PersonaHumana --> Documento
 PersonaHumana --> " * " FormasContribucionHumanas
 PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
+
 
 ' -----------------------------------------
 
