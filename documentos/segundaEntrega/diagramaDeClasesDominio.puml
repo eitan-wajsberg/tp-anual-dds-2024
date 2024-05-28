@@ -84,7 +84,6 @@ Heladera --> " * " CambioEstado
 class CambioEstado {
  - fechaCambio: LocalDate
  - estado: EstadoHeladera
-
 }
 
 CambioEstado --> EstadoHeladera
@@ -120,6 +119,12 @@ interface Contribucion {
  + calcularPuntaje(): float
 }
 
+note bottom
+Las contribuciones comparten la funcionalidad de sumar puntos.
+end note
+
+' -----------------------------------------
+
 class DonacionDinero {
  - monto: float
  - frecuencia: Integer
@@ -132,9 +137,9 @@ DonacionDinero ..|> Contribucion
 
 note bottom
 unidadFrecuencia podría tener los valores:
-   - Semanal
-   - Mensual
-   - Anual
+ - Semanal
+ - Mensual
+ - Anual
 end note
 
 ' -----------------------------------------
@@ -286,8 +291,8 @@ class Pregunta {
 Pregunta --o Respuesta
 note left
 Posibles tipos:
-   Multiple choice
-   Pregunta abierta
+- Multiple choice
+- Pregunta abierta
 end note
 
 ' -----------------------------------------

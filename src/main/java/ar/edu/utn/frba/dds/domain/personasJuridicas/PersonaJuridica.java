@@ -2,6 +2,8 @@ package ar.edu.utn.frba.dds.domain.personasJuridicas;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.adapters.AdapterRecomendacionPuntosHeladera;
+import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
 import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
@@ -15,7 +17,7 @@ import lombok.Getter;
 public class PersonaJuridica {
   @Getter
   private String usuario;
-  private Set<MedioDeContacto> mediosDeContacto;
+  private Contacto contacto;
   private Direccion direccion;
   private String razonSocial;
   private TipoPersonaJuridica tipo;
@@ -26,6 +28,8 @@ public class PersonaJuridica {
   @Getter
   private Set<Contribucion> contribuciones;
   private Set<OfertaCanjeada> ofertasCanjeadas;
+  private AdapterRecomendacionPuntosHeladera adapterRecomendacionPuntosHeladera;
+
   public PersonaJuridica(){
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
@@ -56,5 +60,7 @@ public class PersonaJuridica {
     ReconocimientoTrabajoRealizado reconocimientoTrabajoRealizado = ReconocimientoTrabajoRealizado.getInstance();
     return reconocimientoTrabajoRealizado.calcularPuntaje(this.getContribuciones(), this.puntosGastados());
   }
+
+
 
 }
