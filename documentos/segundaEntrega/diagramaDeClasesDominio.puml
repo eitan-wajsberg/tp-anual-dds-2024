@@ -1,5 +1,6 @@
-@startuml diagramaDeClasesDominio
+@startuml diagramaDeClasesDominio.
 !theme reddress-darkblue
+
 ' -----------------------------------------
 
 class PersonaHumana {
@@ -59,10 +60,10 @@ class Heladera {
 
 note right
 recalcularEstado() se actualiza cada cierto tiempo 
-para consultar: 
- Si hubo fraude
- La heladera sobrepaso la temperatura maxima
- La heladera no supera la temperatura minima
+para consultar:
+ - Si hubo fraude
+ - La heladera sobrepaso la temperatura maxima
+ - La heladera no supera la temperatura minima
 end note
 
 Heladera --> "*" Vianda
@@ -116,9 +117,9 @@ DonacionDinero ..|> Contribucion
 
 note bottom
 unidadFrecuencia podría tener los valores:
-   S: Semanal
-   M: Mensual
-   A: Anual
+   - Semanal
+   - Mensual
+   - Anual
 end note
 
 ' -----------------------------------------
@@ -192,11 +193,11 @@ class Mail {
 }
 
 Mail ..|> MedioDeContacto
-Mail --> AdapterMail
+Mail -> AdapterMail
 
 ' -----------------------------------------
 
-class AdapterMail {
+interface AdapterMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
 
@@ -348,7 +349,6 @@ Direccion --> Coordenada
 
 ' -----------------------------------------
 
-
 class Coordenada {
  - latitud: String
  - longitud: String
@@ -356,19 +356,11 @@ class Coordenada {
 
 ' -----------------------------------------
 
-
-class AdapterRecomendacionPuntosHeladera {
+interface AdapterRecomendacionPuntosHeladera {
  + recomendacion(latitud: String, longitud: String, radio: float): Set<Coordenada>
 }
 
 AdapterRecomendacionPuntosHeladera ..> " * " Coordenada
-
-' -----------------------------------------
-
-class CargaMasivaColaboraciones {
- + importarArchivoCSV(archivoCSV: File): void
- 
-}
 
 ' -----------------------------------------
 
@@ -492,7 +484,6 @@ interface AdapterSensorTemperatura {
 interface AdapterSensorMovimiento {
  + detectarFraude(): boolean 
 }
-
 
 ' -----------------------------------------
 
