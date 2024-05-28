@@ -53,12 +53,22 @@ public class DocumentoServices implements IDocumentoServices {
   }
 
   @Override
-  public void descubrirDocumento(DocumentoInputDTO documentoInputDTO, Usuario usuario) {
+  public DocumentoOutputDTO descubrirDocumento(DocumentoInputDTO documentoInputDTO, Usuario usuario) {
     verificadorDePermisos.verificarSiUsuarioPuede("BUSCAR-DOCUMENTO", usuario);
 
     Optional<Documento> posibleDocumento = this.repoDocumento.buscarPorNro(TipoDocumento.valueOf(documentoInputDTO.getTipoDocumento()), documentoInputDTO.getNroDocumento());
+    DocumentoOutputDTO output;
+
     if(posibleDocumento.isEmpty()) {
-      crear(documentoInputDTO, usuario);
+      output = crear(documentoInputDTO, usuario);
+    }else{
+      output = new DocumentoOutputDTO();
+      Documento documento = posibleDocumento.get();
+      output.setId(documento.getId());
+      output.setTipoDocumento(String.valueOf(documento.getTipo()));
+      output.setNroDocumento(documento.getNroDocumento());
     }
+
+    return output;
   }
 }

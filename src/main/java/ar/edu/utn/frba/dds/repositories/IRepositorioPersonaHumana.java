@@ -5,5 +5,7 @@ import java.util.Optional;
 
 public interface IRepositorioPersonaHumana {
   void guardar(PersonaHumana persona);
-  public Optional<PersonaHumana> buscarPorDocumento(Long documentoId);
+
+  void actualizar(PersonaHumana persona);
+  Optional<PersonaHumana> buscarPorDocumento(Long documentoId);
 }
