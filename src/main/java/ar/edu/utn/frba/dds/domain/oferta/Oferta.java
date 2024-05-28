@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.oferta;
 
+import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.personasJuridicas.Rubro;
 import ar.edu.utn.frba.dds.repositories.IRepositorioOferta;
@@ -20,15 +21,18 @@ public class Oferta {
     private Rubro rubro;
     private PersonaJuridica organizacion;
 
-    //public Oferta(){
-        //algunos sets
-    //repoOfertas.guardar(oferta);
-    //}
-    public void canjear(float puntos) {
-        if(puntos >= cantidadPuntosNecesarios){
+    public Oferta(Long id, String nombre, float puntosNecesarios, Rubro rubro, PersonaJuridica org){
+        this.id= id;
+        this.nombre = nombre;
+        this.cantidadPuntosNecesarios = puntosNecesarios;
+        this.rubro = rubro;
+        this.organizacion = org;
+    }
+    public void canjear(PersonaHumana persona) {
+        if(persona.calcularPuntajeNeto() >= cantidadPuntosNecesarios){
             LocalDateTime ahora = LocalDateTime.now();
             OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(this,ahora);
-            //repoOfertasCanjeadas.guardar(ofertaCanjeada);
+            persona.agregarOfertaCanjeada(ofertaCanjeada);
         }
     }
 }
