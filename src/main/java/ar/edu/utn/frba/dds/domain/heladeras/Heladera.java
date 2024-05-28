@@ -38,7 +38,9 @@ public class Heladera implements Contribucion {
   private EstadoHeladera estado;
   @Setter
   private float temperaturaEsperada;
+  @Setter
   private AdapterSensorTemperatura adapterTemperatura;
+  @Setter
   private AdapterSensorMovimiento adapterSensorMovimiento;
   private List<CambioEstado> historialEstados;
 
@@ -46,6 +48,7 @@ public class Heladera implements Contribucion {
   public Heladera() {
     this.viandas = new HashSet<>();
     this.historialEstados = new ArrayList<>();
+    this.estado = EstadoHeladera.ACTIVA;
   }
 
   public void ingresarViandas(List<Vianda> viandas) {
