@@ -33,6 +33,7 @@ class Vianda {
  - peso: float
  - fechaDonacion: LocalDate
  + calcularPuntaje(): float
+ + estaVencida(): boolean
 }
 
 Vianda ..|> Contribucion
