@@ -33,7 +33,7 @@ public class ReconocimientoDeTrabajoRealizadoTest {
   @Test
   @DisplayName("Una persona que dona dos viandas tiene puntaje tres")
   public void unaPersonaQueDonaDosViandasTienePuntajeTres() {
-
+    PersonaHumana persona = new PersonaHumana();
   }
 
 }
