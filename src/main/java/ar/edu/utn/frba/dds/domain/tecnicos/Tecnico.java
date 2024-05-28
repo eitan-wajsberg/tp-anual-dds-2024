@@ -27,15 +27,4 @@ public class Tecnico {
     this.contacto = contacto;
     this.areasDeCobertura = new HashSet<>();
   }
-
-  public void agregarMedioDeContacto(MedioDeContacto medioDeContacto) {
-     this.contacto.agregarMedioDeContacto(medioDeContacto);
-  }
-
-  public void quitarMedioDeContacto(MedioDeContacto medioDeContacto) {
-    this.contacto.quitarMedioDeContacto(medioDeContacto);
-  }
-
-
-
 }

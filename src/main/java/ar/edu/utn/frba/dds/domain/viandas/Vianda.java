@@ -13,14 +13,14 @@ import lombok.Setter;
 
 @Getter @Setter
 public class Vianda implements Contribucion {
-  private LocalDateTime fechaCaducidad;
+  private LocalDate fechaCaducidad;
   private boolean entregada;
   private String comida;
   private float calorias;
   private float peso;
   private LocalDate fechaDonacion;
 
-  public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float peso, LocalDate fechaDonacion) {
+  public Vianda(LocalDate fechaCaducidad, boolean entregada, String comida, float calorias, float peso, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;
     this.entregada = entregada;
     this.comida = comida;
@@ -29,13 +29,17 @@ public class Vianda implements Contribucion {
     this.fechaDonacion = fechaDonacion;
   }
 
-  public Vianda(LocalDate fechaDonacion){
+  public Vianda(LocalDate fechaDonacion) {
     this.fechaDonacion = fechaDonacion;
     this.entregada = true;
   }
 
-  public float calcularPuntaje(){
+  public float calcularPuntaje() {
     Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
     return coeficientes.get("coeficienteViandasDonadas");
+  }
+
+  public boolean estaVencida() {
+    return fechaCaducidad.isBefore(LocalDate.now());
   }
 }
