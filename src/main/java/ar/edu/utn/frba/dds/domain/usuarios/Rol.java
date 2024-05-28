@@ -18,4 +18,12 @@ public class Rol {
   public boolean tenesPermiso(Permiso permiso){
     return permisos.contains(permiso);
   }
+
+  public void agregarPermiso(Permiso permiso){
+    permisos.add(permiso);
+  }
+
+  public void quitarPermiso(Permiso permiso){
+    permisos.remove(permiso);
+  }
 }
