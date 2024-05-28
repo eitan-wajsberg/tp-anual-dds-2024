@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.services.imp;
 
+import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.contacto.Mail;
 import ar.edu.utn.frba.dds.domain.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
@@ -40,7 +41,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     nuevaPersona.setApellido(personaInputDTO.getApellido());
     nuevaPersona.setDocumento(posibleDocumento.get());
     Contacto contacto = new Contacto();
-    contacto.agregarMedioDeContacto(new Mail(personaInputDTO.getMail())); //TODO falta pasar el mail a la instancia (por constructor o como sea)
+    contacto.agregarMedioDeContacto(new Mail(personaInputDTO.getMail(personaInputDTO.getMail()))); //TODO falta pasar el mail a la instancia (por constructor o como sea)
     nuevaPersona.setContacto(contacto);
 
     // guardar persona
@@ -70,7 +71,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
   public void descubrirPersonaHumana(PersonaHumanaInputDTO personaInputDTO, Usuario usuario) {
     verificadorDePermisos.verificarSiUsuarioPuede("BUSCAR-PERSONA-HUMANA", usuario);
 
-    Optional<PersonaHumana> posiblePersona = repoPersonaHumana.buscarPorDocumento(personaInputDTO.getDocumentoId());
+    Optional<PersonaHumana> posiblePersona = this.repoPersonaHumana.buscarPorDocumento(personaInputDTO.getDocumentoId());
     if(posiblePersona.isEmpty()) {
       PersonaHumanaOutputDTO persona = crear(personaInputDTO, usuario);
       /*persona.getContacto()...enviar("¡Gracias por colaborar en el"

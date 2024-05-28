@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
 import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
+
 import java.util.Set;
 
 public class PersonaJuridica {
@@ -13,7 +14,7 @@ public class PersonaJuridica {
   private Direccion direccion;
   private String razonSocial;
   private TipoPersonaJuridica tipo;
-  // private Rubro rubro;
+  private Rubro rubro;
   private Set<FormasContribucionJuridicas> contribucionesElegidas;
   private Set<Heladera> heladerasAcargo;
   private Set<DonacionDinero> donaciones;
