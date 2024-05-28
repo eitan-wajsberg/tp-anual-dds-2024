@@ -22,8 +22,12 @@ public class Tarjeta implements Contribucion {
     this.historialUsos = new ArrayList<>();
   }
 
-  public float calcularPuntaje(){
+  public float calcularPuntaje() {
     Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
     return coeficientes.get("coeficienteTarjetasRepartidas");
+  }
+
+  public void agregarUso(UsoDeTarjeta uso) {
+    this.historialUsos.add(uso);
   }
 }
