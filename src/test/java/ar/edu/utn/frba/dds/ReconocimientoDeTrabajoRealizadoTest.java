@@ -1,7 +1,11 @@
 package ar.edu.utn.frba.dds;
 
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.contacto.Mail;
+import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
+import ar.edu.utn.frba.dds.domain.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -34,6 +38,7 @@ public class ReconocimientoDeTrabajoRealizadoTest {
   @DisplayName("Una persona que dona dos viandas tiene puntaje tres")
   public void unaPersonaQueDonaDosViandasTienePuntajeTres() {
     PersonaHumana persona = new PersonaHumana();
+    // TODO: falta que este completo el resto de clases para hacer este test
   }
 
 }
