@@ -1,9 +1,11 @@
 package ar.edu.utn.frba.dds.domain.personasHumanas;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
+import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
 import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
+import ar.edu.utn.frba.dds.domain.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
 import java.time.LocalDate;
@@ -34,18 +36,29 @@ public class PersonaHumana {
   private Set<FormasContribucionHumanas> contribucionesElegidas;
   @Getter
   private Set<Contribucion> contribuciones;
+  @Getter
+  private Set<OfertaCanjeada> ofertasCanjeadas;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
+    this.ofertasCanjeadas = new HashSet<>();
   }
-
+  public float puntosGastados(){
+    float sum = 0;
+    for(OfertaCanjeada ofertaCanjeada: ofertasCanjeadas){
+      sum+= ofertaCanjeada.getOferta().getCantidadPuntosNecesarios();
+    }
+    return sum;
+  }
   public float calcularPuntajeNeto() {
-    // TODO:
-    return 0;
+    ReconocimientoTrabajoRealizado reconocimientoTrabajoRealizado = ReconocimientoTrabajoRealizado.getInstance();
+    return reconocimientoTrabajoRealizado.calcularPuntaje(this.getContribuciones(), this.puntosGastados());
   }
 
   public void agregarContribucion(Contribucion contribucion){
     contribuciones.add(contribucion);
   }
+  public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada){ofertasCanjeadas.add(ofertaCanjeada);}
+  
 }
