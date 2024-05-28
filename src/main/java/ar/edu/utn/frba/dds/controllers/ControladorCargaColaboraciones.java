@@ -70,7 +70,7 @@ public class ControladorCargaColaboraciones {
       personaInDTO.setApellido(record.get(3));
       personaInDTO.setMail(record.get(4));
       // TODO el agregarle un mail a una persona humana quizás debería realizarlo otro componente y no todo el "crear" de PersonaHumanaServices
-      PersonaHumanaOutputDTO personaOutDTO = this.personaHumanaServices.descubrirPersonaHumana(personaInDTO, usuario);
+      this.personaHumanaServices.descubrirPersonaHumana(personaInDTO, usuario);
 
       // Le agrego la o las contribuciones a la persona
       List<Contribucion> contribuciones = new ArrayList<>();
