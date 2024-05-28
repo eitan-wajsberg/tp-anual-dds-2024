@@ -10,7 +10,7 @@ import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 public class RepositorioPersonaHumana implements IRepositorioPersonaHumana {
-  private List<PersonaHumana> personas;
+  private final List<PersonaHumana> personas;
 
   public RepositorioPersonaHumana(){
     this.personas = new ArrayList<>();
