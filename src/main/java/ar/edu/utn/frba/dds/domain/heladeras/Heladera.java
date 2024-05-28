@@ -43,15 +43,7 @@ public class Heladera implements Contribucion {
   private List<CambioEstado> historialEstados;
 
 
-  public Heladera(String nombre, Direccion direccion, LocalDateTime fechaRegistro, int capacidadMaximaViandas, boolean activa, Modelo modelo, EstadoHeladera estado, float temperaturaEsperada) {
-    this.nombre = nombre;
-    this.direccion = direccion;
-    this.fechaRegistro = fechaRegistro;
-    this.capacidadMaximaViandas = capacidadMaximaViandas;
-    this.activa = activa;
-    this.modelo = modelo;
-    this.estado = EstadoHeladera.ACTIVA; // Se inicializa activa??
-    this.temperaturaEsperada = temperaturaEsperada;
+  public Heladera() {
     this.viandas = new HashSet<>();
     this.historialEstados = new ArrayList<>();
   }
