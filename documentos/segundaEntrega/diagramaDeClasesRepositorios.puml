@@ -1,4 +1,4 @@
-@startuml diagramaDeClasesRepositorios
+@startuml diagramaDeClasesRepositorios.
 !theme reddress-darkblue
 
 class RepositorioPersonaHumana {

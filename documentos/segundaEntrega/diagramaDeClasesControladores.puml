@@ -1,4 +1,4 @@
-@startuml diagramaDeClasesControladores
+@startuml diagramaDeClasesControladores.
 !theme reddress-darkblue
 
 class ControladorCargaColaboraciones {
