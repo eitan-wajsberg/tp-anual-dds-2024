@@ -28,20 +28,9 @@ public class Vianda implements Contribucion {
     this.colaborador = colaborador;
     this.fechaDonacion = fechaDonacion;
   }
-  public void moverA(Heladera heladera) {
 
-  }
-
-  public void donar() {
-
-  }
-
-  public void setEntregada(boolean entregada) { // boolean entregada ?
-
-  }
   public float calcularPuntaje(){
     Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
     return coeficientes.get("coeficienteViandasDonadas");
   }
-
 }
