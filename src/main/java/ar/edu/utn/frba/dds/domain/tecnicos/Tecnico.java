@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.dds.domain.tecnicos;
 
 import ar.edu.utn.frba.dds.domain.contacto.Contacto;
+import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
+
 import java.util.Set;
 
 public class Tecnico {
@@ -18,7 +20,7 @@ public class Tecnico {
   }
 
   public void quitarMedioDeContacto(MedioDeContacto medioDeContacto) {
-    //TODO:
+    this.contacto.quitarMedioDeContacto(medioDeContacto);
   }
 
 }
