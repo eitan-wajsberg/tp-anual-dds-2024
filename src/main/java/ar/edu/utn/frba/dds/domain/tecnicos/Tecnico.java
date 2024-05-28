@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.domain.tecnicos;
 
-import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
+import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import java.util.Set;
 
 public class Tecnico {
@@ -10,11 +10,11 @@ public class Tecnico {
   private String tipoDocumento;
   private String nroDocumento;
   private String cuil;
-  private Set<MedioDeContacto> mediosDeContacto;
+  private Contacto contacto;
   private Set<Area> areasDeCobertura;
 
   public void agregarMedioDeContacto(MedioDeContacto medioDeContacto) {
-    //TODO:
+     this.contacto.agregarMedioDeContacto(medioDeContacto);
   }
 
   public void quitarMedioDeContacto(MedioDeContacto medioDeContacto) {
