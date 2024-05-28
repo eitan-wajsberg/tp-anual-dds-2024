@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.viandas;
 
+import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class DistribucionVianda {
+public class DistribucionVianda implements Contribucion {
   private Heladera heladeraOrigen;
   private Heladera heladeraDestino;
   private int cantidadViandas;
@@ -22,6 +23,11 @@ public class DistribucionVianda {
     this.cantidadViandas = cantidadViandas;
     this.motivo = motivo;
     this.fecha = fecha;
+  }
+
+  public DistribucionVianda(LocalDate fecha, int cantidadViandas){
+    this.fecha = fecha;
+    this.cantidadViandas = cantidadViandas;
   }
 
   public void distribuir(List<Vianda> viandas) {

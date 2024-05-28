@@ -7,6 +7,10 @@ public class Mail implements MedioDeContacto {
   private String correo;
   private AdapterMail adaptador;
 
+  public Mail(String correo){
+    this.correo = correo;
+  }
+
   @Override
   public void enviar(Mensaje mensaje) {
 

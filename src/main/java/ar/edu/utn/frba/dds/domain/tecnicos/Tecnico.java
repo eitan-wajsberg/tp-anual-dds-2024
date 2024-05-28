@@ -7,24 +7,24 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+@Getter
 public class Tecnico {
-  @Getter @Setter
+   @Setter
   private String nombre;
-  @Getter @Setter
+   @Setter
   private String apellido;
-  @Getter @Setter
+   @Setter
   private String tipoDocumento;
-  @Getter @Setter
+   @Setter
   private String nroDocumento;
-  @Getter @Setter
+   @Setter
   private String cuil;
-  @Getter @Setter
+   @Setter
   private Contacto contacto;
-  @Getter
   private Set<Area> areasDeCobertura;
 
   public Tecnico(Contacto contacto) {
-    this.contacto = new Contacto();
+    this.contacto = contacto;
     this.areasDeCobertura = new HashSet<>();
   }
 

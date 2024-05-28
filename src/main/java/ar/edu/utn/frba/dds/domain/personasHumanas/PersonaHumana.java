@@ -40,12 +40,12 @@ public class PersonaHumana {
     this.contribuciones = new HashSet<>();
   }
 
-  public void donarDinero(DonacionDinero donacion) {
-    // TODO:
-  }
-
   public float calcularPuntajeNeto() {
     // TODO:
     return 0;
+  }
+
+  public void agregarContribucion(Contribucion contribucion){
+    contribuciones.add(contribucion);
   }
 }

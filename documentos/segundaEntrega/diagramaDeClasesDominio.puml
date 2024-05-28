@@ -283,6 +283,7 @@ class Tarjeta {
  - codigo: String
  - historialUsos: List<UsoDeTarjeta>
  - titular: PersonaVulnerable
+ - fechaEntrega: LocalDate
  + calcularPuntaje(): float
 }
 
