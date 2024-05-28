@@ -77,14 +77,14 @@ public class Heladera implements Contribucion {
 
   private int calcularMesesActiva() {
     int mesesActiva = 0;
-    LocalDateTime fechaInicio = fechaRegistro;
+    LocalDate fechaInicio = fechaRegistro.toLocalDate();
 
     for (CambioEstado cambio : historialEstados) {
-      if (cambio.getEstado() == EstadoHeladera.ACTIVA && fechaInicio.isBefore(cambio.getFechaCambio().atStartOfDay())) {
+      if (cambio.getEstado() == EstadoHeladera.ACTIVA && fechaInicio.isBefore(cambio.getFechaCambio())) {
         mesesActiva += Period.between(LocalDate.from(fechaInicio), cambio.getFechaCambio()).getMonths();
-        fechaInicio = cambio.getFechaCambio().atStartOfDay();
-      } else if (cambio.getEstado() != EstadoHeladera.ACTIVA && fechaInicio.isBefore(cambio.getFechaCambio().atStartOfDay())) {
-        fechaInicio = cambio.getFechaCambio().atStartOfDay();
+        fechaInicio = cambio.getFechaCambio();
+      } else if (cambio.getEstado() != EstadoHeladera.ACTIVA && fechaInicio.isBefore(cambio.getFechaCambio())) {
+        fechaInicio = cambio.getFechaCambio();
       }
     }
 
@@ -94,6 +94,7 @@ public class Heladera implements Contribucion {
 
     return mesesActiva;
   }
+
   public void recalcularEstado() {
     if(adapterSensorMovimiento.detectarFraude())
       setEstado(EstadoHeladera.FRAUDE);
@@ -114,5 +115,9 @@ public class Heladera implements Contribucion {
   public float calcularPuntaje() {
     Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
     return coeficientes.get("coeficienteCantidadHeladerasActivas") * this.calcularMesesActiva();
+  }
+
+  public void agregarCambioDeEstado(CambioEstado cambioEstado) {
+    this.historialEstados.add(cambioEstado);
   }
 }
