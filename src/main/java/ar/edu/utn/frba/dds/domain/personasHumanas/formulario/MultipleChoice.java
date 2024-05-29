@@ -14,7 +14,7 @@ public class MultipleChoice implements Pregunta {
   private boolean activa;
   private Set<String> opciones;
 
-  public MultipleChoice(String campo, boolean activa, String tipo) {
+  public MultipleChoice(String campo, boolean activa) {
     this.campo = campo;
     this.activa = activa;
     this.opciones = new HashSet<>();
