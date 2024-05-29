@@ -1,5 +1,7 @@
-package ar.edu.utn.frba.dds.domain.personasHumanas;
+package ar.edu.utn.frba.dds.domain.personasHumanas.formulario;
 
+import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.personasHumanas.formulario.Pregunta;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +9,5 @@ import lombok.Setter;
 @Setter
 public class Respuesta {
   private Pregunta pregunta;
-  private PersonaHumana encuestado;
   private String contenido;
-
-
 }

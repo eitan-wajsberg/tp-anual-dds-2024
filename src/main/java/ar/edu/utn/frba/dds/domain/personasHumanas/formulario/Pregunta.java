@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.domain.personasHumanas;
+package ar.edu.utn.frba.dds.domain.personasHumanas.formulario;
 
 import java.util.ArrayList;
 import java.util.Set;

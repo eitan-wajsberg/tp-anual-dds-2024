@@ -1,6 +1,5 @@
-package ar.edu.utn.frba.dds.domain.personasHumanas;
+package ar.edu.utn.frba.dds.domain.personasHumanas.formulario;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,13 +13,10 @@ public class MultipleChoice implements Pregunta {
   @Setter
   private boolean activa;
   private Set<String> opciones;
-  @Setter
-  private String tipo;
 
   public MultipleChoice(String campo, boolean activa, String tipo) {
     this.campo = campo;
     this.activa = activa;
-    this.tipo = tipo;
     this.opciones = new HashSet<>();
   }
 
