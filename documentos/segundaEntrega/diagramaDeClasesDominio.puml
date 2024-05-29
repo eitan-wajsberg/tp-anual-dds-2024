@@ -74,6 +74,7 @@ para consultar:
  - La heladera no supera la temperatura minima
 end note
 
+
 Heladera --> "*" Vianda
 Heladera --> Modelo
 Heladera --> Direccion
@@ -91,6 +92,11 @@ class CambioEstado {
 }
 
 CambioEstado --> EstadoHeladera
+
+note bottom
+Permite trazabilidad
+end note
+
 
 ' -----------------------------------------
 
@@ -124,9 +130,9 @@ interface Contribucion {
 }
 
 note bottom
-Las contribuciones comparten la funcionalidad de sumar puntos por lo
+Las contribuciones comparten la funcionalidad de sumar puntos, por lo
 tanto, decidimos que implementen una interfaz de contribucion y de esta
-forma agrupar las contribuciones.
+forma agrupar las contribuciones, permitiendo trazabilidad.
 end note
 
 ' -----------------------------------------
@@ -168,6 +174,7 @@ class OfertaCanjeada {
 }
 
 OfertaCanjeada --> Oferta
+
 
 ' -----------------------------------------
 
@@ -226,6 +233,10 @@ Mail -> AdapterMail
 interface AdapterMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
+note left
+   utilizar un adapter permite mayor testeabilidad 
+   y un menor acoplamiento
+end note
 
 ' -----------------------------------------
 
@@ -236,6 +247,11 @@ class AdapterConcretoPuntos {
 
 AdapterConcretoPuntos ..|> AdapterRecomendacionPuntosHeladera
 AdapterConcretoPuntos --> RecomendacionPuntosServicio
+
+note top
+Por mantenibilidad, cohesion y testeabilidad utilizamos el patron 
+adapter.
+end note
 
 ' -----------------------------------------
 
@@ -278,7 +294,8 @@ class MailSender {
  + enviar(mensaje: Mensaje, destinatario: String)
 }
 
-MailSender ..|> AdapterMail
+MailSender ..|> AdapterMail 
+
 
 ' -----------------------------------------
 
@@ -356,6 +373,12 @@ class ReconocimientoTrabajoRealizado {
 ReconocimientoTrabajoRealizado ..> " * " Contribucion
 note bottom: Los coeficientes se encuentran en un archivo de configuración
 
+note left
+   Esta clase es un Singleton. Utilizar este patrón de diseño
+    no afecta la Testeabilidad ya que esta clase
+      
+end note
+
 ' -----------------------------------------
 
 class Tarjeta {
@@ -378,6 +401,10 @@ class UsoDeTarjeta {
 }
 
 UsoDeTarjeta --> Heladera
+
+note right
+Permite trazabilidad
+end note
 
 ' -----------------------------------------
 
@@ -483,8 +510,9 @@ enum EstadoHeladera {
 }
 
 note bottom
-En un futuro esto puede ser resuelto mediante clases, 
-pero todavia no le encontramos una funcionalidad.
+En un futuro esto puede ser resuelto mediante clases (quizás un state)
+pero todavia no le encontramos una funcionalidad. Por
+simplicidad decidimos dejarlo asi.
 end note
 
 ' -----------------------------------------
@@ -566,10 +594,15 @@ class Permiso {
 interface AdapterSensorTemperatura {
  + detectarTemperatura(): float 
 }
+note left
+  En Sensor Temperatura y Movimiento utilizar un adapter permite mayor testeabilidad 
+   y un menor acoplamiento
+end note
 
 interface AdapterSensorMovimiento {
  + detectarFraude(): boolean 
 }
+
 
 ' -----------------------------------------
 

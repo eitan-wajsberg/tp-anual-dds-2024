@@ -31,11 +31,11 @@ import java.util.List;
 
 public class ReconocimientoDeTrabajoRealizadoTest {
 
-  private static final Path COEFICIENTES_PATH = Paths.get("src/resources/coeficientesPuntaje.properties");
+  //private static final Path COEFICIENTES_PATH = Paths.get("src/resources/coeficientesPuntaje.properties");
 
   @BeforeEach
   public void setUp() {
-    ReconocimientoTrabajoRealizado.getInstance().cargarCoeficientesDesdeArchivo(COEFICIENTES_PATH);
+    //ReconocimientoTrabajoRealizado.getInstance().cargarCoeficientesDesdeArchivo(COEFICIENTES_PATH);
   }
 
   @Test

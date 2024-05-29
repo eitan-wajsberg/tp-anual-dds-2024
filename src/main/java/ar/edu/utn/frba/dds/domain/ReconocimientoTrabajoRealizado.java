@@ -13,19 +13,22 @@ import java.util.Properties;
 public class ReconocimientoTrabajoRealizado {
   private static ReconocimientoTrabajoRealizado instancia;
   private static Map<String, Float> coeficientes;
+  private static final String path = "src/resources/coeficientesPuntaje.properties";
   private ReconocimientoTrabajoRealizado(){}
 
   public static ReconocimientoTrabajoRealizado getInstance(){
     if(instancia == null){
       instancia = new ReconocimientoTrabajoRealizado();
       coeficientes = new HashMap<>();
+      this.cargarCoeficientesDesdeArchivo();
     }
     return instancia;
   }
 
-  public static void cargarCoeficientesDesdeArchivo(Path filePath) {
+  public static void cargarCoeficientesDesdeArchivo() {
+
     Properties propiedades = new Properties();
-    try (InputStream input = Files.newInputStream(filePath)) {
+    try (InputStream input = Files.newInputStream(Paths.get(path))) {
       propiedades.load(input);
       for (String nombreClave : propiedades.stringPropertyNames()) {
         String valor = propiedades.getProperty(nombreClave);
@@ -37,6 +40,7 @@ public class ReconocimientoTrabajoRealizado {
   }
 
   public static Map<String, Float> obtenerCoeficientes(){
+    //TODO: cambiar map por float
     return coeficientes;
   }
 

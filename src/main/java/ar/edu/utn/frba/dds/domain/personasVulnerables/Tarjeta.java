@@ -14,15 +14,12 @@ import lombok.Setter;
 public class Tarjeta implements Contribucion {
   @Setter
   private String codigo;
+  @Setter
   private LocalDate fechaEntrega;
   private List<UsoDeTarjeta> historialUsos;
-  @Setter
-  private PersonaVulnerable titular;
 
-  public Tarjeta(String codigo, LocalDate fechaEntrega, PersonaVulnerable titular) {
+  public Tarjeta(String codigo) {
     this.codigo = codigo;
-    this.fechaEntrega = fechaEntrega;
-    this.titular = titular;
     this.historialUsos = new ArrayList<>();
   }
 

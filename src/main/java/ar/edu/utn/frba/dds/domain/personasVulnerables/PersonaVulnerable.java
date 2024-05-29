@@ -15,7 +15,8 @@ public class PersonaVulnerable {
   private String direccion;
   private Integer menoresAcargo;
   private Documento documento;
-  private PersonaHumana donanteQueLoRegistro; // hace falta esto?? creeria que no porque la persona tiene las tarjetas que registro
+  private PersonaHumana donanteQueLoRegistro;// hace falta esto?? creeria que no porque la persona tiene las tarjetas que registro
+  private Tarjeta tarjeta;
 
   public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, String direccion, Integer menoresAcargo, Documento documento, PersonaHumana donanteQueLoRegistro) {
     this.nombre = nombre;
