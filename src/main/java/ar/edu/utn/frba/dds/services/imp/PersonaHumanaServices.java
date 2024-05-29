@@ -20,6 +20,7 @@ import ar.edu.utn.frba.dds.services.exceptions.PersonaHumanaNoEncontradaExceptio
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,9 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
   private IRepositorioDocumento repoDocumento;
   private IRepositorioPersonaHumana repoPersonaHumana;
   private VerificadorDePermisos verificadorDePermisos;
+
+  private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  private static final SecureRandom RANDOM = new SecureRandom();
 
   public PersonaHumanaServices(IRepositorioDocumento repoDocumento, IRepositorioPersonaHumana repoPersonaHumana, VerificadorDePermisos verificadorDePermisos) {
     this.repoPersonaHumana = repoPersonaHumana;
@@ -94,7 +98,9 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
       // TODO: lo siguiente es provisional y una idea para futuro. La creación y asignación de usuario no debería ser hecha de un tiro
       verificadorDePermisos.verificarSiUsuarioPuede("CREAR-USUARIO", usuario);
       Usuario usuarioDePersona = new Usuario(personaInputDTO.getMail());
-      usuarioDePersona.cambiarClave("nuevaClave2024", new ValidadorDeClave());
+      String clave = generateRandomString(12);
+      usuarioDePersona.cambiarClave(clave, new ValidadorDeClave());
+      System.out.println(clave);
 
       // TODO: debería recuperar la persona, asignarle el usuario y actualizar la persona. A fines de lo que se quiere hacer ahora, no es necesario
       posiblePersona = this.repoPersonaHumana.buscarPorDocumento(output.getDocumentoId());
@@ -140,4 +146,14 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
 
     this.repoPersonaHumana.actualizar(persona);
   }
+
+  public static String generateRandomString(int length) {
+    StringBuilder sb = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      int index = RANDOM.nextInt(CHARACTERS.length());
+      sb.append(CHARACTERS.charAt(index));
+    }
+    return sb.toString();
+  }
+
 }
