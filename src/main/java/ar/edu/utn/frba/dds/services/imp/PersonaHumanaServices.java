@@ -93,12 +93,13 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     Optional<PersonaHumana> posiblePersona = this.repoPersonaHumana.buscarPorDocumento(personaInputDTO.getDocumentoId());
     PersonaHumanaOutputDTO output;
 
-    if(posiblePersona.isEmpty()) {
+    if (posiblePersona.isEmpty()) {
       output = crear(personaInputDTO, usuario, mailSender);
       // TODO: lo siguiente es provisional y una idea para futuro. La creación y asignación de usuario no debería ser hecha de un tiro
       verificadorDePermisos.verificarSiUsuarioPuede("CREAR-USUARIO", usuario);
       Usuario usuarioDePersona = new Usuario(personaInputDTO.getMail());
       String clave = generateRandomString(12);
+      // TODO: Verificar que la clave proporcionada es valida y de no ser el caso generar una nueva hasta que lo sea
       usuarioDePersona.cambiarClave(clave, new ValidadorDeClave());
       System.out.println(clave);
 
@@ -108,7 +109,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
       persona.setUsuario(usuarioDePersona);
       repoPersonaHumana.actualizar(persona);
 
-      Mensaje mensaje = new Mensaje("Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica",
+      Mensaje mensaje = new Mensaje("Credenciales de acceso al sistema",
           "¡Gracias por colaborar en el"
               + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica!\n"
               + "Se le ha creado su cuenta de acceso al sistema. Sus credenciales son: \n"
@@ -122,7 +123,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
       } catch (UnsupportedEncodingException e) {
         System.out.println(e.getMessage());
       }
-    }else{
+    } else {
       PersonaHumana persona = posiblePersona.get();
       output = new PersonaHumanaOutputDTO();
       output.setId(persona.getId());
@@ -132,15 +133,15 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
   }
 
   @Override
-  public void agregarColaboraciones(PersonaHumanaInputDTO personaInputDTO, List<Contribucion> contribuciones, Usuario usuario){
+  public void agregarColaboraciones(PersonaHumanaInputDTO personaInputDTO, List<Contribucion> contribuciones, Usuario usuario) {
     verificadorDePermisos.verificarSiUsuarioPuede("AGREGAR-COLABORACION", usuario);
     Optional<PersonaHumana> posiblePersona = this.repoPersonaHumana.buscarPorDocumento(personaInputDTO.getDocumentoId());
-    if(posiblePersona.isEmpty()) {
+    if (posiblePersona.isEmpty()) {
       throw new PersonaHumanaNoEncontradaException();
     }
 
     PersonaHumana persona = posiblePersona.get();
-    for(Contribucion contribucion: contribuciones){
+    for (Contribucion contribucion: contribuciones) {
       persona.agregarContribucion(contribucion);
     }
 
