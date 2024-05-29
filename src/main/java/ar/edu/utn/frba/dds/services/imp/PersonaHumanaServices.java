@@ -3,6 +3,8 @@ package ar.edu.utn.frba.dds.services.imp;
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.contacto.Mail;
+import ar.edu.utn.frba.dds.domain.contacto.MailSender;
+import ar.edu.utn.frba.dds.domain.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
@@ -16,8 +18,12 @@ import ar.edu.utn.frba.dds.services.exceptions.DocumentoNoEncontradoException;
 import ar.edu.utn.frba.dds.services.exceptions.PersonaHumanaNoEncontradaException;
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 
+import java.io.UnsupportedEncodingException;
+import java.net.UnixDomainSocketAddress;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import javax.mail.MessagingException;
 
 public class PersonaHumanaServices implements IPersonaHumanaServices {
   private IRepositorioDocumento repoDocumento;
@@ -49,7 +55,9 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     // TODO: no creo que esta sea el momento de añadir un contacto realmente, o que sea la mejor manera
     // agregar mail
     Contacto contacto = new Contacto();
-    contacto.agregarMedioDeContacto(new Mail(personaInputDTO.getMail()));
+    Mail mail = new Mail(personaInputDTO.getMail());
+    mail.setAdaptador(new MailSender());
+    contacto.agregarMedioDeContacto(mail);
     nuevaPersona.setContacto(contacto);
 
     // guardar persona
@@ -86,20 +94,29 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
       output = crear(personaInputDTO, usuario);
       // TODO: lo siguiente es provisional y una idea para futuro. La creación y asignación de usuario no debería ser hecha de un tiro
       verificadorDePermisos.verificarSiUsuarioPuede("CREAR-USUARIO", usuario);
-      verificadorDePermisos.verificarSiUsuarioPuede("CAMBIAR-CLAVE", usuario);
       Usuario usuarioDePersona = new Usuario(personaInputDTO.getMail());
       usuarioDePersona.cambiarClave("nuevaClave2024", new ValidadorDeClave());
 
       // TODO: debería recuperar la persona, asignarle el usuario y actualizar la persona. A fines de lo que se quiere hacer ahora, no es necesario
       posiblePersona = this.repoPersonaHumana.buscarPorDocumento(output.getDocumentoId());
       PersonaHumana persona = posiblePersona.get();
+      persona.setUsuario(usuarioDePersona);
+      repoPersonaHumana.actualizar(persona);
 
-      // TODO IMPORTANTE: encontrar una manera de que el mensaje de envíe específicamente por mail
-      /*persona.getContacto()...enviar("¡Gracias por colaborar en el"
-          + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica!\n"
-          + "Se le ha creado su cuenta de acceso al sistema. Sus credenciales son: \n"
-          + "Nombre de usuario: " + usuarioDePersona.getNombre() + "\n"
-          + "Contaseña: " + usuarioDePersona.getClave() );*/
+      Mensaje mensaje = new Mensaje("Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica",
+          "¡Gracias por colaborar en el"
+              + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica!\n"
+              + "Se le ha creado su cuenta de acceso al sistema. Sus credenciales son: \n"
+              + "Nombre de usuario: " + usuarioDePersona.getNombre() + "\n"
+              + "Contaseña: " + usuarioDePersona.getClave(),
+          LocalDateTime.now());
+      try {
+        persona.getContacto().enviarMensaje(mensaje);
+      } catch (MessagingException e) {
+        System.out.println(e.getMessage());
+      } catch (UnsupportedEncodingException e) {
+        System.out.println(e.getMessage());
+      }
     }else{
       PersonaHumana persona = posiblePersona.get();
       output = new PersonaHumanaOutputDTO();
