@@ -3,11 +3,16 @@ package ar.edu.utn.frba.dds.repositories.imp;
 import ar.edu.utn.frba.dds.domain.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.repositories.IRepositorioDocumento;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class RepositorioDocumento implements IRepositorioDocumento {
   private List<Documento> documentos;
+
+  public RepositorioDocumento(){
+    this.documentos = new ArrayList<>();
+  }
 
   @Override
   public void guardar(Documento documento) {

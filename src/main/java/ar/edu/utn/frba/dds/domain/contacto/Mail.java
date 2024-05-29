@@ -10,6 +10,7 @@ import lombok.Setter;
 public class Mail implements MedioDeContacto {
   @Getter
   private String correo;
+  @Setter
   private AdapterMail adaptador;
 
   public Mail(String correo){
