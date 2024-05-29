@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.puntosRecomendados;
 
+import ar.edu.utn.frba.dds.domain.adapters.AdapterRecomendacionPuntosHeladera;
 import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -25,9 +26,9 @@ public class ServicioRecomendacionPuntos {
     return instancia;
   }
 
-  public ListadoPuntosRecomendados listadoPuntosRecomendados() throws IOException {
+  public ListadoPuntosRecomendados listadoPuntosRecomendados(float radio, String latitud, String longitud) throws IOException {
     IServicioRecomendacionPuntos servicioPuntos = this.retrofit.create(IServicioRecomendacionPuntos.class);
-    Call<ListadoPuntosRecomendados> requestPuntos = servicioPuntos.puntos();
+    Call<ListadoPuntosRecomendados> requestPuntos = servicioPuntos.puntos(radio, latitud, longitud);
     Response<ListadoPuntosRecomendados> responsePuntos = requestPuntos.execute();
     return responsePuntos.body();
   }
