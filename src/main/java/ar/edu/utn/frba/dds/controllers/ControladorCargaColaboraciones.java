@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
+import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
+import ar.edu.utn.frba.dds.domain.contacto.MailSender;
 import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.personasVulnerables.Tarjeta;
 import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
@@ -39,7 +41,7 @@ public class ControladorCargaColaboraciones {
     this.verificadorDePermisos = verificadorDePermisos;
   }
 
-  public void cargarColaboraciones(Usuario usuario, File dataCSV){
+  public void cargarColaboraciones(Usuario usuario, File dataCSV, AdapterMail mailSender){
     verificadorDePermisos.verificarSiUsuarioPuede("CARGAR-MASIVAMENTE-COLABORACIONES", usuario);
 
     Reader reader = null;
@@ -80,7 +82,7 @@ public class ControladorCargaColaboraciones {
       personaInDTO.setApellido(record.get(3));
       personaInDTO.setMail(record.get(4));
       // TODO el agregarle un mail a una persona humana quizás debería realizarlo otro componente y no todo el "crear" de PersonaHumanaServices
-      this.personaHumanaServices.descubrirPersonaHumana(personaInDTO, usuario);
+      this.personaHumanaServices.descubrirPersonaHumana(personaInDTO, usuario, mailSender);
 
       // Le agrego la o las contribuciones a la persona
       List<Contribucion> contribuciones = new ArrayList<>();

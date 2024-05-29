@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.services.imp;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
+import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.contacto.Mail;
 import ar.edu.utn.frba.dds.domain.contacto.MailSender;
@@ -19,7 +20,6 @@ import ar.edu.utn.frba.dds.services.exceptions.PersonaHumanaNoEncontradaExceptio
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 
 import java.io.UnsupportedEncodingException;
-import java.net.UnixDomainSocketAddress;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +36,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     this.repoDocumento = repoDocumento;
   }
 
-  @Override
-  public PersonaHumanaOutputDTO crear(PersonaHumanaInputDTO personaInputDTO, Usuario usuario) {
+  public PersonaHumanaOutputDTO crear(PersonaHumanaInputDTO personaInputDTO, Usuario usuario, AdapterMail mailSender) {
     verificadorDePermisos.verificarSiUsuarioPuede("CREAR-PERSONA-HUMANA", usuario);
 
     // obtener documento
@@ -56,7 +55,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     // agregar mail
     Contacto contacto = new Contacto();
     Mail mail = new Mail(personaInputDTO.getMail());
-    mail.setAdaptador(new MailSender());
+    mail.setAdaptador(mailSender);
     contacto.agregarMedioDeContacto(mail);
     nuevaPersona.setContacto(contacto);
 
@@ -84,14 +83,14 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
   }
 
   @Override
-  public PersonaHumanaOutputDTO descubrirPersonaHumana(PersonaHumanaInputDTO personaInputDTO, Usuario usuario) {
+  public PersonaHumanaOutputDTO descubrirPersonaHumana(PersonaHumanaInputDTO personaInputDTO, Usuario usuario, AdapterMail mailSender) {
     verificadorDePermisos.verificarSiUsuarioPuede("BUSCAR-PERSONA-HUMANA", usuario);
 
     Optional<PersonaHumana> posiblePersona = this.repoPersonaHumana.buscarPorDocumento(personaInputDTO.getDocumentoId());
     PersonaHumanaOutputDTO output;
 
     if(posiblePersona.isEmpty()) {
-      output = crear(personaInputDTO, usuario);
+      output = crear(personaInputDTO, usuario, mailSender);
       // TODO: lo siguiente es provisional y una idea para futuro. La creación y asignación de usuario no debería ser hecha de un tiro
       verificadorDePermisos.verificarSiUsuarioPuede("CREAR-USUARIO", usuario);
       Usuario usuarioDePersona = new Usuario(personaInputDTO.getMail());

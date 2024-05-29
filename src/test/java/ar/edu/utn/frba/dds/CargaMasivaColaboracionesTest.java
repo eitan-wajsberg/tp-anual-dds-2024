@@ -2,6 +2,8 @@ package ar.edu.utn.frba.dds;
 
 import ar.edu.utn.frba.dds.controllers.ControladorCargaColaboraciones;
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
+import ar.edu.utn.frba.dds.domain.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.personasHumanas.TipoDocumento;
@@ -23,16 +25,22 @@ import ar.edu.utn.frba.dds.services.imp.DocumentoServices;
 import ar.edu.utn.frba.dds.services.imp.PersonaHumanaServices;
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javax.mail.MessagingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import static org.mockito.Mockito.*;
 
 public class CargaMasivaColaboracionesTest {
   static ControladorCargaColaboraciones carga;
@@ -42,10 +50,10 @@ public class CargaMasivaColaboracionesTest {
   static IRepositorioPersonaHumana repoPersonaHumana;
   static Usuario usuario;
 
-  // TODO: MOCKEAR EL MAILSENDER
+  // TODO: REVISAR PORQUE AGREGAMOS EL MOCK DE MAIL SENDER
 
   @BeforeAll
-  public static void antesDeTestear() {
+  public static void antesDeTestear() throws MessagingException, UnsupportedEncodingException {
     repoDocumento = new RepositorioDocumento();
     repoPersonaHumana = new RepositorioPersonaHumana();
 
@@ -76,7 +84,11 @@ public class CargaMasivaColaboracionesTest {
 
     String nombreArchivo = "TestCargaMasivaColaboraciones.csv";
     File nuevoArchivo = new File("src/resources/" + nombreArchivo);
-    carga.cargarColaboraciones(usuario, nuevoArchivo);
+
+    AdapterMail mailSender = mock(AdapterMail.class);
+    carga.cargarColaboraciones(usuario, nuevoArchivo, mailSender);
+
+    doNothing().when(mailSender).enviar(any(), any());
 
     ReconocimientoTrabajoRealizado.getInstance();
   }
