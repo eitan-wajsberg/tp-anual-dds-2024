@@ -1,6 +1,6 @@
-package ar.edu.utn.frba.dds.domain.personasHumanas;
+package ar.edu.utn.frba.dds.domain.personasHumanas.formulario;
 
-import java.util.Set;
+import ar.edu.utn.frba.dds.domain.personasHumanas.formulario.Pregunta;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +8,6 @@ import lombok.Setter;
 public class PreguntaAbierta implements Pregunta {
   private String campo;
   private boolean activa;
-  private String tipo;
 
   @Override
   public boolean esValida(String respuesta) {
