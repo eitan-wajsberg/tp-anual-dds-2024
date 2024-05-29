@@ -233,9 +233,9 @@ Mail -> AdapterMail
 interface AdapterMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
-note left
-   utilizar un adapter permite mayor testeabilidad 
-   y un menor acoplamiento
+note bottom
+Utilizar un adapter permite mayor testeabilidad
+y un menor acoplamiento
 end note
 
 ' -----------------------------------------
@@ -248,7 +248,7 @@ class AdapterConcretoPuntos {
 AdapterConcretoPuntos ..|> AdapterRecomendacionPuntosHeladera
 AdapterConcretoPuntos --> RecomendacionPuntosServicio
 
-note top
+note bottom
 Por mantenibilidad, cohesion y testeabilidad utilizamos el patron 
 adapter.
 end note
@@ -371,12 +371,11 @@ class ReconocimientoTrabajoRealizado {
 }
 
 ReconocimientoTrabajoRealizado ..> " * " Contribucion
-note bottom: Los coeficientes se encuentran en un archivo de configuración
 
-note left
-   Esta clase es un Singleton. Utilizar este patrón de diseño
-    no afecta la Testeabilidad ya que esta clase
-      
+note bottom
+Esta clase es un Singleton y los coeficientes se encuentran en un archivo de configuración.
+Utilizar este patrón de diseño en este caso no afecta la testeabilidad ya que no es
+necesario un mock.
 end note
 
 ' -----------------------------------------
@@ -594,15 +593,20 @@ class Permiso {
 interface AdapterSensorTemperatura {
  + detectarTemperatura(): float 
 }
-note left
-  En Sensor Temperatura y Movimiento utilizar un adapter permite mayor testeabilidad 
-   y un menor acoplamiento
+
+note as notaAdapter
+Utilizamos un adapter, ya que se requiere seguir adelante con el diseño sin
+conocer exactamente cómo, quién y cuándo resolverá una parte necesaria; y
+solamente se conoce qué responsabilidad tendrá dicha parte. Esto nos aporta
+mayor testeabilidad, un menor acoplamiento, y mayor mantenibilidad.
 end note
+
+notaAdapter -- AdapterSensorTemperatura
+notaAdapter -- AdapterSensorMovimiento
 
 interface AdapterSensorMovimiento {
  + detectarFraude(): boolean 
 }
-
 
 ' -----------------------------------------
 
