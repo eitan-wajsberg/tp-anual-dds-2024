@@ -14,6 +14,7 @@ class PersonaHumana {
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
+ - formulario: List<Respuesta>
 
  + puntosGastados(): float
  + calcularPuntajeNeto(): float
@@ -28,7 +29,7 @@ PersonaHumana --> Documento
 PersonaHumana --> " * " FormasContribucionHumanas
 PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
-
+PersonaHumana --> " * " Respuesta
 
 ' -----------------------------------------
 
@@ -234,8 +235,8 @@ interface AdapterMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
 note bottom
-Utilizar un adapter permite mayor testeabilidad
-y un menor acoplamiento
+Utilizamos un adapter para tener mayor testeabilidad,
+mantenibilidad y un menor acoplamiento
 end note
 
 ' -----------------------------------------
@@ -245,13 +246,13 @@ class AdapterConcretoPuntos {
  + recomendacion(latitud: String, longitud: String, radio: float): List<Coordenada>
 }
 
-AdapterConcretoPuntos ..|> AdapterRecomendacionPuntosHeladera
-AdapterConcretoPuntos --> RecomendacionPuntosServicio
-
-note bottom
-Por mantenibilidad, cohesion y testeabilidad utilizamos el patron 
+note top
+Por mantenibilidad, cohesion y testeabilidad utilizamos el patron
 adapter.
 end note
+
+AdapterConcretoPuntos ..|> AdapterRecomendacionPuntosHeladera
+AdapterConcretoPuntos --> RecomendacionPuntosServicio
 
 ' -----------------------------------------
 
@@ -341,27 +342,32 @@ Contacto --> "*" MedioDeContacto
 
 class Respuesta {
  - pregunta: Pregunta
- - encuestado: PersonaHumana
  - contenido: String
 }
 
-Respuesta --> PersonaHumana
+Respuesta ---> Pregunta
 
 ' -----------------------------------------
+interface Pregunta {
+ + esValida(respuesta: String): boolean
+}
 
-class Pregunta {
+class MultipleChoice {
  - campo: String
  - activa: boolean
  - opciones: Set<String>
- - tipo: String
+ + esValida(respuesta: String): boolean
 }
 
-Pregunta --o Respuesta
-note left
-Posibles tipos:
-- Multiple choice
-- Pregunta abierta
-end note
+MultipleChoice ..|> Pregunta
+
+class PreguntaAbierta {
+ - campo: String
+ - activa: boolean
+ + esValida(respuesta: String): boolean
+}
+
+PreguntaAbierta ..|> Pregunta
 
 ' -----------------------------------------
 
@@ -383,12 +389,11 @@ end note
 class Tarjeta {
  - codigo: String
  - historialUsos: List<UsoDeTarjeta>
- - titular: PersonaVulnerable
  - fechaEntrega: LocalDate
  + calcularPuntaje(): float
+ + agregarUso(usoTarjeta: UsoDeTarjeta): void
 }
 
-Tarjeta --> PersonaVulnerable
 Tarjeta --> " * " UsoDeTarjeta
 Tarjeta ..|> Contribucion
 
@@ -415,6 +420,8 @@ class PersonaVulnerable {
  - menoresACargo: int
  - documento: Documento
  - donanteQueLoRegistro: PersonaHumana
+ + usarTarjeta(heladera: Heladera, vianda: Vianda): void
+ + contarUsosHoy(): int;
 }
 
 PersonaVulnerable --> PersonaHumana
