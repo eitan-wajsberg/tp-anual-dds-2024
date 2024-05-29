@@ -13,6 +13,7 @@ import ar.edu.utn.frba.dds.dtos.outputs.personasHumanas.PersonaHumanaOutputDTO;
 import ar.edu.utn.frba.dds.repositories.IRepositorioDocumento;
 import ar.edu.utn.frba.dds.services.IDocumentoServices;
 import ar.edu.utn.frba.dds.services.IPersonaHumanaServices;
+import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -30,13 +31,17 @@ import org.apache.commons.csv.CSVRecord;
 public class ControladorCargaColaboraciones {
   private IPersonaHumanaServices personaHumanaServices;
   private IDocumentoServices documentoServices;
+  private VerificadorDePermisos verificadorDePermisos;
 
-  public ControladorCargaColaboraciones(IPersonaHumanaServices personaHumanaServices, IDocumentoServices documentoServices) {
+  public ControladorCargaColaboraciones(IPersonaHumanaServices personaHumanaServices, IDocumentoServices documentoServices, VerificadorDePermisos verificadorDePermisos) {
     this.personaHumanaServices = personaHumanaServices;
     this.documentoServices = documentoServices;
+    this.verificadorDePermisos = verificadorDePermisos;
   }
 
   public void cargarColaboraciones(Usuario usuario, File dataCSV){
+    verificadorDePermisos.verificarSiUsuarioPuede("CARGAR-MASIVAMENTE-COLABORACIONES", usuario);
+
     Reader reader = null;
     try {
       reader = new FileReader(dataCSV);
