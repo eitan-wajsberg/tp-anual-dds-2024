@@ -1,6 +1,7 @@
-package ar.edu.utn.frba.dds.domain.puntosRecomendados;
+package ar.edu.utn.frba.dds.domain.adapters;
 
 import ar.edu.utn.frba.dds.domain.adapters.AdapterRecomendacionPuntosHeladera;
+import ar.edu.utn.frba.dds.domain.puntosRecomendados.RecomendacionPuntosServicio;
 import ar.edu.utn.frba.dds.domain.ubicacion.Coordenada;
 import java.io.IOException;
 import java.util.List;

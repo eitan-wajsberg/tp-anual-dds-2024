@@ -1,14 +1,11 @@
 package ar.edu.utn.frba.dds;
 
 import ar.edu.utn.frba.dds.domain.puntosRecomendados.ListadoPuntosRecomendados;
-import ar.edu.utn.frba.dds.domain.puntosRecomendados.ServicioRecomendacionPuntos;
+import ar.edu.utn.frba.dds.domain.puntosRecomendados.RecomendacionPuntosServicio;
 import ar.edu.utn.frba.dds.domain.ubicacion.Coordenada;
 import java.io.IOException;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class RecomendacionDePuntosTest {
-  ServicioRecomendacionPuntos servicioPuntos = ServicioRecomendacionPuntos.getInstancia();
+  RecomendacionPuntosServicio servicioPuntos = RecomendacionPuntosServicio.getInstancia();
   Coordenadas coordenadasUno = new Coordenadas();
   Coordenadas coordenadasDos = new Coordenadas();
   Coordenadas coordenadasTres = new Coordenadas();
