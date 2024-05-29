@@ -6,10 +6,15 @@ import ar.edu.utn.frba.dds.domain.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
 import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.oferta.OfertaCanjeada;
+import ar.edu.utn.frba.dds.domain.personasHumanas.formulario.Respuesta;
+import ar.edu.utn.frba.dds.domain.personasHumanas.formulario.RespuestaNoValidaException;
+import ar.edu.utn.frba.dds.domain.personasVulnerables.Tarjeta;
 import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import lombok.Getter;
@@ -39,14 +44,18 @@ public class PersonaHumana {
   @Getter
   private Set<OfertaCanjeada> ofertasCanjeadas;
   @Getter
-  private List<Tarjeta> tarjetasSinEntregar; 
+  private List<Tarjeta> tarjetasSinEntregar;
+  @Getter
+  private List<Respuesta> formulario;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
     this.ofertasCanjeadas = new HashSet<>();
     this.tarjetasSinEntregar = new ArrayList<>();
+    this.formulario = new ArrayList<>();
   }
+
   public float puntosGastados(){
     float sum = 0;
     for(OfertaCanjeada ofertaCanjeada: ofertasCanjeadas){
@@ -62,12 +71,21 @@ public class PersonaHumana {
   public void agregarContribucion(Contribucion contribucion){
     contribuciones.add(contribucion);
   }
-  public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada){ofertasCanjeadas.add(ofertaCanjeada);}
+  public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada){
+    ofertasCanjeadas.add(ofertaCanjeada);
+  }
+
   public void agregarTarjetaSinEntregar(Tarjeta tarjeta){
-    if(this.direccion == NULL){
+    if(this.direccion == null) {
       throw new DireccionIncompleta();
     }
     this.tarjetasSinEntregar.add(tarjeta);
   }
-  
+
+  public void agregarRespuestaAlFormulario(Respuesta respuesta) {
+    if (!respuesta.getPregunta().esValida(respuesta.getContenido())) {
+      throw new RespuestaNoValidaException();
+    }
+    this.formulario.add(respuesta);
+  }
 }

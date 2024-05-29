@@ -115,4 +115,8 @@ public class Heladera implements Contribucion {
   public void agregarCambioDeEstado(CambioEstado cambioEstado) {
     this.historialEstados.add(cambioEstado);
   }
+
+  public void quitarVianda(Vianda vianda) {
+    this.viandas.remove(vianda);
+  }
 }
