@@ -2,79 +2,9 @@
 !theme reddress-darkblue
 
 class ControladorCargaColaboraciones {
+    - personaHumanaServices: IPersonaHumanaServices
+    - documentoServices: IDocumentoServices
     + cargarColaboraciones(usuario: Usuario, dataCSV: File): void
-}
-
-/'
-void cargarColaboraciones(usuario: Usuario, archivoCSV: String){
-
-    Permiso permisoCargarColaboraciones = RepositorioPermisos.buscar("CARGAR_COLABORACION");
-    if(!usuario.getRol().tenesPermiso(permisoCargarColaboraciones)) {
-        throw new PermisoInsuficienteException(permisoCargarColaboraciones);
-    }
-
-    // Crear un objeto Reader para el archivo CSV
-    Reader reader = new FileReader(archivoCSV);
-
-    // Crear un parser CSV con el formato predeterminado
-    CSVParser csvParser = CSVFormat.DEFAULT.parse(reader);
-
-    for (CSVRecord record : csvParser) {
-        // Acceder a los valores de cada columna por su índice
-        String TipoDocumento = record.get(0);
-        Int DNI = record.get(1);
-        Documento doc = new Documento(TipoDocumento, DNI);
-        // lleno DataPersona con tipo doc, nro, nombre, apellido y mail
-        controladorPersona.descubrirPersonaHumana(doc);
-        ...
-        TipoColaboracion colaboracion;
-        switch(record.get("forma de colaboracion")){
-          case "dinero":
-            colaboracion = new DonacionDinero(cantidad); break;
-          ...
-        }
-        controladorPersona.agregarColaboracionAPersona(usuario, DataPersona, colaboracion);
-    }
-}
-tipo doc    documento   fecha colaboracion      forma colab         cantidad
-dni         111         25/5/2024               dinero              100
-dni         120         25/5/2024               dinero              50
-dni         111         25/5/2024               entraga_tarjetas    3
-'/
-
-class ControladorPersonaHumana {
-    + descubrirPersonaHumana(data: DataPersonaHumana): void
-    + agregarColaboracion(usuario: Usuario, data: DataPersonaHumana, contribucion: Contribucion)
-}
-
-/'
-PersonaHumana descubrirPersonaHumana(doc: Documento) {
-        PersonaHumana persona = RepositorioPersonaHumana.buscar(doc);
-
-        if(persona == NULL) {
-            crear usuario
-            crear persona humana y ponerle el usuario
-
-            mandar Mail
-        }
-
-        crear instancias de contribuciones
-        asignarlas a la persona
-
-        actualizar persona en repositorio
-}
-'/
-
-ControladorPersonaHumana ..> DataPersonaHumana
-
-class DataPersonaHumana {
-    tipoDoc: String
-    nroDoc: String
-    nombre: String
-    apellido: String
-    mail: String
-    fechaColaboracion: LocalDate
-    formaColaboracion: String
 }
 
 @enduml
