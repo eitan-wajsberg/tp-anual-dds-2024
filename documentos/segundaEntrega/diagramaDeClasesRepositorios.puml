@@ -2,19 +2,31 @@
 !theme reddress-darkblue
 
 class RepositorioPersonaHumana {
-    + agregar(persona: PersonaHumana): void
-    + modificar(persona: PersonaHumana): void
-    + eliminar(persona: PersonaHumana): void
-    + buscar(documento: Documento): PersonaHumana
+    + guardar(persona: PersonaHumana): void
+    + actualizar(persona: PersonaHumana): void
+    + buscarPorDocumento(documentoId: Long): PersonaHumana
     + listar(): List<PersonaHumana>
 }
 
 class RepositorioPermisos {
-    + agregar(persona: Permiso): void
-    + modificar(persona: Permiso): void
-    + eliminar(persona: Permiso): void
-    + buscar(documento: Documento): Permiso
-    + listar(): List<Permiso>
+    + guardar(permiso: Permiso): void
+    + buscar(nombre: String): Permiso
+}
+
+class RepositorioOfertaCanjeada {
+    + guardar(ofertaCanjeada: OfertaCanjeada): void
+    + buscarPorFecha(fecha: LocalDate): List<OfertaCanjeada>
+}
+
+class RepositorioOferta {
+    + guardar(oferta: Oferta): void
+    + actualizar(oferta: Oferta): void
+}
+
+class RepositorioDocumento {
+    + guardar(documento: Documento): void
+    + buscar(id: Long): Documento
+    + buscarPorNro(tipo: TipoDocumento, nro: String): Documento
 }
 
 @enduml
