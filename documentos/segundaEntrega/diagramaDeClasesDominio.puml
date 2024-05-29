@@ -230,7 +230,7 @@ interface AdapterMail {
 ' -----------------------------------------
 
 class AdapterConcretoPuntos {
- - servicioRecomendacionPunto: ServicioRecomendacionPuntos
+ - servicioRecomendacionPunto: RecomendacionPuntosServicio
  + recomendacion(latitud: String, longitud: String, radio: float): List<Coordenada>
 }
 
@@ -245,17 +245,19 @@ class RecomendacionPuntosServicio {
  + listadoPuntosRecomendados(float radio, String latitud, String longitud): ListadoPuntosRecomendados
 }
 
+RecomendacionPuntosServicio ..> ListadoPuntosRecomendados
+
 ' -----------------------------------------
 
 class ListadoPuntosRecomendados {
- - parametros: Parametros
+ - parametro: Parametro
  + puntos: List<Coordenada>
 }
 
-ListadoPuntosRecomendados --> Parametros
+ListadoPuntosRecomendados --> Parametro
 ListadoPuntosRecomendados --> " * " Coordenada
 
-class Parametros {
+class Parametro {
  + latitud: String
  + longitud: String
  + radio: float
