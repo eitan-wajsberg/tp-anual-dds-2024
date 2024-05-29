@@ -77,9 +77,9 @@ public class CargaMasivaColaboracionesTest {
     carga.cargarColaboraciones(usuario, nuevoArchivo);
 
 
-    Path path = Paths.get("src/resources/coeficientesPuntaje.properties");
+    /* Path path = Paths.get("src/resources/coeficientesPuntaje.properties");
 
-    ReconocimientoTrabajoRealizado.getInstance().cargarCoeficientesDesdeArchivo(path);
+    ReconocimientoTrabajoRealizado.getInstance().cargarCoeficientesDesdeArchivo(path); */
   }
 
   @Test

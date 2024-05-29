@@ -38,11 +38,14 @@ public class PersonaHumana {
   private Set<Contribucion> contribuciones;
   @Getter
   private Set<OfertaCanjeada> ofertasCanjeadas;
+  @Getter
+  private List<Tarjeta> tarjetasSinEntregar; 
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
     this.ofertasCanjeadas = new HashSet<>();
+    this.tarjetasSinEntregar = new ArrayList<>();
   }
   public float puntosGastados(){
     float sum = 0;
@@ -60,5 +63,11 @@ public class PersonaHumana {
     contribuciones.add(contribucion);
   }
   public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada){ofertasCanjeadas.add(ofertaCanjeada);}
-
+  public void agregarTarjetaSinEntregar(Tarjeta tarjeta){
+    if(this.direccion == NULL){
+      throw new DireccionIncompleta();
+    }
+    this.tarjetasSinEntregar.add(tarjeta);
+  }
+  
 }
