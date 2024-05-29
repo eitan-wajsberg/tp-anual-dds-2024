@@ -42,7 +42,6 @@ public class PersonaJuridica {
     this.heladerasAcargo.add(heladera);
     this.contribuciones.add(heladera);
   }
-
   public void darDeBajaHeladera(Heladera heladera) {
     this.heladerasAcargo.remove(heladera);
     this.contribuciones.remove(heladera);

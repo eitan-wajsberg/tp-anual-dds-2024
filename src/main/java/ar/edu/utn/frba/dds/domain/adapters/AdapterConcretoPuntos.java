@@ -1,6 +1,7 @@
-package ar.edu.utn.frba.dds.domain.puntosRecomendados;
+package ar.edu.utn.frba.dds.domain.adapters;
 
 import ar.edu.utn.frba.dds.domain.adapters.AdapterRecomendacionPuntosHeladera;
+import ar.edu.utn.frba.dds.domain.puntosRecomendados.RecomendacionPuntosServicio;
 import ar.edu.utn.frba.dds.domain.ubicacion.Coordenada;
 import java.io.IOException;
 import java.util.List;
@@ -9,10 +10,10 @@ import lombok.Setter;
 @Setter
 public class AdapterConcretoPuntos implements AdapterRecomendacionPuntosHeladera {
 
-  private ServicioRecomendacionPuntos servicioRecomendacionPuntos;
+  private RecomendacionPuntosServicio recomendacionPuntosServicio;
 
   @Override
   public List<Coordenada> recomendacion(String latitud, String longitud, float radio) throws IOException {
-    return servicioRecomendacionPuntos.listadoPuntosRecomendados(radio, latitud, longitud).puntos;
+    return recomendacionPuntosServicio.listadoPuntosRecomendados(radio, latitud, longitud).puntos;
   }
 }
