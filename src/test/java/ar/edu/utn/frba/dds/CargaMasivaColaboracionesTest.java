@@ -52,12 +52,13 @@ public class CargaMasivaColaboracionesTest {
 
     personaHumanaServices = new PersonaHumanaServices(repoDocumento, repoPersonaHumana, verificadorDePermisos);
     documentoServices = new DocumentoServices(verificadorDePermisos, repoDocumento);
-    carga = new ControladorCargaColaboraciones(personaHumanaServices, documentoServices);
+    carga = new ControladorCargaColaboraciones(personaHumanaServices, documentoServices, verificadorDePermisos);
 
     usuario = new Usuario("testing");
     Rol cargasMasivas = new Rol();
 
     List<Permiso> permisosNecesarios = new ArrayList<>();
+    permisosNecesarios.add(new Permiso("CARGAR-MASIVAMENTE-COLABORACIONES"));
     permisosNecesarios.add(new Permiso("CREAR-DOCUMENTO"));
     permisosNecesarios.add(new Permiso("BUSCAR-DOCUMENTO"));
     permisosNecesarios.add(new Permiso("CREAR-PERSONA-HUMANA"));
