@@ -3,8 +3,6 @@ package ar.edu.utn.frba.dds.domain.personasHumanas;
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.contacto.Contacto;
-import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
-import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.personasHumanas.formulario.RespuestaNoValidaException;
@@ -15,7 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,7 +74,7 @@ public class PersonaHumana {
 
   public void agregarTarjetaSinEntregar(Tarjeta tarjeta){
     if(this.direccion == null) {
-      throw new DireccionIncompleta();
+      throw new DireccionIncompletaException();
     }
     this.tarjetasSinEntregar.add(tarjeta);
   }
@@ -87,5 +84,13 @@ public class PersonaHumana {
       throw new RespuestaNoValidaException();
     }
     this.formulario.add(respuesta);
+  }
+
+  public void agregarFormaDeContribucion(FormasContribucionHumanas forma) {
+    this.contribucionesElegidas.add(forma);
+  }
+
+  public void quitarFormaDeContribucion(FormasContribucionHumanas forma) {
+    this.contribucionesElegidas.remove(forma);
   }
 }
