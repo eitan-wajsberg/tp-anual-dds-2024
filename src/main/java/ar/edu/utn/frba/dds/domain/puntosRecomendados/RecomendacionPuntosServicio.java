@@ -1,33 +1,34 @@
-package ar.edu.utn.frba.dds.domain.puntosRecomendados;
+package ar.edu.utn.frba.dds.services.imp;
 
-import ar.edu.utn.frba.dds.domain.adapters.AdapterRecomendacionPuntosHeladera;
+import ar.edu.utn.frba.dds.domain.puntosRecomendados.ListadoPuntosRecomendados;
+import ar.edu.utn.frba.dds.services.IRecomendacionPuntosServices;
 import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ServicioRecomendacionPuntos {
-  private static ServicioRecomendacionPuntos instancia = null;
+public class RecomendacionPuntosServices {
+  private static RecomendacionPuntosServices instancia = null;
   private static final String urlAPI = "https://52d49f8e-4e4d-4233-8610-c727a6cc27e9.mock.pstmn.io/api/";
   private Retrofit retrofit;
 
-  private ServicioRecomendacionPuntos() {
+  private RecomendacionPuntosServices() {
     this.retrofit = new Retrofit.Builder()
         .baseUrl(urlAPI)
         .addConverterFactory(GsonConverterFactory.create())
         .build();
   }
 
-  public static ServicioRecomendacionPuntos getInstancia() {
+  public static RecomendacionPuntosServices getInstancia() {
     if (instancia == null) {
-      instancia = new ServicioRecomendacionPuntos();
+      instancia = new RecomendacionPuntosServices();
     }
     return instancia;
   }
 
   public ListadoPuntosRecomendados listadoPuntosRecomendados(float radio, String latitud, String longitud) throws IOException {
-    IServicioRecomendacionPuntos servicioPuntos = this.retrofit.create(IServicioRecomendacionPuntos.class);
+    IRecomendacionPuntosServices servicioPuntos = this.retrofit.create(IRecomendacionPuntosServices.class);
     Call<ListadoPuntosRecomendados> requestPuntos = servicioPuntos.puntos(radio, latitud, longitud);
     Response<ListadoPuntosRecomendados> responsePuntos = requestPuntos.execute();
     return responsePuntos.body();

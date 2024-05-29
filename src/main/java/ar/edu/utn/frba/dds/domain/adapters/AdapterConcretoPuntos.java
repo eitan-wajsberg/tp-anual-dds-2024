@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 public class AdapterConcretoPuntos implements AdapterRecomendacionPuntosHeladera {
 
-  private ServicioRecomendacionPuntos servicioRecomendacionPuntos;
+  private RecomendacionPuntosServicio recomendacionPuntosServicio;
 
   @Override
   public List<Coordenada> recomendacion(String latitud, String longitud, float radio) throws IOException {
-    return servicioRecomendacionPuntos.listadoPuntosRecomendados(radio, latitud, longitud).puntos;
+    return recomendacionPuntosServicio.listadoPuntosRecomendados(radio, latitud, longitud).puntos;
   }
 }

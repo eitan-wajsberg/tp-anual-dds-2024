@@ -11,10 +11,14 @@ class PersonaHumana {
  - documento: Documento
  - fechaNacimiento: LocalDate
  - ofertasCanjeadas: List<OfertaCanjeada>
- - contribuciones: Set<Contribucion>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
- + calcularPuntosCanjeados(): float
+ - contribuciones: Set<Contribucion>
+ - ofertasCanjeadas: Set<OfertaCanjeada>
+
+ + puntosGastados(): float
  + calcularPuntajeNeto(): float
+ + agregarContribucion(contribucion: Contribucion): void
+ + agregarOfertaCanjeada(ofertaCanjeada: OfertaCanjeada): void
 }
 
 PersonaHumana --> " * " Contribucion
@@ -120,7 +124,9 @@ interface Contribucion {
 }
 
 note bottom
-Las contribuciones comparten la funcionalidad de sumar puntos.
+Las contribuciones comparten la funcionalidad de sumar puntos por lo
+tanto, decidimos que implementen una interfaz de contribucion y de esta
+forma agrupar las contribuciones.
 end note
 
 ' -----------------------------------------
@@ -220,6 +226,49 @@ Mail -> AdapterMail
 interface AdapterMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
+
+' -----------------------------------------
+
+class AdapterConcretoPuntos {
+ - servicioRecomendacionPunto: ServicioRecomendacionPuntos
+ + recomendacion(latitud: String, longitud: String, radio: float): List<Coordenada>
+}
+
+AdapterConcretoPuntos ..|> AdapterRecomendacionPuntosHeladera
+AdapterConcretoPuntos --> RecomendacionPuntosServicio
+
+' -----------------------------------------
+
+class RecomendacionPuntosServicio {
+ - urlAPI: String
+ - retrofit: Retrofit
+ + listadoPuntosRecomendados(float radio, String latitud, String longitud): ListadoPuntosRecomendados
+}
+
+' -----------------------------------------
+
+class ListadoPuntosRecomendados {
+ - parametros: Parametros
+ + puntos: List<Coordenada>
+}
+
+ListadoPuntosRecomendados --> Parametros
+ListadoPuntosRecomendados --> " * " Coordenada
+
+class Parametros {
+ + latitud: String
+ + longitud: String
+ + radio: float
+}
+
+' -----------------------------------------
+
+class RecomendacionDePuntos {
+ - adapterPuntos: AdapterRecomendacionPuntosHeladera
+ + recomendacion(latitud: String, longitud: String, radio: float): List<Coordenada>
+}
+
+RecomendacionDePuntos --> AdapterRecomendacionPuntosHeladera
 
 ' -----------------------------------------
 
@@ -355,8 +404,14 @@ class PersonaJuridica {
  - contribucionesElegidas: Set<FormasContribucionJuridicas>
  - heladerasACargo: Set<Heladera>
  - contribuciones: Set<Contribucion>
+ - ofertasCanjeadas: Set<OfertaCanjeada>
+
  + hacerseCargoDeHeladera(heladera: Heladera): void
  + darDeBajaHeladera(heladera: Heladera): void
+ + agregarContribucion(contribucion: Contribucion): void
+ + puntosGastados(): float
+ + calcularPuntajeNeto(): float
+
 }
 
 PersonaJuridica --> " * " FormasContribucionJuridica
