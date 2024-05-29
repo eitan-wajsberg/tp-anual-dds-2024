@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.contacto;
 
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -35,4 +36,20 @@ public class MailSender implements AdapterMail {
 
     Transport.send(message);
   }
+
+//  public static void main(String[] args) {
+//
+//    MailSender mailSender = new MailSender();
+//    Mensaje mensaje = new Mensaje("Importantisimo", "Lavar los platos", LocalDateTime.now());
+//
+//    try {
+//      mailSender.enviar(mensaje, "fgaunasoma@frba.utn.edu.ar");
+//      System.out.println("Email sent successfully.");
+//    } catch (MessagingException e) {
+//      System.out.println("Failed to send email: " + e.getMessage());
+//    } catch (UnsupportedEncodingException e) {
+//      throw new RuntimeException(e);
+//    }
+//  }
 }
+
