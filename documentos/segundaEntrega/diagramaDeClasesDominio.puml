@@ -37,7 +37,7 @@ class Vianda {
  - fechaCaducidad: LocalDate
  - entregada: boolean
  - comida: String
- - peso: float
+ - pesoEnGramos: float
  - fechaDonacion: LocalDate
  + calcularPuntaje(): float
  + estaVencida(): boolean

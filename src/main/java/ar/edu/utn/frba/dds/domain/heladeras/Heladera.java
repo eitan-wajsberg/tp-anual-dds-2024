@@ -108,8 +108,8 @@ public class Heladera implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
-    return coeficientes.get("coeficienteCantidadHeladerasActivas") * this.calcularMesesActiva();
+    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteCantidadHeladerasActivas");
+    return coeficiente * this.calcularMesesActiva();
   }
 
   public void agregarCambioDeEstado(CambioEstado cambioEstado) {
@@ -118,5 +118,9 @@ public class Heladera implements Contribucion {
 
   public void quitarVianda(Vianda vianda) {
     this.viandas.remove(vianda);
+  }
+
+  public void ingresarVianda(Vianda vianda){
+    this.viandas.add(vianda);
   }
 }

@@ -28,8 +28,8 @@ public class Tarjeta implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
-    return coeficientes.get("coeficienteTarjetasRepartidas");
+    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteTarjetasRepartidas");
+    return coeficiente;
   }
 
   public void agregarUso(UsoDeTarjeta uso) {

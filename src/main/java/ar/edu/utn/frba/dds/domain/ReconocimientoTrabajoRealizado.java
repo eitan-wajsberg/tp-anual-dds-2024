@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class ReconocimientoTrabajoRealizado {
     if(instancia == null){
       instancia = new ReconocimientoTrabajoRealizado();
       coeficientes = new HashMap<>();
-      this.cargarCoeficientesDesdeArchivo();
+      instancia.cargarCoeficientesDesdeArchivo();
     }
     return instancia;
   }
@@ -39,9 +40,8 @@ public class ReconocimientoTrabajoRealizado {
     }
   }
 
-  public static Map<String, Float> obtenerCoeficientes(){
-    //TODO: cambiar map por float
-    return coeficientes;
+  public static float obtenerCoeficientes(String nombreCoeficiente){
+    return coeficientes.get(nombreCoeficiente);
   }
 
   public float calcularPuntaje(Set<Contribucion> contribuciones, float puntajeGastado){
