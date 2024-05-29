@@ -2,10 +2,7 @@ package ar.edu.utn.frba.dds.domain.personasJuridicas;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
-import ar.edu.utn.frba.dds.domain.adapters.AdapterRecomendacionPuntosHeladera;
 import ar.edu.utn.frba.dds.domain.contacto.Contacto;
-import ar.edu.utn.frba.dds.domain.contacto.MedioDeContacto;
-import ar.edu.utn.frba.dds.domain.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
@@ -13,22 +10,26 @@ import ar.edu.utn.frba.dds.domain.ubicacion.Direccion;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class PersonaJuridica {
-  @Getter
+  @Setter
   private String usuario;
+  @Setter
   private Contacto contacto;
+  @Setter
   private Direccion direccion;
+  @Setter
   private String razonSocial;
+  @Setter
   private TipoPersonaJuridica tipo;
+  @Setter
   private Rubro rubro;
   private Set<FormasContribucionJuridicas> contribucionesElegidas;
-  @Getter
   private Set<Heladera> heladerasAcargo;
-  @Getter
   private Set<Contribucion> contribuciones;
   private Set<OfertaCanjeada> ofertasCanjeadas;
-  private AdapterRecomendacionPuntosHeladera adapterRecomendacionPuntosHeladera;
 
   public PersonaJuridica(){
     this.contribucionesElegidas = new HashSet<>();
@@ -46,21 +47,18 @@ public class PersonaJuridica {
     this.heladerasAcargo.remove(heladera);
     this.contribuciones.remove(heladera);
   }
-  public void agregarContribucion(Contribucion contribucion){
+  public void agregarContribucion(Contribucion contribucion) {
     contribuciones.add(contribucion);
   }
-  public float puntosGastados(){
+  public float puntosGastados() {
     float sum = 0;
-    for(OfertaCanjeada ofertaCanjeada: ofertasCanjeadas){
-      sum+= ofertaCanjeada.getOferta().getCantidadPuntosNecesarios();
+    for (OfertaCanjeada ofertaCanjeada: ofertasCanjeadas) {
+      sum += ofertaCanjeada.getOferta().getCantidadPuntosNecesarios();
     }
     return sum;
   }
-  public float calcularPuntajeNeto(){
+  public float calcularPuntajeNeto() {
     ReconocimientoTrabajoRealizado reconocimientoTrabajoRealizado = ReconocimientoTrabajoRealizado.getInstance();
     return reconocimientoTrabajoRealizado.calcularPuntaje(this.getContribuciones(), this.puntosGastados());
   }
-
-
-
 }

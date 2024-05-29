@@ -6,5 +6,10 @@ import lombok.Getter;
 
 @Getter
 public class ListadoPuntosRecomendados {
+  private class Parametros {
+    public String latitud;
+    public String longitud;
+    public float radio;
+  }
   public List<Coordenada> puntos;
 }
