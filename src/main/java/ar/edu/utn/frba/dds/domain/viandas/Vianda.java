@@ -17,15 +17,15 @@ public class Vianda implements Contribucion {
   private boolean entregada;
   private String comida;
   private float calorias;
-  private float peso;
+  private float pesoEnGramos;
   private LocalDate fechaDonacion;
 
-  public Vianda(LocalDate fechaCaducidad, boolean entregada, String comida, float calorias, float peso, LocalDate fechaDonacion) {
+  public Vianda(LocalDate fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;
     this.entregada = entregada;
     this.comida = comida;
     this.calorias = calorias;
-    this.peso = peso;
+    this.pesoEnGramos = pesoEnGramos;
     this.fechaDonacion = fechaDonacion;
   }
 
@@ -35,8 +35,8 @@ public class Vianda implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
-    return coeficientes.get("coeficienteViandasDonadas");
+    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDonadas");
+    return coeficiente;
   }
 
   public boolean estaVencida() {

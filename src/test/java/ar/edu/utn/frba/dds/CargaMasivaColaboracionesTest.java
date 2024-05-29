@@ -42,6 +42,8 @@ public class CargaMasivaColaboracionesTest {
   static IRepositorioPersonaHumana repoPersonaHumana;
   static Usuario usuario;
 
+  // TODO: MOCKEAR EL MAILSENDER
+
   @BeforeAll
   public static void antesDeTestear() {
     repoDocumento = new RepositorioDocumento();
@@ -76,10 +78,7 @@ public class CargaMasivaColaboracionesTest {
     File nuevoArchivo = new File("src/resources/" + nombreArchivo);
     carga.cargarColaboraciones(usuario, nuevoArchivo);
 
-
-    /* Path path = Paths.get("src/resources/coeficientesPuntaje.properties");
-
-    ReconocimientoTrabajoRealizado.getInstance().cargarCoeficientesDesdeArchivo(path); */
+    ReconocimientoTrabajoRealizado.getInstance();
   }
 
   @Test
@@ -87,6 +86,7 @@ public class CargaMasivaColaboracionesTest {
   public void seCarganTodasLasPersonas() {
     Assertions.assertEquals(repoPersonaHumana.listar().size(), 6);
   }
+
   @Test
   @DisplayName("Se cargan bien todos los datos de una nueva persona")
   public void cargaCompletaDePersona(){

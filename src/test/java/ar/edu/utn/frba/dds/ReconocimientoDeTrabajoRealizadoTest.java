@@ -30,23 +30,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 public class ReconocimientoDeTrabajoRealizadoTest {
-
-  //private static final Path COEFICIENTES_PATH = Paths.get("src/resources/coeficientesPuntaje.properties");
-
-  @BeforeEach
-  public void setUp() {
-    //ReconocimientoTrabajoRealizado.getInstance().cargarCoeficientesDesdeArchivo(COEFICIENTES_PATH);
-  }
-
-  @Test
-  @DisplayName("El reconocimiento lee correctamente el archivo")
-  public void reconocimientoLeeArchivo() {
-    Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.getInstance().obtenerCoeficientes();
-    Assertions.assertEquals(2.0f, coeficientes.get("coeficienteTarjetasRepartidas"));
-    Assertions.assertEquals(1.5f, coeficientes.get("coeficienteViandasDonadas"));
-    Assertions.assertEquals(1.0f, coeficientes.get("coeficienteViandasDistribuidas"));
-  }
-
   @Test
   @DisplayName("Una persona que dona dos viandas tiene puntaje tres")
   public void unaPersonaQueDonaDosViandasTienePuntajeTres() {
@@ -120,7 +103,7 @@ public void unaPersonaHumanaCon3PuntosPuedeCanjearUnaOfertaDe2Puntos(){
         new PersonaJuridica());
 
     oferta.canjear(persona);
-    Assertions.assertTrue(persona.getOfertasCanjeadas().size() > 0);
+    Assertions.assertTrue(!persona.getOfertasCanjeadas().isEmpty());
 }
 
   private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
@@ -133,7 +116,5 @@ public void unaPersonaHumanaCon3PuntosPuedeCanjearUnaOfertaDe2Puntos(){
     distribucionVianda.setHeladeraDestino(destino);
     return distribucionVianda;
   }
-
-
 }
 

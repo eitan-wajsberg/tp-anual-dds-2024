@@ -36,7 +36,7 @@ public class DistribucionVianda implements Contribucion {
   }
 
   public float calcularPuntaje(){
-    Map<String, Float> coeficientes = ReconocimientoTrabajoRealizado.obtenerCoeficientes();
-    return cantidadViandas * coeficientes.get("coeficienteViandasDistribuidas");
+    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDistribuidas");
+    return cantidadViandas * coeficiente;
   }
 }
