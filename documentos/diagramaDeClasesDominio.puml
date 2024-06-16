@@ -10,6 +10,7 @@ class PersonaHumana {
  - apellido: String
  - documento: Documento
  - fechaNacimiento: LocalDate
+ - tarjeta: Tarjeta
  - ofertasCanjeadas: List<OfertaCanjeada>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  - contribuciones: Set<Contribucion>
@@ -20,6 +21,8 @@ class PersonaHumana {
  + calcularPuntajeNeto(): float
  + agregarContribucion(contribucion: Contribucion): void
  + agregarOfertaCanjeada(ofertaCanjeada: OfertaCanjeada): void
+ + usarTarjeta(heladera: Heladera): void
+ + asignarTarjeta(tarjeta: Tarjeta): void
 }
 
 PersonaHumana --> " * " Contribucion
@@ -30,6 +33,7 @@ PersonaHumana --> " * " FormasContribucionHumanas
 PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
+PersonaHumana --> Tarjeta
 
 ' -----------------------------------------
 
@@ -58,6 +62,7 @@ class Heladera {
  - temperaturaEsperada: float
  - historialEstados: List<CambioEstado>
  - historialTemperaturas: List<CambioTemperatura>
+ - solicitudesDeApertura: List<SolicitudApertura>
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
  + calcularPuntaje(): float
@@ -66,6 +71,8 @@ class Heladera {
  + cambiarTemperatura(temperatura: float): void
  - agregarTemperaturaAlHistorial(temperatura: float): void
  + estaActiva(): boolean
+ + validarApertura(codigoTarjeta: String): boolean
+ + algoConElVencimiento()
 }
 
 note right
@@ -86,6 +93,15 @@ Heladera --> SensorTemperatura
 Heladera --> SensorMovimiento
 Heladera --> " * " CambioEstado
 Heladera --> " * " CambioTemperatura
+Heladera --> " * " SolicitudApertura
+
+' -----------------------------------------
+
+class SolicitudApertura {
+ - fecha: LocalDateTime
+ - codigoTarjeta: String 
+ - aperturaConcretada: boolean
+}
 
 ' -----------------------------------------
 
@@ -128,6 +144,17 @@ class CambioTemperatura {
  - temperaturaCelsius: float
 }
 
+' -----------------------------------------
+
+class CargaMasivaColaboraciones {
+   /'TODO'/
+}
+
+class ControladorCargaColaboraciones {
+   - personaHumanaServices: IPersonaHumanaServices
+   - documentoServices: IDocumentoServices
+   + cargarColaboraciones(usuario: Usuario, dataCSV: File): void
+}
 
 ' -----------------------------------------
 
@@ -145,6 +172,13 @@ class DistribucionVianda {
  - cantidadViandas: int
  - motivo: String
  - fecha: LocalDate
+ + quitarViandasDeOrigen(viandasAQuitar: List<Vianda>):void /'{
+      origen.quitarViandas(viandasAQuitar)
+      viandasAMover= viandasAQuitar
+   }'/
+ + ponerViandasEnDestino():void /' {
+      destino.meterViandas(viandasAMover)
+   }'/
  + distribuir(viandas: List<Vianda>): void
  + calcularPuntaje(): float
 }
