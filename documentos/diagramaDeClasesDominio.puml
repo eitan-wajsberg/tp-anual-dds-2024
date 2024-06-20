@@ -75,15 +75,6 @@ class Heladera {
  + algoConElVencimiento()
 }
 
-note right
-recalcularEstado() se actualiza cada cierto tiempo 
-para consultar:
- - Si hubo fraude
- - La heladera sobrepaso la temperatura maxima
- - La heladera no supera la temperatura minima
-end note
-
-
 Heladera --> "*" Vianda
 Heladera --> Modelo
 Heladera --> Direccion
@@ -101,6 +92,12 @@ class SolicitudApertura {
  - fecha: LocalDateTime
  - codigoTarjeta: String 
  - aperturaConcretada: boolean
+ - accion: Accion
+}
+
+enum Accion {
+ QUITAR_VIANDA
+ INGRESAR_VIANDA
 }
 
 ' -----------------------------------------
@@ -116,24 +113,84 @@ note bottom
 Permite trazabilidad
 end note
 
+note right
+La falla de conexión se verificará validando la última recepción de temperatura de cada heladera con un cronjob: ValidadorConexion.
+La cantidad de tiempo límite desde que se recibió la última temperatura estará parametrizada.
+end note
+
+' -----------------------------------------
+
+class Incidente {
+ - heladera: Heladera
+ - fechaCambio: LocalDateTime
+ - tecnico: Tecnico
+ - visitas: List<Visita>
+ - solucionado: bool
+ - tipoIncidente: TipoIncidente
+ + registrarVisita(visita: Visita): void
+ + asignarTecnico(): void
+ /'float distanciaMasCorta; Tecnico tecnico; float distanciaActual;
+ for cada tecnico
+   for cada tecnico.areaDeCobertura
+      distanciaActual = heladera.getDireccion().getCoordenada().distanciaCon(area.getCoordenada())
+      if distanciaActual < distanciaMasCorta{
+         distanciaMasCorta = distanciaActual
+         tecnico = tecnico
+
+   tecnico.getMedioDeContacto().notificar(new Mensaje())
+   '/
+}
+
+interface Tipo
+ +   
+{} etnedicnI
+
+class Visita {
+ - descripcion: String
+ - foto: Image 
+}
+
+class Alerta {
+ - incidente: Incidente
+ - tipo: TipoAlerta
+}
+Alerta ..|> TipoIncidente
+
+class FallaTecnica{
+ - incidente: Incidente
+ - colaborador: 
+ - descripcion: String
+ - foto: Image
+}
+FallaTecnica ..|> TipoIncidente
+
+enum TipoAlerta {
+   FRAUDE
+   FALLA_CONEXION
+   FALLA_TEMPERATURA
+}
+
+' -----------------------------------------
+
+class ServicioGeoRef {
+ - instancia: ServicioGeoRef
+ - retrofit: Retrofit
+ + obtenerDetallesUbicacion(latitud: double, longitud: double): 
+}
+
 ' -----------------------------------------
 
 class ReceptorTemperatura {
-   - heladera: Heladera
    + messageArrived(topic: String, mqttMessage MqttMesage): void /'{
+      heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarTemperatura(mqttMessage.temperatura());
    }'/
 }
 
-note bottom
-La clase receptora de mensajes mqtt debería ser la clase sensor en sí o esa clase receptora se comunica con la clase sensor?
-end note
-
 class ReceptorMovimiento {
-   - heladera: Heladera
    + messageArrived(topic: String, mqttMessage MqttMesage): void /'{
+      heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarEstado(FRAUDE);
-      heladera.setActiva(false);
    }'/
 }
 
@@ -147,14 +204,12 @@ class CambioTemperatura {
 ' -----------------------------------------
 
 class CargaMasivaColaboraciones {
-   /'TODO'/
+   - personaHumanaRepo: IRepositorioPersonaHumana
+   - documentoRepo: IRepositorioDocumento
+   + cargarColaboraciones(dataCSV: File): void
 }
 
-class ControladorCargaColaboraciones {
-   - personaHumanaServices: IPersonaHumanaServices
-   - documentoServices: IDocumentoServices
-   + cargarColaboraciones(usuario: Usuario, dataCSV: File): void
-}
+CargaMasivaColaboraciones ..> AdapterMail
 
 ' -----------------------------------------
 
@@ -172,9 +227,11 @@ class DistribucionVianda {
  - cantidadViandas: int
  - motivo: String
  - fecha: LocalDate
+ - terminada: bool
+ - viandasAMover: List<Vianda>
  + quitarViandasDeOrigen(viandasAQuitar: List<Vianda>):void /'{
       origen.quitarViandas(viandasAQuitar)
-      viandasAMover= viandasAQuitar
+      viandasAMover = viandasAQuitar
    }'/
  + ponerViandasEnDestino():void /' {
       destino.meterViandas(viandasAMover)
@@ -182,6 +239,26 @@ class DistribucionVianda {
  + distribuir(viandas: List<Vianda>): void
  + calcularPuntaje(): float
 }
+
+
+/'
+
+1. El colaborador ya tiene una sesion iniciada.
+2. El colaborador detalla la heladera de origen y destino, y el motivo de distribucion.
+2.1. El colaborador toca un boton para comenzar la distribucion.
+3. Se manda la solicitud de apertura de la heladera de origen para sacar viandas. Empieza a correr el cronometro de 3hs.
+4. El colaborador abre la heladera de origen y saca las viandas. 
+5. Se manda la solicitud de apertura de la heladera de destino para ingresar viandas. Empieza a correr el cronometro de 3hs.
+6. El colaborador ingresa las viandas a la heladera de destino. 
+7. Se agrega la distribucion realizada en las contribuciones del colaborador.
+7.1 El colaborador marca que ya hizo la distribución (terminada = true)
+
+En caso de acudir a realizar algunas de estas tareas, el colaborador deberá registrar 
+una distribución de viandas como una forma de contribución. 
+Vamos a asumir que los distribuidores son responsables para llevar a cabo dicha tarea con criterio. 
+También, una vez registrada esta colaboración se debe actualizar el stock de cada heladera.
+
+'/
 
 DistribucionVianda --> Heladera
 DistribucionVianda --> Heladera
@@ -331,18 +408,12 @@ RecomendacionPuntosServicio ..> ListadoPuntosRecomendados
 ' -----------------------------------------
 
 class ListadoPuntosRecomendados {
- - parametro: Parametro
+ - parametro: Area
  + puntos: List<Coordenada>
 }
 
-ListadoPuntosRecomendados --> Parametro
+ListadoPuntosRecomendados --> Area
 ListadoPuntosRecomendados --> " * " Coordenada
-
-class Parametro {
- + latitud: String
- + longitud: String
- + radio: float
-}
 
 ' -----------------------------------------
 
@@ -370,7 +441,8 @@ class Tecnico {
  - documento: Documento
  - cuil: String
  - contacto: Contacto
- - areasDeCobertura: Set<Area>
+ - areasDeCobertura: List<AreaAnterior>
+ - areaDeCobertura: Area
 }
 
 Tecnico --> Contacto
@@ -381,7 +453,12 @@ Tecnico --> Usuario
 ' -----------------------------------------
 
 class Area {
- - nombre: String
+ - coordenada: Coordenada
+ - radio: double
+}
+
+class AreaAnterior {
+ - area: String
 }
 
 ' -----------------------------------------
