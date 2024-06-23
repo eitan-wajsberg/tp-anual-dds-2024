@@ -23,6 +23,7 @@ class PersonaHumana {
  + agregarOfertaCanjeada(ofertaCanjeada: OfertaCanjeada): void
  + usarTarjeta(heladera: Heladera): void
  + asignarTarjeta(tarjeta: Tarjeta): void
+ + serNotificadoPor(mensaje: Mensaje): void
 }
 
 PersonaHumana --> " * " Contribucion
@@ -34,6 +35,13 @@ PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
 PersonaHumana --> Tarjeta
+PersonaHumana ..|> IObserverNotificacion 
+
+' -----------------------------------------
+
+interface IObserverNotificacion {
+ + serNotificadoPor(mensaje: Mensaje): void
+}
 
 ' -----------------------------------------
 
@@ -63,8 +71,14 @@ class Heladera {
  - historialEstados: List<CambioEstado>
  - historialTemperaturas: List<CambioTemperatura>
  - solicitudesDeApertura: List<SolicitudApertura>
+
+ - observersQuedanNViandas: List<Suscripcion>
+ - observersFaltanNViandas: List<Suscripcion>
+ - observersDesperfecto: List<Suscripcion> 
+
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
+ + notificarColaborador(): void
  + calcularPuntaje(): float
  + cambiarEstado(nuevoEstado: CambioEstado): void
  - tieneTemperaturaValida(): boolean
@@ -72,19 +86,67 @@ class Heladera {
  - agregarTemperaturaAlHistorial(temperatura: float): void
  + estaActiva(): boolean
  + validarApertura(codigoTarjeta: String): boolean
- + algoConElVencimiento()
+ + algoConElVencimiento() '????????????????????????
 }
 
-Heladera --> "*" Vianda
+Heladera --> " * " Vianda
 Heladera --> Modelo
 Heladera --> Direccion
 Heladera ..|> Contribucion
 Heladera --> EstadoHeladera
-Heladera --> SensorTemperatura
-Heladera --> SensorMovimiento
 Heladera --> " * " CambioEstado
 Heladera --> " * " CambioTemperatura
 Heladera --> " * " SolicitudApertura
+
+' -----------------------------------------
+
+interesados: {FALTAN_N_VIANDAS: [fulano, mengano], 
+               DESPERFECTO: [zultano]}
+notificar(tipoEvento, heladera){
+lista = interesados[tipoEvento]
+recorre lista y notifica
+}
+
+
+class Suscripcion {
+ - colaborador: Colaborador
+ + notificar(heladera: Heladera): void
+   '/
+   if(cumpleCondicion(heladera)){
+      mensaje = armarMensaje(heladera);
+      this.colaborador.serNotificadoPor(mensaje);
+   }'/
+   
+ # cumpleCondicion(heladera: Heladera): void
+ # armarMensaje(heladera: Heladera): String
+}
+
+class QuedanNViandas {
+ - cantidadViandasDisponibles: int
+ - colaborador: Colaborador
+ # cumpleCondicion(heladera: Heladera): void
+ # armarMensaje(heladera: Heladera): String
+}
+
+class FaltanNViandas {
+ - cantidadViandasParaLlenarse: int
+ - colaborador: Colaborador
+ # cumpleCondicion(heladera: Heladera): void
+ # armarMensaje(heladera: Heladera): String
+}
+
+class Desperfecto {
+ - colaborador: Colaborador
+ - aceptada: bool ? 'el colaborador debe aceptar o rechazar esta sugerencia
+ + sugerirHeladeras(heladera: Heladera): List<Heladera>?
+ # cumpleCondicion(heladera: Heladera): void
+ # armarMensaje(heladera: Heladera): String
+}
+
+QuedanNViandas --|> Suscripcion
+FaltaNViandas --|> Suscripcion
+Desperfecto --|> Suscripcion
+Suscripcion --|> Heladera
 
 ' -----------------------------------------
 
@@ -129,7 +191,8 @@ class Incidente {
  - tipoIncidente: TipoIncidente
  + registrarVisita(visita: Visita): void
  + asignarTecnico(): void
- /'float distanciaMasCorta; Tecnico tecnico; float distanciaActual;
+ /'
+ float distanciaMasCorta; Tecnico tecnico; float distanciaActual;
  for cada tecnico
    for cada tecnico.areaDeCobertura
       distanciaActual = heladera.getDireccion().getCoordenada().distanciaCon(area.getCoordenada())
@@ -137,23 +200,25 @@ class Incidente {
          distanciaMasCorta = distanciaActual
          tecnico = tecnico
 
-   tecnico.getMedioDeContacto().notificar(new Mensaje())
+   tecnico.getMedioDeContacto().notificar(new Mensaje("heladera"+...+tipoIncidente.obtenerDescripcionIncidente()))
    '/
 }
 
-interface Tipo
- +   
-{} etnedicnI
+interface TipoIncidente {
+ + obtenerDescripcionIncidente(): String
+} 
 
 class Visita {
  - descripcion: String
- - foto: Image 
+ - foto: Image
 }
 
 class Alerta {
  - incidente: Incidente
  - tipo: TipoAlerta
+ + obtenerDescripcionIncidente(): String
 }
+
 Alerta ..|> TipoIncidente
 
 class FallaTecnica{
@@ -161,13 +226,15 @@ class FallaTecnica{
  - colaborador: 
  - descripcion: String
  - foto: Image
+ + obtenerDescripcionIncidente(): String
 }
+
 FallaTecnica ..|> TipoIncidente
 
 enum TipoAlerta {
-   FRAUDE
-   FALLA_CONEXION
-   FALLA_TEMPERATURA
+ FRAUDE
+ FALLA_CONEXION
+ FALLA_TEMPERATURA
 }
 
 ' -----------------------------------------
@@ -175,20 +242,22 @@ enum TipoAlerta {
 class ServicioGeoRef {
  - instancia: ServicioGeoRef
  - retrofit: Retrofit
- + obtenerDetallesUbicacion(latitud: double, longitud: double): 
+ + obtenerDetallesUbicacion(latitud: double, longitud: double): 'INCOMPLETO
 }
 
 ' -----------------------------------------
 
 class ReceptorTemperatura {
-   + messageArrived(topic: String, mqttMessage MqttMesage): void /'{
+ + messageArrived(topic: String, mqttMessage MqttMesage): void 
+   /'{
       heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarTemperatura(mqttMessage.temperatura());
    }'/
 }
 
 class ReceptorMovimiento {
-   + messageArrived(topic: String, mqttMessage MqttMesage): void /'{
+ + messageArrived(topic: String, mqttMessage MqttMesage): void 
+   /'{
       heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarEstado(FRAUDE);
    }'/
@@ -204,9 +273,9 @@ class CambioTemperatura {
 ' -----------------------------------------
 
 class CargaMasivaColaboraciones {
-   - personaHumanaRepo: IRepositorioPersonaHumana
-   - documentoRepo: IRepositorioDocumento
-   + cargarColaboraciones(dataCSV: File): void
+ - personaHumanaRepo: IRepositorioPersonaHumana
+ - documentoRepo: IRepositorioDocumento
+ + cargarColaboraciones(dataCSV: File): void
 }
 
 CargaMasivaColaboraciones ..> AdapterMail
@@ -311,8 +380,8 @@ Oferta --> PersonaJuridica
 Oferta --> Rubro
 
 class OfertaCanjeada {
-   oferta: Oferta
-   fechaCanje: LocalDateTime
+ - oferta: Oferta
+ - fechaCanje: LocalDateTime
 }
 
 OfertaCanjeada --> Oferta
@@ -667,10 +736,10 @@ end note
 ' -----------------------------------------
 
 class Usuario {
-- nombre: String
-- clave: String
-- rol: Rol
-+ cambiarClave(clave: String, validador: ValidadorDeClave): void
+ - nombre: String
+ - clave: String
+ - rol: Rol
+ + cambiarClave(clave: String, validador: ValidadorDeClave): void
 }
 
 Usuario --> Rol
@@ -679,8 +748,8 @@ Usuario ..> ValidadorDeClave
 ' -----------------------------------------
 
 class ValidadorDeClave{
-- validadores: Set<TipoValidacion>
-+ esValido(clave: String): boolean
+ - validadores: Set<TipoValidacion>
+ + esValido(clave: String): boolean
 }
 
 ValidadorDeClave --> " * " TipoValidacion
@@ -688,17 +757,17 @@ ValidadorDeClave --> " * " TipoValidacion
 ' -----------------------------------------
 
 interface TipoValidacion{
-+ validar(clave: String): boolean
-+ getMensajeError(): String
+ + validar(clave: String): boolean
+ + getMensajeError(): String
 }
 
 ' -----------------------------------------
 
 class LongitudEstipulada{
-- longitudMaxima: int
-- longitudMinima: int
-+ validar(clave: String): boolean
-+ getMensajeError(): String
+ - longitudMaxima: int
+ - longitudMinima: int
+ + validar(clave: String): boolean
+ + getMensajeError(): String
 }
 
 LongitudEstipulada ..|> TipoValidacion
@@ -706,8 +775,8 @@ LongitudEstipulada ..|> TipoValidacion
 ' -----------------------------------------
 
 class ListaDePeoresClavesMemorizados{
-+ validar(clave: String): boolean
-+ getMensajeError(): String
+ + validar(clave: String): boolean
+ + getMensajeError(): String
 }
 
 ListaDePeoresClavesMemorizados ..|> TipoValidacion
@@ -715,9 +784,9 @@ ListaDePeoresClavesMemorizados ..|> TipoValidacion
 ' -----------------------------------------
 
 class AusenciaDeCredencialesPorDefecto{
-- usuario: String
-+ validar(clave: String): boolean
-+ getMensajeError(): String
+ - usuario: String
+ + validar(clave: String): boolean
+ + getMensajeError(): String
 }
 
 AusenciaDeCredencialesPorDefecto ..|> TipoValidacion
@@ -725,9 +794,9 @@ AusenciaDeCredencialesPorDefecto ..|> TipoValidacion
 ' -----------------------------------------
 
 class Rol {
-- nombre: String
-- permisos: Set<Permiso>
-+ tenesPermiso(permiso: Permiso): boolean
+ - nombre: String
+ - permisos: Set<Permiso>
+ + tenesPermiso(permiso: Permiso): boolean
 }
 
 Rol --> " * "Permiso
@@ -735,7 +804,7 @@ Rol --> " * "Permiso
 ' -----------------------------------------
 
 class Permiso {
-- nombre: String
+ - nombre: String
 }
 
 ' -----------------------------------------
