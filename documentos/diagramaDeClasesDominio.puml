@@ -71,11 +71,7 @@ class Heladera {
  - historialEstados: List<CambioEstado>
  - historialTemperaturas: List<CambioTemperatura>
  - solicitudesDeApertura: List<SolicitudApertura>
-
- - observersQuedanNViandas: List<Suscripcion>
- - observersFaltanNViandas: List<Suscripcion>
- - observersDesperfecto: List<Suscripcion> 
-
+ - gestorSuscripciones: GestorSuscripciones
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
  + notificarColaborador(): void
@@ -97,15 +93,31 @@ Heladera --> EstadoHeladera
 Heladera --> " * " CambioEstado
 Heladera --> " * " CambioTemperatura
 Heladera --> " * " SolicitudApertura
+Heladera --> GestorSuscripciones
 
 ' -----------------------------------------
 
-interesados: {FALTAN_N_VIANDAS: [fulano, mengano], 
-               DESPERFECTO: [zultano]}
-notificar(tipoEvento, heladera){
-lista = interesados[tipoEvento]
-recorre lista y notifica
+Heladera --> GestorSuscripciones
+
+' -----------------------------------------
+class GestorSuscripciones {
+   - suscripcionesPorTipo: Map<TipoEvento, Suscripcion>
+   '/
+   suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano], 
+                  DESPERFECTO: [zultano]}
+   '/ 
+   + notificar(tipoEvento: TipoEvento, heladera: Heladera): void
+   '/
+   {
+      interesados = suscripcionesPorTipo[tipoEvento]
+      recorre lista y notifica
+   }'/
 }
+
+enum TipoSuscripcion {
+ FALTAN_N_VIANDAS
+ DESPERFECTO
+ QUEDAN_N_VIANDAS
 
 
 class Suscripcion {
