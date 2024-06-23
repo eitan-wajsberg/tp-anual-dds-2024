@@ -35,7 +35,7 @@ PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
 PersonaHumana --> Tarjeta
-PersonaHumana ..|> IObserverNotificacion 
+PersonaHumana ..|> IObserverNotificacion
 
 ' -----------------------------------------
 
@@ -97,15 +97,28 @@ Heladera --> GestorSuscripciones
 
 ' -----------------------------------------
 
-Heladera --> GestorSuscripciones
+class ValidadorConexion {
+ - umbralDesconexionEnMinutos: int
+ - heladerasRepositorio: IRepositoryHeladera
+ + verificarConexionHeladeras(): void
+ - estaConectada(heladera: Heladera): boolean
+}
+
+ValidadorConexion ..> Heladera
+
+note right
+La falla de conexión se verificará validando la última recepción de temperatura de cada heladera con un cronjob: ValidadorConexion.
+La cantidad de tiempo límite desde que se recibió la última temperatura estará parametrizada.
+end note
 
 ' -----------------------------------------
+
 class GestorSuscripciones {
    - suscripcionesPorTipo: Map<TipoEvento, Suscripcion>
    '/
-   suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano], 
+   suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano],
                   DESPERFECTO: [zultano]}
-   '/ 
+   '/
    + notificar(tipoEvento: TipoEvento, heladera: Heladera): void
    '/
    {
@@ -114,11 +127,15 @@ class GestorSuscripciones {
    }'/
 }
 
+GestorSuscripciones --> " * " Suscripcion
+GestorSuscripciones --> " * " TipoEvento
+GestorSuscripciones ..> Heladera
+
 enum TipoSuscripcion {
  FALTAN_N_VIANDAS
  DESPERFECTO
  QUEDAN_N_VIANDAS
-
+}
 
 class Suscripcion {
  - colaborador: Colaborador
@@ -127,11 +144,15 @@ class Suscripcion {
    if(cumpleCondicion(heladera)){
       mensaje = armarMensaje(heladera);
       this.colaborador.serNotificadoPor(mensaje);
+      mensaje.registrar();
    }'/
-   
+
  # cumpleCondicion(heladera: Heladera): void
  # armarMensaje(heladera: Heladera): String
 }
+
+Suscripcion --> Colaborador
+Suscripcion ..> Heladera
 
 class QuedanNViandas {
  - cantidadViandasDisponibles: int
@@ -158,13 +179,59 @@ class Desperfecto {
 QuedanNViandas --|> Suscripcion
 FaltaNViandas --|> Suscripcion
 Desperfecto --|> Suscripcion
-Suscripcion --|> Heladera
+
+' -----------------------------------------
+
+interface IAdapterPDF {
++ exportarAPDF(parrafos: List<String>): void
+}
+
+class AdapterPDFiText {
++ exportarAPDF(parrafos: List<String>): void
+}
+
+AdapterPDFiText ..|> IAdapterPDF
+
+class GeneradorReportes {
+ - reportes: List<Reporte>
+ + generarReportes(): void
+}
+
+GeneradorReportes → " * " Reporte
+
+interface Reporte {
+ + generarReporte(parrafos: List<String>): void
+}
+
+class CantidadDeFallasPorHeladera {
+ - pdfAPI: IAdapterPDF
++ generarReporte(parrafos: List<String>): void
+}
+
+CantidadDeFallasPorHeladera ..|> Reporte
+CantidadDeFallasPorHeladera --> IAdapterPDF
+
+class MovimientoDeViandasPorHeladera {
+ - pdfAPI: IAdapterPDF
+ + generarReporte(parrafos: List<String>): void
+}
+
+MovimientoDeViandasPorHeladera ..|> Reporte
+MovimientoDeViandasPorHeladera --> IAdapterPDF
+
+class CantidadViandasPorColaborador {
+ - pdfAPI: IAdapterPDF
+ + generarReporte(parrafos: List<String>): void
+}
+
+CantidadViandasPorColaborador ..|> Reporte
+CantidadViandasPorColaborador --> IAdapterPDF
 
 ' -----------------------------------------
 
 class SolicitudApertura {
  - fecha: LocalDateTime
- - codigoTarjeta: String 
+ - codigoTarjeta: String
  - aperturaConcretada: boolean
  - accion: Accion
 }
@@ -185,11 +252,6 @@ CambioEstado --> EstadoHeladera
 
 note bottom
 Permite trazabilidad
-end note
-
-note right
-La falla de conexión se verificará validando la última recepción de temperatura de cada heladera con un cronjob: ValidadorConexion.
-La cantidad de tiempo límite desde que se recibió la última temperatura estará parametrizada.
 end note
 
 ' -----------------------------------------
@@ -218,7 +280,7 @@ class Incidente {
 
 interface TipoIncidente {
  + obtenerDescripcionIncidente(): String
-} 
+}
 
 class Visita {
  - descripcion: String
@@ -235,7 +297,7 @@ Alerta ..|> TipoIncidente
 
 class FallaTecnica{
  - incidente: Incidente
- - colaborador: 
+ - colaborador:
  - descripcion: String
  - foto: Image
  + obtenerDescripcionIncidente(): String
@@ -260,7 +322,7 @@ class ServicioGeoRef {
 ' -----------------------------------------
 
 class ReceptorTemperatura {
- + messageArrived(topic: String, mqttMessage MqttMesage): void 
+ + messageArrived(topic: String, mqttMessage MqttMesage): void
    /'{
       heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarTemperatura(mqttMessage.temperatura());
@@ -268,7 +330,7 @@ class ReceptorTemperatura {
 }
 
 class ReceptorMovimiento {
- + messageArrived(topic: String, mqttMessage MqttMesage): void 
+ + messageArrived(topic: String, mqttMessage MqttMesage): void
    /'{
       heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarEstado(FRAUDE);
@@ -328,15 +390,15 @@ class DistribucionVianda {
 2. El colaborador detalla la heladera de origen y destino, y el motivo de distribucion.
 2.1. El colaborador toca un boton para comenzar la distribucion.
 3. Se manda la solicitud de apertura de la heladera de origen para sacar viandas. Empieza a correr el cronometro de 3hs.
-4. El colaborador abre la heladera de origen y saca las viandas. 
+4. El colaborador abre la heladera de origen y saca las viandas.
 5. Se manda la solicitud de apertura de la heladera de destino para ingresar viandas. Empieza a correr el cronometro de 3hs.
-6. El colaborador ingresa las viandas a la heladera de destino. 
+6. El colaborador ingresa las viandas a la heladera de destino.
 7. Se agrega la distribucion realizada en las contribuciones del colaborador.
 7.1 El colaborador marca que ya hizo la distribución (terminada = true)
 
-En caso de acudir a realizar algunas de estas tareas, el colaborador deberá registrar 
-una distribución de viandas como una forma de contribución. 
-Vamos a asumir que los distribuidores son responsables para llevar a cabo dicha tarea con criterio. 
+En caso de acudir a realizar algunas de estas tareas, el colaborador deberá registrar
+una distribución de viandas como una forma de contribución.
+Vamos a asumir que los distribuidores son responsables para llevar a cabo dicha tarea con criterio.
 También, una vez registrada esta colaboración se debe actualizar el stock de cada heladera.
 
 '/
@@ -511,7 +573,7 @@ class MailSender {
  + enviar(mensaje: Mensaje, destinatario: String)
 }
 
-MailSender ..|> AdapterMail 
+MailSender ..|> AdapterMail
 
 
 ' -----------------------------------------
@@ -548,6 +610,8 @@ class Mensaje {
  - asunto: String
  - cuerpo: String
  - fecha: LocalDateTime
+ - destinatario: Usuario
+ + registrarEnRepositorio(): void
 }
 
 ' -----------------------------------------
@@ -668,7 +732,6 @@ class PersonaJuridica {
  + agregarContribucion(contribucion: Contribucion): void
  + puntosGastados(): float
  + calcularPuntajeNeto(): float
-
 }
 
 PersonaJuridica --> " * " FormasContribucionJuridica
@@ -822,3 +885,4 @@ class Permiso {
 ' -----------------------------------------
 
 @enduml
+
