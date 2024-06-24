@@ -86,10 +86,8 @@ class Heladera {
  + agregarSolicitudApertura(solicitud: SolicitudApertura): void
  + cantidadViandas(): int
  + cantidadViandasVirtuales(): int
- + enviarAHeladeraFisicaSolicitudApertura(): void☝️ 🤓
+ + enviarAHeladeraFisicaSolicitudApertura(): void
 }
-
-
 
 Heladera --> " * " Vianda
 Heladera --> Modelo
@@ -120,7 +118,7 @@ end note
 ' -----------------------------------------
 
 class GestorSuscripciones {
-   - suscripcionesPorTipo: Map<TipoEvento, Suscripcion>
+   - suscripcionesPorTipo: Map<TipoSuscripcion, Suscripcion>
    '/
    suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano], 
                   DESPERFECTO: [zultano]}
@@ -134,7 +132,7 @@ class GestorSuscripciones {
 }
 
 GestorSuscripciones --> " * " Suscripcion
-GestorSuscripciones --> " * " TipoEvento
+GestorSuscripciones --> " * " TipoSuscripcion
 GestorSuscripciones ..> Heladera
 
 enum TipoSuscripcion {
@@ -183,7 +181,7 @@ class Desperfecto {
 }
 
 QuedanNViandas --|> Suscripcion
-FaltaNViandas --|> Suscripcion
+FaltanNViandas --|> Suscripcion
 Desperfecto --|> Suscripcion
 
 ' -----------------------------------------
@@ -203,7 +201,7 @@ class GeneradorReportes {
  + generarReportes(): void
 }
 
-'GeneradorReportes → " * " Reporte
+GeneradorReportes --> " * " Reporte
 
 interface Reporte {
  + generarReporte(parrafos: List<String>): void
@@ -241,6 +239,8 @@ class SolicitudApertura {
  - aperturaConcretada: boolean
  - accion: Accion
 }
+
+SolicitudApertura --> Accion
 
 enum Accion {
  QUITAR_VIANDA
@@ -284,6 +284,11 @@ class Incidente {
    '/
 }
 
+Incidente --> TipoIncidente
+Incidente --> " * " Visita
+Incidente --> ServicioGeoRef
+Incidente --> Tecnico
+
 interface TipoIncidente {
  + obtenerDescripcionIncidente(): String
 } 
@@ -300,8 +305,9 @@ class Alerta {
 }
 
 Alerta ..|> TipoIncidente
+Alerta --> TipoAlerta
 
-class FallaTecnica{
+class FallaTecnica {
  - incidente: Incidente
  - colaborador: 
  - descripcion: String
@@ -322,8 +328,11 @@ enum TipoAlerta {
 class ServicioGeoRef {
  - instancia: ServicioGeoRef
  - retrofit: Retrofit
- + obtenerDetallesUbicacion(latitud: double, longitud: double): 'INCOMPLETO
+ 'INCOMPLETO!!!!!!
+ + obtenerDetallesUbicacion(latitud: double, longitud: double):
 }
+
+' quien lo usa? como se relaciona?
 
 ' -----------------------------------------
 
@@ -342,6 +351,10 @@ class ReceptorMovimiento {
       heladera.cambiarEstado(FRAUDE);
    }'/
 }
+
+' VERIFICAR!!!!! estan bien estas relaciones?
+ReceptorMovimiento ..> Heladera
+ReceptorTemperatura ..> Heladera
 
 ' -----------------------------------------
 
@@ -597,7 +610,6 @@ class Tecnico {
  - documento: Documento
  - cuil: String
  - contacto: Contacto
- - areasDeCobertura: List<AreaAnterior>
  - areaDeCobertura: Area
 }
 
@@ -611,10 +623,6 @@ Tecnico --> Usuario
 class Area {
  - coordenada: Coordenada
  - radio: double
-}
-
-class AreaAnterior {
- - area: String
 }
 
 ' -----------------------------------------
