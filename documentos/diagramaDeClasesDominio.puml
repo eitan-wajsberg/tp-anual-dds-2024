@@ -35,7 +35,7 @@ PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
 PersonaHumana --> Tarjeta
-PersonaHumana ..|> IObserverNotificacion
+PersonaHumana ..|> IObserverNotificacion 
 
 ' -----------------------------------------
 
@@ -83,7 +83,13 @@ class Heladera {
  + estaActiva(): boolean
  + validarApertura(codigoTarjeta: String): boolean
  + algoConElVencimiento() '????????????????????????
+ + agregarSolicitudApertura(solicitud: SolicitudApertura): void
+ + cantidadViandas(): int
+ + cantidadViandasVirtuales(): int
+ + enviarAHeladeraFisicaSolicitudApertura(): void☝️ 🤓
 }
+
+
 
 Heladera --> " * " Vianda
 Heladera --> Modelo
@@ -116,9 +122,9 @@ end note
 class GestorSuscripciones {
    - suscripcionesPorTipo: Map<TipoEvento, Suscripcion>
    '/
-   suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano],
+   suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano], 
                   DESPERFECTO: [zultano]}
-   '/
+   '/ 
    + notificar(tipoEvento: TipoEvento, heladera: Heladera): void
    '/
    {
@@ -146,7 +152,7 @@ class Suscripcion {
       this.colaborador.serNotificadoPor(mensaje);
       mensaje.registrar();
    }'/
-
+   
  # cumpleCondicion(heladera: Heladera): void
  # armarMensaje(heladera: Heladera): String
 }
@@ -197,7 +203,7 @@ class GeneradorReportes {
  + generarReportes(): void
 }
 
-GeneradorReportes → " * " Reporte
+'GeneradorReportes → " * " Reporte
 
 interface Reporte {
  + generarReporte(parrafos: List<String>): void
@@ -231,7 +237,7 @@ CantidadViandasPorColaborador --> IAdapterPDF
 
 class SolicitudApertura {
  - fecha: LocalDateTime
- - codigoTarjeta: String
+ - codigoTarjeta: String 
  - aperturaConcretada: boolean
  - accion: Accion
 }
@@ -280,7 +286,7 @@ class Incidente {
 
 interface TipoIncidente {
  + obtenerDescripcionIncidente(): String
-}
+} 
 
 class Visita {
  - descripcion: String
@@ -297,7 +303,7 @@ Alerta ..|> TipoIncidente
 
 class FallaTecnica{
  - incidente: Incidente
- - colaborador:
+ - colaborador: 
  - descripcion: String
  - foto: Image
  + obtenerDescripcionIncidente(): String
@@ -322,7 +328,7 @@ class ServicioGeoRef {
 ' -----------------------------------------
 
 class ReceptorTemperatura {
- + messageArrived(topic: String, mqttMessage MqttMesage): void
+ + messageArrived(topic: String, mqttMessage MqttMesage): void 
    /'{
       heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarTemperatura(mqttMessage.temperatura());
@@ -330,7 +336,7 @@ class ReceptorTemperatura {
 }
 
 class ReceptorMovimiento {
- + messageArrived(topic: String, mqttMessage MqttMesage): void
+ + messageArrived(topic: String, mqttMessage MqttMesage): void 
    /'{
       heladera = repositorioHeladeras.buscar(mqttMessage.toString());
       heladera.cambiarEstado(FRAUDE);
@@ -372,7 +378,7 @@ class DistribucionVianda {
  - fecha: LocalDate
  - terminada: bool
  - viandasAMover: List<Vianda>
- + quitarViandasDeOrigen(viandasAQuitar: List<Vianda>):void /'{
+ + quitarViandasDeOrigen(viandasAQuitar: List<Vianda>): void /'{
       origen.quitarViandas(viandasAQuitar)
       viandasAMover = viandasAQuitar
    }'/
@@ -386,19 +392,26 @@ class DistribucionVianda {
 
 /'
 
-1. El colaborador ya tiene una sesion iniciada.
-2. El colaborador detalla la heladera de origen y destino, y el motivo de distribucion.
-2.1. El colaborador toca un boton para comenzar la distribucion.
-3. Se manda la solicitud de apertura de la heladera de origen para sacar viandas. Empieza a correr el cronometro de 3hs.
-4. El colaborador abre la heladera de origen y saca las viandas.
-5. Se manda la solicitud de apertura de la heladera de destino para ingresar viandas. Empieza a correr el cronometro de 3hs.
-6. El colaborador ingresa las viandas a la heladera de destino.
-7. Se agrega la distribucion realizada en las contribuciones del colaborador.
-7.1 El colaborador marca que ya hizo la distribución (terminada = true)
 
-En caso de acudir a realizar algunas de estas tareas, el colaborador deberá registrar
-una distribución de viandas como una forma de contribución.
-Vamos a asumir que los distribuidores son responsables para llevar a cabo dicha tarea con criterio.
+1. El colaborador ya tiene una sesión iniciada.
+2. El colaborador detalla la heladera de origen y destino, y el motivo de distribución.
+2.1. El colaborador toca un botón para comenzar la distribución
+2.2. Se valida que la heladera.cantidadViandasVirtual() < heladera.cantidadMáximaViandas.
+3. Se manda la solicitud de apertura de la heladera de origen para sacar viandas. Empieza a correr el cronómetro de 3 hs. 
+4. El colaborador se dirige a la heladera de origen y se verifica que la solicitud sea válida.
+4.1. El colaborador abre la heladera de origen y saca las viandas. 
+4.2. La solicitud de algún modo debe llamar el metodo quitarViandasDeOrigen() de la distribución y quitar las viandas que efectivamente quito.
+5. Se manda la solicitud de apertura de la heladera de destino para ingresar viandas. Empieza a correr el cronómetro de 3 hs.
+6. El colaborador se dirige a la heladera de destino y se verifica que la solicitud sea válida.
+6.1. El colaborador ingresa las viandas a la heladera de destino.=
+6.2. La solicitud de algún modo debe llamar el metodo ponerViandasDeDestino() de la distribución y meter las viandas que quitó de la heladera origen en la de destino.
+7. Se agrega la distribución realizada en las contribuciones del colaborador.
+7.1. El colaborador marca que ya hizo la distribución (terminada = true).
+
+
+En caso de acudir a realizar algunas de estas tareas, el colaborador deberá registrar 
+una distribución de viandas como una forma de contribución. 
+Vamos a asumir que los distribuidores son responsables para llevar a cabo dicha tarea con criterio. 
 También, una vez registrada esta colaboración se debe actualizar el stock de cada heladera.
 
 '/
@@ -416,7 +429,7 @@ interface Contribucion {
 
 note bottom
 Las contribuciones comparten la funcionalidad de sumar puntos, por lo
-tanto, decidimos que implementen una interfaz de contribucion y de esta
+tanto, decidimos que implementen una interfaz de contribución y de esta
 forma agrupar las contribuciones, permitiendo trazabilidad.
 end note
 
@@ -573,7 +586,7 @@ class MailSender {
  + enviar(mensaje: Mensaje, destinatario: String)
 }
 
-MailSender ..|> AdapterMail
+MailSender ..|> AdapterMail 
 
 
 ' -----------------------------------------
