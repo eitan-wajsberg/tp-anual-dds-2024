@@ -82,7 +82,6 @@ class Heladera {
  - agregarTemperaturaAlHistorial(temperatura: float): void
  + estaActiva(): boolean
  + validarApertura(codigoTarjeta: String): boolean
- + algoConElVencimiento() '????????????????????????
  + agregarSolicitudApertura(solicitud: SolicitudApertura): void
  + cantidadViandas(): int
  + cantidadViandasVirtuales(): int
@@ -148,8 +147,7 @@ class Suscripcion {
       mensaje = armarMensaje(heladera);
       this.colaborador.serNotificadoPor(mensaje);
       mensaje.registrar();
-   }
-   '/
+   }'/
    
  # cumpleCondicion(heladera: Heladera): void
  # armarMensaje(heladera: Heladera): String
@@ -328,11 +326,8 @@ enum TipoAlerta {
 class ServicioGeoRef {
  - instancia: ServicioGeoRef
  - retrofit: Retrofit
- 'INCOMPLETO!!!!!!
- + obtenerDetallesUbicacion(latitud: double, longitud: double):
+ + obtenerDetallesUbicacion(latitud: double, longitud: double): Direccion
 }
-
-' quien lo usa? como se relaciona?
 
 ' -----------------------------------------
 
@@ -734,18 +729,28 @@ PersonaJuridica --> " * " FormasContribucionJuridica
 PersonaJuridica --> Rubro
 PersonaJuridica --> Contacto
 PersonaJuridica --> Direccion
-PersonaJuridica --> "*" Heladera
+PersonaJuridica --> " * " Heladera
 PersonaJuridica --> TipoPersonaJuridica
 PersonaJuridica --> Usuario
 
 ' -----------------------------------------
 
 class Direccion {
- - direccion: String
- - coordenada: Coordenada
+ - calle: Calle
+ - altura: String
+ - municipio: Municipio 
+ - provincia: Provincia
+ + estaCercaDe(direccion: Direccion): boolean
+ + obtenerCoordenada(): Coordenada
 }
 
+class Calle {
+ - calle: String
+}
+
+Direccion --> Calle
 Direccion --> Coordenada
+Direccion ..> ServicioGeoRef
 
 ' -----------------------------------------
 
@@ -875,4 +880,3 @@ class Permiso {
 ' -----------------------------------------
 
 @enduml
-
