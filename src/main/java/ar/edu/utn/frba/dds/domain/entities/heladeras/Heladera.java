@@ -120,4 +120,5 @@ public class Heladera implements Contribucion {
   public void ingresarVianda(Vianda vianda){
     this.viandas.add(vianda);
   }
+
 }
