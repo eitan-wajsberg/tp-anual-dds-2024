@@ -1,16 +1,12 @@
 package ar.edu.utn.frba.dds.services.imp;
 
-import ar.edu.utn.frba.dds.domain.contacto.Mail;
-import ar.edu.utn.frba.dds.domain.personasHumanas.Documento;
-import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.personasHumanas.TipoDocumento;
-import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.dtos.inputs.personasHumanas.DocumentoInputDTO;
 import ar.edu.utn.frba.dds.dtos.outputs.personasHumanas.DocumentoOutputDTO;
-import ar.edu.utn.frba.dds.dtos.outputs.personasHumanas.PersonaHumanaOutputDTO;
-import ar.edu.utn.frba.dds.repositories.IRepositorioDocumento;
+import ar.edu.utn.frba.dds.domain.repositories.IRepositorioDocumento;
 import ar.edu.utn.frba.dds.services.IDocumentoServices;
-import ar.edu.utn.frba.dds.services.exceptions.DocumentoNoEncontradoException;
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 import java.util.Optional;
 

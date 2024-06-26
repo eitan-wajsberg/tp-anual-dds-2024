@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.dds;
 
-import ar.edu.utn.frba.dds.domain.puntosRecomendados.ListadoPuntosRecomendados;
-import ar.edu.utn.frba.dds.domain.puntosRecomendados.RecomendacionPuntosServicio;
-import ar.edu.utn.frba.dds.domain.ubicacion.Coordenada;
+import ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.ListadoPuntosRecomendados;
+import ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.RecomendacionPuntosServicio;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
