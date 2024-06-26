@@ -22,7 +22,7 @@ public class Tarjeta implements Contribucion {
 
   public Tarjeta() {
     this.historialUsos = new ArrayList<>();
-    this.codigo = generateRandomHash();
+    this.codigo = generarCodigo();
   }
 
   public Tarjeta(LocalDate fechaEntrega){
@@ -38,7 +38,7 @@ public class Tarjeta implements Contribucion {
     this.historialUsos.add(uso);
   }
 
-  public static String generateRandomHash() {
+  public static String generarCodigo() {
     SecureRandom secureRandom = new SecureRandom();
     byte[] randomBytes = new byte[8];
     secureRandom.nextBytes(randomBytes);
