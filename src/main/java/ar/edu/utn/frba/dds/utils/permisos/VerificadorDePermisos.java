@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.dds.utils.permisos;
 
-import ar.edu.utn.frba.dds.domain.usuarios.Permiso;
-import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
-import ar.edu.utn.frba.dds.repositories.IRepositorioPermisos;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Permiso;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPermisos;
 import java.util.Optional;
 
 public class VerificadorDePermisos {

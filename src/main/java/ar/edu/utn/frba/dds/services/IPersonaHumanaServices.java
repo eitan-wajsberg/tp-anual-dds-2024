@@ -2,8 +2,7 @@ package ar.edu.utn.frba.dds.services;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
-import ar.edu.utn.frba.dds.domain.contacto.MailSender;
-import ar.edu.utn.frba.dds.domain.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.dtos.inputs.personasHumanas.PersonaHumanaInputDTO;
 import ar.edu.utn.frba.dds.dtos.outputs.personasHumanas.PersonaHumanaOutputDTO;
 

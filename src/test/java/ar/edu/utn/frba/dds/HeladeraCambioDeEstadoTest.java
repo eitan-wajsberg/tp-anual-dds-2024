@@ -3,9 +3,9 @@ package ar.edu.utn.frba.dds;
 
 import ar.edu.utn.frba.dds.domain.adapters.AdapterSensorMovimiento;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterSensorTemperatura;
-import ar.edu.utn.frba.dds.domain.heladeras.EstadoHeladera;
-import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.heladeras.Modelo;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Modelo;
 
 import org.junit.jupiter.api.*;
 

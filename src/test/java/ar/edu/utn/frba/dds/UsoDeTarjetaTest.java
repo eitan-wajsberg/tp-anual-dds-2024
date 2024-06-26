@@ -1,13 +1,13 @@
 package ar.edu.utn.frba.dds;
 
-import ar.edu.utn.frba.dds.domain.personasHumanas.Documento;
-import ar.edu.utn.frba.dds.domain.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.personasHumanas.TipoDocumento;
-import ar.edu.utn.frba.dds.domain.personasVulnerables.PersonaVulnerable;
-import ar.edu.utn.frba.dds.domain.personasVulnerables.Tarjeta;
-import ar.edu.utn.frba.dds.domain.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.personasVulnerables.UsoMaximoDeTarjetasPorDiaExcedidoException;
-import ar.edu.utn.frba.dds.domain.viandas.Vianda;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
+import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
+import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.UsoMaximoDeTarjetasPorDiaExcedidoException;
+import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
