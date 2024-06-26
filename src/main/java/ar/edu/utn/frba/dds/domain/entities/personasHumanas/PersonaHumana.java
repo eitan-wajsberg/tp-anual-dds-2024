@@ -6,7 +6,7 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
-import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import java.time.LocalDate;

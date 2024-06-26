@@ -3,6 +3,9 @@ package ar.edu.utn.frba.dds.domain.entities.personasVulnerables;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoMaximoDeTarjetasPorDiaExcedidoException;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,7 +36,7 @@ public class PersonaVulnerable {
   }
 
   public void usarTarjeta(Heladera heladera, Vianda vianda) throws UsoMaximoDeTarjetasPorDiaExcedidoException {
-    // FIXME: Revisar si la es correcto que este metodo reciba la vianda
+    // FIXME: Revisar si es correcto que este metodo reciba la vianda
     int usosHoy = contarUsosHoy();
     int maxUsosPermitidos = 4 + (2 * menoresAcargo);
 

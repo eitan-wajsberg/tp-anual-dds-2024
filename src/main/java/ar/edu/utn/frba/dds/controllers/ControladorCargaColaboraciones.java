@@ -3,7 +3,7 @@ package ar.edu.utn.frba.dds.controllers;
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
-import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;

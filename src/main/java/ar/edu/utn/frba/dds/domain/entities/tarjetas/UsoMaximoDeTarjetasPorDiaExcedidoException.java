@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.domain.entities.personasVulnerables;
+package ar.edu.utn.frba.dds.domain.entities.tarjetas;
 
 public class UsoMaximoDeTarjetasPorDiaExcedidoException extends RuntimeException {
   public UsoMaximoDeTarjetasPorDiaExcedidoException() {

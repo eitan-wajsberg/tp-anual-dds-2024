@@ -6,7 +6,7 @@ import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
-import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Permiso;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
