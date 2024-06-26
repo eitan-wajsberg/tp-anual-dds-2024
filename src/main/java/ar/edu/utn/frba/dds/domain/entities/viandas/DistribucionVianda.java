@@ -34,7 +34,7 @@ public class DistribucionVianda implements Contribucion {
     heladeraDestino.ingresarViandas(viandas);
   }
 
-  public float calcularPuntaje(){
+  public float calcularPuntaje() {
     float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDistribuidas");
     return cantidadViandas * coeficiente;
   }
