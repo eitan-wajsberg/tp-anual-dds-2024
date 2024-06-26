@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.domain.entities.personasVulnerables;
+package ar.edu.utn.frba.dds.domain.entities.tarjetas;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import java.time.LocalDateTime;

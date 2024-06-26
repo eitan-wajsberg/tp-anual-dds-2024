@@ -1,10 +1,12 @@
-package ar.edu.utn.frba.dds.domain.entities.personasVulnerables;
+package ar.edu.utn.frba.dds.domain.entities.tarjetas;
 
 import ar.edu.utn.frba.dds.domain.Contribucion;
 import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,10 +18,11 @@ public class Tarjeta implements Contribucion {
   @Setter
   private LocalDate fechaEntrega;
   private List<UsoDeTarjeta> historialUsos;
+  private static final int HASH_LENGTH = 11;
 
-  public Tarjeta(String codigo) {
-    this.codigo = codigo;
+  public Tarjeta() {
     this.historialUsos = new ArrayList<>();
+    this.codigo = generateRandomHash();
   }
 
   public Tarjeta(LocalDate fechaEntrega){
@@ -33,5 +36,13 @@ public class Tarjeta implements Contribucion {
 
   public void agregarUso(UsoDeTarjeta uso) {
     this.historialUsos.add(uso);
+  }
+
+  public static String generateRandomHash() {
+    SecureRandom secureRandom = new SecureRandom();
+    byte[] randomBytes = new byte[8];
+    secureRandom.nextBytes(randomBytes);
+    String hash = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+    return hash.length() > HASH_LENGTH ? hash.substring(0, HASH_LENGTH) : hash;
   }
 }
