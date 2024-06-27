@@ -185,49 +185,57 @@ Desperfecto --|> Suscripcion
 ' -----------------------------------------
 
 interface IAdapterPDF {
-+ exportarAPDF(parrafos: List<String>): void
+ + exportarAPDF(titulo: String, parrafos: List<String>): void
 }
 
 class AdapterPDFiText {
-+ exportarAPDF(parrafos: List<String>): void
+ + iText: ITextPDF
+ + exportarAPDF(titulo: String, parrafos: List<String>): void
+}
+
+AdapterPDFiText --> ITextPDF
+
+class ITextPDF {
+ + ruta: String
+ + generarPDF(titulo: String, parrafos: List<String>);
 }
 
 AdapterPDFiText ..|> IAdapterPDF
 
 class GeneradorReportes {
  - reportes: List<Reporte>
+ - pdfAPI: IAdapterPDF
  + generarReportes(): void
 }
 
 GeneradorReportes --> " * " Reporte
+GeneradorReportes --> IAdapterPDF
 
 interface Reporte {
- + generarReporte(parrafos: List<String>): void
+ + generarReporte(): List<String>
+ + titulo(): String
 }
 
 class CantidadDeFallasPorHeladera {
- - pdfAPI: IAdapterPDF
-+ generarReporte(parrafos: List<String>): void
+ + generarReporte(): List<String>
+ + titulo(): String
 }
 
 CantidadDeFallasPorHeladera ..|> Reporte
-CantidadDeFallasPorHeladera --> IAdapterPDF
 
-class MovimientoDeViandasPorHeladera {
- - pdfAPI: IAdapterPDF
- + generarReporte(parrafos: List<String>): void
+class MovimientoViandasPorHeladera {
+ + generarReporte(): List<String>
+  + titulo(): String
 }
 
-MovimientoDeViandasPorHeladera ..|> Reporte
-MovimientoDeViandasPorHeladera --> IAdapterPDF
+MovimientoViandasPorHeladera ..|> Reporte
 
 class CantidadViandasPorColaborador {
- - pdfAPI: IAdapterPDF
- + generarReporte(parrafos: List<String>): void
+ + generarReporte(): List<String>
+  + titulo(): String
 }
 
 CantidadViandasPorColaborador ..|> Reporte
-CantidadViandasPorColaborador --> IAdapterPDF
 
 ' -----------------------------------------
 
