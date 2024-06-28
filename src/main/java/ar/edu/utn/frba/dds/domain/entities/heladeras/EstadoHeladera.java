@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
 public enum EstadoHeladera {
-  DESPERFECTO,
+  FALLA_TEMPERATURA,
   ACTIVA,
-  FRAUDE
+  FRAUDE,
+  FALLA_CONEXION,
+  FALLA_TECNICA
 }
