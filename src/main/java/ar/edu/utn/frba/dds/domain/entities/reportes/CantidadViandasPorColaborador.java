@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.reportes;
 
+import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
 import java.time.LocalDate;
@@ -12,11 +13,11 @@ public class CantidadViandasPorColaborador implements Reporte {
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
     for (PersonaHumana persona : repositorioColaboradores.listar()) {
-      /*int cantidadViandas = (int) persona.getContribuciones().stream().filter(con ->
+      int cantidadViandas = (int) persona.getContribuciones().stream().filter(con ->
          con.obtenerTipoContribucion() == TipoContribucion.DONACION_VIANDA
          && fechaEnRango(con.obtenerFechaRegistro(), fechaInicio, fechaFin)
-      ).count();*/
-      String parrafo = "Cantidad de viandas donadas de " + persona.getNombre() + ": ";
+      ).count();
+      String parrafo = "Cantidad de viandas donadas de " + persona.getNombre() + ": " + cantidadViandas;
       parrafos.add(parrafo);
     }
     return parrafos;
