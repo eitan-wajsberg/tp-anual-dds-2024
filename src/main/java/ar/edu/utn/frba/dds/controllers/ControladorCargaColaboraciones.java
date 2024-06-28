@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.controllers;
 
-import ar.edu.utn.frba.dds.domain.Contribucion;
+import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;

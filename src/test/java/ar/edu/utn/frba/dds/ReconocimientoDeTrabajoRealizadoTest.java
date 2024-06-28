@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.dds;
 
-import ar.edu.utn.frba.dds.domain.Contribucion;
-import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.entities.Contribucion;
+import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;

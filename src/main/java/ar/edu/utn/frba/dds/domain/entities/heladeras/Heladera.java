@@ -1,8 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
-import ar.edu.utn.frba.dds.domain.Contribucion;
-import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
+import ar.edu.utn.frba.dds.domain.entities.Contribucion;
+import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;

@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.dds;
 
 import ar.edu.utn.frba.dds.controllers.ControladorCargaColaboraciones;
-import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
@@ -44,8 +44,6 @@ public class CargaMasivaColaboracionesTest {
   static IRepositorioDocumento repoDocumento;
   static IRepositorioPersonaHumana repoPersonaHumana;
   static Usuario usuario;
-
-  // TODO: REVISAR PORQUE AGREGAMOS EL MOCK DE MAIL SENDER
 
   @BeforeAll
   public static void antesDeTestear() throws MessagingException, UnsupportedEncodingException {

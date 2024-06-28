@@ -1,12 +1,11 @@
 package ar.edu.utn.frba.dds.domain.entities.donacionesDinero;
 
-import ar.edu.utn.frba.dds.domain.Contribucion;
-import ar.edu.utn.frba.dds.domain.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.entities.Contribucion;
+import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 @Getter @Setter
 public class DonacionDinero implements Contribucion {
