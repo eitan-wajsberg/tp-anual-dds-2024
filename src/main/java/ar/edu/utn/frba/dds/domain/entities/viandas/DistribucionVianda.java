@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.viandas;
 
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import java.time.LocalDate;
 import java.util.List;
@@ -37,5 +38,13 @@ public class DistribucionVianda implements Contribucion {
   public float calcularPuntaje() {
     float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDistribuidas");
     return cantidadViandas * coeficiente;
+  }
+
+  public TipoContribucion obtenerTipoContribucion() {
+    return TipoContribucion.DISTRIBUCION_VIANDAS;
+  }
+
+  public LocalDate obtenerFechaRegistro() {
+    return this.fecha;
   }
 }
