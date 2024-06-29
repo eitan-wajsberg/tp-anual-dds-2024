@@ -45,4 +45,11 @@ public class Tarjeta implements Contribucion {
     String hash = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     return hash.length() > HASH_LENGTH ? hash.substring(0, HASH_LENGTH) : hash;
   }
+
+  public int cantidadDeUsos(LocalDate dia){
+    LocalDate hoy = LocalDate.now();
+    return (int) this.historialUsos.stream()
+        .filter(uso -> uso.getFecha().isEqual(dia))
+        .count();
+  }
 }
