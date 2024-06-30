@@ -64,6 +64,7 @@ public class CargaMasivaColaboraciones {
       String nroDocumento = record.get(1);
 
       Long idDoc = descubrirDocumento(tipoDocumento, nroDocumento);
+      Documento doc = this.documentoRepo.buscar(idDoc).get();
 
       // Aseguro existencia de la persona humana
       Optional<PersonaHumana> posiblePersona = this.personaHumanaRepo.buscarPorDocumento(idDoc);
@@ -76,7 +77,9 @@ public class CargaMasivaColaboraciones {
         String mail = record.get(4);
         persona = builder.construirNombre(nombre)
             .construirApellido(apellido)
-            .construirMail(mail, adapterMail).construir();
+            .construirMail(mail, adapterMail)
+            .construirDocumento(doc)
+            .construir();
         this.personaHumanaRepo.guardar(persona);
         notificarAltaPersona(persona);
       } else {
@@ -115,7 +118,8 @@ public class CargaMasivaColaboraciones {
         case "ENTREGA_TARJETAS":
           Tarjeta tarjetaRepartida;
           for (int i = 0; i < cantidad; i++) {
-            tarjetaRepartida = new Tarjeta(fecha);
+            tarjetaRepartida = new Tarjeta();
+            tarjetaRepartida.setFechaEntrega(fecha);
 
             contribuciones.add(tarjetaRepartida);
           }

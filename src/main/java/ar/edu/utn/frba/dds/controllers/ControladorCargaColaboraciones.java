@@ -62,7 +62,6 @@ public class ControladorCargaColaboraciones {
     }
 
     for (CSVRecord record : csvParser) {
-      System.out.println(record);
 
       // Aseguro existencia del documento
       String tipoDocumento = record.get(0);
@@ -113,7 +112,8 @@ public class ControladorCargaColaboraciones {
         case "ENTREGA_TARJETAS":
           Tarjeta tarjetaRepartida;
           for(int i=0; i < cantidad; i++){
-            tarjetaRepartida = new Tarjeta(fecha);
+            tarjetaRepartida = new Tarjeta();
+            tarjetaRepartida.setFechaEntrega(fecha);
 
             contribuciones.add(tarjetaRepartida);
           }

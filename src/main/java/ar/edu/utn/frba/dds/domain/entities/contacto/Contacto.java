@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.contacto;
 
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,5 +31,22 @@ public class Contacto {
     for(MedioDeContacto medio: medios){
       medio.enviar(mensaje);
     }
+  }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof Contacto)) {
+      return false;
+    }
+
+    Contacto contacto = (Contacto) o;
+
+    return this.mediosDeContacto.stream().allMatch(medio1 ->
+        contacto.mediosDeContacto.stream().anyMatch(medio2 ->
+            medio2.equals(medio1)));
   }
 }

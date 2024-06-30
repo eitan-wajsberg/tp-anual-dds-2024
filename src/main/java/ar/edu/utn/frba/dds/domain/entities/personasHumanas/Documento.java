@@ -14,4 +14,20 @@ public class Documento {
     this.tipo = tipo;
     this.nroDocumento = nroDocumento;
   }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof Documento)) {
+      return false;
+    }
+
+    Documento doc = (Documento) o;
+
+    return this.tipo.equals(doc.tipo)
+            && this.nroDocumento.equals(doc.nroDocumento);
+  }
 }
