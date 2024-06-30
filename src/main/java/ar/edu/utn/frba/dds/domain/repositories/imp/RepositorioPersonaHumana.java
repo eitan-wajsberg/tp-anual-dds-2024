@@ -43,4 +43,8 @@ public class RepositorioPersonaHumana implements IRepositorioPersonaHumana {
         .filter(c -> c.getDocumento().getId().equals(documentoId))
         .findFirst();
   }
+
+  public int contar(){
+    return this.personas.size();
+  }
 }
