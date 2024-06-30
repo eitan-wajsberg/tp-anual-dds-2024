@@ -15,9 +15,10 @@ public class RepositorioPersonaHumana implements IRepositorioPersonaHumana {
   }
 
   @Override
-  public void guardar(PersonaHumana persona) {
-    persona.setId((long) (this.personas.size() + 1));
+  public Long guardar(PersonaHumana persona) {
+    persona.setId(this.personas.size() + 1);
     this.personas.add(persona);
+    return persona.getId();
   }
 
   @Override
