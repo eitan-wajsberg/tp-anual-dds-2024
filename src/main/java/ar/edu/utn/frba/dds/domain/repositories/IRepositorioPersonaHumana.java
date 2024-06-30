@@ -9,4 +9,5 @@ public interface IRepositorioPersonaHumana {
   void actualizar(PersonaHumana persona);
   List<PersonaHumana> listar();
   Optional<PersonaHumana> buscarPorDocumento(Long documentoId);
+  int contar();
 }
