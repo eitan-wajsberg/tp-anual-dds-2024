@@ -18,6 +18,8 @@ import lombok.Setter;
 
 @Getter
 public class Heladera implements Contribucion {
+  @Getter @Setter
+  private Long id;
   @Setter
   private String nombre;
   @Setter
