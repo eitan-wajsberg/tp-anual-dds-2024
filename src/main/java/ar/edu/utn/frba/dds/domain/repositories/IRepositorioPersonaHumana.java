@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IRepositorioPersonaHumana {
-  void guardar(PersonaHumana persona);
+  Long guardar(PersonaHumana persona);
   void actualizar(PersonaHumana persona);
   List<PersonaHumana> listar();
   Optional<PersonaHumana> buscarPorDocumento(Long documentoId);
