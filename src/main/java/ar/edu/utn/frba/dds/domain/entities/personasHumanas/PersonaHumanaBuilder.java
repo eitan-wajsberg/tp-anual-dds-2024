@@ -3,6 +3,8 @@ package ar.edu.utn.frba.dds.domain.entities.personasHumanas;
 import static ar.edu.utn.frba.dds.utils.random.Random.generateRandomString;
 
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
+import ar.edu.utn.frba.dds.domain.entities.Contribucion;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 
@@ -23,7 +25,12 @@ public class PersonaHumanaBuilder {
   public PersonaHumanaBuilder construirMail(String mail, AdapterMail adapterMail) {
     Mail contactoMail = new Mail(mail);
     contactoMail.setAdaptador(adapterMail);
-    this.persona.getContacto().agregarMedioDeContacto(contactoMail);
+
+    Contacto contacto = new Contacto();
+    contacto.agregarMedioDeContacto(contactoMail);
+
+    this.persona.setContacto(contacto);
+
     this.mail = mail;
     return this;
   }
@@ -33,18 +40,27 @@ public class PersonaHumanaBuilder {
       throw new PersonaSinContactoException();
     }
 
-    crearUsuario(this.persona);
+    crearUsuario();
 
     return persona;
   }
 
-  private void crearUsuario(PersonaHumana persona){
+  private void crearUsuario(){
     Usuario usuarioDePersona = new Usuario(this.mail);
     String clave = generateRandomString(12);
 
     usuarioDePersona.cambiarClave(clave);
-    System.out.println("Clave: " + clave);
 
     this.persona.setUsuario(usuarioDePersona);
+  }
+
+  public PersonaHumanaBuilder construirDocumento(Documento doc) {
+    this.persona.setDocumento(doc);
+    return this;
+  }
+
+  public PersonaHumanaBuilder construirContribucion(Contribucion c) {
+    this.persona.agregarContribucion(c);
+    return this;
   }
 }

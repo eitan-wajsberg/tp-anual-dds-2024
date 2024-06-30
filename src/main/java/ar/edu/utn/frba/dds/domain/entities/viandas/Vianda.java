@@ -38,4 +38,19 @@ public class Vianda implements Contribucion {
   public boolean estaVencida() {
     return fechaCaducidad.isBefore(LocalDate.now());
   }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof Vianda)) {
+      return false;
+    }
+
+    Vianda vianda = (Vianda) o;
+
+    return this.fechaDonacion.equals(vianda.fechaDonacion);
+  }
 }

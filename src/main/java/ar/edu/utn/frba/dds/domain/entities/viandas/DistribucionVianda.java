@@ -38,4 +38,20 @@ public class DistribucionVianda implements Contribucion {
     float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDistribuidas");
     return cantidadViandas * coeficiente;
   }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof DistribucionVianda)) {
+      return false;
+    }
+
+    DistribucionVianda distribucion = (DistribucionVianda) o;
+
+    return this.fecha.equals(distribucion.fecha)
+        && this.cantidadViandas == distribucion.cantidadViandas;
+  }
 }
