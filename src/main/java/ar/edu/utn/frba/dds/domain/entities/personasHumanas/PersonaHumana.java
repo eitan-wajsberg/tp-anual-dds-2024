@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
@@ -45,6 +46,8 @@ public class PersonaHumana {
   private List<Tarjeta> tarjetasSinEntregar;
   @Getter
   private List<Respuesta> formulario;
+  @Getter
+  private Tarjeta tarjeta;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
@@ -54,10 +57,10 @@ public class PersonaHumana {
     this.formulario = new ArrayList<>();
   }
 
-  public float puntosGastados(){
+  public float puntosGastados() {
     float sum = 0;
-    for(OfertaCanjeada ofertaCanjeada: ofertasCanjeadas){
-      sum+= ofertaCanjeada.getOferta().getCantidadPuntosNecesarios();
+    for (OfertaCanjeada ofertaCanjeada : ofertasCanjeadas) {
+      sum += ofertaCanjeada.getOferta().getCantidadPuntosNecesarios();
     }
     return sum;
   }
@@ -66,15 +69,15 @@ public class PersonaHumana {
     return reconocimientoTrabajoRealizado.calcularPuntaje(this.getContribuciones(), this.puntosGastados());
   }
 
-  public void agregarContribucion(Contribucion contribucion){
+  public void agregarContribucion(Contribucion contribucion) {
     contribuciones.add(contribucion);
   }
-  public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada){
+  public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada) {
     ofertasCanjeadas.add(ofertaCanjeada);
   }
 
-  public void agregarTarjetaSinEntregar(Tarjeta tarjeta){
-    if(this.direccion == null) {
+  public void agregarTarjetaSinEntregar(Tarjeta tarjeta) {
+    if (this.direccion == null) {
       throw new DireccionIncompletaException();
     }
     this.tarjetasSinEntregar.add(tarjeta);
@@ -99,21 +102,28 @@ public class PersonaHumana {
     // TODO
   }
 
+  public void usarTarjeta(Heladera heladera) {
+    // TODO
+  }
+
+  public void asignarTarjeta(Tarjeta tarjeta) {
+    // FIXME: Habia que verificar algo en especifico para asignarle la tarjeta?
+    this.tarjeta = tarjeta;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;
     }
 
-    if (!(o instanceof PersonaHumana)) {
+    if (!(o instanceof PersonaHumana persona)) {
       return false;
     }
 
-    PersonaHumana persona = (PersonaHumana) o;
-
     // comparar distribuciones
     boolean mismasContribuciones = this.contribuciones.size() == persona.contribuciones.size();
-    if(mismasContribuciones) {
+    if (mismasContribuciones) {
       mismasContribuciones =
           this.contribuciones.stream().allMatch(contribucion1 ->
             persona.contribuciones.stream().anyMatch(contribucion2 ->

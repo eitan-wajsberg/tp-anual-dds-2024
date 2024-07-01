@@ -2,37 +2,36 @@ package ar.edu.utn.frba.dds.domain.entities.reportes;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 public class GeneradorReportes {
-  @Getter @Setter
-  private List<Reporte> reportes;
+  @Getter
+  private static List<Reporte> reportes;
   @Getter @Setter
   private IAdapterPDF adapterPDF;
   private static GeneradorReportes instancia = null;
-
-  public enum Temporalidad {
-    DIARIO,
-    SEMANAL,
-    MENSUAL,
-    ANUAL
-  }
-
   @Getter @Setter
   private Temporalidad temporalidad;
 
   public static GeneradorReportes getInstance() {
     if (instancia == null) {
       instancia = new GeneradorReportes();
+      reportes = new ArrayList<>();
     }
     return instancia;
   }
 
-  private LocalDate calcularFechaInicio(Temporalidad temporalidad) {
+  public void agregarReportes(Reporte ...reportes) {
+    Collections.addAll(this.reportes, reportes);
+  }
+
+  public LocalDate calcularFechaInicio() {
     LocalDate ahora = LocalDate.now();
-    return switch (temporalidad) {
+    return switch (this.temporalidad) {
       case DIARIO -> ahora.minusDays(1);
       case SEMANAL -> ahora.minusWeeks(1);
       case MENSUAL -> ahora.minusMonths(1);
@@ -43,7 +42,7 @@ public class GeneradorReportes {
   }
 
   public void generarReportes() {
-    LocalDate fechaInicio = calcularFechaInicio(temporalidad);
+    LocalDate fechaInicio = calcularFechaInicio();
     LocalDate fechaFin = LocalDate.now();
 
     for (Reporte reporte : reportes) {
