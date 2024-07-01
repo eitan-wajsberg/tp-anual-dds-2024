@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class GeneradorReportes {
+  @Getter @Setter
   private List<Reporte> reportes;
+  @Getter @Setter
   private IAdapterPDF adapterPDF;
   private static GeneradorReportes instancia = null;
 
@@ -30,25 +32,23 @@ public class GeneradorReportes {
 
   private LocalDate calcularFechaInicio(Temporalidad temporalidad) {
     LocalDate ahora = LocalDate.now();
-    switch (temporalidad) {
-      case DIARIO:
-        return ahora.minusDays(1);
-      case SEMANAL:
-        return ahora.minusWeeks(1);
-      case MENSUAL:
-        return ahora.minusMonths(1);
-      case ANUAL:
-        return ahora.minusYears(1);
-      default:
-        return ahora; // En caso de que no se establezca ninguna temporalidad, usar la fecha actual.
-    }
+    return switch (temporalidad) {
+      case DIARIO -> ahora.minusDays(1);
+      case SEMANAL -> ahora.minusWeeks(1);
+      case MENSUAL -> ahora.minusMonths(1);
+      case ANUAL -> ahora.minusYears(1);
+      default ->
+          ahora; // En caso de que no se establezca ninguna temporalidad, usar la fecha actual.
+    };
   }
 
   public void generarReportes() {
     LocalDate fechaInicio = calcularFechaInicio(temporalidad);
     LocalDate fechaFin = LocalDate.now();
+
     for (Reporte reporte : reportes) {
-      adapterPDF.exportarPDF(reporte.titulo(), reporte.generarReporte(fechaInicio, fechaFin));
+      List<String> parrafos = reporte.generarReporte(fechaInicio, fechaFin);
+      adapterPDF.exportarPDF(reporte.titulo(), parrafos);
     }
   }
 }

@@ -6,8 +6,11 @@ import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 public class CantidadFallasPorHeladera implements Reporte {
+  @Getter @Setter
   IRepositorioHeladera repositorioHeladera;
 
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
@@ -22,7 +25,7 @@ public class CantidadFallasPorHeladera implements Reporte {
     return parrafos;
   }
 
-  public static boolean fechaEnRango(LocalDate fecha, LocalDate fechaInicio, LocalDate fechaFin) {
+  private static boolean fechaEnRango(LocalDate fecha, LocalDate fechaInicio, LocalDate fechaFin) {
     return (fecha.isEqual(fechaInicio) || fecha.isAfter(fechaFin))
         && (fecha.isEqual(fechaFin) || fecha.isBefore(fechaFin));
   }
