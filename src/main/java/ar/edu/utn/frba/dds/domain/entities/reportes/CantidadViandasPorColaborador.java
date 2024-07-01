@@ -29,6 +29,6 @@ public class CantidadViandasPorColaborador implements Reporte {
   }
 
   public String titulo() {
-    return "Cantidad viandas por colaborador";
+    return "Cantidad de viandas por colaborador";
   }
 }

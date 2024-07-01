@@ -28,6 +28,6 @@ public class CantidadFallasPorHeladera implements Reporte {
   }
 
   public String titulo() {
-    return "Cantidad fallas por heladera";
+    return "Cantidad de fallas por heladera";
   }
 }

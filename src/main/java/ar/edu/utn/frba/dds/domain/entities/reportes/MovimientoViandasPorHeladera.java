@@ -14,7 +14,6 @@ public class MovimientoViandasPorHeladera implements Reporte {
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
     for (Heladera heladera : this.repositorioHeladera.listar()) {
-      // como para meter o sacar cosas en la heladera primero hay que solicitarlas
       int cantidadViandasRetiradas = cantidadViandasSegunAccion(heladera, AccionApertura.QUITAR_VIANDA);
       int cantidadViandasColocadas = cantidadViandasSegunAccion(heladera, AccionApertura.INGRESAR_VIANDA);
       String parrafo = heladera.getNombre() + ": "
@@ -27,12 +26,13 @@ public class MovimientoViandasPorHeladera implements Reporte {
   }
 
   private int cantidadViandasSegunAccion(Heladera heladera, AccionApertura accion) {
+    // como para meter o sacar cosas en la heladera primero hay que solicitarlas
     return (int) heladera.getSolicitudesDeApertura().stream().filter(sol ->
         sol.isAperturaConcretada() && sol.getAccion().equals(accion)
     ).count();
   }
 
   public String titulo() {
-    return "Movimiento viandas por heladera";
+    return "Movimientos de viandas por heladera";
   }
 }
