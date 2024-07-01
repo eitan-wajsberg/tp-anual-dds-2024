@@ -2,7 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.tarjetas;
 
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
-
+import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -29,6 +29,14 @@ public class Tarjeta implements Contribucion {
   public float calcularPuntaje() {
     float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteTarjetasRepartidas");
     return coeficiente;
+  }
+
+  public TipoContribucion obtenerTipoContribucion() {
+    return TipoContribucion.ENTREGA_TARJETAS;
+  }
+
+  public LocalDate obtenerFechaRegistro() {
+    return null;
   }
 
   public void agregarUso(UsoDeTarjeta uso) {
