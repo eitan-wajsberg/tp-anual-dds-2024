@@ -10,7 +10,6 @@ import lombok.Setter;
 public class Mail implements MedioDeContacto {
   @Getter
   private String correo;
-  @Setter
   private AdapterMail adaptador;
 
   public Mail(String correo){
@@ -20,5 +19,20 @@ public class Mail implements MedioDeContacto {
   @Override
   public void enviar(Mensaje mensaje) throws MessagingException, UnsupportedEncodingException {
     adaptador.enviar(mensaje, correo);
+  }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof Mail)) {
+      return false;
+    }
+
+    Mail mail = (Mail) o;
+
+    return this.correo.equals(mail.correo);
   }
 }

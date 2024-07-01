@@ -15,15 +15,16 @@ public class RepositorioPersonaHumana implements IRepositorioPersonaHumana {
   }
 
   @Override
-  public void guardar(PersonaHumana persona) {
+  public Long guardar(PersonaHumana persona) {
     persona.setId((long) (this.personas.size() + 1));
     this.personas.add(persona);
+    return persona.getId();
   }
 
   @Override
   public void actualizar(PersonaHumana persona) {
-    for(int i=0; i < personas.size(); i++){
-      if(persona.getId().equals(personas.get(i).getId())){
+    for (int i = 0; i < personas.size(); i++) {
+      if (persona.getId().equals(personas.get(i).getId())) {
         personas.set(i, persona);
         break;
       }
@@ -41,5 +42,9 @@ public class RepositorioPersonaHumana implements IRepositorioPersonaHumana {
         .stream()
         .filter(c -> c.getDocumento().getId().equals(documentoId))
         .findFirst();
+  }
+
+  public int contar(){
+    return this.personas.size();
   }
 }

@@ -15,9 +15,10 @@ public class RepositorioDocumento implements IRepositorioDocumento {
   }
 
   @Override
-  public void guardar(Documento documento) {
+  public Long guardar(Documento documento) {
     documento.setId((long) (this.documentos.size() + 1));
     this.documentos.add(documento);
+    return documento.getId();
   }
 
   public Optional<Documento> buscar(Long id) {

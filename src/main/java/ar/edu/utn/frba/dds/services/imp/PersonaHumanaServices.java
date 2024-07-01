@@ -30,9 +30,6 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
   private IRepositorioPersonaHumana repoPersonaHumana;
   private VerificadorDePermisos verificadorDePermisos;
 
-  private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  private static final SecureRandom RANDOM = new SecureRandom();
-
   public PersonaHumanaServices(IRepositorioDocumento repoDocumento, IRepositorioPersonaHumana repoPersonaHumana, VerificadorDePermisos verificadorDePermisos) {
     this.repoPersonaHumana = repoPersonaHumana;
     this.verificadorDePermisos = verificadorDePermisos;
@@ -94,34 +91,6 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
 
     if (posiblePersona.isEmpty()) {
       output = crear(personaInputDTO, usuario, mailSender);
-      // TODO: lo siguiente es provisional y una idea para futuro. La creación y asignación de usuario no debería ser hecha de un tiro
-      verificadorDePermisos.verificarSiUsuarioPuede("CREAR-USUARIO", usuario);
-      Usuario usuarioDePersona = new Usuario(personaInputDTO.getMail());
-      String clave = generateRandomString(12);
-      // TODO: Verificar que la clave proporcionada es valida y de no ser el caso generar una nueva hasta que lo sea
-      usuarioDePersona.cambiarClave(clave, new ValidadorDeClave());
-      System.out.println(clave);
-
-      // TODO: debería recuperar la persona, asignarle el usuario y actualizar la persona. A fines de lo que se quiere hacer ahora, no es necesario
-      posiblePersona = this.repoPersonaHumana.buscarPorDocumento(output.getDocumentoId());
-      PersonaHumana persona = posiblePersona.get();
-      persona.setUsuario(usuarioDePersona);
-      repoPersonaHumana.actualizar(persona);
-
-      Mensaje mensaje = new Mensaje("Credenciales de acceso al sistema",
-          "¡Gracias por colaborar en el"
-              + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica!\n"
-              + "Se le ha creado su cuenta de acceso al sistema. Sus credenciales son: \n"
-              + "Nombre de usuario: " + usuarioDePersona.getNombre() + "\n"
-              + "Contaseña: " + usuarioDePersona.getClave(),
-          LocalDateTime.now());
-      try {
-        persona.getContacto().enviarMensaje(mensaje);
-      } catch (MessagingException e) {
-        System.out.println(e.getMessage());
-      } catch (UnsupportedEncodingException e) {
-        System.out.println(e.getMessage());
-      }
     } else {
       PersonaHumana persona = posiblePersona.get();
       output = new PersonaHumanaOutputDTO();
@@ -145,15 +114,6 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     }
 
     this.repoPersonaHumana.actualizar(persona);
-  }
-
-  public static String generateRandomString(int length) {
-    StringBuilder sb = new StringBuilder(length);
-    for (int i = 0; i < length; i++) {
-      int index = RANDOM.nextInt(CHARACTERS.length());
-      sb.append(CHARACTERS.charAt(index));
-    }
-    return sb.toString();
   }
 
 }

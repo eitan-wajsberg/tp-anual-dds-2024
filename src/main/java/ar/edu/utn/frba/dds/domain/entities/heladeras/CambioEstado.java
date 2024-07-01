@@ -13,4 +13,8 @@ public class CambioEstado {
     this.estado = estado;
     this.fechaCambio = fechaCambio;
   }
+
+  public boolean esUnaFalla() {
+    return !this.estado.equals(EstadoHeladera.ACTIVA);
+  }
 }

@@ -1,34 +1,29 @@
 package ar.edu.utn.frba.dds;
 
-import ar.edu.utn.frba.dds.controllers.ControladorCargaColaboraciones;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
+import ar.edu.utn.frba.dds.domain.entities.cargaMasiva.CargaMasivaColaboraciones;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
+import ar.edu.utn.frba.dds.domain.entities.contacto.MailSender;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumanaBuilder;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.Permiso;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioDocumento;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPermisos;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDocumento;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPermisos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
-import ar.edu.utn.frba.dds.services.IDocumentoServices;
-import ar.edu.utn.frba.dds.services.IPersonaHumanaServices;
-import ar.edu.utn.frba.dds.services.imp.DocumentoServices;
-import ar.edu.utn.frba.dds.services.imp.PersonaHumanaServices;
-import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.mail.MessagingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -38,83 +33,70 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 
 public class CargaMasivaColaboracionesTest {
-  static ControladorCargaColaboraciones carga;
-  static IPersonaHumanaServices personaHumanaServices;
-  static IDocumentoServices documentoServices;
+  static CargaMasivaColaboraciones carga;
   static IRepositorioDocumento repoDocumento;
   static IRepositorioPersonaHumana repoPersonaHumana;
-  static Usuario usuario;
 
   @BeforeAll
   public static void antesDeTestear() throws MessagingException, UnsupportedEncodingException {
     repoDocumento = new RepositorioDocumento();
     repoPersonaHumana = new RepositorioPersonaHumana();
 
-    IRepositorioPermisos repoPermisos = new RepositorioPermisos();
-    VerificadorDePermisos verificadorDePermisos = new VerificadorDePermisos(repoPermisos);
+    // Preparo mail sender
+    AdapterMail mailSender = mock(AdapterMail.class);
+    doNothing().when(mailSender).enviar(any(), any());
 
-    personaHumanaServices = new PersonaHumanaServices(repoDocumento, repoPersonaHumana, verificadorDePermisos);
-    documentoServices = new DocumentoServices(verificadorDePermisos, repoDocumento);
-    carga = new ControladorCargaColaboraciones(personaHumanaServices, documentoServices, verificadorDePermisos);
-
-    usuario = new Usuario("testing");
-    Rol cargasMasivas = new Rol();
-
-    List<Permiso> permisosNecesarios = new ArrayList<>();
-    permisosNecesarios.add(new Permiso("CARGAR-MASIVAMENTE-COLABORACIONES"));
-    permisosNecesarios.add(new Permiso("CREAR-DOCUMENTO"));
-    permisosNecesarios.add(new Permiso("BUSCAR-DOCUMENTO"));
-    permisosNecesarios.add(new Permiso("CREAR-PERSONA-HUMANA"));
-    permisosNecesarios.add(new Permiso("BUSCAR-PERSONA-HUMANA"));
-    permisosNecesarios.add(new Permiso("AGREGAR-COLABORACION"));
-    permisosNecesarios.add(new Permiso("CREAR-USUARIO"));
-    permisosNecesarios.add(new Permiso("CREAR-USUARIO"));
-    for(Permiso permiso: permisosNecesarios){
-      repoPermisos.guardar(permiso);
-      cargasMasivas.agregarPermiso(permiso);
-    }
-    usuario.setRol(cargasMasivas);
-
+    // Preparo archivo
     String nombreArchivo = "TestCargaMasivaColaboraciones.csv";
     File nuevoArchivo = new File("src/resources/" + nombreArchivo);
 
-    AdapterMail mailSender = mock(AdapterMail.class);
-    carga.cargarColaboraciones(usuario, nuevoArchivo, mailSender);
-
-    doNothing().when(mailSender).enviar(any(), any());
-
-    ReconocimientoTrabajoRealizado.getInstance();
+    // Realizo carga
+    carga = new CargaMasivaColaboraciones(repoPersonaHumana, repoDocumento);
+    carga.cargarColaboraciones(nuevoArchivo, mailSender);
   }
 
   @Test
   @DisplayName("Se cargan todas las nuevas personas")
   public void seCarganTodasLasPersonas() {
-    Assertions.assertEquals(repoPersonaHumana.listar().size(), 6);
+    Assertions.assertEquals(repoPersonaHumana.contar(), 6);
   }
 
   @Test
   @DisplayName("Se cargan bien todos los datos de una nueva persona")
   public void cargaCompletaDePersona(){
     PersonaHumana personaEnRepo = repoPersonaHumana.listar().get(0);
-    PersonaHumana personaEsperada = new PersonaHumana();
-    personaEsperada.setNombre("Marco");
-    personaEsperada.setApellido("Bravo");
-    personaEsperada.setDocumento(new Documento(TipoDocumento.DNI, "44125678"));
-    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    personaEsperada.agregarContribucion(new Vianda(LocalDate.parse("25/05/2024", dateFormat)));
-    personaEsperada.agregarContribucion(new DistribucionVianda(LocalDate.parse("26/05/2024", dateFormat), 5));
-    personaEsperada.agregarContribucion(new Vianda(LocalDate.parse("30/05/2024", dateFormat)));
-    personaEsperada.agregarContribucion(new Tarjeta(LocalDate.parse("04/06/2024", dateFormat)));
+    PersonaHumana personaEsperada = construirPrimeraPersona();
+
     float puntajeReal = ReconocimientoTrabajoRealizado.getInstance().
         calcularPuntaje(personaEnRepo.getContribuciones(), personaEnRepo.puntosGastados());
     float puntajeEsperado = ReconocimientoTrabajoRealizado.getInstance().
         calcularPuntaje(personaEsperada.getContribuciones(), personaEsperada.puntosGastados());
 
-    Assertions.assertEquals(personaEsperada.getNombre(), personaEnRepo.getNombre());
-    Assertions.assertEquals(personaEsperada.getApellido(), personaEnRepo.getApellido());
-    Assertions.assertEquals(personaEsperada.getDocumento().getTipo(), personaEnRepo.getDocumento().getTipo());
-    Assertions.assertEquals(personaEsperada.getDocumento().getNroDocumento(), personaEnRepo.getDocumento().getNroDocumento());
-    Assertions.assertEquals(personaEsperada.getContribuciones().size(), personaEnRepo.getContribuciones().size());
+    Assertions.assertTrue(personaEsperada.equals(personaEnRepo));
     Assertions.assertEquals(puntajeEsperado, puntajeReal);
+  }
+
+  private PersonaHumana construirPrimeraPersona(){
+    Tarjeta tarjeta = new Tarjeta();
+    tarjeta.setFechaEntrega(fecha("04/06/2024"));
+
+    PersonaHumanaBuilder builder = new PersonaHumanaBuilder();
+    PersonaHumana persona =
+        builder.construirNombre("Marco")
+            .construirApellido("Bravo")
+            .construirMail("nosequepasa@sielmailnoesvalido.com", new MailSender())
+            .construirDocumento(new Documento(TipoDocumento.DNI, "44125678"))
+            .construirContribucion(new Vianda(fecha("25/05/2024")))
+            .construirContribucion(new DistribucionVianda(fecha("26/05/2024"), 5))
+            .construirContribucion(new Vianda(fecha("30/05/2024")))
+            .construirContribucion(tarjeta)
+            .construir();
+
+    return persona;
+  }
+
+  private LocalDate fecha(String fecha){
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    return LocalDate.parse(fecha, dateFormat);
   }
 }

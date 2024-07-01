@@ -47,4 +47,20 @@ public class DistribucionVianda implements Contribucion {
   public LocalDate obtenerFechaRegistro() {
     return this.fecha;
   }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof DistribucionVianda)) {
+      return false;
+    }
+
+    DistribucionVianda distribucion = (DistribucionVianda) o;
+
+    return this.fecha.equals(distribucion.fecha)
+        && this.cantidadViandas == distribucion.cantidadViandas;
+  }
 }

@@ -2,8 +2,8 @@ package ar.edu.utn.frba.dds.domain.entities.tarjetas;
 
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
-
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
+import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,10 +24,6 @@ public class Tarjeta implements Contribucion {
   public Tarjeta() {
     this.historialUsos = new ArrayList<>();
     this.codigo = generarCodigo();
-  }
-
-  public Tarjeta(LocalDate fechaEntrega){
-    this.fechaEntrega = fechaEntrega;
   }
 
   public float calcularPuntaje() {
@@ -53,5 +49,27 @@ public class Tarjeta implements Contribucion {
     secureRandom.nextBytes(randomBytes);
     String hash = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     return hash.length() > HASH_LENGTH ? hash.substring(0, HASH_LENGTH) : hash;
+  }
+
+  public int cantidadDeUsos(LocalDate dia){
+    LocalDate hoy = LocalDate.now();
+    return (int) this.historialUsos.stream()
+        .filter(uso -> uso.getFecha().isEqual(dia))
+        .count();
+  }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof Tarjeta)) {
+      return false;
+    }
+
+    Tarjeta tarjeta = (Tarjeta) o;
+
+    return this.fechaEntrega.equals(tarjeta.fechaEntrega);
   }
 }
