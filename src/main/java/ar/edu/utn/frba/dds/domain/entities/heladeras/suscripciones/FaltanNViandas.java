@@ -3,16 +3,18 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import java.time.LocalDateTime;
 
 public class FaltanNViandas extends Suscripcion {
   private int cantidadViandasParaLlenarse;
-  private PersonaHumana colaborador;
 
   protected boolean cumpleCondicion(Heladera heladera) {
-    return false;
+    return heladera.cantidadViandas() + cantidadViandasParaLlenarse == heladera.getCapacidadMaximaViandas();
   }
 
-  protected Mensaje armarMensaje(Heladera heladera) {
-    return null;
+  protected String armarCuerpo(Heladera heladera) {
+    return "Faltan " + cantidadViandasParaLlenarse
+        + " viandas para que la heladera "
+        + heladera.getNombre() + " este llena.";
   }
 }
