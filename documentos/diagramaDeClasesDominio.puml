@@ -416,6 +416,19 @@ DistribucionVianda ..|> Contribucion
 
 interface Contribucion {
  + calcularPuntaje(): float
+ + obtenerTipoContribucion(): TipoContribucion
+ + obtenerFechaRegistro(): LocalDate
+}
+
+Contribucion ..> TipoContribucion
+
+enum TipoContribucion {
+ DISTRIBUCION_VIANDAS
+ DONACION_DINERO
+ DONACION_VIANDA
+ ENTREGA_TARJETAS
+ ENCARGARSE_DE_HELADERA
+ OFRECER_OFERTA
 }
 
 note bottom
