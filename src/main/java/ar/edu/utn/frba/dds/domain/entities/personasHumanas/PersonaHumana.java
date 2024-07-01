@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.personasHumanas;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
@@ -94,8 +95,12 @@ public class PersonaHumana {
     this.contribucionesElegidas.remove(forma);
   }
 
+  public void serNotificadoPor(Mensaje mensaje) {
+    // TODO
+  }
+
   @Override
-  public boolean equals(Object o){
+  public boolean equals(Object o) {
     if (o == this) {
       return true;
     }
