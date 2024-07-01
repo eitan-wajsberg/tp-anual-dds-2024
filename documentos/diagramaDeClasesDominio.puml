@@ -144,13 +144,13 @@ class Suscripcion {
  + notificar(heladera: Heladera): void
    /'
    if(cumpleCondicion(heladera)){
-      mensaje = armarMensaje(heladera);
+      Mensaje mensaje = armarMensaje(heladera);
       this.colaborador.serNotificadoPor(mensaje);
       mensaje.registrar();
    }'/
-   
+ - armarMensaje(heladera: Heladera): Mensaje
  # cumpleCondicion(heladera: Heladera): boolean
- # armarMensaje(heladera: Heladera): String
+ # armarCuerpo(heladera: Heladera): String
 }
 
 Suscripcion --> PersonaHumana
@@ -159,20 +159,20 @@ Suscripcion ..> Heladera
 class QuedanNViandas {
  - cantidadViandasDisponibles: int
  # cumpleCondicion(heladera: Heladera): void
- # armarMensaje(heladera: Heladera): String
+ # armarCuerpo(heladera: Heladera): String
 }
 
 class FaltanNViandas {
  - cantidadViandasParaLlenarse: int
  # cumpleCondicion(heladera: Heladera): void
- # armarMensaje(heladera: Heladera): String
+ # armarCuerpo(heladera: Heladera): String
 }
 
 class Desperfecto {
- - aceptada: bool ? 'el colaborador debe aceptar o rechazar esta sugerencia
- + sugerirHeladeras(heladera: Heladera): List<Heladera>?
+ - aceptada: boolean
+ + sugerirHeladeras(heladera: Heladera): String
  # cumpleCondicion(heladera: Heladera): void
- # armarMensaje(heladera: Heladera): String
+ # armarCuerpo(heladera: Heladera): String
 }
 
 QuedanNViandas --|> Suscripcion
