@@ -209,30 +209,36 @@ GeneradorReportes --> " * " Reporte
 GeneradorReportes --> IAdapterPDF
 
 interface Reporte {
- + generarReporte(): List<String>
+ + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
 }
 
 class CantidadDeFallasPorHeladera {
- + generarReporte(): List<String>
+ - repositorioHeladera: IRepositorioHeladera
+ + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
 }
 
 CantidadDeFallasPorHeladera ..|> Reporte
+CantidadDeFallasPorHeladera ..> Heladera
 
 class MovimientoViandasPorHeladera {
- + generarReporte(): List<String>
-  + titulo(): String
+ - repositorioHeladera: IRepositorioHeladera
+ + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
+ + titulo(): String
 }
 
 MovimientoViandasPorHeladera ..|> Reporte
+MovimientoViandasPorHeladera ..> Heladera
 
 class CantidadViandasPorColaborador {
- + generarReporte(): List<String>
-  + titulo(): String
+ - repositorioColaboradores: IRepositorioPersonaHumana
+ + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
+ + titulo(): String
 }
 
 CantidadViandasPorColaborador ..|> Reporte
+CantidadViandasPorColaborador ..> PersonaHumana
 
 ' -----------------------------------------
 
