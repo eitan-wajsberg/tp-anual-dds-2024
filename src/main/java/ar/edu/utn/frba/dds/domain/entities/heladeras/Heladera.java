@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
@@ -78,6 +79,14 @@ public class Heladera implements Contribucion {
   public float calcularPuntaje() {
     float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteCantidadHeladerasActivas");
     return coeficiente * this.calcularMesesActiva();
+  }
+
+  public TipoContribucion obtenerTipoContribucion() {
+    return TipoContribucion.ENCARGARSE_DE_HELADERA;
+  }
+
+  public LocalDate obtenerFechaRegistro() {
+    return this.fechaRegistro.toLocalDate();
   }
 
   public void cambiarEstado(EstadoHeladera nuevoEstado) {

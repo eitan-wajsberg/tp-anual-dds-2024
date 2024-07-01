@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.donacionesDinero;
 
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
+import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +18,13 @@ public class DonacionDinero implements Contribucion {
   public float calcularPuntaje(){
     float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficientePesosDonados");
     return monto * coeficiente;
+  }
+
+  public TipoContribucion obtenerTipoContribucion() {
+    return TipoContribucion.DONACION_DINERO;
+  }
+
+  public LocalDate obtenerFechaRegistro() {
+    return this.fecha;
   }
 }

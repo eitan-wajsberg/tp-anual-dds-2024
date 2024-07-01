@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.viandas;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 
+import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,14 @@ public class Vianda implements Contribucion {
   public float calcularPuntaje() {
     float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDonadas");
     return coeficiente;
+  }
+
+  public TipoContribucion obtenerTipoContribucion() {
+    return TipoContribucion.DONACION_VIANDA;
+  }
+
+  public LocalDate obtenerFechaRegistro() {
+    return this.fechaDonacion;
   }
 
   public boolean estaVencida() {
