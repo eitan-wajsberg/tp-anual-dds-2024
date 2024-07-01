@@ -677,6 +677,7 @@ class Tarjeta {
  - fechaEntrega: LocalDate
  + calcularPuntaje(): float
  + agregarUso(usoTarjeta: UsoDeTarjeta): void
+ + cantidadDeUsos(dia: LocalDate): int
 }
 
 Tarjeta --> " * " UsoDeTarjeta
@@ -706,7 +707,6 @@ class PersonaVulnerable {
  - documento: Documento
  - donanteQueLoRegistro: PersonaHumana
  + usarTarjeta(heladera: Heladera, vianda: Vianda): void
- + contarUsosHoy(): int;
 }
 
 PersonaVulnerable --> PersonaHumana

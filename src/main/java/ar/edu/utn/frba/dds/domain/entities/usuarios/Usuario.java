@@ -24,4 +24,8 @@ public class Usuario {
     }
   }
 
+  public void cambiarClave(String clave){
+    this.clave = clave;
+  }
+
 }

@@ -93,4 +93,33 @@ public class PersonaHumana {
   public void quitarFormaDeContribucion(FormasContribucionHumanas forma) {
     this.contribucionesElegidas.remove(forma);
   }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof PersonaHumana)) {
+      return false;
+    }
+
+    PersonaHumana persona = (PersonaHumana) o;
+
+    // comparar distribuciones
+    boolean mismasContribuciones = this.contribuciones.size() == persona.contribuciones.size();
+    if(mismasContribuciones) {
+      mismasContribuciones =
+          this.contribuciones.stream().allMatch(contribucion1 ->
+            persona.contribuciones.stream().anyMatch(contribucion2 ->
+                contribucion2.equals(contribucion1)));
+    }
+
+    return
+        mismasContribuciones
+        && this.nombre.equals(persona.nombre)
+        && this.apellido.equals(persona.apellido)
+        && this.documento.equals(persona.documento)
+        && this.contacto.equals(persona.contacto);
+  }
 }
