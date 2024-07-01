@@ -132,6 +132,10 @@ public class Heladera implements Contribucion {
   }
 
   public void agregarSolicitudApertura(SolicitudApertura solicitud) {
+    if (!this.estaActiva()) {
+      throw new HeladeraInactivaException();
+    }
+
     this.solicitudesDeApertura.add(solicitud);
   }
 
