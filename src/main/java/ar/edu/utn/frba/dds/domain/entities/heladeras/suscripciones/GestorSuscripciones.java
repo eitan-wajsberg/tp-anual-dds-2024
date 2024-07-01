@@ -8,6 +8,6 @@ public class GestorSuscripciones {
   private Map<TipoContribucion, Suscripcion> suscripcionesPorTipo;
 
   public void notificar(TipoSuscripcion tipo, Heladera heladera) {
-
+    // TODO
   }
 }
