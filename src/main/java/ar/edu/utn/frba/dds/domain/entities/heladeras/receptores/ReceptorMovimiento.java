@@ -2,66 +2,56 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.receptores;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
-import lombok.Getter;
-import org.eclipse.paho.client.mqttv3.*;
-
-import java.util.List;
 import java.util.Optional;
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-@Getter
-public class ReceptorMovimiento  implements MqttCallback {
+public class ReceptorMovimiento implements IMqttMessageListener {
+  RepositorioHeladera repositorioHeladeras;
+  public void messageArrived(String topic, MqttMessage mensaje){ // formato: idHeladera | fraude
+        try{
+          String[] payload = dividirPayload(mensaje.toString());
+          if(payload != null){
+            Long idHeladera = Long.parseLong(payload[0]);
+            String tipoMensaje = payload[1];
+            Boolean valor = Boolean.parseBoolean(payload[2]);
 
-    private MqttClient client;
-    private RepositorioHeladera repositorioHeladeras;
-
-    public ReceptorMovimiento(String brokerUrl, String clientId, RepositorioHeladera repositorioHeladeras) throws MqttException {
-        this.repositorioHeladeras = repositorioHeladeras;
-        this.client = new MqttClient(brokerUrl, clientId);
-        this.client.setCallback(this);
-        this.client.connect();
-    }
-
-    public void subscribe(String topic) throws MqttException {
-        client.subscribe(topic);
-    }
-
-    @Override
-    public void connectionLost(Throwable cause) {
-        // Lógica para manejar la pérdida de conexión
-    }
-    @Override
-    public void messageArrived(String topic, MqttMessage mqttMessage) {
-        String payload = new String(mqttMessage.getPayload());
-        System.out.println("Mensaje recibido: " + payload);
-
-        try {
-            // Asumiendo que el payload tiene el formato "heladeraId:temperatura"
-            String[] parts = payload.split(":");
-            if (parts.length == 2) {
-                Long heladeraId = Long.parseLong(parts[0]);
-                float temperatura = Float.parseFloat(parts[1]);
-                Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(heladeraId);
-                if (optionalHeladera.isPresent()) {
-                    Heladera heladera = optionalHeladera.get();
-                    heladera.cambiarTemperatura(temperatura);
-                } else {
-                    System.err.println("Heladera no encontrada para el ID: " + heladeraId);
-                }
-            } else {
-                System.err.println("Formato de payload incorrecto");
-            }
+            procesarMensaje(idHeladera, tipoMensaje, valor);
+          }
         } catch (NumberFormatException e) {
-            System.err.println("Error al convertir la temperatura o el ID de la heladera: " + e.getMessage());
+          System.err.println("Error al convertir el valor a entero: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error al procesar el mensaje: " + e.getMessage());
+          System.err.println("Error al procesar el mensaje: " + e.getMessage());
         }
-    }
 
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-        // Lógica para manejar la confirmación de entrega de un mensaje publicado
+  }
+  private String[] dividirPayload(String payload) {
+    String[] partes = payload.split(",");
+    if (partes.length == 2) {
+      String[] parteDivididas = partes[0].split(":");
+      if (parteDivididas.length == 2) {
+        return new String[]{parteDivididas[0], parteDivididas[1], partes[1]};
+      } else {
+        System.err.println("Formato de IdHeladera,TipoDeMensaje incorrecto");
+      }
+    } else {
+      System.err.println("Formato de payload incorrecto");
     }
+    return null;
+  }
+  private void procesarMensaje(Long idHeladera, String tipoMensaje, Boolean valor) {
+    Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera);
+    if (optionalHeladera.isPresent()) {
+      Heladera heladera = optionalHeladera.get();
+      if(tipoMensaje != "Fraude") {
+        System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
+      }
+      else if (valor){
+        heladera.recibirAlertaFraude();
+      }
+    } else {
+      System.err.println("Heladera no encontrada para el ID: " + idHeladera);
+    }
+  }
 
 }
-
-
