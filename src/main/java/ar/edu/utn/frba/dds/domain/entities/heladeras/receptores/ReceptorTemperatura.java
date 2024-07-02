@@ -72,8 +72,6 @@ public class ReceptorTemperatura implements MqttCallback {
                 Heladera heladera = optionalHeladera.get();
                 if(tipoMensaje == "Temperatura") {
                         heladera.cambiarTemperatura(valor);
-                        repositorioHeladeras.actualizar(heladera);
-
                 }
                 else {
                     System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
