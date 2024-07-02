@@ -153,6 +153,13 @@ class Suscripcion {
  # armarCuerpo(heladera: Heladera): String
 }
 
+note bottom
+Utilizamos el patron Template, ya que todas las suscripciones
+tienen comportamiento en comun, el armado del mensaje y la notificacion
+para todas es el mismo, solo cambian las condiciones y el cuerpo del mensaje
+de las mismas.
+end note
+
 Suscripcion --> PersonaHumana
 Suscripcion ..> Heladera
 

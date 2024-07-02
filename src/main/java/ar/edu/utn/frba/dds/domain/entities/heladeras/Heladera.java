@@ -33,6 +33,7 @@ public class Heladera implements Contribucion {
   @Setter
   private Modelo modelo;
   private Set<Vianda> viandas;
+  @Setter
   private EstadoHeladera estado;
   @Setter
   private float temperaturaEsperada;
@@ -159,6 +160,10 @@ public class Heladera implements Contribucion {
 
   public void enviarAHeladeraFisicaSolicitudApertura() {
     // TODO
+  }
+  public void recibirAlertaFraude(){
+    this.setEstado(EstadoHeladera.FRAUDE);
+    this.agregarCambioDeEstado(new CambioEstado(EstadoHeladera.FRAUDE, LocalDate.now()));
   }
 
   public void quitarVianda(Vianda vianda) {
