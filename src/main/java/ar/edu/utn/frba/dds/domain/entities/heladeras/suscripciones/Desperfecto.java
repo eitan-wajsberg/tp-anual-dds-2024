@@ -2,10 +2,16 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+
 import java.util.List;
 
 public class Desperfecto extends Suscripcion {
   private boolean aceptado;
+
+  public Desperfecto(PersonaHumana colaborador) {
+    this.colaborador = colaborador;
+  }
 
   protected boolean cumpleCondicion(Heladera heladera) {
     return !heladera.estaActiva();

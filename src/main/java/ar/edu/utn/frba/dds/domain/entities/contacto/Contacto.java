@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import javax.mail.MessagingException;
+
+import ar.edu.utn.frba.dds.domain.repositories.IRepositorioMensajes;
 import lombok.Getter;
 
 @Getter
 public class Contacto {
   private Set<MedioDeContacto> mediosDeContacto;
+  private IRepositorioMensajes repositorioMensajes;
 
   public Contacto() {
     this.mediosDeContacto = new HashSet<>();
@@ -31,6 +34,7 @@ public class Contacto {
     for(MedioDeContacto medio: medios){
       medio.enviar(mensaje);
     }
+    repositorioMensajes.guardar(mensaje);
   }
 
   @Override
