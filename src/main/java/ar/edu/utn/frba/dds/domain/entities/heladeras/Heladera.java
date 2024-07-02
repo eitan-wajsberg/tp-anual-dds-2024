@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
@@ -102,18 +103,8 @@ public class Heladera implements Contribucion {
     this.historialEstados.add(cambioEstado);
   }
 
-  private boolean tieneTemperaturaValida() {
-    return !this.noSuperaTemperaturaMinima() && !this.superaTemperaturaMaxima();
-  }
-
-  private boolean superaTemperaturaMaxima() {
-    List<CambioTemperatura> historial = this.historialTemperaturas;
-    return historial.get(historial.size() - 1).getTemperaturaCelsius() > modelo.getTemperaturaMaxima();
-  }
-
-  private boolean noSuperaTemperaturaMinima() {
-    List<CambioTemperatura> historial = this.historialTemperaturas;
-    return historial.get(historial.size() - 1).getTemperaturaCelsius() < modelo.getTemperaturaMinima();
+  private boolean tieneTemperaturaEnRango(Float temperatura){
+    return temperatura >= modelo.getTemperaturaMinima() && temperatura <= modelo.getTemperaturaMaxima();
   }
 
   public void cambiarTemperatura(float nuevaTemperatura) {
