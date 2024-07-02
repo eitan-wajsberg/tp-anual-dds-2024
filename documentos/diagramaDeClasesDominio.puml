@@ -60,6 +60,7 @@ Vianda ..|> Contribucion
 ' -----------------------------------------
 
 class Heladera {
+ - id: Long
  - nombre: String
  - direccion: Direccion
  - fechaRegistro: LocalDate
@@ -71,7 +72,6 @@ class Heladera {
  - historialEstados: List<CambioEstado>
  - historialTemperaturas: List<CambioTemperatura>
  - solicitudesDeApertura: List<SolicitudApertura>
- - gestorSuscripciones: GestorSuscripciones
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
  + notificarColaborador(): void
@@ -96,7 +96,6 @@ Heladera --> EstadoHeladera
 Heladera --> " * " CambioEstado
 Heladera --> " * " CambioTemperatura
 Heladera --> " * " SolicitudApertura
-Heladera --> GestorSuscripciones
 
 ' -----------------------------------------
 
@@ -117,21 +116,16 @@ end note
 ' -----------------------------------------
 
 class GestorSuscripciones {
-   - suscripcionesPorTipo: Map<TipoSuscripcion, Suscripcion>
-   /'
-    suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano], DESPERFECTO: [zultano]}
-   '/ 
-   + notificar(tipoSuscripcion: TipoSuscripcion, heladera: Heladera): void
-   /'
-   {
-      interesados = suscripcionesPorTipo[tipoEvento]
-      recorre lista y notifica
-   }'/
+   - suscripcionesPorTipo: Map<TipoSuscripcion, Map<Integer, Suscripcion>>
+   - heladera: Heladera
+   + notificar(cantidadViandas: int, tipo: TipoSuscripcion, heladera: Heladera): void
+   + suscribirPersona(persona: PersonaHumana): void
+   + suscribirPersona((persona: PersonaHumana, tipo: TipoSuscripcion, cantidadViandas: int): void
 }
 
 GestorSuscripciones --> " * " Suscripcion
 GestorSuscripciones --> " * " TipoSuscripcion
-GestorSuscripciones ..> Heladera
+GestorSuscripciones --> Heladera
 
 enum TipoSuscripcion {
  FALTAN_N_VIANDAS
