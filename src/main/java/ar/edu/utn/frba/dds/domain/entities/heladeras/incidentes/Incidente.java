@@ -21,9 +21,9 @@ public class Incidente {
 
     public void asignarTecnico() {
         // TODO
-
+        /*
         float distanciaMasCorta;
-       List <Tecnico> tecnicos =repositorioTecnicos.listar();
+        List <Tecnico> tecnicos =repositorioTecnicos.listar();
         float distanciaActual;
         for cada tecnico
         for cada tecnico.areaDeCobertura
@@ -32,6 +32,6 @@ public class Incidente {
             distanciaMasCorta = distanciaActual
             tecnico = tecnico
             tecnico.getMedioDeContacto().notificar(new Mensaje("heladera"+...+tipoIncidente.obtenerDescripcionIncidente()))
-
+         */
     }
 }

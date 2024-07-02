@@ -1,7 +1,22 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
-public class Direccion {
+import lombok.Getter;
+import lombok.Setter;
 
-  String direccion;
-  Coordenada coordenada;
+@Getter @Setter
+public class Direccion {
+  private Calle calle;
+  private String altura;
+  private Municipio municipio;
+  private Provincia provincia;
+
+  public boolean estaCercaDe() {
+    // TODO
+    return false;
+  }
+
+  public Coordenada obtenerCoordenada() {
+    // TODO
+    return null;
+  }
 }

@@ -41,7 +41,7 @@ public class Heladera implements Contribucion {
   private List<CambioEstado> historialEstados;
   private List<CambioTemperatura> historialTemperaturas;
   private List<SolicitudApertura> solicitudesDeApertura;
-  private GestorSuscripciones gestorSuscripciones;
+  private List<Incidente> incidentes;
 
   public Heladera() {
     this.viandas = new HashSet<>();
@@ -49,6 +49,7 @@ public class Heladera implements Contribucion {
     this.estado = EstadoHeladera.ACTIVA;
     this.historialTemperaturas = new ArrayList<>();
     this.solicitudesDeApertura = new ArrayList<>();
+    this.incidentes = new ArrayList<>();
   }
 
   public void ingresarViandas(List<Vianda> viandas) {
@@ -108,7 +109,9 @@ public class Heladera implements Contribucion {
   }
 
   public void cambiarTemperatura(float nuevaTemperatura) {
-    // FIXME: Este metodo estaba dirigido a cambiar la temperatura de la heladera fisica?
+    if (!tieneTemperaturaEnRango(nuevaTemperatura)) this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
+
+    agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));
   }
 
   public void agregarTemperaturaAlHistorial(CambioTemperatura temperatura) {
