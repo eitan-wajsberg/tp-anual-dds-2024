@@ -121,9 +121,11 @@ public class PersonaHumana {
     // TODO
   }
 
-  public void asignarTarjeta(Tarjeta tarjeta) {
-    // FIXME: Habia que verificar algo en especifico para asignarle la tarjeta?
-    this.tarjeta = tarjeta;
+  public void asignarTarjeta() {
+    if (this.direccion == null) {
+      throw new DireccionIncompletaException();
+    }
+    this.tarjeta = new Tarjeta();
   }
 
   @Override
