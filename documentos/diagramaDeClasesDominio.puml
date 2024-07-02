@@ -773,7 +773,17 @@ class Calle {
  - calle: String
 }
 
+class Municipio {
+ - municipio: String
+}
+
+class Provincia {
+ - provincia: String
+}
+
 Direccion --> Calle
+Direccion --> Municipio
+Direccion --> Provincia
 Direccion --> Coordenada
 Direccion ..> ServicioGeoRef
 
