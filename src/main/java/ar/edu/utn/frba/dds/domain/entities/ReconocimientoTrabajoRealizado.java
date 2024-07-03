@@ -13,10 +13,10 @@ public class ReconocimientoTrabajoRealizado {
   private static ReconocimientoTrabajoRealizado instancia;
   private static Map<String, Float> coeficientes;
   private static final String path = "src/resources/coeficientesPuntaje.properties";
-  private ReconocimientoTrabajoRealizado(){}
+  private ReconocimientoTrabajoRealizado() {}
 
-  public static ReconocimientoTrabajoRealizado getInstance(){
-    if(instancia == null){
+  public static ReconocimientoTrabajoRealizado getInstance() {
+    if (instancia == null) {
       instancia = new ReconocimientoTrabajoRealizado();
       coeficientes = new HashMap<>();
       instancia.cargarCoeficientesDesdeArchivo();
@@ -25,7 +25,6 @@ public class ReconocimientoTrabajoRealizado {
   }
 
   public static void cargarCoeficientesDesdeArchivo() {
-
     Properties propiedades = new Properties();
     try (InputStream input = Files.newInputStream(Paths.get(path))) {
       propiedades.load(input);
@@ -38,14 +37,14 @@ public class ReconocimientoTrabajoRealizado {
     }
   }
 
-  public static float obtenerCoeficientes(String nombreCoeficiente){
+  public static float obtenerCoeficientes(String nombreCoeficiente) {
     return coeficientes.get(nombreCoeficiente);
   }
 
-  public float calcularPuntaje(Set<Contribucion> contribuciones, float puntajeGastado){
+  public float calcularPuntaje(Set<Contribucion> contribuciones, float puntajeGastado) {
     float puntajeBruto = (float) 0;
-    for(Contribucion contribucion : contribuciones){
-      puntajeBruto+=contribucion.calcularPuntaje();
+    for (Contribucion contribucion : contribuciones) {
+      puntajeBruto += contribucion.calcularPuntaje();
     }
     return puntajeBruto - puntajeGastado;
   }

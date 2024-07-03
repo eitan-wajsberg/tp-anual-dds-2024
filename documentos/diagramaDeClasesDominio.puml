@@ -60,6 +60,7 @@ Vianda ..|> Contribucion
 ' -----------------------------------------
 
 class Heladera {
+ - id: Long
  - nombre: String
  - direccion: Direccion
  - fechaRegistro: LocalDate
@@ -71,7 +72,6 @@ class Heladera {
  - historialEstados: List<CambioEstado>
  - historialTemperaturas: List<CambioTemperatura>
  - solicitudesDeApertura: List<SolicitudApertura>
- - gestorSuscripciones: GestorSuscripciones
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
  + notificarColaborador(): void
@@ -96,7 +96,6 @@ Heladera --> EstadoHeladera
 Heladera --> " * " CambioEstado
 Heladera --> " * " CambioTemperatura
 Heladera --> " * " SolicitudApertura
-Heladera --> GestorSuscripciones
 
 ' -----------------------------------------
 
@@ -117,21 +116,16 @@ end note
 ' -----------------------------------------
 
 class GestorSuscripciones {
-   - suscripcionesPorTipo: Map<TipoSuscripcion, Suscripcion>
-   /'
-    suscripcionesPorTipo: {FALTAN_N_VIANDAS: [fulano, mengano], DESPERFECTO: [zultano]}
-   '/ 
-   + notificar(tipoSuscripcion: TipoSuscripcion, heladera: Heladera): void
-   /'
-   {
-      interesados = suscripcionesPorTipo[tipoEvento]
-      recorre lista y notifica
-   }'/
+   - suscripcionesPorTipo: Map<TipoSuscripcion, Map<Integer, Suscripcion>>
+   - heladera: Heladera
+   + notificar(cantidadViandas: int, tipo: TipoSuscripcion, heladera: Heladera): void
+   + suscribirPersona(persona: PersonaHumana): void
+   + suscribirPersona((persona: PersonaHumana, tipo: TipoSuscripcion, cantidadViandas: int): void
 }
 
 GestorSuscripciones --> " * " Suscripcion
 GestorSuscripciones --> " * " TipoSuscripcion
-GestorSuscripciones ..> Heladera
+GestorSuscripciones --> Heladera
 
 enum TipoSuscripcion {
  FALTAN_N_VIANDAS
@@ -210,6 +204,9 @@ class GeneradorReportes {
  - reportes: List<Reporte>
  - pdfAPI: IAdapterPDF
  + generarReportes(): void
+ + calcularFechaInicio: LocalDate
+ + agregarReporte(reporte: Reporte): void
+ + quitarReporte(reporte: Reporte): void
 }
 
 GeneradorReportes --> " * " Reporte
@@ -224,6 +221,7 @@ class CantidadDeFallasPorHeladera {
  - repositorioHeladera: IRepositorioHeladera
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
+ - cantidadFallas(heladera: Heladera, fechaInicio: LocalDate, fechaFin: LocalDate): int
 }
 
 CantidadDeFallasPorHeladera ..|> Reporte
@@ -233,15 +231,18 @@ class MovimientoViandasPorHeladera {
  - repositorioHeladera: IRepositorioHeladera
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
+ - cantidadViandasSegunAccion(heladera: Heladera, accion: AccionApertura, fechaInicio: LocalDate, fechaFin: LocalDate): int
 }
 
 MovimientoViandasPorHeladera ..|> Reporte
 MovimientoViandasPorHeladera ..> Heladera
+MovimientoViandasPorHeladera ..> AccionApertura
 
 class CantidadViandasPorColaborador {
  - repositorioColaboradores: IRepositorioPersonaHumana
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
+ - cantidadViandasDonadadas(persona: PersonaHumana, fechaInicio: LocalDate, fechaFin: LocalDate): int
 }
 
 CantidadViandasPorColaborador ..|> Reporte
@@ -253,12 +254,12 @@ class SolicitudApertura {
  - fecha: LocalDateTime
  - codigoTarjeta: String 
  - aperturaConcretada: boolean
- - accion: Accion
+ - accion: AccionApertura
 }
 
-SolicitudApertura --> Accion
+SolicitudApertura --> AccionApertura
 
-enum Accion {
+enum AccionApertura {
  QUITAR_VIANDA
  INGRESAR_VIANDA
 }
@@ -268,6 +269,7 @@ enum Accion {
 class CambioEstado {
  - fechaCambio: LocalDate
  - estado: EstadoHeladera
+ + esUnaFalla(): boolean
 }
 
 CambioEstado --> EstadoHeladera
@@ -381,10 +383,11 @@ class CambioTemperatura {
 class CargaMasivaColaboraciones {
  - personaHumanaRepo: IRepositorioPersonaHumana
  - documentoRepo: IRepositorioDocumento
+ - adapterMail: AdapterMail
  + cargarColaboraciones(dataCSV: File): void
 }
 
-CargaMasivaColaboraciones ..> AdapterMail
+CargaMasivaColaboraciones --> AdapterMail
 
 ' -----------------------------------------
 
@@ -545,6 +548,9 @@ Mail -> AdapterMail
 interface AdapterMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
+
+AdapterMail ..> Mensaje
+
 note bottom
 Utilizamos un adapter para tener mayor testeabilidad,
 mantenibilidad y un menor acoplamiento
@@ -779,7 +785,17 @@ class Calle {
  - calle: String
 }
 
+class Municipio {
+ - municipio: String
+}
+
+class Provincia {
+ - provincia: String
+}
+
 Direccion --> Calle
+Direccion --> Municipio
+Direccion --> Provincia
 Direccion --> Coordenada
 Direccion ..> ServicioGeoRef
 

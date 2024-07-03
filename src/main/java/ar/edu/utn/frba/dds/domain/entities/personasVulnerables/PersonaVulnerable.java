@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.personasVulnerables;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraInactivaException;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraVirtualmenteVaciaException;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
@@ -38,7 +39,7 @@ public class PersonaVulnerable {
 
   public void usarTarjeta(Heladera heladera, Vianda vianda) throws UsoMaximoDeTarjetasPorDiaExcedidoException, HeladeraInactivaException {
     // FIXME: Revisar si es correcto que este metodo reciba la vianda
-    if(!heladera.estaActiva()){
+    if (!heladera.estaActiva()) {
       throw new HeladeraInactivaException();
     }
 
@@ -47,8 +48,8 @@ public class PersonaVulnerable {
     int maxUsosPermitidos = 4 + (2 * menoresAcargo);
 
     if (usosHoy < maxUsosPermitidos) {
-      tarjeta.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
       heladera.quitarVianda(vianda);
+      tarjeta.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
     } else {
       throw new UsoMaximoDeTarjetasPorDiaExcedidoException();
     }

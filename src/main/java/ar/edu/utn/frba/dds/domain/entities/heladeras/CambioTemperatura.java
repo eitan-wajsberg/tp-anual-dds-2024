@@ -8,4 +8,9 @@ import lombok.Setter;
 public class CambioTemperatura {
   private LocalDateTime fecha;
   private float temperaturaCelsius;
+
+  public CambioTemperatura(LocalDateTime fecha, float temperaturaCelsius) {
+    this.fecha = fecha;
+    this.temperaturaCelsius = temperaturaCelsius;
+  }
 }
