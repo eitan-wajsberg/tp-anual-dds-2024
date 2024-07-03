@@ -9,7 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class PublicadorSolicitudApertura {
   private static PublicadorSolicitudApertura instancia;
-
+  private MqttClient client ;
   public static PublicadorSolicitudApertura getInstance() {
     if (instancia == null) {
       instancia = new PublicadorSolicitudApertura();
@@ -17,6 +17,13 @@ public class PublicadorSolicitudApertura {
     return instancia;
   }
 
+  // Método para inyectar un MqttClient mockeado para pruebas
+  public void setMqttClient(MqttClient client) {
+    this.client = client;
+  }
+  public static void setInstance(PublicadorSolicitudApertura publicador) {
+    instancia = publicador;
+  }
   public void publicarSolicitudApertura(String codigoTarjeta, LocalDateTime fecha, Long idHeladera) {
     // FIXME: La ruta del broker debe compartirse con los receptores y utilizar distintos topicos?
     String broker = "tcp://your-broker-address:1883";
@@ -39,3 +46,4 @@ public class PublicadorSolicitudApertura {
     }
   }
 }
+
