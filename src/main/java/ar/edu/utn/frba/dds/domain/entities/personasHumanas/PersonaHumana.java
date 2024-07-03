@@ -74,6 +74,7 @@ public class PersonaHumana {
     }
     return sum;
   }
+
   public float calcularPuntajeNeto() {
     ReconocimientoTrabajoRealizado reconocimientoTrabajoRealizado = ReconocimientoTrabajoRealizado.getInstance();
     return reconocimientoTrabajoRealizado.calcularPuntaje(this.getContribuciones(), this.puntosGastados());

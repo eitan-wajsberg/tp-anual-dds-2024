@@ -19,12 +19,10 @@ public class GestorSuscripciones {
   }
 
   public void notificar(TipoSuscripcion tipo, Heladera heladera) {
-    List<Suscripcion> suscripciones = switch (tipo) {
-        case DESPERFECTO -> suscripcionesPorTipo.get(tipo);
-        case FALTAN_N_VIANDAS, QUEDAN_N_VIANDAS -> suscripcionesPorTipo.get(tipo);
-    };
-
-    suscripciones.forEach(suscripcion -> suscripcion.notificar(heladera));
+    List<Suscripcion> suscripciones = suscripcionesPorTipo.get(tipo);
+    if (suscripciones != null) {
+      suscripciones.forEach(suscripcion -> suscripcion.notificar(heladera));
+    }
   }
   
   public void agregarSuscripcionPorTipo(TipoSuscripcion tipo, Suscripcion suscripcion, Heladera heladera) {

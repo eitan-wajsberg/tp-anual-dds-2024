@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.Setter;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -10,6 +11,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class PublicadorSolicitudApertura {
   private static PublicadorSolicitudApertura instancia;
   private MqttClient client ;
+  private final static String broker = "tcp://your-broker-address:1883";
+
   public static PublicadorSolicitudApertura getInstance() {
     if (instancia == null) {
       instancia = new PublicadorSolicitudApertura();
@@ -21,12 +24,13 @@ public class PublicadorSolicitudApertura {
   public void setMqttClient(MqttClient client) {
     this.client = client;
   }
+
   public static void setInstance(PublicadorSolicitudApertura publicador) {
     instancia = publicador;
   }
+
   public void publicarSolicitudApertura(String codigoTarjeta, LocalDateTime fecha, Long idHeladera) {
     // FIXME: La ruta del broker debe compartirse con los receptores y utilizar distintos topicos?
-    String broker = "tcp://your-broker-address:1883";
     String topic = "mqqt/heladeras/" + idHeladera;
     int cantidadHoras = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
     String contenido = codigoTarjeta + " " + fecha.plusHours(cantidadHoras);
