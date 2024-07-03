@@ -10,11 +10,13 @@ import javax.mail.MessagingException;
 
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioMensajes;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Contacto {
   private Set<MedioDeContacto> mediosDeContacto;
-  private IRepositorioMensajes repositorioMensajes;
+  @Setter
+  private static IRepositorioMensajes repositorioMensajes;
 
   public Contacto() {
     this.mediosDeContacto = new HashSet<>();
@@ -34,7 +36,7 @@ public class Contacto {
     for(MedioDeContacto medio: medios){
       medio.enviar(mensaje);
     }
-    repositorioMensajes.guardar(mensaje);
+    // repositorioMensajes.guardar(mensaje); // guardamos todos los mensajes o solo los que eran por las notif de eventos?
   }
 
   @Override
