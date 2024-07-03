@@ -24,7 +24,7 @@ public class Direccion {
 
   public boolean estaCercaDe(Direccion direccion) {
     int umbralKm = UmbralDistanciaEnKm.getInstance().getUmbralDistanciaEnKm();
-    return ManejoDistancias.distanciaHaversineConCoordenadas(direccion.getCoordenada(), this.coordenada) <= umbralKm;
+    return ManejoDistancias.distanciaHaversineConCoordenadasEnKm(direccion.getCoordenada(), this.coordenada) <= umbralKm;
   }
 
   public String direccionSegunGeoRef() {
