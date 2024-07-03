@@ -4,8 +4,10 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import java.time.LocalDate;
@@ -41,6 +43,7 @@ public class Heladera implements Contribucion {
   private List<CambioEstado> historialEstados;
   private List<CambioTemperatura> historialTemperaturas;
   private List<SolicitudApertura> solicitudesDeApertura;
+  private List<Incidente> incidentes;
   private GestorSuscripciones gestorSuscripciones;
 
   public Heladera() {
@@ -49,6 +52,8 @@ public class Heladera implements Contribucion {
     this.estado = EstadoHeladera.ACTIVA;
     this.historialTemperaturas = new ArrayList<>();
     this.solicitudesDeApertura = new ArrayList<>();
+    this.incidentes = new ArrayList<>();
+    this.gestorSuscripciones = new GestorSuscripciones();
   }
 
   public void ingresarViandas(List<Vianda> viandas) {
@@ -103,12 +108,16 @@ public class Heladera implements Contribucion {
     this.historialEstados.add(cambioEstado);
   }
 
-  private boolean tieneTemperaturaEnRango(Float temperatura){
+  private boolean tieneTemperaturaEnRango(Float temperatura) {
     return temperatura >= modelo.getTemperaturaMinima() && temperatura <= modelo.getTemperaturaMaxima();
   }
 
   public void cambiarTemperatura(float nuevaTemperatura) {
-    // FIXME: Este metodo estaba dirigido a cambiar la temperatura de la heladera fisica?
+    if (!tieneTemperaturaEnRango(nuevaTemperatura)) {
+      this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
+    }
+
+    agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));
   }
 
   public void agregarTemperaturaAlHistorial(CambioTemperatura temperatura) {
@@ -129,6 +138,9 @@ public class Heladera implements Contribucion {
     }
 
     this.solicitudesDeApertura.add(solicitud);
+    PublicadorSolicitudApertura
+        .getInstance()
+        .publicarSolicitudApertura(solicitud.getCodigoTarjeta(), solicitud.getFecha(), this.id);
   }
 
   public int cantidadViandas() {
@@ -139,29 +151,44 @@ public class Heladera implements Contribucion {
     return this.cantidadViandas() + this.cantidadViandasIngresadasVirtualmente() - this.cantidadViandasQuitadasVirtualmente();
   }
 
-  private int cantidadViandasQuitadasVirtualmente() {
+  public int cantidadViandasQuitadasVirtualmente() {
     Stream<SolicitudApertura> quitadas = this.solicitudesDeApertura.stream().filter(SolicitudApertura::esQuitadaVirtualmente);
     return quitadas.mapToInt(SolicitudApertura::getCantidadViandas).sum();
   }
 
-  private int cantidadViandasIngresadasVirtualmente() {
+  public int cantidadViandasIngresadasVirtualmente() {
     Stream<SolicitudApertura> ingresadas = this.solicitudesDeApertura.stream().filter(SolicitudApertura::esIngresadaVirtualmente);
     return ingresadas.mapToInt(SolicitudApertura::getCantidadViandas).sum();
   }
 
-  public void enviarAHeladeraFisicaSolicitudApertura() {
-    // TODO
-  }
-  public void recibirAlertaFraude(){
+  public void recibirAlertaFraude() {
     this.setEstado(EstadoHeladera.FRAUDE);
     this.agregarCambioDeEstado(new CambioEstado(EstadoHeladera.FRAUDE, LocalDate.now()));
+    gestorSuscripciones.notificar(0, TipoSuscripcion.DESPERFECTO, this);
   }
 
   public void quitarVianda(Vianda vianda) {
+    if (this.cantidadViandasQuitadasVirtualmente() == this.cantidadViandas()) {
+      throw new HeladeraVirtualmenteVaciaException();
+    }
+
     this.viandas.remove(vianda);
+    this.avisoGestorParaNotificarCantidades();
   }
 
   public void ingresarVianda(Vianda vianda) {
+    if (this.cantidadViandasIngresadasVirtualmente() + this.cantidadViandas() == this.capacidadMaximaViandas) {
+      throw new HeladeraVirtualmenteLlenaException();
+    }
+    
     this.viandas.add(vianda);
+    this.avisoGestorParaNotificarCantidades();
+  }
+
+  private void avisoGestorParaNotificarCantidades() {
+    int cantidadDeViandasFaltantes = this.capacidadMaximaViandas - this.cantidadViandas();
+    gestorSuscripciones.notificar(this.cantidadViandas(), TipoSuscripcion.QUEDAN_N_VIANDAS, this);
+    gestorSuscripciones.notificar(cantidadDeViandasFaltantes, TipoSuscripcion.FALTAN_N_VIANDAS, this);
   }
 }
+

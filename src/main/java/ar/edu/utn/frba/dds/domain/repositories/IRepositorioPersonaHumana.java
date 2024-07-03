@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface IRepositorioPersonaHumana {
   Long guardar(PersonaHumana persona);
-  void actualizar(PersonaHumana persona);
   List<PersonaHumana> listar();
   Optional<PersonaHumana> buscarPorDocumento(Long documentoId);
+  public void actualizar(PersonaHumana persona);
   int contar();
 }

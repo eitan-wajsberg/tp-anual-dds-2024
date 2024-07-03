@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.reportes;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +27,7 @@ public class GeneradorReportes {
   public void agregarReportes(Reporte ...reportes) {
     Collections.addAll(this.reportes, reportes);
   }
+  public void quitarReporte(Reporte reporte) { this.reportes.remove(reporte); }
 
   public LocalDate calcularFechaInicio() {
     LocalDate ahora = LocalDate.now();

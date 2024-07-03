@@ -8,6 +8,11 @@ import java.time.LocalDateTime;
 public class FaltanNViandas extends Suscripcion {
   private int cantidadViandasParaLlenarse;
 
+  public FaltanNViandas(PersonaHumana colaborador, int cantidadViandasParaLlenarse) {
+    this.cantidadViandasParaLlenarse = cantidadViandasParaLlenarse;
+    this.colaborador = colaborador;
+  }
+
   protected boolean cumpleCondicion(Heladera heladera) {
     return heladera.cantidadViandas() + cantidadViandasParaLlenarse == heladera.getCapacidadMaximaViandas();
   }

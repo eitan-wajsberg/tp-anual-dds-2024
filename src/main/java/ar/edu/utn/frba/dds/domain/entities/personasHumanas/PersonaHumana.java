@@ -5,12 +5,17 @@ import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.mail.MessagingException;
 
 public class PersonaHumana {
   @Getter @Setter
@@ -72,6 +79,7 @@ public class PersonaHumana {
   public void agregarContribucion(Contribucion contribucion) {
     contribuciones.add(contribucion);
   }
+
   public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada) {
     ofertasCanjeadas.add(ofertaCanjeada);
   }
@@ -99,15 +107,17 @@ public class PersonaHumana {
   }
 
   public void serNotificadoPor(Mensaje mensaje) {
-    // TODO
-  }
-
-  public void usarTarjeta(Heladera heladera) {
-    // TODO
+    try {
+      contacto.enviarMensaje(mensaje);
+    } catch (MessagingException | UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void asignarTarjeta(Tarjeta tarjeta) {
-    // FIXME: Habia que verificar algo en especifico para asignarle la tarjeta?
+    if (this.direccion == null) {
+      throw new DireccionIncompletaException();
+    }
     this.tarjeta = tarjeta;
   }
 

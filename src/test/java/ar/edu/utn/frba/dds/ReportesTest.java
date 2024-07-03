@@ -1,16 +1,11 @@
 package ar.edu.utn.frba.dds;
 
-import ar.edu.utn.frba.dds.domain.entities.reportes.CantidadFallasPorHeladera;
-import ar.edu.utn.frba.dds.domain.entities.reportes.CantidadViandasPorColaborador;
 import ar.edu.utn.frba.dds.domain.entities.reportes.GeneradorReportes;
 import ar.edu.utn.frba.dds.domain.entities.reportes.IAdapterPDF;
-import ar.edu.utn.frba.dds.domain.entities.reportes.MovimientoViandasPorHeladera;
 import ar.edu.utn.frba.dds.domain.entities.reportes.Reporte;
 import ar.edu.utn.frba.dds.domain.entities.reportes.Temporalidad;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,7 +37,7 @@ public class ReportesTest {
 
   @Test
   @DisplayName("La temporalidad de la generacion de reportes es parametrizable")
-  void laTemporalidadEsParametrizable() {
+  void laTemporalidadEnElGeneradorDeReporesEsParametrizable() {
     generador.setTemporalidad(Temporalidad.DIARIO);
     LocalDate fechaEsperadaInicio = LocalDate.now().minusDays(1);
     Assertions.assertEquals(fechaEsperadaInicio, generador.calcularFechaInicio());
@@ -61,8 +56,8 @@ public class ReportesTest {
   }
 
   @Test
-  @DisplayName("Exportar reporte mockeado en un PDF")
-  void testExportarReportePDF() {
+  @DisplayName("La generacion y exportacion del contenido de un reporte semanal en PDF es correcta")
+  void verificarGeneracionYExportacionDeReportesEnPDF() {
     generador.setTemporalidad(Temporalidad.SEMANAL);
     generador.generarReportes();
 

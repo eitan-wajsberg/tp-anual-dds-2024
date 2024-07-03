@@ -13,6 +13,10 @@ public class SolicitudApertura {
   private AccionApertura accion;
   private int cantidadViandas;
 
+  public SolicitudApertura() {
+
+  }
+
   public boolean esIngresadaVirtualmente() {
     return !this.isAperturaConcretada() && this.getAccion() == AccionApertura.INGRESAR_VIANDA;
   }
@@ -22,6 +26,8 @@ public class SolicitudApertura {
   }
 
   public boolean esValida(String codigoTarjeta) {
-    return !this.isAperturaConcretada() && Objects.equals(this.codigoTarjeta, codigoTarjeta);
+    int horasParaEjecutarAccion = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
+    return !this.isAperturaConcretada() && Objects.equals(this.codigoTarjeta, codigoTarjeta)
+        && LocalDateTime.now().isBefore(fecha.plusHours(horasParaEjecutarAccion));
   }
 }
