@@ -33,11 +33,11 @@ public class ReceptorMovimiento implements IMqttMessageListener {
   private String[] dividirPayload(String payload) {
     String[] partes = payload.split(",");
     if (partes.length == 2) {
-      String[] parteDivididas = partes[0].split(":");
+      String[] parteDivididas = partes[1].split(":");
       if (parteDivididas.length == 2) {
-        return new String[]{parteDivididas[0], parteDivididas[1], partes[1]};
+        return new String[]{partes[0], parteDivididas[0], parteDivididas[1]};
       } else {
-        System.err.println("Formato de IdHeladera,TipoDeMensaje incorrecto");
+        System.err.println("Formato de TipoDeMensaje:Valor incorrecto");
       }
     } else {
       System.err.println("Formato de payload incorrecto");
