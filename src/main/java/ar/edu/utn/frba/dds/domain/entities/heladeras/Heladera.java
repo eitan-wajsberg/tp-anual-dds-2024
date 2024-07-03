@@ -45,6 +45,7 @@ public class Heladera implements Contribucion {
   private List<SolicitudApertura> solicitudesDeApertura;
   // private List<Incidente> incidentes; // TODO: preguntar que honduras con eso
   private GestorSuscripciones gestorSuscripciones;
+  private static int minutosMargenFallaConexion = 7;
 
   public Heladera() {
     this.viandas = new HashSet<>();
@@ -185,11 +186,10 @@ public class Heladera implements Contribucion {
   }
 
   public void detectarFallaDeConexion() {
-    int minutosDeMargenDesconexion = MinutosMargenFallaConexion.getInstance().getMinutosMargenFallaConexion();
     boolean huboFallaDesconexion = historialTemperaturas
         .get(historialTemperaturas.size() - 1)
         .getFecha()
-        .plusMinutes(minutosDeMargenDesconexion)
+        .plusMinutes(Heladera.minutosMargenFallaConexion)
         .isBefore(LocalDateTime.now());
 
     if (huboFallaDesconexion) {
