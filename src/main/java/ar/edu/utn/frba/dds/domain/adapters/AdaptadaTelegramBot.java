@@ -29,7 +29,8 @@ public class AdaptadaTelegramBot extends TelegramLongPollingBot implements Adapt
 
   @Override
   public String getBotUsername() {
-    return "DdeSisBot";
+    return "DdeSisBot"; // https://t.me/DdeSisBot
+
   }
 
   @Override

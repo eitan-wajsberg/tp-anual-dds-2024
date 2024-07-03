@@ -796,11 +796,13 @@ class PersonaVulnerable {
  - menoresACargo: int
  - documento: Documento
  - donanteQueLoRegistro: PersonaHumana
+ - tarjeta: Tarjeta
  + usarTarjeta(heladera: Heladera, vianda: Vianda): void
 }
 
 PersonaVulnerable --> PersonaHumana
 PersonaVulnerable --> Documento
+PersonaVulnerable --> Tarjeta
 
 ' -----------------------------------------
 
