@@ -128,7 +128,7 @@ class GestorSuscripciones {
 
   + notificar(tipo: TipoSuscripcion, heladera: Heladera): void
   + agregarSuscripcionPorTipo(tipo: TipoSuscripcion, suscripcion: Suscripcion, heladera: Heladera): void
-  + suscripcionValida(persona: PersonaHumana, heladera: Heladera): boolean
+  + suscripcionValida(suscriptor: IObserverNotificacion, heladera: Heladera): boolean
 }
 
 GestorSuscripciones --> " * " Suscripcion
@@ -567,20 +567,6 @@ Telegram -> AdapterTelegramTelegram
 
 ' -----------------------------------------
 
-interface AdapterWhatsApp{
-+ enviar(telefonoUsuario: String, texto: String);
-}
-
-' -----------------------------------------
-
-class AdapterTwillio {
- + enviar(telefonoUsuario: String, texto: String);
-}
-
-AdapterTwillio ..|> AdapterWhatsApp
-
-' -----------------------------------------
-
 class Telefono {
  - numero: String
  + enviar(mensaje: Mensaje)
@@ -659,7 +645,7 @@ RecomendacionDePuntos --> AdapterRecomendacionPuntosHeladera
 ' -----------------------------------------
 
 class MailSender {
- + enviar(mensaje: Mensaje, destinatario: String)
+ + enviar(mensaje: Mensaje, correo: String)
 }
 
 MailSender ..|> AdapterMail
@@ -695,6 +681,7 @@ class Mensaje {
  - cuerpo: String
  - fecha: LocalDateTime
  - destinatario: Usuario
+ - repositorioMensajes: IRepositorioMensajes
  + registrarEnRepositorio(): void
 }
 
