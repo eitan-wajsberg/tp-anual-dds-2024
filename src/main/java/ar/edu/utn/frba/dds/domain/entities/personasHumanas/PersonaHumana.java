@@ -79,6 +79,7 @@ public class PersonaHumana {
   public void agregarContribucion(Contribucion contribucion) {
     contribuciones.add(contribucion);
   }
+
   public void agregarOfertaCanjeada(OfertaCanjeada ofertaCanjeada) {
     ofertasCanjeadas.add(ofertaCanjeada);
   }
@@ -106,26 +107,18 @@ public class PersonaHumana {
   }
 
   public void serNotificadoPor(Mensaje mensaje) {
-      try {
-          contacto.enviarMensaje(mensaje);
-      } catch (MessagingException | UnsupportedEncodingException e) {
-          throw new RuntimeException(e);
-      }
+    try {
+      contacto.enviarMensaje(mensaje);
+    } catch (MessagingException | UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-
-
-
-
-  public void usarTarjeta(Heladera heladera) {
-    // TODO
-  }
-
-  public void asignarTarjeta() {
+  public void asignarTarjeta(Tarjeta tarjeta) {
     if (this.direccion == null) {
       throw new DireccionIncompletaException();
     }
-    this.tarjeta = new Tarjeta();
+    this.tarjeta = tarjeta;
   }
 
   @Override

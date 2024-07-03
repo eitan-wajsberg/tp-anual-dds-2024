@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.reportes;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
