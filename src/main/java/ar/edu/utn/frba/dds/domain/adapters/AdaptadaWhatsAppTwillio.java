@@ -4,9 +4,9 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
-public class AdapterTwillio implements AdapterWhatsApp {
+public class AdaptadaWhatsAppTwillio implements AdapterWhatsApp {
 
-  public static final String ACCOUNT_SID = "AC2f7dbacc4470d9c634115c9bad014";
+  public static final String ACCOUNT_SID = "AC2f7dbacc4470d9c634115c9bad014"; //No debería estar acá
   public static final String AUTH_TOKEN = "3eb76ab54c958f19c11157908314d453";
 
 
