@@ -4,24 +4,30 @@
 ' -----------------------------------------
 
 class PersonaHumana {
+ - id: Long
+ - usuario: Usuario
+ - documento: Documento
  - contacto: Contacto
  - direccion: Direccion
  - nombre: String
  - apellido: String
- - documento: Documento
  - fechaNacimiento: LocalDate
- - tarjeta: Tarjeta
  - ofertasCanjeadas: List<OfertaCanjeada>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
  - formulario: List<Respuesta>
+ - tarjetaColaboracion: Tarjeta
  + puntosGastados(): float
  + calcularPuntajeNeto(): float
  + agregarContribucion(contribucion: Contribucion): void
  + agregarOfertaCanjeada(ofertaCanjeada: OfertaCanjeada): void
+ + agregarTarjetaSinEntregar(tarjeta: Tarjeta): void
+ + agregarRespuestaAlFormulario(respuesta: Respuesta): void
+ + agregarFormaDeContribucion(forma: FormasContribucionHumanas): void
+ + quitarFormaDeContribucion(forma: FormasContribucionHumanas): void
  + usarTarjeta(heladera: Heladera): void
- + asignarTarjeta(tarjeta: Tarjeta): void
+ + asignarTarjetaParaColaborar(tarjeta: Tarjeta): void
  + serNotificadoPor(mensaje: Mensaje): void
 }
 
@@ -78,10 +84,11 @@ class Heladera {
  - gestorSuscripciones: GestorSuscripciones
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
- + notificarColaborador(): void
+ + calcularMesesActiva(): int
  + calcularPuntaje(): float
  + cambiarEstado(nuevoEstado: CambioEstado): void
- - tieneTemperaturaValida(): boolean
+ - agregarCambioDeEstado(cambioEstado: CambioEstado): void
+ - temperaturaEnRango(temperatura: float): boolean
  + cambiarTemperatura(temperatura: float): void
  - agregarTemperaturaAlHistorial(temperatura: float): void
  + estaActiva(): boolean
@@ -89,9 +96,13 @@ class Heladera {
  + agregarSolicitudApertura(solicitud: SolicitudApertura): void
  + cantidadViandas(): int
  + cantidadViandasVirtuales(): int
- + enviarAHeladeraFisicaSolicitudApertura(): void
+ + cantidadViandasQuitadasVirtualmente(): int
+ + cantidadViandasIngresadasVirtualmente(): int
+ + recibirAlertaFraude(): void
+ + detectarFallaDeConexion(): void
+ + quitarVianda(vianda: Vianda): void
+ + ingresarVianda(vianda: Vianda): void
  - avisoGestorParaNotificarCantidades(): void
- - recibirAlertaFraude(): void
 }
 
 Heladera --> " * " Vianda
@@ -124,7 +135,6 @@ end note
 
 class GestorSuscripciones {
   - suscripcionesPorTipo: Map<TipoSuscripcion, List<Suscripcion>>
-
   + notificar(tipo: TipoSuscripcion, heladera: Heladera): void
   + agregarSuscripcionPorTipo(tipo: TipoSuscripcion, suscripcion: Suscripcion, heladera: Heladera): void
   + suscripcionValida(persona: PersonaHumana, heladera: Heladera): boolean
