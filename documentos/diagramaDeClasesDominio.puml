@@ -541,24 +541,39 @@ interface AdapterWhatsApp{
 
 ' -----------------------------------------
 
-class AdapterTwillio {
+class AdaptadaWhatsAppTwillio {
  + enviar(telefonoUsuario: String, texto: String);
 }
 
-AdapterTwillio ..|> AdapterWhatsApp
+AdaptadaWhatsAppTwillio ..|> AdapterWhatsApp
 
 ' -----------------------------------------
 
 class Telegram {
- - numero: String
+ - userID: String
  - adaptador: AdapterTelegram
  + enviar(mensaje: Mensaje)
 }
 
 Telegram ..|> MedioDeContacto
-Telegram -> AdapterTelegramTelegram
+Telegram -> AdapterTelegram
 
 ' -----------------------------------------
+
+interface AdapterTelegram{
++ enviar(userID: String, texto: String);
+}
+
+' -----------------------------------------
+
+class AdaptadaTelegramBot {
+ + enviar(userID: String, texto: String);
+}
+
+AdaptadaTelegramBot ..|> AdapterTelegram
+
+' -----------------------------------------
+
 
 class Telefono {
  - numero: String
@@ -585,11 +600,6 @@ interface AdapterMail {
 }
 
 AdapterMail ..> Mensaje
-
-note bottom
-Utilizamos un adapter para tener mayor testeabilidad,
-mantenibilidad y un menor acoplamiento
-end note
 
 ' -----------------------------------------
 
@@ -637,11 +647,11 @@ RecomendacionDePuntos --> AdapterRecomendacionPuntosHeladera
 
 ' -----------------------------------------
 
-class MailSender {
+class AdaptadaJavaXMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
 
-MailSender ..|> AdapterMail
+AdaptadaJavaXMail ..|> AdapterMail
 
 
 ' -----------------------------------------
