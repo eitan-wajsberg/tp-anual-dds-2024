@@ -221,7 +221,6 @@ class CantidadDeFallasPorHeladera {
  - repositorioHeladera: IRepositorioHeladera
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
- - fechaEnRango(fecha: LocalDate, fechaInicio: LocalDate, fechaFin: LocalDate): boolean
  - cantidadFallas(heladera: Heladera, fechaInicio: LocalDate, fechaFin: LocalDate): int
 }
 
@@ -232,15 +231,18 @@ class MovimientoViandasPorHeladera {
  - repositorioHeladera: IRepositorioHeladera
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
+ - cantidadViandasSegunAccion(heladera: Heladera, accion: AccionApertura, fechaInicio: LocalDate, fechaFin: LocalDate): int
 }
 
 MovimientoViandasPorHeladera ..|> Reporte
 MovimientoViandasPorHeladera ..> Heladera
+MovimientoViandasPorHeladera ..> AccionApertura
 
 class CantidadViandasPorColaborador {
  - repositorioColaboradores: IRepositorioPersonaHumana
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
+ - cantidadViandasDonadadas(persona: PersonaHumana, fechaInicio: LocalDate, fechaFin: LocalDate): int
 }
 
 CantidadViandasPorColaborador ..|> Reporte
@@ -252,12 +254,12 @@ class SolicitudApertura {
  - fecha: LocalDateTime
  - codigoTarjeta: String 
  - aperturaConcretada: boolean
- - accion: Accion
+ - accion: AccionApertura
 }
 
-SolicitudApertura --> Accion
+SolicitudApertura --> AccionApertura
 
-enum Accion {
+enum AccionApertura {
  QUITAR_VIANDA
  INGRESAR_VIANDA
 }
