@@ -311,7 +311,7 @@ end note
 class Incidente {
  - heladera: Heladera
  - fecha: LocalDateTime
- - tecnico: Tecnico
+ - tecnicoSeleccionado: Tecnico
  - visitas: List<Visita>
  - solucionado: bool
  - tipoIncidente: TipoIncidente
@@ -662,11 +662,12 @@ class Tecnico {
  - documento: Documento
  - cuil: String
  - contacto: Contacto
- - areaDeCobertura: Area
+ - coordenada: Coordenada
+ - distanciaMaximaEnKmParaSerAvisado: double
 }
 
 Tecnico --> Contacto
-Tecnico --> Area
+Tecnico --> Coordenada
 Tecnico --> Documento
 Tecnico --> Usuario
 
