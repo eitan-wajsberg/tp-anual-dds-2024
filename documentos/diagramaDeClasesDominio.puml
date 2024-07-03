@@ -4,25 +4,30 @@
 ' -----------------------------------------
 
 class PersonaHumana {
+ - id: Long
+ - usuario: Usuario
+ - documento: Documento
  - contacto: Contacto
  - direccion: Direccion
  - nombre: String
  - apellido: String
- - documento: Documento
  - fechaNacimiento: LocalDate
- - tarjeta: Tarjeta
  - ofertasCanjeadas: List<OfertaCanjeada>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
  - formulario: List<Respuesta>
-
+ - tarjetaColaboracion: Tarjeta
  + puntosGastados(): float
  + calcularPuntajeNeto(): float
  + agregarContribucion(contribucion: Contribucion): void
  + agregarOfertaCanjeada(ofertaCanjeada: OfertaCanjeada): void
+ + agregarTarjetaSinEntregar(tarjeta: Tarjeta): void
+ + agregarRespuestaAlFormulario(respuesta: Respuesta): void
+ + agregarFormaDeContribucion(forma: FormasContribucionHumanas): void
+ + quitarFormaDeContribucion(forma: FormasContribucionHumanas): void
  + usarTarjeta(heladera: Heladera): void
- + asignarTarjeta(tarjeta: Tarjeta): void
+ + asignarTarjetaParaColaborar(tarjeta: Tarjeta): void
  + serNotificadoPor(mensaje: Mensaje): void
 }
 
@@ -79,10 +84,11 @@ class Heladera {
  - gestorSuscripciones: GestorSuscripciones
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
- + notificarColaborador(): void
+ + calcularMesesActiva(): int
  + calcularPuntaje(): float
  + cambiarEstado(nuevoEstado: CambioEstado): void
- - tieneTemperaturaValida(): boolean
+ - agregarCambioDeEstado(cambioEstado: CambioEstado): void
+ - temperaturaEnRango(temperatura: float): boolean
  + cambiarTemperatura(temperatura: float): void
  - agregarTemperaturaAlHistorial(temperatura: float): void
  + estaActiva(): boolean
@@ -90,9 +96,13 @@ class Heladera {
  + agregarSolicitudApertura(solicitud: SolicitudApertura): void
  + cantidadViandas(): int
  + cantidadViandasVirtuales(): int
- + enviarAHeladeraFisicaSolicitudApertura(): void
+ + cantidadViandasQuitadasVirtualmente(): int
+ + cantidadViandasIngresadasVirtualmente(): int
+ + recibirAlertaFraude(): void
+ + detectarFallaDeConexion(): void
+ + quitarVianda(vianda: Vianda): void
+ + ingresarVianda(vianda: Vianda): void
  - avisoGestorParaNotificarCantidades(): void
- - recibirAlertaFraude(): void
 }
 
 Heladera --> " * " Vianda
@@ -125,7 +135,6 @@ end note
 
 class GestorSuscripciones {
   - suscripcionesPorTipo: Map<TipoSuscripcion, List<Suscripcion>>
-
   + notificar(tipo: TipoSuscripcion, heladera: Heladera): void
   + agregarSuscripcionPorTipo(tipo: TipoSuscripcion, suscripcion: Suscripcion, heladera: Heladera): void
   + suscripcionValida(suscriptor: IObserverNotificacion, heladera: Heladera): boolean
@@ -143,12 +152,6 @@ enum TipoSuscripcion {
 class Suscripcion {
  - suscriptor: IObserverNotificacion
  + notificar(heladera: Heladera): void
-   /'
-   if(cumpleCondicion(heladera)){
-      Mensaje mensaje = armarMensaje(heladera);
-      this.colaborador.serNotificadoPor(mensaje);
-      mensaje.registrar();
-   }'/
  - armarMensaje(heladera: Heladera): Mensaje
  # cumpleCondicion(heladera: Heladera): boolean
  # armarCuerpo(heladera: Heladera): String
@@ -304,17 +307,6 @@ class Incidente {
  - tipoIncidente: TipoIncidente
  + registrarVisita(visita: Visita): void
  + asignarTecnico(): void
- /'
- float distanciaMasCorta; Tecnico tecnico; float distanciaActual;
- for cada tecnico
-   for cada tecnico.areaDeCobertura
-      distanciaActual = heladera.getDireccion().getCoordenada().distanciaCon(area.getCoordenada())
-      if distanciaActual < distanciaMasCorta{
-         distanciaMasCorta = distanciaActual
-         tecnico = tecnico
-
-   tecnico.getMedioDeContacto().notificar(new Mensaje("heladera"+...+tipoIncidente.obtenerDescripcionIncidente()))
-   '/
 }
 
 Incidente --> TipoIncidente
@@ -331,7 +323,6 @@ class Visita {
 }
 
 class Alerta {
- - incidente: Incidente
  - tipo: TipoAlerta
  + obtenerDescripcionIncidente(): String
 }
@@ -340,8 +331,7 @@ Alerta ..|> TipoIncidente
 Alerta --> TipoAlerta
 
 class FallaTecnica {
- - incidente: Incidente
- - colaborador: 
+ - colaborador: PersonaHumana
  - descripcion: String
  - foto: Image
  + obtenerDescripcionIncidente(): String
@@ -382,7 +372,6 @@ class ReceptorMovimiento {
     - procesarMensaje(idHeladera: Long, tipoMensaje: String, valor: Boolean): void
 }
 
-' VERIFICAR!!!!! estan bien estas relaciones?
 ReceptorMovimiento ..> Heladera
 ReceptorTemperatura ..> Heladera
 
@@ -470,26 +459,20 @@ end note
 class DonacionDinero {
  - monto: float
  - frecuencia: Integer
- - unidadFrecuencia: String
+ - unidadFrecuencia: Temporalidad
  - fecha: LocalDate
  + calcularPuntaje(): float
 }
 
 DonacionDinero ..|> Contribucion
-
-note bottom
-unidadFrecuencia podría tener los valores:
- - Semanal
- - Mensual
- - Anual
-end note
+DonacionDinero --> Temporalidad
 
 ' -----------------------------------------
 
 class Oferta {
  - nombre: String
  - cantidadPuntosNecesarios: float
- - imagen: ???
+ - imagen: Image
  - rubro: Rubro
  - organizacion: PersonaJuridica
  + canjear(): void
@@ -693,10 +676,11 @@ class Contacto {
  - mediosDeContacto: Set<MedioDeContacto>
  + agregarMedioDeContacto(medioDeContacto: MedioDeContacto): void
  + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
- + enviarMensaje(Mensaje mensaje): void
+ + enviarMensaje(mensaje: Mensaje): void
 }
 
 Contacto --> "*" MedioDeContacto
+Contacto ..> Mensaje
 
 ' -----------------------------------------
 
