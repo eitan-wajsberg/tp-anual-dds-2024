@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 
+import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
@@ -11,9 +12,9 @@ public class QuedanNViandas extends Suscripcion {
   @Getter
   private int cantidadViandasDisponibles;
 
-  public QuedanNViandas(PersonaHumana colaborador, int cantidadViandasDisponibles) {
+  public QuedanNViandas(IObserverNotificacion suscriptor, int cantidadViandasDisponibles) {
     this.cantidadViandasDisponibles = cantidadViandasDisponibles;
-    this.colaborador = colaborador;
+    this.suscriptor = suscriptor;
   }
 
   protected boolean cumpleCondicion(Heladera heladera) {

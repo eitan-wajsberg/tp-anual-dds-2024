@@ -1,10 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 
-import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
+import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.reportes.CantidadFallasPorHeladera;
-import ar.edu.utn.frba.dds.domain.entities.reportes.GeneradorReportes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +26,7 @@ public class GestorSuscripciones {
   }
   
   public void agregarSuscripcionPorTipo(TipoSuscripcion tipo, Suscripcion suscripcion, Heladera heladera) {
-    if (suscripcionValida(suscripcion.colaborador, heladera)) {
+    if (suscripcionValida(suscripcion.suscriptor, heladera)) {
       throw new SuscripcionNoCercanaException();
     }
 
@@ -38,8 +35,8 @@ public class GestorSuscripciones {
     this.suscripcionesPorTipo.put(tipo, suscripciones);
   }
 
-  public boolean suscripcionValida(PersonaHumana persona, Heladera heladera) {
-    return persona.getDireccion().getMunicipio().equals(heladera.getDireccion().getMunicipio())
-            && persona.getDireccion().getProvincia().equals(heladera.getDireccion().getProvincia());
+  public boolean suscripcionValida(IObserverNotificacion suscriptor, Heladera heladera) {
+    return suscriptor.getDireccion().getMunicipio().equals(heladera.getDireccion().getMunicipio())
+            && suscriptor.getDireccion().getProvincia().equals(heladera.getDireccion().getProvincia());
   }
 }

@@ -1,19 +1,19 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 
+import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 
 import java.time.LocalDateTime;
 
 public abstract class Suscripcion {
-  protected PersonaHumana colaborador;
+  protected IObserverNotificacion suscriptor;
 
   public void notificar(Heladera heladera) {
     if (cumpleCondicion(heladera)) {
       Mensaje mensaje = armarMensaje(heladera);
-      this.colaborador.serNotificadoPor(mensaje);
+      this.suscriptor.serNotificadoPor(mensaje);
     }
   }
 
