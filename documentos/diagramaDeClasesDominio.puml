@@ -82,6 +82,8 @@ class Heladera {
  - historialTemperaturas: List<CambioTemperatura>
  - solicitudesDeApertura: List<SolicitudApertura>
  - gestorSuscripciones: GestorSuscripciones
+ - static minutosMargenFallaConexion: int
+
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
  + calcularMesesActiva(): int
@@ -118,10 +120,8 @@ Heladera --> GestorSuscripciones
 ' -----------------------------------------
 
 class ValidadorConexion {
- - umbralDesconexionEnMinutos: int
  - heladerasRepositorio: IRepositoryHeladera
- + verificarConexionHeladeras(): void
- - estaConectada(heladera: Heladera): boolean
+ + validarConexiones(): void
 }
 
 ValidadorConexion ..> Heladera
