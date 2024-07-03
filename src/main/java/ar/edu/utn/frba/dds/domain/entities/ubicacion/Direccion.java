@@ -24,13 +24,7 @@ public class Direccion {
 
   public boolean estaCercaDe(Direccion direccion) {
     int umbralKm = UmbralDistanciaEnKm.getInstance().getUmbralDistanciaEnKm();
-
-    double lat1 = Double.parseDouble(direccion.coordenada.getLatitud());
-    double lon1 = Double.parseDouble(direccion.coordenada.getLongitud());
-    double lat2 = Double.parseDouble(this.coordenada.getLatitud());
-    double lon2 = Double.parseDouble(this.coordenada.getLongitud());
-
-    return ManejoDistancias.distanciaHaversine(lat1, lon1, lat2, lon2) <= umbralKm;
+    return ManejoDistancias.distanciaHaversineConCoordenadas(direccion.getCoordenada(), this.coordenada) <= umbralKm;
   }
 
   public String direccionSegunGeoRef() {
