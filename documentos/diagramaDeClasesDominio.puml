@@ -16,7 +16,6 @@ class PersonaHumana {
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
  - formulario: List<Respuesta>
-
  + puntosGastados(): float
  + calcularPuntajeNeto(): float
  + agregarContribucion(contribucion: Contribucion): void
@@ -143,12 +142,6 @@ enum TipoSuscripcion {
 class Suscripcion {
  - suscriptor: IObserverNotificacion
  + notificar(heladera: Heladera): void
-   /'
-   if(cumpleCondicion(heladera)){
-      Mensaje mensaje = armarMensaje(heladera);
-      this.colaborador.serNotificadoPor(mensaje);
-      mensaje.registrar();
-   }'/
  - armarMensaje(heladera: Heladera): Mensaje
  # cumpleCondicion(heladera: Heladera): boolean
  # armarCuerpo(heladera: Heladera): String
@@ -304,17 +297,6 @@ class Incidente {
  - tipoIncidente: TipoIncidente
  + registrarVisita(visita: Visita): void
  + asignarTecnico(): void
- /'
- float distanciaMasCorta; Tecnico tecnico; float distanciaActual;
- for cada tecnico
-   for cada tecnico.areaDeCobertura
-      distanciaActual = heladera.getDireccion().getCoordenada().distanciaCon(area.getCoordenada())
-      if distanciaActual < distanciaMasCorta{
-         distanciaMasCorta = distanciaActual
-         tecnico = tecnico
-
-   tecnico.getMedioDeContacto().notificar(new Mensaje("heladera"+...+tipoIncidente.obtenerDescripcionIncidente()))
-   '/
 }
 
 Incidente --> TipoIncidente
@@ -331,7 +313,6 @@ class Visita {
 }
 
 class Alerta {
- - incidente: Incidente
  - tipo: TipoAlerta
  + obtenerDescripcionIncidente(): String
 }
@@ -340,8 +321,7 @@ Alerta ..|> TipoIncidente
 Alerta --> TipoAlerta
 
 class FallaTecnica {
- - incidente: Incidente
- - colaborador: 
+ - colaborador: PersonaHumana
  - descripcion: String
  - foto: Image
  + obtenerDescripcionIncidente(): String
@@ -382,7 +362,6 @@ class ReceptorMovimiento {
     - procesarMensaje(idHeladera: Long, tipoMensaje: String, valor: Boolean): void
 }
 
-' VERIFICAR!!!!! estan bien estas relaciones?
 ReceptorMovimiento ..> Heladera
 ReceptorTemperatura ..> Heladera
 
@@ -470,26 +449,20 @@ end note
 class DonacionDinero {
  - monto: float
  - frecuencia: Integer
- - unidadFrecuencia: String
+ - unidadFrecuencia: Temporalidad
  - fecha: LocalDate
  + calcularPuntaje(): float
 }
 
 DonacionDinero ..|> Contribucion
-
-note bottom
-unidadFrecuencia podría tener los valores:
- - Semanal
- - Mensual
- - Anual
-end note
+DonacionDinero --> Temporalidad
 
 ' -----------------------------------------
 
 class Oferta {
  - nombre: String
  - cantidadPuntosNecesarios: float
- - imagen: ???
+ - imagen: Image
  - rubro: Rubro
  - organizacion: PersonaJuridica
  + canjear(): void
@@ -694,8 +667,6 @@ class Mensaje {
  - asunto: String
  - cuerpo: String
  - fecha: LocalDateTime
- - destinatario: Usuario
- + registrarEnRepositorio(): void
 }
 
 Mensaje --> Usuario
@@ -706,10 +677,11 @@ class Contacto {
  - mediosDeContacto: Set<MedioDeContacto>
  + agregarMedioDeContacto(medioDeContacto: MedioDeContacto): void
  + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
- + enviarMensaje(Mensaje mensaje): void
+ + enviarMensaje(mensaje: Mensaje): void
 }
 
 Contacto --> "*" MedioDeContacto
+Contacto ..> Mensaje
 
 ' -----------------------------------------
 
