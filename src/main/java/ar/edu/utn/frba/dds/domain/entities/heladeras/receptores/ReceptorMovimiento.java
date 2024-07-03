@@ -8,6 +8,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class ReceptorMovimiento implements IMqttMessageListener {
   RepositorioHeladera repositorioHeladeras;
+
+  public ReceptorMovimiento(RepositorioHeladera repositorioHeladeras) {
+    this.repositorioHeladeras = repositorioHeladeras;
+  }
+
   public void messageArrived(String topic, MqttMessage mensaje){ // formato: idHeladera | fraude
         try{
           String[] payload = dividirPayload(mensaje.toString());

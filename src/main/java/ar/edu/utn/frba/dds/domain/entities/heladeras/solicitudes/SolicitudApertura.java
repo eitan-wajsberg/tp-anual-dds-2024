@@ -27,7 +27,11 @@ public class SolicitudApertura {
 
   public boolean esValida(String codigoTarjeta) {
     int horasParaEjecutarAccion = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
-    return !this.isAperturaConcretada() && Objects.equals(this.codigoTarjeta, codigoTarjeta)
+    boolean esValido = !this.isAperturaConcretada() && Objects.equals(this.codigoTarjeta, codigoTarjeta)
         && LocalDateTime.now().isBefore(fecha.plusHours(horasParaEjecutarAccion));
+    if (esValido) {
+      this.aperturaConcretada = true;
+      }
+    return esValido;
+    }
   }
-}

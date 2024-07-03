@@ -9,4 +9,5 @@ import java.awt.*;
 public class Visita {
     private String descripcion;
     private Image foto;
+
 }

@@ -116,16 +116,16 @@ end note
 ' -----------------------------------------
 
 class GestorSuscripciones {
-   - suscripcionesPorTipo: Map<TipoSuscripcion, Map<Integer, Suscripcion>>
-   - heladera: Heladera
-   + notificar(cantidadViandas: int, tipo: TipoSuscripcion, heladera: Heladera): void
-   + suscribirPersona(persona: PersonaHumana): void
-   + suscribirPersona((persona: PersonaHumana, tipo: TipoSuscripcion, cantidadViandas: int): void
+  - suscripcionesPorTipo: Map<TipoSuscripcion, Map<Integer, List<Suscripcion>>>
+
+  + notificar(cantidadViandas: int, tipo: TipoSuscripcion, heladera: Heladera): void
+  + suscribirPersona(persona: PersonaHumana, tipoSuscripcion: TipoSuscripcion, cantidadViandas: int, heladera: Heladera): void
+  + suscribirPersona(persona: PersonaHumana, heladera: Heladera): void
+  + suscripcionValida(persona: PersonaHumana, heladera: Heladera): boolean
 }
 
 GestorSuscripciones --> " * " Suscripcion
 GestorSuscripciones --> " * " TipoSuscripcion
-GestorSuscripciones --> Heladera
 
 enum TipoSuscripcion {
  FALTAN_N_VIANDAS
@@ -282,7 +282,7 @@ end note
 
 class Incidente {
  - heladera: Heladera
- - fechaCambio: LocalDateTime
+ - fecha: LocalDateTime
  - tecnico: Tecnico
  - visitas: List<Visita>
  - solucionado: bool
@@ -304,7 +304,6 @@ class Incidente {
 
 Incidente --> TipoIncidente
 Incidente --> " * " Visita
-Incidente ..> ServicioGeoRef
 Incidente --> Tecnico
 
 interface TipoIncidente {
@@ -350,21 +349,22 @@ class ServicioGeoRef {
 }
 
 ' -----------------------------------------
-
 class ReceptorTemperatura {
- + messageArrived(topic: String, mqttMessage MqttMesage): void 
-   /'{
-      heladera = repositorioHeladeras.buscar(mqttMessage.toString());
-      heladera.cambiarTemperatura(mqttMessage.temperatura());
-   }'/
+    - client: MqttClient
+    - repositorioHeladeras: RepositorioHeladera
+
+    + subscribe(topic: String): void
+    + connectionLost(cause: Throwable): void
+    + messageArrived(topic: String, mqttMessage: MqttMessage): void
+    - dividirPayload(payload: String): String[]
+    - procesarMensaje(idHeladera: Long, tipoMensaje: String, valor: int): void
 }
 
 class ReceptorMovimiento {
- + messageArrived(topic: String, mqttMessage MqttMesage): void 
-   /'{
-      heladera = repositorioHeladeras.buscar(mqttMessage.toString());
-      heladera.cambiarEstado(FRAUDE);
-   }'/
+    - repositorioHeladeras: RepositorioHeladera
+    + messageArrived(topic: String, mensaje: MqttMessage): void
+    - dividirPayload(payload: String): String[]
+    - procesarMensaje(idHeladera: Long, tipoMensaje: String, valor: Boolean): void
 }
 
 ' VERIFICAR!!!!! estan bien estas relaciones?
@@ -648,6 +648,7 @@ class Contacto {
  - mediosDeContacto: Set<MedioDeContacto>
  + agregarMedioDeContacto(medioDeContacto: MedioDeContacto): void
  + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
+ + enviarMensaje(Mensaje mensaje): void
 }
 
 Contacto --> "*" MedioDeContacto
