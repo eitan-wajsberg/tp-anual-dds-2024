@@ -129,6 +129,17 @@ Heladera --> GestorSuscripciones
 
 ' -----------------------------------------
 
+class ReceptorAperturaHeladera {
+ - IRepositorioHeladera repositorioHeladera
+ + messageArrived(topic: String, mensaje: MqttMessage): void
+ - dividirPayload(payload: String): String[]
+ - procesarMensaje(idHeladera: Long, tipoMensaje: String, codigoTarjeta: String): void
+}
+
+ReceptorHeladera ..> Heladera
+
+' -----------------------------------------
+
 class ValidadorConexion {
  - heladerasRepositorio: IRepositoryHeladera
  + validarConexiones(): void
