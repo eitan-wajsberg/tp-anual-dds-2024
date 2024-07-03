@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes;
 
-public enum TipoAlertaa {
+public enum TipoAlerta {
     FRAUDE,
     FALLA_CONEXION,
     FALLA_TEMPERATURA,

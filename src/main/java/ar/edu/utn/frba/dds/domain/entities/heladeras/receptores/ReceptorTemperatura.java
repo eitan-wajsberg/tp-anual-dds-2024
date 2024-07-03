@@ -26,7 +26,6 @@ public class ReceptorTemperatura implements MqttCallback {
 
     @Override
     public void connectionLost(Throwable cause) {
-        // LOGICA DE FALLA DE CONEXION
     }
 
     // FORMATO DE MENSAJE: [IdHeladera,TipoDeMensaje:Valor]

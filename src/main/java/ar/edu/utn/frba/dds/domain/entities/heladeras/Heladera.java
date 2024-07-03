@@ -164,7 +164,20 @@ public class Heladera implements Contribucion {
   public void recibirAlertaFraude() {
     this.setEstado(EstadoHeladera.FRAUDE);
     this.agregarCambioDeEstado(new CambioEstado(EstadoHeladera.FRAUDE, LocalDate.now()));
+
     gestorSuscripciones.notificar(0, TipoSuscripcion.DESPERFECTO, this);
+  }
+
+  public boolean tieneFallaDeConexion() {
+    int minutosDeMargenDesconexion = 4;
+    return historialTemperaturas.get(historialTemperaturas.size() - 1)
+        .getFecha()
+        .plusMinutes(minutosDeMargenDesconexion)
+        .isBefore(LocalDateTime.now());
+  }
+  
+  public void agregarIncidente(Incidente incidente) {
+    this.incidentes.add(incidente);
   }
 
   public void quitarVianda(Vianda vianda) {
