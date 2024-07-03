@@ -148,12 +148,12 @@ public class Heladera implements Contribucion {
     return this.cantidadViandas() + this.cantidadViandasIngresadasVirtualmente() - this.cantidadViandasQuitadasVirtualmente();
   }
 
-  private int cantidadViandasQuitadasVirtualmente() {
+  public int cantidadViandasQuitadasVirtualmente() {
     Stream<SolicitudApertura> quitadas = this.solicitudesDeApertura.stream().filter(SolicitudApertura::esQuitadaVirtualmente);
     return quitadas.mapToInt(SolicitudApertura::getCantidadViandas).sum();
   }
 
-  private int cantidadViandasIngresadasVirtualmente() {
+  public int cantidadViandasIngresadasVirtualmente() {
     Stream<SolicitudApertura> ingresadas = this.solicitudesDeApertura.stream().filter(SolicitudApertura::esIngresadaVirtualmente);
     return ingresadas.mapToInt(SolicitudApertura::getCantidadViandas).sum();
   }
@@ -167,7 +167,5 @@ public class Heladera implements Contribucion {
     this.viandas.remove(vianda);
   }
 
-  public void ingresarVianda(Vianda vianda) {
-    this.viandas.add(vianda);
-  }
+  public void ingresarVianda(Vianda vianda) { this.viandas.add(vianda); }
 }
