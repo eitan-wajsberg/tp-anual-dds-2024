@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
@@ -104,12 +105,14 @@ public class Heladera implements Contribucion {
     this.historialEstados.add(cambioEstado);
   }
 
-  private boolean tieneTemperaturaEnRango(Float temperatura){
+  private boolean tieneTemperaturaEnRango(Float temperatura) {
     return temperatura >= modelo.getTemperaturaMinima() && temperatura <= modelo.getTemperaturaMaxima();
   }
 
   public void cambiarTemperatura(float nuevaTemperatura) {
-    if (!tieneTemperaturaEnRango(nuevaTemperatura)) this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
+    if (!tieneTemperaturaEnRango(nuevaTemperatura)) {
+      this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
+    }
 
     agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));
   }
@@ -132,6 +135,9 @@ public class Heladera implements Contribucion {
     }
 
     this.solicitudesDeApertura.add(solicitud);
+    PublicadorSolicitudApertura
+        .getInstance()
+        .publicarSolicitudApertura(solicitud.getCodigoTarjeta(), solicitud.getFecha(), this.id);
   }
 
   public int cantidadViandas() {
@@ -152,10 +158,7 @@ public class Heladera implements Contribucion {
     return ingresadas.mapToInt(SolicitudApertura::getCantidadViandas).sum();
   }
 
-  public void enviarAHeladeraFisicaSolicitudApertura() {
-    // TODO
-  }
-  public void recibirAlertaFraude(){
+  public void recibirAlertaFraude() {
     this.setEstado(EstadoHeladera.FRAUDE);
     this.agregarCambioDeEstado(new CambioEstado(EstadoHeladera.FRAUDE, LocalDate.now()));
   }

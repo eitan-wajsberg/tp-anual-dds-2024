@@ -1,7 +1,13 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.temporal.Temporal;
 import java.util.Objects;
+import java.util.Properties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +19,10 @@ public class SolicitudApertura {
   private AccionApertura accion;
   private int cantidadViandas;
 
+  public SolicitudApertura() {
+
+  }
+
   public boolean esIngresadaVirtualmente() {
     return !this.isAperturaConcretada() && this.getAccion() == AccionApertura.INGRESAR_VIANDA;
   }
@@ -22,6 +32,8 @@ public class SolicitudApertura {
   }
 
   public boolean esValida(String codigoTarjeta) {
-    return !this.isAperturaConcretada() && Objects.equals(this.codigoTarjeta, codigoTarjeta);
+    int horasParaEjecutarAccion = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
+    return !this.isAperturaConcretada() && Objects.equals(this.codigoTarjeta, codigoTarjeta)
+        && LocalDateTime.now().isBefore(fecha.plusHours(horasParaEjecutarAccion));
   }
 }
