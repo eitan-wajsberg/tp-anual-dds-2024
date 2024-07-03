@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
@@ -146,10 +147,13 @@ public class Heladera implements Contribucion {
     if (!this.estaActiva()) {
       throw new HeladeraInactivaException();
     }
-    if (this.cantidadViandasIngresadasVirtualmente() + this.cantidadViandas() == this.capacidadMaximaViandas) {
+    // FIXME: Habria que separarlo en distintos metodos
+    if (this.cantidadViandasIngresadasVirtualmente() + this.cantidadViandas() + solicitud.getCantidadViandas() >= this.capacidadMaximaViandas
+        && solicitud.getAccion() == AccionApertura.INGRESAR_VIANDA) {
       throw new HeladeraVirtualmenteLlenaException();
     }
-    if (this.cantidadViandasQuitadasVirtualmente() == this.cantidadViandas()) {
+    if (this.cantidadViandasQuitadasVirtualmente() + solicitud.getCantidadViandas() >= this.cantidadViandas()
+        && solicitud.getAccion() == AccionApertura.QUITAR_VIANDA) {
       throw new HeladeraVirtualmenteVaciaException();
     }
 
