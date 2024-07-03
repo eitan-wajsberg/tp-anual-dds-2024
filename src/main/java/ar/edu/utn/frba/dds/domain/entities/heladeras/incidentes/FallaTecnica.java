@@ -8,13 +8,13 @@ import java.awt.*;
 
 @Getter @Setter
 public class FallaTecnica implements TipoIncidente {
-    private Incidente incidente;
     private PersonaHumana colaborador;
     private String descripcion;
     private Image foto;
 
      public String obtenerDescripcionIncidente() {
-         // TODO
-         return null;
+       return String.format("Hubo una falla técnica reportada por %s. Descripción: %s.",
+           colaborador.getNombre(),
+           descripcion);
      }
 }
