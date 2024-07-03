@@ -204,6 +204,9 @@ class GeneradorReportes {
  - reportes: List<Reporte>
  - pdfAPI: IAdapterPDF
  + generarReportes(): void
+ + calcularFechaInicio: LocalDate
+ + agregarReporte(reporte: Reporte): void
+ + quitarReporte(reporte: Reporte): void
 }
 
 GeneradorReportes --> " * " Reporte
@@ -218,6 +221,8 @@ class CantidadDeFallasPorHeladera {
  - repositorioHeladera: IRepositorioHeladera
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
  + titulo(): String
+ - fechaEnRango(fecha: LocalDate, fechaInicio: LocalDate, fechaFin: LocalDate): boolean
+ - cantidadFallas(heladera: Heladera, fechaInicio: LocalDate, fechaFin: LocalDate): int
 }
 
 CantidadDeFallasPorHeladera ..|> Reporte
@@ -262,6 +267,7 @@ enum Accion {
 class CambioEstado {
  - fechaCambio: LocalDate
  - estado: EstadoHeladera
+ + esUnaFalla(): boolean
 }
 
 CambioEstado --> EstadoHeladera
