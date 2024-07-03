@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolic
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.HorasParaEjecutarAccion;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
@@ -28,8 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-public class manejoDeSolicitudesTest {
-
+public class ManejoDeSolicitudesTest {
     private Heladera heladeraLlena;
     private Heladera heladeraCasiLLena;
     private Heladera heladeraVacia;
@@ -41,7 +41,6 @@ public class manejoDeSolicitudesTest {
 
     @BeforeEach
     public void antesDeTestear() throws Exception {
-
         Vianda vianda1 = crearVianda("2024-05-20", "vianda1", 500, 1200);
         Vianda vianda2 = crearVianda("2024-05-20", "vianda2", 600, 1300);
         Vianda vianda3 = crearVianda("2024-05-20", "vianda3", 600, 1300);
@@ -84,23 +83,25 @@ public class manejoDeSolicitudesTest {
         solicitudA.setCantidadViandas(4);
         solicitudA.setCodigoTarjeta("1111");
         solicitudA.setAperturaConcretada(false);
+        solicitudA.setFecha(LocalDateTime.now());
 
         solicitudB = new SolicitudApertura();
         solicitudB.setAccion(AccionApertura.QUITAR_VIANDA);
         solicitudB.setCantidadViandas(1);
         solicitudB.setCodigoTarjeta("1111");
         solicitudB.setAperturaConcretada(false);
+        solicitudB.setFecha(LocalDateTime.now());
 
         solicitudC = new SolicitudApertura();
         solicitudC.setAccion(AccionApertura.INGRESAR_VIANDA);
         solicitudC.setCantidadViandas(1);
         solicitudC.setCodigoTarjeta("0000");
         solicitudC.setAperturaConcretada(false);
-
-
+        solicitudC.setFecha(LocalDateTime.now());
 
         heladera = new Heladera();
         heladera.setId(1L);
+
         RepositorioHeladera repositorioHeladeraMock = mock(RepositorioHeladera.class);
         when(repositorioHeladeraMock.buscarPorId(1L)).thenReturn(Optional.of(heladera));
 
@@ -115,8 +116,8 @@ public class manejoDeSolicitudesTest {
             doNothing().when(mock).disconnect();
         })) {
             // Constructor mockeado para que el objeto MqttClient se use en lugar del real.
-        }}
-
+        }
+    }
 
     @Test
     @DisplayName("Cuando un Colaborador realiza una Solicitud para agregar 4 Viandas, pero la heladera está casi llena, se genera una excepción de heladera llena")
@@ -160,13 +161,15 @@ public class manejoDeSolicitudesTest {
     }
 
     @Test
+    @DisplayName("Una solicitud de apertura para ingresar 2 viandas")
     public void testPublicarSolicitudApertura() throws MqttException {
         SolicitudApertura solicitud = new SolicitudApertura();
         solicitud.setCodigoTarjeta("12345");
         solicitud.setFecha(LocalDateTime.now());
         solicitud.setAccion(AccionApertura.INGRESAR_VIANDA);
-        solicitud.setCantidadViandas(5);
+        solicitud.setCantidadViandas(2);
 
+        heladera.setCapacidadMaximaViandas(40);
         heladera.agregarSolicitudApertura(solicitud);
 
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
@@ -176,7 +179,7 @@ public class manejoDeSolicitudesTest {
 
         String expectedTopic = "mqqt/heladeras/1";
         int expectedHoras = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
-        String expectedMessageContent = "12345 " + solicitud.getFecha().plusHours(expectedHoras).toString();
+        String expectedMessageContent = "12345" + solicitud.getFecha().plusHours(expectedHoras);
 
         assertEquals(expectedTopic, topicCaptor.getValue());
         assertEquals(expectedMessageContent, new String(messageCaptor.getValue().getPayload()));
