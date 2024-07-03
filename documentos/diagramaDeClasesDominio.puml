@@ -375,10 +375,11 @@ class CambioTemperatura {
 class CargaMasivaColaboraciones {
  - personaHumanaRepo: IRepositorioPersonaHumana
  - documentoRepo: IRepositorioDocumento
+ - adapterMail: AdapterMail
  + cargarColaboraciones(dataCSV: File): void
 }
 
-CargaMasivaColaboraciones ..> AdapterMail
+CargaMasivaColaboraciones --> AdapterMail
 
 ' -----------------------------------------
 
@@ -539,6 +540,9 @@ Mail -> AdapterMail
 interface AdapterMail {
  + enviar(mensaje: Mensaje, correo: String)
 }
+
+AdapterMail ..> Mensaje
+
 note bottom
 Utilizamos un adapter para tener mayor testeabilidad,
 mantenibilidad y un menor acoplamiento
