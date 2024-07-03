@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter @Setter
 public class Alerta implements TipoIncidente {
     private Incidente incidente;
-    private TipoAlertaa tipoAlertaa;
+    private TipoAlerta tipoAlerta;
 
     public String obtenerDescripcionIncidente() {
         // TODO
