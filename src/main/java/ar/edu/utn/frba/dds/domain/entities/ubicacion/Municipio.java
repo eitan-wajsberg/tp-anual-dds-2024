@@ -6,4 +6,8 @@ import lombok.Setter;
 @Getter @Setter
 public class Municipio {
     private String municipio;
+
+    public Municipio(String municipio) {
+        this.municipio = municipio;
+    }
 }

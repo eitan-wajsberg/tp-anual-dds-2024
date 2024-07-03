@@ -43,7 +43,7 @@ public class Heladera implements Contribucion {
   private List<CambioEstado> historialEstados;
   private List<CambioTemperatura> historialTemperaturas;
   private List<SolicitudApertura> solicitudesDeApertura;
-  private List<Incidente> incidentes;
+ // private List<Incidente> incidentes;
   private GestorSuscripciones gestorSuscripciones;
 
   public Heladera() {
@@ -52,7 +52,7 @@ public class Heladera implements Contribucion {
     this.estado = EstadoHeladera.ACTIVA;
     this.historialTemperaturas = new ArrayList<>();
     this.solicitudesDeApertura = new ArrayList<>();
-    this.incidentes = new ArrayList<>();
+    // this.incidentes = new ArrayList<>();
     this.gestorSuscripciones = new GestorSuscripciones();
   }
 
@@ -168,17 +168,24 @@ public class Heladera implements Contribucion {
     gestorSuscripciones.notificar(0, TipoSuscripcion.DESPERFECTO, this);
   }
 
-  public boolean tieneFallaDeConexion() {
-    int minutosDeMargenDesconexion = 4;
-    return historialTemperaturas.get(historialTemperaturas.size() - 1)
+  public void detectarFallaDeConexion() {
+    int minutosDeMargenDesconexion = MinutosMargenFallaConexion.getInstance().getMinutosMargenFallaConexion();
+    boolean huboFallaDesconexion = historialTemperaturas
+        .get(historialTemperaturas.size() - 1)
         .getFecha()
         .plusMinutes(minutosDeMargenDesconexion)
         .isBefore(LocalDateTime.now());
+
+    if (huboFallaDesconexion) {
+      gestorSuscripciones.notificar(0, TipoSuscripcion.DESPERFECTO, this);
+    }
   }
   
-  public void agregarIncidente(Incidente incidente) {
+  /*public void agregarIncidente(Incidente incidente) {
     this.incidentes.add(incidente);
   }
+
+   */
 
   public void quitarVianda(Vianda vianda) {
     if (this.cantidadViandasQuitadasVirtualmente() == this.cantidadViandas()) {

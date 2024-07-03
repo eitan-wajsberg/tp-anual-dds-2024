@@ -12,11 +12,14 @@ import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 
+import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +57,7 @@ public class PersonaHumana {
   @Getter
   private List<Respuesta> formulario;
   @Getter
-  private Tarjeta tarjeta;
+  private Tarjeta tarjetaColaboracion;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
@@ -114,11 +117,19 @@ public class PersonaHumana {
     }
   }
 
-  public void asignarTarjeta(Tarjeta tarjeta) {
+  public void asignarTarjetaParaColaborar(Tarjeta tarjeta) {
     if (this.direccion == null) {
       throw new DireccionIncompletaException();
     }
-    this.tarjeta = tarjeta;
+    this.tarjetaColaboracion = tarjeta;
+  }
+
+  public void usarTarjeta(Heladera heladera){
+    if(!heladera.validarApertura(this.tarjetaColaboracion.getCodigo())){
+      throw new NoHaySolicitudActivaException();
+    }
+
+    this.tarjetaColaboracion.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
   }
 
   @Override

@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.repositories.imp;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,12 @@ public class RepositorioHeladera implements IRepositorioHeladera {
         break;
       }
     }
+  }
+
+  public List<String> recomendarHeladeras(Direccion direccion) {
+    return this.heladeras.stream()
+        .filter(heladera -> heladera.getDireccion().estaCercaDe(direccion))
+        .map(Heladera::getNombre).toList();
   }
 
   public List<Heladera> listar() {
