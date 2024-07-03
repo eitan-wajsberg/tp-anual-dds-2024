@@ -10,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class PublicadorSolicitudApertura {
   private static PublicadorSolicitudApertura instancia;
-  private MqttClient client ;
+  private MqttClient client;
   private final static String broker = "tcp://your-broker-address:1883";
 
   public static PublicadorSolicitudApertura getInstance() {
@@ -37,7 +37,6 @@ public class PublicadorSolicitudApertura {
     int qos = 2;
 
     try {
-      MqttClient client = new MqttClient(broker, "SMAACVS");
       client.connect();
 
       MqttMessage message = new MqttMessage(contenido.getBytes());
