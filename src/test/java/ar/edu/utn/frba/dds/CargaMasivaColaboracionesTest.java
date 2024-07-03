@@ -51,8 +51,8 @@ public class CargaMasivaColaboracionesTest {
     File nuevoArchivo = new File("src/resources/" + nombreArchivo);
 
     // Realizo carga
-    carga = new CargaMasivaColaboraciones(repoPersonaHumana, repoDocumento);
-    carga.cargarColaboraciones(nuevoArchivo, mailSender);
+    carga = new CargaMasivaColaboraciones(repoPersonaHumana, repoDocumento, mailSender);
+    carga.cargarColaboraciones(nuevoArchivo);
   }
 
   @Test

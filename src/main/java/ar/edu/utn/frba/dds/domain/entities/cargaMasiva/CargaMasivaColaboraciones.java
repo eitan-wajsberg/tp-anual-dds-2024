@@ -30,13 +30,15 @@ import org.apache.commons.csv.CSVRecord;
 public class CargaMasivaColaboraciones {
   private IRepositorioPersonaHumana personaHumanaRepo;
   private IRepositorioDocumento documentoRepo;
+  private AdapterMail adapterMail;
 
-  public CargaMasivaColaboraciones(IRepositorioPersonaHumana personaHumanaRepo, IRepositorioDocumento documentoRepo) {
+  public CargaMasivaColaboraciones(IRepositorioPersonaHumana personaHumanaRepo, IRepositorioDocumento documentoRepo, AdapterMail adapterMail) {
     this.personaHumanaRepo = personaHumanaRepo;
     this.documentoRepo = documentoRepo;
+    this.adapterMail = adapterMail;
   }
 
-  public void cargarColaboraciones(File dataCSV, AdapterMail adapterMail) {
+  public void cargarColaboraciones(File dataCSV) {
     Reader reader;
     try {
       reader = new FileReader(dataCSV);
