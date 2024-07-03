@@ -8,6 +8,7 @@ import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioTecnicos;
 
 import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.deser.BasicDeserializerFactory;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
@@ -15,22 +16,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.mail.MessagingException;
+import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 public class Incidente {
+    @Setter
     private LocalDateTime fecha;
+    @Setter
     private Tecnico tecnico;
     private List<Visita> visitas;
     @Setter
     private boolean solucionado;
+    @Setter
     private Heladera heladera;
+    @Setter
     private TipoIncidente tipoIncidente;
     private IRepositorioTecnicos repositorioTecnicos;
 
-    public Incidente(IRepositorioTecnicos repositorioTecnicos, LocalDateTime fecha) {
+    public Incidente(IRepositorioTecnicos repositorioTecnicos, Heladera heladera) throws MessagingException, UnsupportedEncodingException {
         this.repositorioTecnicos = repositorioTecnicos;
         this.solucionado = false;
         this.visitas = new ArrayList<>();
+        this.heladera = heladera;
+        asignarTecnico(heladera); // FIXME: Verificar esto
     }
 
     public void registrarVisita(Visita visita, boolean solucionado) {
@@ -61,7 +70,7 @@ public class Incidente {
             "SMAACVS: Aviso para revisar una heladera",
             "Estimado tecnico,\n"
                 + "Fue elegido para revisar la heladera " + heladera.getNombre()
-                + "en la direccion " + heladera.getDireccion().direccionSegunGeoRef() + ". \n"
+                + "en la direccion " + heladera.getDireccion().direccionSegunGeoRef() + ".\n"
                 + tipoIncidente.obtenerDescripcionIncidente() + "\n"
                 + "Saludos, "
                 + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica",
