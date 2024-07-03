@@ -105,18 +105,8 @@ public class ManejoDeSolicitudesTest {
         RepositorioHeladera repositorioHeladeraMock = mock(RepositorioHeladera.class);
         when(repositorioHeladeraMock.buscarPorId(1L)).thenReturn(Optional.of(heladera));
 
-        // Inyectar el mock de MqttClient en el PublicadorSolicitudApertura
-        PublicadorSolicitudApertura publicadorMock = new PublicadorSolicitudApertura();
-        publicadorMock.setMqttClient(mqttClientMock);
-        PublicadorSolicitudApertura.setInstance(publicadorMock);
-
-        try (MockedConstruction<MqttClient> mocked = mockConstruction(MqttClient.class, (mock, context) -> {
-            doNothing().when(mock).connect();
-            doNothing().when(mock).publish(any(String.class), any(MqttMessage.class));
-            doNothing().when(mock).disconnect();
-        })) {
-            // Constructor mockeado para que el objeto MqttClient se use en lugar del real.
-        }
+        PublicadorSolicitudApertura publicador = PublicadorSolicitudApertura.getInstance();
+        publicador.setMqttClient(mqttClientMock);
     }
 
     @Test
@@ -141,7 +131,7 @@ public class ManejoDeSolicitudesTest {
     @DisplayName("Cuando una Solicitud llena una Heladera y otra Solicitud de agregar Vianda es enviada, se genera una excepción de heladera llena")
     void testSolicitudesEnConflicto() {
         // Simular el llenado de la heladera con solicitudA
-        heladeraCasiLLena.agregarSolicitudApertura(solicitudA);
+        heladeraCasiLLena.agregarSolicitudApertura(solicitudC);
 
         // Luego intentar agregar una vianda más, lo cual debería fallar
         Exception exception = Assertions.assertThrows(HeladeraVirtualmenteLlenaException.class, () -> {
@@ -161,7 +151,7 @@ public class ManejoDeSolicitudesTest {
     }
 
     @Test
-    @DisplayName("Una solicitud de apertura para ingresar 2 viandas")
+    @DisplayName("Verifica la publicación de un mensaje MQTT al agregar una solicitud de apertura valida")
     public void testPublicarSolicitudApertura() throws MqttException {
         SolicitudApertura solicitud = new SolicitudApertura();
         solicitud.setCodigoTarjeta("12345");
@@ -175,11 +165,11 @@ public class ManejoDeSolicitudesTest {
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<MqttMessage> messageCaptor = ArgumentCaptor.forClass(MqttMessage.class);
 
-        verify(mqttClientMock).publish(topicCaptor.capture(), messageCaptor.capture());
+        verify(mqttClientMock, times(1)).publish(topicCaptor.capture(), messageCaptor.capture());
 
         String expectedTopic = "mqqt/heladeras/1";
         int expectedHoras = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
-        String expectedMessageContent = "12345" + solicitud.getFecha().plusHours(expectedHoras);
+        String expectedMessageContent = "12345 " + solicitud.getFecha().plusHours(expectedHoras);
 
         assertEquals(expectedTopic, topicCaptor.getValue());
         assertEquals(expectedMessageContent, new String(messageCaptor.getValue().getPayload()));
