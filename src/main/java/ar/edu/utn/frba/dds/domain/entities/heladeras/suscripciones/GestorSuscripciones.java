@@ -15,46 +15,29 @@ import java.util.Map;
 
 public class GestorSuscripciones {
   @Getter
-  private Map<TipoSuscripcion, Map<Integer, List<Suscripcion>>> suscripcionesPorTipo;
+  private Map<TipoSuscripcion, List<Suscripcion>> suscripcionesPorTipo;
 
   public GestorSuscripciones() {
     this.suscripcionesPorTipo = new HashMap<>();
   }
 
-  public void notificar(int cantidadViandas, TipoSuscripcion tipo, Heladera heladera) {
+  public void notificar(TipoSuscripcion tipo, Heladera heladera) {
     List<Suscripcion> suscripciones = switch (tipo) {
-        case DESPERFECTO -> suscripcionesPorTipo.get(tipo).get(0);
-        case FALTAN_N_VIANDAS, QUEDAN_N_VIANDAS -> suscripcionesPorTipo.get(tipo).get(cantidadViandas);
+        case DESPERFECTO -> suscripcionesPorTipo.get(tipo);
+        case FALTAN_N_VIANDAS, QUEDAN_N_VIANDAS -> suscripcionesPorTipo.get(tipo);
     };
 
     suscripciones.forEach(suscripcion -> suscripcion.notificar(heladera));
   }
-
-  public void suscribirPersona(PersonaHumana persona, TipoSuscripcion tipoSuscripcion, int cantidadViandas, Heladera heladera) {
-    if (!suscripcionValida(persona, heladera)) throw new SuscripcionNoCercanaException();
-
-    // FIXME: Algun dia esto no deberia un ser un switch
-    Suscripcion suscripcion;
-    switch (tipoSuscripcion) {
-      case QUEDAN_N_VIANDAS -> suscripcion = new QuedanNViandas(persona, cantidadViandas);
-      case FALTAN_N_VIANDAS -> suscripcion = new FaltanNViandas(persona, cantidadViandas);
-      default -> throw new TipoSuscripcionInvalidoException();
-    }
-
-    List<Suscripcion> listaSuscripciones = suscripcionesPorTipo.get(tipoSuscripcion).get(cantidadViandas);
-    listaSuscripciones.add(suscripcion);
-    this.suscripcionesPorTipo.get(tipoSuscripcion).put(cantidadViandas, listaSuscripciones);
-  }
-
-  public void suscribirPersona(PersonaHumana persona, Heladera heladera)  {
-    if (!suscripcionValida(persona, heladera)) {
+  
+  public void agregarSuscripcionPorTipo(TipoSuscripcion tipo, Suscripcion suscripcion, Heladera heladera) {
+    if (suscripcionValida(suscripcion.colaborador, heladera)) {
       throw new SuscripcionNoCercanaException();
     }
 
-    Desperfecto desperfecto = new Desperfecto(persona);
-    List<Suscripcion> listaSuscripciones = suscripcionesPorTipo.get(TipoSuscripcion.DESPERFECTO).get(0);
-    listaSuscripciones.add(desperfecto);
-    this.suscripcionesPorTipo.get(TipoSuscripcion.DESPERFECTO).put(0, listaSuscripciones);
+    List<Suscripcion> suscripciones = this.suscripcionesPorTipo.get(tipo);
+    suscripciones.add(suscripcion);
+    this.suscripcionesPorTipo.put(tipo, suscripciones);
   }
 
   public boolean suscripcionValida(PersonaHumana persona, Heladera heladera) {

@@ -43,7 +43,7 @@ public class Heladera implements Contribucion {
   private List<CambioEstado> historialEstados;
   private List<CambioTemperatura> historialTemperaturas;
   private List<SolicitudApertura> solicitudesDeApertura;
- // private List<Incidente> incidentes;
+  // private List<Incidente> incidentes; // TODO: preguntar que honduras con eso
   private GestorSuscripciones gestorSuscripciones;
 
   public Heladera() {
@@ -57,11 +57,21 @@ public class Heladera implements Contribucion {
   }
 
   public void ingresarViandas(List<Vianda> viandas) {
+    if (this.cantidadViandasIngresadasVirtualmente() + this.cantidadViandas() + viandas.size() == this.capacidadMaximaViandas) {
+      throw new HeladeraVirtualmenteLlenaException();
+    }
+
     this.viandas.addAll(viandas);
+    this.avisoGestorParaNotificarCantidades();
   }
 
   public void quitarViandas(List<Vianda> viandas) {
-    viandas.forEach(this.viandas::remove);
+    if (this.cantidadViandasQuitadasVirtualmente() + viandas.size() == this.cantidadViandas()) {
+      throw new HeladeraVirtualmenteVaciaException();
+    }
+
+    this.viandas.removeAll(viandas);
+    this.avisoGestorParaNotificarCantidades();
   }
 
   private int calcularMesesActiva() {
@@ -165,7 +175,7 @@ public class Heladera implements Contribucion {
     this.setEstado(EstadoHeladera.FRAUDE);
     this.agregarCambioDeEstado(new CambioEstado(EstadoHeladera.FRAUDE, LocalDate.now()));
 
-    gestorSuscripciones.notificar(0, TipoSuscripcion.DESPERFECTO, this);
+    gestorSuscripciones.notificar(TipoSuscripcion.DESPERFECTO, this);
   }
 
   public void detectarFallaDeConexion() {
@@ -177,15 +187,13 @@ public class Heladera implements Contribucion {
         .isBefore(LocalDateTime.now());
 
     if (huboFallaDesconexion) {
-      gestorSuscripciones.notificar(0, TipoSuscripcion.DESPERFECTO, this);
+      gestorSuscripciones.notificar(TipoSuscripcion.DESPERFECTO, this);
     }
   }
   
   /*public void agregarIncidente(Incidente incidente) {
     this.incidentes.add(incidente);
-  }
-
-   */
+  }*/
 
   public void quitarVianda(Vianda vianda) {
     if (this.cantidadViandasQuitadasVirtualmente() == this.cantidadViandas()) {
@@ -206,9 +214,8 @@ public class Heladera implements Contribucion {
   }
 
   private void avisoGestorParaNotificarCantidades() {
-    int cantidadDeViandasFaltantes = this.capacidadMaximaViandas - this.cantidadViandas();
-    gestorSuscripciones.notificar(this.cantidadViandas(), TipoSuscripcion.QUEDAN_N_VIANDAS, this);
-    gestorSuscripciones.notificar(cantidadDeViandasFaltantes, TipoSuscripcion.FALTAN_N_VIANDAS, this);
+    gestorSuscripciones.notificar(TipoSuscripcion.QUEDAN_N_VIANDAS, this);
+    gestorSuscripciones.notificar(TipoSuscripcion.FALTAN_N_VIANDAS, this);
   }
 }
 

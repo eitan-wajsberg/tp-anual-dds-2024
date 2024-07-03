@@ -12,12 +12,12 @@ public class QuedanNViandas extends Suscripcion {
   private int cantidadViandasDisponibles;
 
   public QuedanNViandas(PersonaHumana colaborador, int cantidadViandasDisponibles) {
-    this.cantidadViandasDisponibles =cantidadViandasDisponibles;
+    this.cantidadViandasDisponibles = cantidadViandasDisponibles;
     this.colaborador = colaborador;
   }
 
   protected boolean cumpleCondicion(Heladera heladera) {
-    return heladera.cantidadViandasVirtuales() - cantidadViandasDisponibles == 0;
+    return heladera.cantidadViandasVirtuales() == cantidadViandasDisponibles;
   }
 
   protected String armarCuerpo(Heladera heladera) {

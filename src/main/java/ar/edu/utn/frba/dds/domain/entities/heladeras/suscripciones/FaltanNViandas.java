@@ -14,7 +14,7 @@ public class FaltanNViandas extends Suscripcion {
   }
 
   protected boolean cumpleCondicion(Heladera heladera) {
-    return heladera.cantidadViandas() + cantidadViandasParaLlenarse == heladera.getCapacidadMaximaViandas();
+    return heladera.cantidadViandasVirtuales() + cantidadViandasParaLlenarse == heladera.getCapacidadMaximaViandas();
   }
 
   protected String armarCuerpo(Heladera heladera) {

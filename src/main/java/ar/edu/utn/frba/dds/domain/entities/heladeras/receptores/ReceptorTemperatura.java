@@ -67,18 +67,17 @@ public class ReceptorTemperatura implements MqttCallback {
 
 
     private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor) {
-            Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera);
-            if (optionalHeladera.isPresent()) {
-                Heladera heladera = optionalHeladera.get();
-                if(tipoMensaje == "Temperatura") {
-                        heladera.cambiarTemperatura(valor);
-                }
-                else {
-                    System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
-                }
+        Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera);
+        if (optionalHeladera.isPresent()) {
+            Heladera heladera = optionalHeladera.get();
+            if (tipoMensaje.equals("Temperatura")) {
+                heladera.cambiarTemperatura(valor);
             } else {
-                System.err.println("Heladera no encontrada para el ID: " + idHeladera);
+                System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
             }
+        } else {
+            System.err.println("Heladera no encontrada para el ID: " + idHeladera);
+        }
     }
 
     @Override
