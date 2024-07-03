@@ -14,7 +14,8 @@ public class GeneradorReportesMain
 {
   public static void main(String[] args) {
     // configuro generador de reportes
-    AdapterPDFiText adaptador = new AdapterPDFiText(new ITextPDF());
+    String rutaReportes = "src/resources/reportes";
+    AdapterPDFiText adaptador = new AdapterPDFiText(new ITextPDF(rutaReportes));
     GeneradorReportes.getInstance().setAdapterPDF(adaptador);
     GeneradorReportes.getInstance().setTemporalidad(Temporalidad.SEMANAL);
 

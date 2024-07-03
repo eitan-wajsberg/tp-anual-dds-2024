@@ -203,6 +203,7 @@ AdapterPDFiText ..|> IAdapterPDF
 class GeneradorReportes {
  - reportes: List<Reporte>
  - pdfAPI: IAdapterPDF
+ - temporalidad: Temporalidad
  + generarReportes(): void
  + calcularFechaInicio: LocalDate
  + agregarReporte(reporte: Reporte): void
@@ -211,6 +212,14 @@ class GeneradorReportes {
 
 GeneradorReportes --> " * " Reporte
 GeneradorReportes --> IAdapterPDF
+GeneradorReportes --> Temporalidad
+
+enum Temporalidad {
+ DIARIO
+ SEMANAL
+ MENSUAL
+ ANUAL
+}
 
 interface Reporte {
  + generarReporte(fechaInicio: LocalDate, fechaFin: LocalDate): List<String>
@@ -263,7 +272,6 @@ enum AccionApertura {
  QUITAR_VIANDA
  INGRESAR_VIANDA
 }
-
 ' -----------------------------------------
 
 class CambioEstado {

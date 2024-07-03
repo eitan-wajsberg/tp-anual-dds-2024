@@ -11,7 +11,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ITextPDF {
-  private final static String rutaRelativa = "";
+  private String rutaRelativa = "";
+
+  public ITextPDF(String rutaRelativa){
+    this.rutaRelativa = rutaRelativa;
+  }
 
   public void generarPDF(String titulo, List<String> parrafos) {
     try {
