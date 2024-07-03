@@ -1,13 +1,13 @@
-package ar.edu.utn.frba.dds.domain.entities.contacto;
+package ar.edu.utn.frba.dds.domain.adapters;
 
-import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class MailSender implements AdapterMail {
+public class AdaptadaJavaXMail implements AdapterMail {
 
   private static final String username = System.getenv("USER_DDS_TPA");
   private static final String password = System.getenv("PASSWORD_DDS_TPA");
