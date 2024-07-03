@@ -13,7 +13,7 @@ public class ReconocimientoTrabajoRealizado {
   private static ReconocimientoTrabajoRealizado instancia;
   private static Map<String, Float> coeficientes;
   private static final String path = "src/resources/coeficientesPuntaje.properties";
-  private ReconocimientoTrabajoRealizado(){}
+  private ReconocimientoTrabajoRealizado() {}
 
   public static ReconocimientoTrabajoRealizado getInstance() {
     if (instancia == null) {

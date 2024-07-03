@@ -38,7 +38,11 @@ public class PersonaVulnerable {
 
   public void usarTarjeta(Heladera heladera, Vianda vianda) throws UsoMaximoDeTarjetasPorDiaExcedidoException, HeladeraInactivaException {
     // FIXME: Revisar si es correcto que este metodo reciba la vianda
-    if(!heladera.estaActiva()){
+    if (!heladera.estaActiva()) {
+      throw new HeladeraInactivaException();
+    }
+
+    if ((heladera.cantidadViandas() - heladera.cantidadViandasQuitadasVirtualmente()) == 0) {
       throw new HeladeraInactivaException();
     }
 
