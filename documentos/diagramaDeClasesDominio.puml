@@ -68,6 +68,16 @@ Vianda ..|> Contribucion
 
 ' -----------------------------------------
 
+class PublicadorSolicitudApertura {
+  - client: MqttClient
+  - static broker: String
+
+  + publicarSolicitudApertura(codigoTarjeta: String, fecha: LocalDateTime, idHeladera: Long): void
+}
+Heladera ..> PublicadorSolicitudApertura
+
+' -----------------------------------------
+
 class Heladera {
  - id: Long
  - nombre: String
@@ -665,7 +675,6 @@ class Mensaje {
  - fecha: LocalDateTime
  - destinatario: Usuario
  - repositorioMensajes: IRepositorioMensajes
- + registrarEnRepositorio(): void
 }
 
 Mensaje --> Usuario
