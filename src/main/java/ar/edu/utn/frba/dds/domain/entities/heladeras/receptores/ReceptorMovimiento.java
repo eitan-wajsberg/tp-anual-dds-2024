@@ -58,5 +58,4 @@ public class ReceptorMovimiento implements IMqttMessageListener {
       System.err.println("Heladera no encontrada para el ID: " + idHeladera);
     }
   }
-
 }
