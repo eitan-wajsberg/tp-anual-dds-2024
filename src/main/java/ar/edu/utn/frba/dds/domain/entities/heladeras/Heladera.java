@@ -146,6 +146,12 @@ public class Heladera implements Contribucion {
     if (!this.estaActiva()) {
       throw new HeladeraInactivaException();
     }
+    if (this.cantidadViandasIngresadasVirtualmente() + this.cantidadViandas() == this.capacidadMaximaViandas) {
+      throw new HeladeraVirtualmenteLlenaException();
+    }
+    if (this.cantidadViandasQuitadasVirtualmente() == this.cantidadViandas()) {
+      throw new HeladeraVirtualmenteVaciaException();
+    }
 
     this.solicitudesDeApertura.add(solicitud);
     PublicadorSolicitudApertura
