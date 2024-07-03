@@ -33,7 +33,7 @@ public class GestorSuscripciones {
   public void suscribirPersona(PersonaHumana persona, TipoSuscripcion tipoSuscripcion, int cantidadViandas, Heladera heladera) {
     if (!suscripcionValida(persona, heladera)) throw new SuscripcionNoCercanaException();
 
-    // FIXME: Algun dia esto no deberia un ser un switch y usariamos las etiquetas
+    // FIXME: Algun dia esto no deberia un ser un switch
     Suscripcion suscripcion;
     switch (tipoSuscripcion) {
       case QUEDAN_N_VIANDAS -> suscripcion = new QuedanNViandas(persona, cantidadViandas);
@@ -60,10 +60,5 @@ public class GestorSuscripciones {
   public boolean suscripcionValida(PersonaHumana persona, Heladera heladera) {
     return persona.getDireccion().getMunicipio().equals(heladera.getDireccion().getMunicipio())
             && persona.getDireccion().getProvincia().equals(heladera.getDireccion().getProvincia());
-  }
-
-  public static Object instanciarTipoSuscripcion(String className, PersonaHumana persona, int cantidadViandas) throws Exception {
-    Class<?> clazz = Class.forName(className);
-    return clazz.getDeclaredConstructor().newInstance(persona, cantidadViandas);
   }
 }
