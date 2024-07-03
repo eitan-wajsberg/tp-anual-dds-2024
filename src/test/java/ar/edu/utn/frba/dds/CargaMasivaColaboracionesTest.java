@@ -3,14 +3,12 @@ package ar.edu.utn.frba.dds;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.cargaMasiva.CargaMasivaColaboraciones;
-import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
-import ar.edu.utn.frba.dds.domain.entities.contacto.MailSender;
+import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumanaBuilder;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioDocumento;
@@ -21,9 +19,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import javax.mail.MessagingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -84,7 +79,7 @@ public class CargaMasivaColaboracionesTest {
     PersonaHumana persona =
         builder.construirNombre("Marco")
             .construirApellido("Bravo")
-            .construirMail("nosequepasa@sielmailnoesvalido.com", new MailSender())
+            .construirMail("nosequepasa@sielmailnoesvalido.com", new AdaptadaJavaXMail())
             .construirDocumento(new Documento(TipoDocumento.DNI, "44125678"))
             .construirContribucion(new Vianda(fecha("25/05/2024")))
             .construirContribucion(new DistribucionVianda(fecha("26/05/2024"), 5))
