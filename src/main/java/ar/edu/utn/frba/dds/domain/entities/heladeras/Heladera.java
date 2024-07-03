@@ -118,19 +118,19 @@ public class Heladera implements Contribucion {
     this.historialEstados.add(cambioEstado);
   }
 
-  private boolean tieneTemperaturaEnRango(Float temperatura) {
+  private boolean temperaturaEnRango(float temperatura) {
     return temperatura >= modelo.getTemperaturaMinima() && temperatura <= modelo.getTemperaturaMaxima();
   }
 
   public void cambiarTemperatura(float nuevaTemperatura) {
-    if (!tieneTemperaturaEnRango(nuevaTemperatura)) {
+    if (!temperaturaEnRango(nuevaTemperatura)) {
       this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
     }
 
     agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));
   }
 
-  public void agregarTemperaturaAlHistorial(CambioTemperatura temperatura) {
+  private void agregarTemperaturaAlHistorial(CambioTemperatura temperatura) {
     this.historialTemperaturas.add(temperatura);
   }
 

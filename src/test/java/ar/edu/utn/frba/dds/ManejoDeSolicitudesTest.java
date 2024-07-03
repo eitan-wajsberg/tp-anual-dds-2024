@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolic
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.HorasParaEjecutarAccion;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
@@ -28,8 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-public class manejoDeSolicitudesTest {
-
+public class ManejoDeSolicitudesTest {
     private Heladera heladeraLlena;
     private Heladera heladeraCasiLLena;
     private Heladera heladeraVacia;
@@ -38,10 +38,10 @@ public class manejoDeSolicitudesTest {
     private SolicitudApertura solicitudB;
     private SolicitudApertura solicitudC;
     private MqttClient mqttClientMock = mock(MqttClient.class);
+    private GestorSuscripciones mockGestorSuscripciones = mock(GestorSuscripciones.class);
 
     @BeforeEach
     public void antesDeTestear() throws Exception {
-
         Vianda vianda1 = crearVianda("2024-05-20", "vianda1", 500, 1200);
         Vianda vianda2 = crearVianda("2024-05-20", "vianda2", 600, 1300);
         Vianda vianda3 = crearVianda("2024-05-20", "vianda3", 600, 1300);
