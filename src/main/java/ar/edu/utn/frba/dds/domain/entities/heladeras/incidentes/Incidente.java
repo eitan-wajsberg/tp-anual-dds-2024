@@ -42,16 +42,17 @@ public class Incidente {
     }
 
     public void asignarTecnico(Heladera heladera) throws MessagingException, UnsupportedEncodingException {
-        double distanciaMasCorta = 0;
+        // FIXME: Hace falta parametrizar eso? yo creeria que si
+        double distanciaMasCortaEnKm = 50; // distancia maxima considerada para llamar un tecnico
         Tecnico tecnicoElegido = null;
         List <Tecnico> tecnicos = repositorioTecnicos.listar();
         for (Tecnico tecnico : tecnicos) {
-            double distanciaActual = ManejoDistancias.distanciaHaversineConCoordenadas(
+            double distanciaActualEnKm = ManejoDistancias.distanciaHaversineConCoordenadasEnKm(
                 heladera.getDireccion().getCoordenada(),
                 tecnico.getArea().getCoordenada()
             );
-            if (distanciaActual < distanciaMasCorta) {
-                distanciaMasCorta = distanciaActual;
+            if (distanciaActualEnKm < distanciaMasCortaEnKm) {
+                distanciaMasCortaEnKm = distanciaActualEnKm;
                 tecnicoElegido = tecnico;
             }
         }
