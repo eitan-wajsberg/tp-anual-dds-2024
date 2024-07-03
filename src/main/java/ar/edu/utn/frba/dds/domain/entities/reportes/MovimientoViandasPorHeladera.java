@@ -3,7 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.reportes;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.utils.manejoFechas.ManejoFechas;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +30,10 @@ public class MovimientoViandasPorHeladera implements Reporte {
 
   private int cantidadViandasSegunAccion(Heladera heladera, AccionApertura accion, LocalDate fechaInicio, LocalDate fechaFin) {
     // como para meter o sacar cosas en la heladera primero hay que solicitarlas
-    return (int) heladera.getSolicitudesDeApertura().stream().filter(sol ->
+    return heladera.getSolicitudesDeApertura().stream().filter(sol ->
         sol.isAperturaConcretada() && sol.getAccion().equals(accion)
-        && fechaEnRango(sol.getFecha().toLocalDate(), fechaInicio, fechaFin)
-    ).count();
-  }
-
-  private static boolean fechaEnRango(LocalDate fecha, LocalDate fechaInicio, LocalDate fechaFin) {
-    return (fecha.isEqual(fechaInicio) || fecha.isAfter(fechaFin))
-        && (fecha.isEqual(fechaFin) || fecha.isBefore(fechaFin));
+        && ManejoFechas.fechaEnRango(sol.getFecha().toLocalDate(), fechaInicio, fechaFin)
+    ).mapToInt(sol -> sol.getCantidadViandas()).sum();
   }
 
   public String titulo() {

@@ -16,25 +16,22 @@ import java.util.Map;
 public class GestorSuscripciones {
   @Getter
   private Map<TipoSuscripcion, Map<Integer, List<Suscripcion>>> suscripcionesPorTipo;
-  @Getter @Setter
-  private Heladera heladera;
 
   public GestorSuscripciones() {
     this.suscripcionesPorTipo = new HashMap<>();
   }
 
-  public void notificar(int cantidadViandas, TipoSuscripcion tipo) {
+  public void notificar(int cantidadViandas, TipoSuscripcion tipo, Heladera heladera) {
     List<Suscripcion> suscripciones = switch (tipo) {
         case DESPERFECTO -> suscripcionesPorTipo.get(tipo).get(0);
         case FALTAN_N_VIANDAS, QUEDAN_N_VIANDAS -> suscripcionesPorTipo.get(tipo).get(cantidadViandas);
-        default -> throw new TipoSuscripcionInvalidoException();
     };
 
-    suscripciones.forEach(suscripcion -> suscripcion.notificar(this.heladera));
+    suscripciones.forEach(suscripcion -> suscripcion.notificar(heladera));
   }
 
-  public void suscribirPersona(PersonaHumana persona, TipoSuscripcion tipoSuscripcion, int cantidadViandas) {
-    if (!suscripcionValida(persona)) throw new SuscripcionNoCercanaException();
+  public void suscribirPersona(PersonaHumana persona, TipoSuscripcion tipoSuscripcion, int cantidadViandas, Heladera heladera) {
+    if (!suscripcionValida(persona, heladera)) throw new SuscripcionNoCercanaException();
 
     // FIXME: Algun dia esto no deberia un ser un switch y usariamos las etiquetas
     Suscripcion suscripcion;
@@ -49,8 +46,10 @@ public class GestorSuscripciones {
     this.suscripcionesPorTipo.get(tipoSuscripcion).put(cantidadViandas, listaSuscripciones);
   }
 
-  public void suscribirPersona(PersonaHumana persona)  {
-    if (!suscripcionValida(persona)) throw new SuscripcionNoCercanaException();
+  public void suscribirPersona(PersonaHumana persona, Heladera heladera)  {
+    if (!suscripcionValida(persona, heladera)) {
+      throw new SuscripcionNoCercanaException();
+    }
 
     Desperfecto desperfecto = new Desperfecto(persona);
     List<Suscripcion> listaSuscripciones = suscripcionesPorTipo.get(TipoSuscripcion.DESPERFECTO).get(0);
@@ -58,7 +57,7 @@ public class GestorSuscripciones {
     this.suscripcionesPorTipo.get(TipoSuscripcion.DESPERFECTO).put(0, listaSuscripciones);
   }
 
-  public boolean suscripcionValida(PersonaHumana persona) {
+  public boolean suscripcionValida(PersonaHumana persona, Heladera heladera) {
     return persona.getDireccion().getMunicipio().equals(heladera.getDireccion().getMunicipio())
             && persona.getDireccion().getProvincia().equals(heladera.getDireccion().getProvincia());
   }
@@ -68,4 +67,3 @@ public class GestorSuscripciones {
     return clazz.getDeclaredConstructor().newInstance(persona, cantidadViandas);
   }
 }
-
