@@ -24,7 +24,7 @@ public class Incidente {
     @Setter
     private LocalDateTime fecha;
     @Setter
-    private Tecnico tecnico;
+    private Tecnico tecnicoSeleccionado;
     private List<Visita> visitas;
     @Setter
     private boolean solucionado;
@@ -53,20 +53,19 @@ public class Incidente {
     public void asignarTecnico(Heladera heladera) throws MessagingException, UnsupportedEncodingException {
         // FIXME: Hace falta parametrizar eso? yo creeria que si
         double distanciaMasCortaEnKm = 50; // distancia maxima considerada para llamar un tecnico
-        Tecnico tecnicoElegido = null;
-        List <Tecnico> tecnicos = repositorioTecnicos.listar();
-        for (Tecnico tecnico : tecnicos) {
+        for (Tecnico tecnico : repositorioTecnicos.listar()) {
             double distanciaActualEnKm = ManejoDistancias.distanciaHaversineConCoordenadasEnKm(
                 heladera.getDireccion().getCoordenada(),
-                tecnico.getArea().getCoordenada()
+                tecnico.getCoordenada()
             );
-            if (distanciaActualEnKm < distanciaMasCortaEnKm) {
+            if (distanciaActualEnKm < distanciaMasCortaEnKm
+                && distanciaActualEnKm <= tecnico.getDistanciaMaximaEnKmParaSerAvisado()) {
                 distanciaMasCortaEnKm = distanciaActualEnKm;
-                tecnicoElegido = tecnico;
+                tecnicoSeleccionado = tecnico;
             }
         }
         
-        tecnicoElegido.getContacto().enviarMensaje(new Mensaje(
+        tecnicoSeleccionado.getContacto().enviarMensaje(new Mensaje(
             "SMAACVS: Aviso para revisar una heladera",
             "Estimado tecnico,\n"
                 + "Fue elegido para revisar la heladera " + heladera.getNombre()
