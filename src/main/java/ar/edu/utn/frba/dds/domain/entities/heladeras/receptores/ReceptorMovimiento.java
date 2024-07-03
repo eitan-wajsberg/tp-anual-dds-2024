@@ -44,14 +44,14 @@ public class ReceptorMovimiento implements IMqttMessageListener {
     }
     return null;
   }
+
   private void procesarMensaje(Long idHeladera, String tipoMensaje, Boolean valor) {
     Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera);
     if (optionalHeladera.isPresent()) {
       Heladera heladera = optionalHeladera.get();
-      if(tipoMensaje != "Fraude") {
+      if (!tipoMensaje.equals("Fraude")) {
         System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
-      }
-      else if (valor){
+      } else if (valor) {
         heladera.recibirAlertaFraude();
       }
     } else {

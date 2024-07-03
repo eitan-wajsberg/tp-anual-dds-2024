@@ -43,6 +43,10 @@ interface IObserverNotificacion {
  + serNotificadoPor(mensaje: Mensaje): void
 }
 
+note right
+Desacopla al notificador del notificado
+end note
+
 ' -----------------------------------------
 
 class Vianda {
@@ -72,6 +76,7 @@ class Heladera {
  - historialEstados: List<CambioEstado>
  - historialTemperaturas: List<CambioTemperatura>
  - solicitudesDeApertura: List<SolicitudApertura>
+ - gestorSuscripciones: GestorSuscripciones
  + ingresarViandas(viandas: List<Vianda>): void
  + quitarViandas(viandas: List<Vianda>): void
  + notificarColaborador(): void
@@ -86,6 +91,8 @@ class Heladera {
  + cantidadViandas(): int
  + cantidadViandasVirtuales(): int
  + enviarAHeladeraFisicaSolicitudApertura(): void
+ - avisoGestorParaNotificarCantidades(): void
+ - recibirAlertaFraude(): void
 }
 
 Heladera --> " * " Vianda
@@ -96,6 +103,7 @@ Heladera --> EstadoHeladera
 Heladera --> " * " CambioEstado
 Heladera --> " * " CambioTemperatura
 Heladera --> " * " SolicitudApertura
+Heladera --> GestorSuscripciones
 
 ' -----------------------------------------
 
@@ -116,11 +124,10 @@ end note
 ' -----------------------------------------
 
 class GestorSuscripciones {
-  - suscripcionesPorTipo: Map<TipoSuscripcion, Map<Integer, List<Suscripcion>>>
+  - suscripcionesPorTipo: Map<TipoSuscripcion, List<Suscripcion>>
 
-  + notificar(cantidadViandas: int, tipo: TipoSuscripcion, heladera: Heladera): void
-  + suscribirPersona(persona: PersonaHumana, tipoSuscripcion: TipoSuscripcion, cantidadViandas: int, heladera: Heladera): void
-  + suscribirPersona(persona: PersonaHumana, heladera: Heladera): void
+  + notificar(tipo: TipoSuscripcion, heladera: Heladera): void
+  + agregarSuscripcionPorTipo(tipo: TipoSuscripcion, suscripcion: Suscripcion, heladera: Heladera): void
   + suscripcionValida(persona: PersonaHumana, heladera: Heladera): boolean
 }
 
@@ -134,7 +141,7 @@ enum TipoSuscripcion {
 }
 
 class Suscripcion {
- - colaborador: PersonaHumana
+ - suscriptor: IObserverNotificacion
  + notificar(heladera: Heladera): void
    /'
    if(cumpleCondicion(heladera)){
@@ -154,7 +161,7 @@ para todas es el mismo, solo cambian las condiciones y el cuerpo del mensaje
 de las mismas.
 end note
 
-Suscripcion --> PersonaHumana
+Suscripcion --> IObserverNotificacion
 Suscripcion ..> Heladera
 
 class QuedanNViandas {
@@ -526,10 +533,51 @@ MedioDeContacto ..> Mensaje
 
 class WhatsApp {
  - numero: String
+ - adaptador: AdapterWhatsApp
  + enviar(mensaje: Mensaje)
 }
 
 WhatsApp ..|> MedioDeContacto
+WhatsApp -> AdapterWhatsApp
+
+' -----------------------------------------
+
+interface AdapterWhatsApp{
++ enviar(telefonoUsuario: String, texto: String);
+}
+
+' -----------------------------------------
+
+class AdapterTwillio {
+ + enviar(telefonoUsuario: String, texto: String);
+}
+
+AdapterTwillio ..|> AdapterWhatsApp
+
+' -----------------------------------------
+
+class Telegram {
+ - numero: String
+ - adaptador: AdapterTelegram
+ + enviar(mensaje: Mensaje)
+}
+
+Telegram ..|> MedioDeContacto
+Telegram -> AdapterTelegramTelegram
+
+' -----------------------------------------
+
+interface AdapterWhatsApp{
++ enviar(telefonoUsuario: String, texto: String);
+}
+
+' -----------------------------------------
+
+class AdapterTwillio {
+ + enviar(telefonoUsuario: String, texto: String);
+}
+
+AdapterTwillio ..|> AdapterWhatsApp
 
 ' -----------------------------------------
 
@@ -614,7 +662,7 @@ class MailSender {
  + enviar(mensaje: Mensaje, destinatario: String)
 }
 
-MailSender ..|> AdapterMail 
+MailSender ..|> AdapterMail
 
 
 ' -----------------------------------------
@@ -649,6 +697,8 @@ class Mensaje {
  - destinatario: Usuario
  + registrarEnRepositorio(): void
 }
+
+Mensaje --> Usuario
 
 ' -----------------------------------------
 

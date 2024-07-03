@@ -33,6 +33,7 @@ public class DistribucionVianda implements Contribucion {
   public void distribuir(List<Vianda> viandas) {
     heladeraOrigen.quitarViandas(viandas);
     heladeraDestino.ingresarViandas(viandas);
+    // FIXME: Esto sigue siendo asi? Los metodos estos de quitar viandas en plural no deberiamos cambiarlos?
   }
 
   public float calcularPuntaje() {
