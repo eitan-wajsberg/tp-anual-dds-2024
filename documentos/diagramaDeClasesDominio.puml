@@ -668,6 +668,7 @@ AdaptadaJavaXMail ..|> AdapterMail
 ' -----------------------------------------
 
 class Tecnico {
+ - usuario: Usuario
  - nombre: String
  - apellido: String
  - documento: Documento
