@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Desperfecto extends Suscripcion {
   private boolean aceptado;
+  private SugerenciaHeladera sugerencia;
   private IRepositorioHeladera repositorioHeladeras;
 
   public Desperfecto(IObserverNotificacion suscriptor) {
