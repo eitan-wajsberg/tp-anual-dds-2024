@@ -17,7 +17,8 @@ class PersonaHumana {
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
  - formulario: List<Respuesta>
- - tarjetaColaboracion: List<Tarjeta>
+ - tarjetasColaboracion: List<Tarjeta>
+ - tarjetaEnUso: Tarjeta
  + puntosGastados(): float
  + calcularPuntajeNeto(): float
  + agregarContribucion(contribucion: Contribucion): void
@@ -40,6 +41,7 @@ PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
 PersonaHumana --> " * "Tarjeta
+PersonaHumana --> Tarjeta
 PersonaHumana ..|> IObserverNotificacion 
 
 ' -----------------------------------------
@@ -806,7 +808,8 @@ class PersonaVulnerable {
  - menoresACargo: int
  - documento: Documento
  - donanteQueLoRegistro: PersonaHumana
- - tarjeta: List<Tarjeta>
+ - tarjetas: List<Tarjeta>
+ - tarjetaEnUso: Tarjeta
  + usarTarjeta(heladera: Heladera, vianda: Vianda): void
 }
 
