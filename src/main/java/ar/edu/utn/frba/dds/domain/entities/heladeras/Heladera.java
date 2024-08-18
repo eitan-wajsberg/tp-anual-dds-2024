@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolic
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import java.time.LocalDate;
@@ -140,8 +141,8 @@ public class Heladera implements Contribucion {
     return this.estado == EstadoHeladera.ACTIVA;
   }
 
-  public boolean validarApertura(String codigoTarjeta) {
-    return this.solicitudesDeApertura.stream().anyMatch(sol -> sol.esValida(codigoTarjeta));
+  public boolean validarApertura(Tarjeta tarjeta) {
+    return this.solicitudesDeApertura.stream().anyMatch(sol -> sol.esValida(tarjeta));
   }
 
   public void agregarSolicitudApertura(SolicitudApertura solicitud) {
@@ -161,7 +162,7 @@ public class Heladera implements Contribucion {
     this.solicitudesDeApertura.add(solicitud);
     PublicadorSolicitudApertura
         .getInstance()
-        .publicarSolicitudApertura(solicitud.getCodigoTarjeta(), solicitud.getFecha(), this.id);
+        .publicarSolicitudApertura(solicitud.getTarjeta().getCodigo(), solicitud.getFecha(), this.id);
   }
 
   public int cantidadViandas() {

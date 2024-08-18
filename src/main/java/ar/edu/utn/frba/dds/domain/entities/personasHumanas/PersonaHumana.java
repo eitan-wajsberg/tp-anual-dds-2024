@@ -126,7 +126,7 @@ public class PersonaHumana {
   }
 
   public void usarTarjeta(Heladera heladera){
-    if(!heladera.validarApertura(this.tarjetaColaboracion.getCodigo())){
+    if (!heladera.validarApertura(this.tarjetaColaboracion)) {
       throw new NoHaySolicitudActivaException();
     }
 
