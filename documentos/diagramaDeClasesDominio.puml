@@ -202,7 +202,8 @@ class FaltanNViandas {
 
 class Desperfecto {
  - aceptada: boolean
- + sugerirHeladeras(heladera: Heladera): String
+ - sugerencia: SugerenciaHeladera
+ + sugerirHeladeras(heladera: Heladera): SugerenciaHeladera
  # cumpleCondicion(heladera: Heladera): void
  # armarCuerpo(heladera: Heladera): String
 }
@@ -210,6 +211,12 @@ class Desperfecto {
 QuedanNViandas --|> Suscripcion
 FaltanNViandas --|> Suscripcion
 Desperfecto --|> Suscripcion
+
+class SugerenciaHeladera{
+ - fechaRealizacion: LocalDate
+ - heladerasSugeridas: List<Heladera>
+ - heladerasEscogidas: List<Heladera>
+}
 
 ' -----------------------------------------
 
