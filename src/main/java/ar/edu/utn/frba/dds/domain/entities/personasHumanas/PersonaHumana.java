@@ -57,7 +57,8 @@ public class PersonaHumana {
   @Getter
   private List<Respuesta> formulario;
   @Getter
-  private Tarjeta tarjetaColaboracion;
+  private List<Tarjeta> tarjetasColaboracion;
+  private Tarjeta tarjetaEnUso;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
@@ -122,15 +123,25 @@ public class PersonaHumana {
     if (this.direccion == null) {
       throw new DireccionIncompletaException();
     }
-    this.tarjetaColaboracion = tarjeta;
+
+    darTarjetaDeBaja();
+    this.tarjetasColaboracion.add(tarjeta);
+    this.tarjetaEnUso = tarjeta;
+  }
+
+  public void darTarjetaDeBaja(){
+    if (this.tarjetaEnUso != null) {
+      this.tarjetaEnUso.setFechaBaja(LocalDate.now());
+    }
+    this.tarjetaEnUso = null;
   }
 
   public void usarTarjeta(Heladera heladera){
-    if (!heladera.validarApertura(this.tarjetaColaboracion)) {
+    if (!heladera.validarApertura(this.tarjetaEnUso)) {
       throw new NoHaySolicitudActivaException();
     }
 
-    this.tarjetaColaboracion.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
+    this.tarjetaEnUso.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
   }
 
   @Override
