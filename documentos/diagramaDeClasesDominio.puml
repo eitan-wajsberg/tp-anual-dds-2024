@@ -291,9 +291,10 @@ CantidadViandasPorColaborador ..> PersonaHumana
 ' -----------------------------------------
 
 class SolicitudApertura {
- - fecha: LocalDateTime
- - codigoTarjeta: String 
+ - fechaSolicitud: LocalDateTime
+ - tarjeta: Tarjeta
  - aperturaConcretada: boolean
+ - fechaConcrecion: LocalDateTime
  - accion: AccionApertura
 }
 
