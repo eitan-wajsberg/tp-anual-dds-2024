@@ -211,6 +211,7 @@ class Desperfecto {
 QuedanNViandas --|> Suscripcion
 FaltanNViandas --|> Suscripcion
 Desperfecto --|> Suscripcion
+Desperfecto --> SugerenciaHeladera
 
 class SugerenciaHeladera{
  - fechaRealizacion: LocalDate
