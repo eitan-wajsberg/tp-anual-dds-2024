@@ -11,6 +11,7 @@ import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoMaximoDeTarjetasPorDiaExc
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,8 @@ public class PersonaVulnerable {
   private Integer menoresAcargo;
   private Documento documento;
   private PersonaHumana donanteQueLoRegistro;
-  private Tarjeta tarjeta;
+  private List<Tarjeta> tarjetas;
+  private Tarjeta tarjetaEnUso;
 
   public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, String direccion, Integer menoresAcargo, Documento documento, PersonaHumana donanteQueLoRegistro) {
     this.nombre = nombre;
@@ -44,14 +46,27 @@ public class PersonaVulnerable {
     }
 
     LocalDate hoy = LocalDate.now();
-    int usosHoy = this.tarjeta.cantidadDeUsos(hoy);
+    int usosHoy = this.tarjetaEnUso.cantidadDeUsos(hoy);
     int maxUsosPermitidos = 4 + (2 * menoresAcargo);
 
     if (usosHoy < maxUsosPermitidos) {
       heladera.quitarVianda(vianda);
-      tarjeta.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
+      tarjetaEnUso.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
     } else {
       throw new UsoMaximoDeTarjetasPorDiaExcedidoException();
     }
+  }
+
+  public void asignarTarjeta(Tarjeta tarjeta){
+    darTarjetaDeBaja();
+    this.tarjetas.add(tarjeta);
+    this.tarjetaEnUso = tarjeta;
+  }
+
+  public void darTarjetaDeBaja(){
+    if (this.tarjetaEnUso != null) {
+      this.tarjetaEnUso.setFechaBaja(LocalDate.now());
+    }
+    this.tarjetaEnUso = null;
   }
 }

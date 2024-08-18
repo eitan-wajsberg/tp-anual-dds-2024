@@ -18,6 +18,8 @@ public class Tarjeta implements Contribucion {
   private String codigo;
   @Setter
   private LocalDate fechaEntrega;
+  @Setter
+  private LocalDate fechaBaja;
   private List<UsoDeTarjeta> historialUsos;
   private static final int HASH_LENGTH = 11;
 
