@@ -87,8 +87,9 @@ hr{
     position: absolute;
     left:0;
     height: 100%;
+    width: 100%;
     object-fit: cover;
-    opacity: 40%;
+    opacity: 30%;
     transition: transform 0.3s ease;
 }
 
@@ -111,5 +112,9 @@ hr{
 
 .card-custom:hover img {
     transform: scale(1.05);
-    opacity: 50%;
+    opacity: 40%;
+}
+
+.container-cards {
+
 }
