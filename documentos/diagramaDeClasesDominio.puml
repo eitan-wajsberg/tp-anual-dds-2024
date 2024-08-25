@@ -808,7 +808,7 @@ PersonaVulnerable --> Tarjeta
 ' -----------------------------------------
 
 class PersonaJuridica {
- - usuario: String
+ - usuario: Usuario
  - contacto: Contacto
  - dirección: Direccion
  - razonSocial: String
