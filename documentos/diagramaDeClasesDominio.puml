@@ -1,5 +1,4 @@
 @startuml diagramaDeClasesDominio.
-!theme reddress-darkblue
 
 ' -----------------------------------------
 
@@ -12,7 +11,6 @@ class PersonaHumana {
  - nombre: String
  - apellido: String
  - fechaNacimiento: LocalDate
- - ofertasCanjeadas: List<OfertaCanjeada>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
@@ -215,7 +213,7 @@ FaltanNViandas --|> Suscripcion
 Desperfecto --|> Suscripcion
 Desperfecto --> SugerenciaHeladera
 
-class SugerenciaHeladera{
+class SugerenciaHeladera {
  - fechaRealizacion: LocalDate
  - heladerasSugeridas: List<Heladera>
  - heladerasEscogidas: List<Heladera>
@@ -820,7 +818,7 @@ PersonaVulnerable --> " * " Tarjeta
 ' -----------------------------------------
 
 class PersonaJuridica {
- - usuario: String
+ - usuario: Usuario
  - contacto: Contacto
  - dirección: Direccion
  - razonSocial: String
@@ -940,7 +938,7 @@ Usuario ..> ValidadorDeClave
 
 ' -----------------------------------------
 
-class ValidadorDeClave{
+class ValidadorDeClave {
  - validadores: Set<TipoValidacion>
  + esValido(clave: String): boolean
 }
@@ -949,14 +947,14 @@ ValidadorDeClave --> " * " TipoValidacion
 
 ' -----------------------------------------
 
-interface TipoValidacion{
+interface TipoValidacion {
  + validar(clave: String): boolean
  + getMensajeError(): String
 }
 
 ' -----------------------------------------
 
-class LongitudEstipulada{
+class LongitudEstipulada {
  - longitudMaxima: int
  - longitudMinima: int
  + validar(clave: String): boolean
@@ -967,7 +965,7 @@ LongitudEstipulada ..|> TipoValidacion
 
 ' -----------------------------------------
 
-class ListaDePeoresClavesMemorizados{
+class ListaDePeoresClavesMemorizados {
  + validar(clave: String): boolean
  + getMensajeError(): String
 }
@@ -976,7 +974,7 @@ ListaDePeoresClavesMemorizados ..|> TipoValidacion
 
 ' -----------------------------------------
 
-class AusenciaDeCredencialesPorDefecto{
+class AusenciaDeCredencialesPorDefecto {
  - usuario: String
  + validar(clave: String): boolean
  + getMensajeError(): String
