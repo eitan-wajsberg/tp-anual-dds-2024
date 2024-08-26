@@ -1,0 +1,426 @@
+@startuml diagramaEntidadRelacion.
+
+entity heladera {
+  * id: INTEGER(11)
+  --
+  * id_direccion: INTEGER(11) <<FK>>
+  * id_modelo: INTEGER(11) <<FK>>
+  * id_persona_juridica: INTEGER(11) <<FK>>
+  * nombre: VARCHAR(255)
+  * fechaRegistro: DATE
+  * capacidadMaximaViandas: : INTEGER(11)
+  * estado: ENUM
+  temperaturaEsperada: DECIMAL
+  minutosMargenFallaConexion: DECIMAL ? esto va ?
+}
+
+entity modelo {
+ * id: INTEGER(11)
+ --
+ * modelo: VARCHAR(255)
+ * temperaturaMinima: DECIMAL
+ * temperaturaMaxima: DECIMAL
+}
+
+entity cambio_estado {
+ * id: INTEGER(11)
+ --
+ * id_heladera: INTEGER(11) <<FK>>
+ * fechaCambio: DATE
+ * estado: ENUM
+}
+
+note bottom
+estado: FALLA_TEMPERATURA, ACTIVA, FRAUDE, FALLA_CONEXION, FALLA_TECNICA
+end note
+
+entity cambio_temperatura {
+ * id: INTEGER(11)
+ --
+ * id_heladera: INTEGER(11) <<FK>>
+ * fechaCambio: DATE
+ * temperatura: DECIMAL
+}
+
+entity solicitud_apertura {
+ * id: INTEGER(11)
+ --
+ * id_heladera: INTEGER(11) <<FK>>
+ * id_tarjeta: INTEGER(11) <<FK>>
+ * fechaCambio: DATE
+ * aperturaConcretada: boolean
+ * fechaConcrecion: DATE
+ * accion: ENUM
+}   
+note right
+accion: QUITAR_VIANDA, INGRESAR_VIANDA
+end note
+
+entity tarjeta {
+ * id: INTEGER(11)
+ --
+ * codigo: VARCHAR(255) (ESTO SE GUARDA?)
+ * fechaEntrega: DATE
+ * fechaBaja: DATE
+}
+
+entity uso_tarjeta {
+ * id: INTEGER(11)
+ --
+ * id_heladera: INTEGER(11) <<FK>>
+ * id_tarjeta: INTEGER(11) <<FK>>
+ * fechaUso: DATE
+}
+
+entity direccion {
+ * id: INTEGER(11)
+ --
+ * id_municipio: INTEGER(11) <<FK>>
+ * id_provincia: INTEGER(11) <<FK>>
+ * id_calle: INTEGER(11) <<FK>>
+ * altura: VARCHAR(4)
+}
+
+entity calle {
+ * id: INTEGER(11)
+ --
+ * calle: VARCHAR(255)
+}
+
+entity municipio {
+ * id: INTEGER(11)
+ --
+ * municipio: VARCHAR(255)
+}
+
+entity provincia {
+ * id: INTEGER(11)
+ --
+ * provincia: VARCHAR(255)
+}
+
+entity vianda {
+ * id: INTEGER(11)
+ --
+ * fechaCaducidad: DATE
+ * entregada: BOOL
+ * comida: VARCHAR(255)
+ pesoEnGramos: NUMBER
+ * fechaDonacion: DATE
+}
+
+entity persona_vulnerable {
+ *id: INTEGER(11)
+ --
+ *nombre: VARCHAR(255)
+ *fechaDeNacimiento: DATE
+ *fechaDeRegistro: DATE
+ *menoresACargo: INTEGER(2)
+ tipo_documento : ENUM
+ nro_documento : VARCHAR(50)
+ id_dirección: INTEGER(11): <<FK>>
+ id_persona_que_lo_registro: INTEGER(11): <<FK>>
+ id_tarjeta_en_uso: INTEGER(11): <<FK>>
+}
+
+entity tarjeta_usada_persona_vulnerable {
+ *id_persona_vulnerable: INTEGER(11) <<FK>>
+ *id_tarjeta: INTEGER(11) <<FK>>
+ --
+ fecha_de_baja: DATE
+}
+
+entity persona_humana {
+  * id : INTEGER(11)
+  --
+  * id_tarjeta : INTEGER(11) <<FK>
+  * id_direccion: INTEGER(11) <<FK>
+  * id_usuario: INTEGER(11) <<FK>>
+  * tipo_documento : ENUM
+  * nro_documento : VARCHAR(50)
+  * nombre: VARCHAR(255)
+  * apellido: VARCHAR(255)
+  * fechaNacimiento: DATE
+   ' ONETOMANY contribucionesElegidas: Set<FormasContribucionHumanas>
+   ' ONETOMANY ofertasCanjeadas: Set<OfertaCanjeada>
+   ' ONETOMANY formulario: List<Respuesta>
+}
+
+entity respuesta{
+  *id: INTEGER(11) <<FK>>
+  --
+  *id_pregunta: INTEGER(11) <<FK>>
+  *id_personaHumana: INTEGER(11) <<FK>>
+  *respuesta_libre: TEXT
+}
+
+entity opcion_respuesta{
+ * id_respuesta: INTEGER(11) <<FK>>
+ * id_opcion: INTEGER(11) <<FK>>
+}
+
+entity pregunta{
+ * id : INTEGER(11) <<FK>>
+ --
+ * tipo: ENUM
+ * campo: TEXT
+ * activa: BIT(1)
+ * opciones: Set<String>
+}
+
+entity opcion_pregunta{
+ * id_pregunta: INTEGER(11) <<FK>>
+ * id_opcion: INTEGER(11) <<FK>>
+}
+
+entity opcion{
+ * id : INTEGER(11)
+ --
+ * campo : VARCHAR(100)
+}
+
+entity contacto {
+ * id : INTEGER(11)
+ --
+ * id_persona: INTEGER(11) <<FK>>
+ * tipo_persona: ENUM
+ * valor: VARCHAR(255)
+}
+
+entity distribucion_vianda {
+ * id: INTEGER(11)
+ --
+ * id_personaHumana: INTEGER(11) <<FK>>
+ * id_heladeraOrigen: INTEGER(11) <<FK>
+ * id_heladeraDestino: INTEGER(11) <<FK>
+ * cantidadViandas: INTEGER(3)
+ * motivo: TEXT
+ * fecha: DATE
+ * terminada: BIT(1)
+ ' MANYTOMANY viandasAMover: List<Vianda>
+}
+entity donacion_dinero {
+ * id: INTEGER(11)
+ --
+ * id_personaHumana: INTEGER(11) <<FK>>
+ * monto: DECIMAL
+ * frecuencia: INTEGER(3)
+ * unidadFrecuencia: Temporalidad
+ * fecha: DATE
+}
+
+entity persona_juridica {
+ * id: INTEGER(11)
+ --
+ * id_usuario: INTEGER(11) <<FK>>
+ * id_direccion: INTEGER(11) <<FK>>
+ * id_rubro: INTEGER(11) <<FK>>
+' * contacto: Contacto
+ * razonSocial: VARCHAR(255)
+ * tipo: ENUM
+ * contribucionesElegidas: ENUM
+' * heladerasACargo: Set<Heladera>
+' * ofertasCanjeadas: Set<OfertaCanjeada> ??
+}
+
+entity oferta_canjeada {
+  *id_oferta: INTEGER(11) <<FK>>
+  *id_persona: INTEGER(11) <<FK>>
+  --
+  * fecha_canje : DATETIME
+}
+
+entity oferta {
+  * id : INTEGER(11)
+  --
+  * nombre : VARCHAR(255)
+  * cantidad_puntos_necesarios : DECIMAL
+  * id_rubro : INTEGER(11) <<FK>>
+  * id_persona_juridica : INTEGER(11) <<FK>>
+}
+
+entity rubro {
+  * id : INTEGER(11)
+  --
+  * nombre : VARCHAR(255)
+}
+
+entity incidente {
+ * id: INTEGER(11)
+ --
+ * id_heladera: INTEGER(11) <<FK>>
+ * id_tecnico: INTEGER(11) <<FK>>
+ * id_alerta: INTEGER(11) <<FK>>
+ * fecha: DATE
+ * solucionado: BIT(1)
+ (tipoIncidente: TipoIncidente) y esto?
+}
+
+entity visita {
+ * id: INTEGER(11)
+ --
+ * id_incidente: INTEGER(11) <<FK>>
+ * descripcion: VARCHAR(255)
+ * foto_ruta: VARCHAR(255)
+}
+
+entity mensaje {
+ * id: INTEGER(11)
+ --
+ * id_destinatario: INTEGER(11) <<FK>>
+ * asunto: VARCHAR(255)
+ * cuerpo: TEXT
+ * fecha: DATE
+}
+
+entity usuario {
+ * id: INTEGER(11)
+ --
+ * id_rol: INTEGER(11) <<FK>>
+ * nombre: VARCHAR(255)
+ (* clave: VARCHAR(255))!!!! 'no creo que vaya asi, supongo que se encripta
+}
+
+entity rol {
+ * id: INTEGER(11)
+ --
+ * nombre: VARCHAR(255)
+}
+
+entity rol_permiso {
+ * id_rol: INTEGER(11) <<FK>>
+ * id_permiso: INTEGER(11) <<FK>>
+ --
+}
+
+entity permiso {
+ * id: INTEGER(11)
+ --
+ * nombre: VARCHAR(255)
+}
+
+entity tecnico {
+  * id : INTEGER(11)
+  --
+  * nombre : VARCHAR(255)
+  * apellido : VARCHAR(255)
+  * tipo_documento : VARCHAR(50)
+  * nro_documento : VARCHAR(50)
+  * cuil : VARCHAR(50)
+  * id_contacto : INTEGER(11) <<FK>> -- Contacto
+  * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
+  * id_usuario: INTEGER(11) <<FK>>
+  * distancia_maxima_en_km_para_ser_avisado : DOUBLE
+}
+
+entity contacto {
+  * id : INTEGER(11)
+  * telefono : VARCHAR(20)
+  * email : VARCHAR(255)
+}
+
+entity coordenada {
+  * id : INTEGER(11)
+  * latitud : DOUBLE
+  * longitud : DOUBLE
+}
+
+entity area {
+  * id : INTEGER(11)
+  --
+  * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
+  * radio : FLOAT
+}
+
+entity sugerencia_heladeras {
+ * id : INTEGER(11)
+ --
+ * fechaRealizacion: DATE
+}
+' TODO: COMPLETAR con relación a incidente o lo que corresponda
+entity sugerencia_distribucion {
+ * id_sugerencia_heladeras: INTEGER(11)
+ * id_heladera: INTEGER(11)
+ * escogida: BIT(1)
+}
+
+' TODO: REVISAR!!!!
+entity alerta {
+ * id : INTEGER(11)
+ --
+ * tipo: ENUM
+}
+
+tecnico }o--|| contacto
+tecnico }o--|| coordenada
+tecnico |o--|| usuario
+area }o--|| coordenada
+
+heladera ||--o{ vianda
+heladera ||--o{ cambio_estado
+heladera ||--o{ cambio_temperatura
+heladera ||--o{ solicitud_apertura
+heladera ||-u-|| direccion
+heladera ||--o{ uso_tarjeta
+heladera }o--|| modelo
+
+direccion }o--|| municipio
+direccion }o--|| provincia
+direccion }o--|| calle
+
+tarjeta ||--o{ uso_tarjeta
+tarjeta ||--o{ solicitud_apertura
+
+persona_humana ||--o{ distribucion_vianda
+persona_humana ||--o{ donacion_dinero
+persona_humana ||--o{ vianda
+persona_humana ||--|| direccion
+persona_humana ||--o{ tarjeta
+
+persona_vulnerable |o--|| direccion
+persona_vulnerable }o--|| persona_humana
+persona_vulnerable ||--o{ tarjeta_usada_persona_vulnerable
+tarjeta ||--o{ tarjeta_usada_persona_vulnerable
+
+incidente ||--o{ visita
+incidente }o--|| heladera
+alerta ||--|| incidente
+
+oferta }o--|| rubro
+oferta_canjeada }o--|| oferta
+oferta_canjeada }o--|| persona_humana
+oferta }o--|| persona_juridica
+
+respuesta ||--o{ opcion_respuesta
+opcion ||--o{ opcion_respuesta
+pregunta ||--o{ respuesta
+pregunta ||--o{ opcion_pregunta
+opcion ||--o{ opcion_pregunta
+respuesta }o--|| persona_humana
+
+rol ||--o{ rol_permiso
+permiso ||--o{ rol_permiso
+rol ||--o{ usuario
+
+persona_humana ||--|| usuario
+
+mensaje }o--|| usuario
+
+sugerencia_heladeras ||--|{ sugerencia_distribucion
+heladera ||--o{ sugerencia_distribucion
+
+'heladera origen
+distribucion_vianda }o--|| heladera
+'heladera destino
+distribucion_vianda }o--|| heladera
+
+persona_juridica ||--|| usuario
+persona_juridica ||--|| direccion
+persona_juridica ||--|| rubro
+persona_juridica ||--o{ heladera
+persona_juridica ||--|{ contacto
+persona_juridica ||--o{ oferta_canjeada
+
+@enduml
+
+
