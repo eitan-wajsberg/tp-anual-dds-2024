@@ -10,8 +10,8 @@ entity heladera {
   * fechaRegistro: DATE
   * capacidadMaximaViandas: : INTEGER(11)
   * estado: ENUM
-  temperaturaEsperada: DECIMAL
-  minutosMargenFallaConexion: DECIMAL ? esto va ?
+  * temperaturaEsperada: DECIMAL
+  * minutosMargenFallaConexion: DECIMAL ? esto va ?
 }
 
 entity modelo {
@@ -39,7 +39,7 @@ entity cambio_temperatura {
  --
  * id_heladera: INTEGER(11) <<FK>>
  * fechaCambio: DATE
- * temperatura: DECIMAL
+ * temperaturaEnCelsius: DECIMAL
 }
 
 entity solicitud_apertura {
@@ -47,22 +47,30 @@ entity solicitud_apertura {
  --
  * id_heladera: INTEGER(11) <<FK>>
  * id_tarjeta: INTEGER(11) <<FK>>
- * fechaCambio: DATE
- * aperturaConcretada: boolean
+ * fechaSolicitud: DATE
+ * aperturaConcretada: BIT(1)
  * fechaConcrecion: DATE
  * accion: ENUM
-}   
+}
 note right
 accion: QUITAR_VIANDA, INGRESAR_VIANDA
 end note
 
+'TODO: REVISAR si La persona humana tiene la FK de tarjeta o la tarjeta tiene la FK de la persona?
+'TODO cómo diferenciar si la persona humana ya entregó la tarjeta a la persona vulnerable o la sigue teniendo en posesión
+'TODO se podrían separar los dos tipos de tarjeta en dos entidades (nivel dominio también)?
 entity tarjeta {
  * id: INTEGER(11)
  --
  * codigo: VARCHAR(255) (ESTO SE GUARDA?)
- * fechaEntrega: DATE
+ ' TODO lo de arriba
+ fechaEntrega: DATE
  * fechaBaja: DATE
+ * propietario: ENUM
 }
+note right
+propietario: PERSONA_VULNERABLE, COLABORADOR
+end note
 
 entity uso_tarjeta {
  * id: INTEGER(11)
@@ -102,10 +110,11 @@ entity provincia {
 entity vianda {
  * id: INTEGER(11)
  --
+ * id_persona_humana: INTEGER(11) <<FK>>
  * fechaCaducidad: DATE
- * entregada: BOOL
+ * entregada: BIT(1)
  * comida: VARCHAR(255)
- pesoEnGramos: NUMBER
+ * pesoEnGramos: DECIMAL
  * fechaDonacion: DATE
 }
 
@@ -133,18 +142,20 @@ entity tarjeta_usada_persona_vulnerable {
 entity persona_humana {
   * id : INTEGER(11)
   --
-  * id_tarjeta : INTEGER(11) <<FK>
-  * id_direccion: INTEGER(11) <<FK>
+  * id_tarjeta : INTEGER(11) <<FK>>
+  * id_direccion: INTEGER(11) <<FK>>
   * id_usuario: INTEGER(11) <<FK>>
   * tipo_documento : ENUM
   * nro_documento : VARCHAR(50)
   * nombre: VARCHAR(255)
   * apellido: VARCHAR(255)
   * fechaNacimiento: DATE
-   ' ONETOMANY contribucionesElegidas: Set<FormasContribucionHumanas>
-   ' ONETOMANY ofertasCanjeadas: Set<OfertaCanjeada>
-   ' ONETOMANY formulario: List<Respuesta>
+  ' TODO: Definir contribuciones elegidas
+  ' ONETOMANY contribucionesElegidas: Set<FormasContribucionHumanas> TODO: cómo haremos esto? es una pregunta y respuesta? cómo lo identificamos?
+  ' ONETOMANY ofertasCanjeadas: Set<OfertaCanjeada>
+  ' ONETOMANY formulario: List<Respuesta>
 }
+'TODO agregar tabla similar a la de tarjetas-personas_vulnerables porque el colaborador puede tener varias tarjetas
 
 entity respuesta{
   *id: INTEGER(11) <<FK>>
@@ -157,6 +168,7 @@ entity respuesta{
 entity opcion_respuesta{
  * id_respuesta: INTEGER(11) <<FK>>
  * id_opcion: INTEGER(11) <<FK>>
+ --
 }
 
 entity pregunta{
@@ -171,6 +183,7 @@ entity pregunta{
 entity opcion_pregunta{
  * id_pregunta: INTEGER(11) <<FK>>
  * id_opcion: INTEGER(11) <<FK>>
+ --
 }
 
 entity opcion{
@@ -179,35 +192,40 @@ entity opcion{
  * campo : VARCHAR(100)
 }
 
-entity contacto {
- * id : INTEGER(11)
- --
- * id_persona: INTEGER(11) <<FK>>
- * tipo_persona: ENUM
- * valor: VARCHAR(255)
-}
-
 entity distribucion_vianda {
  * id: INTEGER(11)
  --
  * id_personaHumana: INTEGER(11) <<FK>>
- * id_heladeraOrigen: INTEGER(11) <<FK>
- * id_heladeraDestino: INTEGER(11) <<FK>
+ * id_heladeraOrigen: INTEGER(11) <<FK>>
+ * id_heladeraDestino: INTEGER(11) <<FK>>
  * cantidadViandas: INTEGER(3)
  * motivo: TEXT
  * fecha: DATE
  * terminada: BIT(1)
  ' MANYTOMANY viandasAMover: List<Vianda>
 }
-entity donacion_dinero {
+
+entity viandas_distribuidas {
+ * id_distribucion_viandas: INTEGER(11) <<FK>>
+ * id_vianda: INTEGER(11) <<FK>>
+ --
+
+}
+
+entity donacion_dinero
+ propietario{
  * id: INTEGER(11)
  --
  * id_personaHumana: INTEGER(11) <<FK>>
  * monto: DECIMAL
  * frecuencia: INTEGER(3)
- * unidadFrecuencia: Temporalidad
+ * unidadFrecuencia: ENUM
  * fecha: DATE
 }
+
+note right
+unidadFrecuencia: DIARIO, SEMANAL, MENSUAL, ANUAL
+end note
 
 entity persona_juridica {
  * id: INTEGER(11)
@@ -219,13 +237,13 @@ entity persona_juridica {
  * razonSocial: VARCHAR(255)
  * tipo: ENUM
  * contribucionesElegidas: ENUM
-' * heladerasACargo: Set<Heladera>
+' TODO: Definir contribuciones elegidas
 ' * ofertasCanjeadas: Set<OfertaCanjeada> ??
 }
 
 entity oferta_canjeada {
   *id_oferta: INTEGER(11) <<FK>>
-  *id_persona: INTEGER(11) <<FK>>
+  *id_persona_humana: INTEGER(11) <<FK>>
   --
   * fecha_canje : DATETIME
 }
@@ -237,6 +255,7 @@ entity oferta {
   * cantidad_puntos_necesarios : DECIMAL
   * id_rubro : INTEGER(11) <<FK>>
   * id_persona_juridica : INTEGER(11) <<FK>>
+  * imagen_ruta: VARCHAR(255)
 }
 
 entity rubro {
@@ -254,6 +273,7 @@ entity incidente {
  * fecha: DATE
  * solucionado: BIT(1)
  (tipoIncidente: TipoIncidente) y esto?
+ 'TODO solucionar tema tipoIncidente
 }
 
 entity visita {
@@ -279,6 +299,7 @@ entity usuario {
  * id_rol: INTEGER(11) <<FK>>
  * nombre: VARCHAR(255)
  (* clave: VARCHAR(255))!!!! 'no creo que vaya asi, supongo que se encripta
+ 'TODO arriba
 }
 
 entity rol {
@@ -311,26 +332,34 @@ entity tecnico {
   * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
   * id_usuario: INTEGER(11) <<FK>>
   * distancia_maxima_en_km_para_ser_avisado : DOUBLE
+  'TODO la distancia máxima es igual para todos los técnicos?
 }
 
 entity contacto {
-  * id : INTEGER(11)
-  * telefono : VARCHAR(20)
-  * email : VARCHAR(255)
+    * id : INTEGER(11)
+    * id_persona: INTEGER(11) <<FK>>
+    * tipo_persona: ENUM
+    * valor: VARCHAR(255)
+    * telefono : VARCHAR(20)
+    * email : VARCHAR(255)
+    * userTelegram : VARCHAR(255)
+    'TODO cómo diferenciar wpp, telegram, etc. porque necesitan distintos datos
 }
 
 entity coordenada {
-  * id : INTEGER(11)
-  * latitud : DOUBLE
-  * longitud : DOUBLE
+ * id: INTEGER(11)
+ --
+ * latitud : DOUBLE
+ * longitud : DOUBLE
 }
 
 entity area {
-  * id : INTEGER(11)
-  --
-  * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
-  * radio : FLOAT
+ * id : INTEGER(11)
+ --
+ * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
+ * radio : FLOAT
 }
+'TODO el area se usa?
 
 entity sugerencia_heladeras {
  * id : INTEGER(11)
@@ -373,9 +402,11 @@ tarjeta ||--o{ solicitud_apertura
 
 persona_humana ||--o{ distribucion_vianda
 persona_humana ||--o{ donacion_dinero
+persona_juridica ||--o{ donacion_dinero
 persona_humana ||--o{ vianda
 persona_humana ||--|| direccion
 persona_humana ||--o{ tarjeta
+persona_humana ||--o{ vianda
 
 persona_vulnerable |o--|| direccion
 persona_vulnerable }o--|| persona_humana
@@ -398,8 +429,8 @@ pregunta ||--o{ opcion_pregunta
 opcion ||--o{ opcion_pregunta
 respuesta }o--|| persona_humana
 
-rol ||--o{ rol_permiso
-permiso ||--o{ rol_permiso
+rol ||--|{ rol_permiso
+permiso ||--|{ rol_permiso
 rol ||--o{ usuario
 
 persona_humana ||--|| usuario
@@ -414,13 +445,18 @@ distribucion_vianda }o--|| heladera
 'heladera destino
 distribucion_vianda }o--|| heladera
 
+viandas_distribuidas }o--|| distribucion_vianda
+viandas_distribuidas }o--|| vianda
+
 persona_juridica ||--|| usuario
 persona_juridica ||--|| direccion
 persona_juridica ||--|| rubro
 persona_juridica ||--o{ heladera
 persona_juridica ||--|{ contacto
-persona_juridica ||--o{ oferta_canjeada
 
+persona_humana ||--|{ contacto
+'TODO esta relación y la de contacto y persona juridica es cuestionable, quizás se podría hacer de una mejor manera
+'TODO falta agregar tema suscripciones
 @enduml
 
 
