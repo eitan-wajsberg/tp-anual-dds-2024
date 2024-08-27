@@ -110,8 +110,8 @@ hr{
 }
 
 .card-custom:hover img {
-    transform: scale(1.05);
-    opacity: 40%;
+    transform: scale(1.02);
+    opacity: 32%;
 }
 
 select {
