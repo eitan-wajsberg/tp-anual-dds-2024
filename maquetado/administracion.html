@@ -12,65 +12,65 @@
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </head>
 <body>
-<header class="main-navbar">
-    <div class="align-items-baseline justify-content-between d-flex ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
-        <h2 class="fw-bold fs-4 d-inline-block">SMAACVS
-            <span class="fw-normal">|</span>
-            <span class="fw-medium fs-5 mr-2">Administración</span>
-        </h2>
-        <div class="d-none d-md-block">
-            <span class="fw-bold fs-6 pe-4 ps-4">Administrador Martinez</span>
-            <button class="btn btn-dark p-2">
-                <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
-            </button>
+<div class="wrapper">
+    <header class="main-navbar">
+        <div class="align-items-baseline justify-content-between d-flex ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
+            <h2 class="fw-bold fs-4 d-inline-block">SMAACVS
+                <span class="fw-normal">|</span>
+                <span class="fw-medium fs-5 mr-2">Administración</span>
+            </h2>
+            <div class="d-none d-md-block">
+                <span class="fw-bold fs-6 pe-4 ps-4">Administrador Martinez</span>
+                <button class="btn btn-dark p-2">
+                    <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="mt-5 ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3 mb-5">
+        <div class="row g-3 d-flex align-items-stretch">
+            <a class="col-md-12" href="adminCargaCSV.html">
+                <div class="card-custom">
+                    <img src="img/carga-masiva.png" alt="Carga masiva de colaboraciones">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Carga masiva de colaboraciones</h5>
+                        <p class="card-text mb-4">Sección para realizar la migración de los donantes que ya están registrados en el sistema, pero de forma masiva. Para facilitar y agilizar este proceso, se propone la importación de un archivo CSV, lo que permitirá que la carga de datos sea mucho más sencilla, eficiente y menos propensa a errores, al automatizar la incorporación de grandes volúmenes de información en una sola operación.</p>
+                    </div>
+                </div>
+            </a>
+            <a class="col-md-6 d-flex" href="adminAltaDeTecnicos.html">
+                <div class="card-custom flex-fill">
+                    <img src="img/alta-tecnicos.png" alt="Carga masiva de colaboraciones">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Alta de técnicos</h5>
+                        <p class="card-text mb-4">Proceso para el registro de nuevos técnicos en el sistema. Este procedimiento permitirá la incorporación de técnicos, facilitando la gestión de sus datos personales y profesionales.</p>
+                    </div>
+                </div>
+            </a>
+            <a class="col-md-6 d-flex" href="adminReportesSeguimiento.html">
+                <div class="card-custom flex-fill">
+                    <img src="img/reportes-seguimiento.png" alt="Carga masiva de colaboraciones">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Reportes de seguimiento</h5>
+                        <p class="card-text mb-4">Reportes generados semanalmente para llevar un seguimiento del trabajo realizado por todos los involucrados en la causa.</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
-</header>
-<div class="mt-5 ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
-    <div class="row g-3 d-flex align-items-stretch">
-        <a class="col-md-12" href="adminCargaCSV.html">
-            <div class="card-custom">
-                <img src="img/carga-masiva.png" alt="Carga masiva de colaboraciones">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Carga masiva de colaboraciones</h5>
-                    <p class="card-text mb-4">Sección para realizar la migración de los donantes que ya están registrados en el sistema, pero de forma masiva. Para facilitar y agilizar este proceso, se propone la importación de un archivo CSV, lo que permitirá que la carga de datos sea mucho más sencilla, eficiente y menos propensa a errores, al automatizar la incorporación de grandes volúmenes de información en una sola operación.</p>
-                </div>
-            </div>
-        </a>
-        <a class="col-md-6 d-flex" href="adminAltaDeTecnicos.html">
-            <div class="card-custom flex-fill">
-                <img src="img/alta-tecnicos.png" alt="Carga masiva de colaboraciones">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Alta de técnicos</h5>
-                    <p class="card-text mb-4">Proceso para el registro de nuevos técnicos en el sistema. Este procedimiento permitirá la incorporación de técnicos, facilitando la gestión de sus datos personales y profesionales.</p>
-                </div>
-            </div>
-        </a>
-        <a class="col-md-6 d-flex" href="adminReportesSeguimiento.html">
-            <div class="card-custom flex-fill">
-                <img src="img/reportes-seguimiento.png" alt="Carga masiva de colaboraciones">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Reportes de seguimiento</h5>
-                    <p class="card-text mb-4">Reportes generados semanalmente para llevar un seguimiento del trabajo realizado por todos los involucrados en la causa.</p>
-                </div>
-            </div>
-        </a>
-    </div>
-</div>
-<div class="footer m-5">
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
-        <p class="col-md-4 mb-0 text-muted">&copy; 2024 SMAACVS - UTN FRBA</p>
-        <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-        </a>
+    <footer class="m-5 d-flex flex-wrap justify-content-between align-items-center py-3 border-top mt-auto">
+        <div class="col-md-4 mb-0 text-muted">
+            <p class="fw-bold">&copy; 2024 SMAACVS</p>
+            <p class="fst-italic">Universidad Tecnológica Nacional FRBA</p>
+            <p class="fst-italic">Diseño de Sistemas - Grupo 8 - Miércoles Noche</p>
+        </div>
         <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2">Página principal</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2">Colaborar</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2">Mapa de heladeras</a></li>
         </ul>
     </footer>
+<div/>
 </div>
 </body>
 </html>

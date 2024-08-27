@@ -12,146 +12,145 @@
   <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </head>
 <body>
-<header class="main-navbar">
-  <div class="align-items-baseline justify-content-between d-flex ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
-    <h2 class="fw-bold fs-4 d-inline-block">SMAACVS
-      <span class="fw-normal">|</span>
-      <span class="fw-medium fs-5 mr-2">Reportes de seguimiento</span>
-    </h2>
-    <div class="d-none d-md-block">
-      <span class="fw-bold fs-6 pe-4 ps-4">Administrador Martinez</span>
-      <button class="btn btn-dark p-2">
-        <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
-      </button>
-    </div>
-  </div>
-</header>
-<div class="container my-5">
-  <h2 class="fw-bold">Reportes</h2>
-  <p>
-    Los reportes se generan semanalmente para hacer un seguimiento detallado del trabajo de todos los involucrados en la causa. Estos informes incluyen información clave, como el número de fallas por heladera, la cantidad de viandas retiradas y colocadas por cada heladera, y el número de viandas donadas por cada colaborador durante la semana.
-  </p>
-  <div class="report-card mt-5">
-    <div class="row p-3">
-      <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
-        <h3 class="fw-bold text-center text-md-start">22/05/2024</h3>
+<div class="wrapper">
+  <header class="main-navbar">
+    <div class="align-items-baseline justify-content-between d-flex ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
+      <h2 class="fw-bold fs-4 d-inline-block">SMAACVS
+        <span class="fw-normal">|</span>
+        <span class="fw-medium fs-5 mr-2">Reportes de seguimiento</span>
+      </h2>
+      <div class="d-none d-md-block">
+        <span class="fw-bold fs-6 pe-4 ps-4">Administrador Martinez</span>
+        <button class="btn btn-dark p-2">
+          <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
+        </button>
       </div>
-      <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
-        <div class="dropdown">
-          <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Descargar
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Cantidad de fallas por Heladera</a>
-            <a class="dropdown-item" href="#">Cantidad de Viandas Retiradas/Colocadas por Heladera</a>
-            <a class="dropdown-item" href="#">Cantidad de Viandas Donadas por colaborador</a>
-            <a class="dropdown-item" href="#">Todos</a>
+    </div>
+  </header>
+  <div class="m-5">
+    <h2 class="fw-bold">Reportes</h2>
+    <p>
+      Los reportes se generan semanalmente para hacer un seguimiento detallado del trabajo de todos los involucrados en la causa. Estos informes incluyen información clave, como el número de fallas por heladera, la cantidad de viandas retiradas y colocadas por cada heladera, y el número de viandas donadas por cada colaborador durante la semana.
+    </p>
+    <div class="report-card mt-5">
+      <div class="row p-3">
+        <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
+          <h3 class="fw-bold text-center text-md-start">22/05/2024</h3>
+        </div>
+        <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
+          <div class="dropdown">
+            <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Descargar
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">Cantidad de fallas por Heladera</a>
+              <a class="dropdown-item" href="#">Cantidad de Viandas Retiradas/Colocadas por Heladera</a>
+              <a class="dropdown-item" href="#">Cantidad de Viandas Donadas por colaborador</a>
+              <a class="dropdown-item" href="#">Todos</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="table-responsive mt-3">
-      <table class="table mb-0">
-        <thead>
-        <tr>
-          <th class="py-3 px-4">Tipo</th>
-          <th class="py-3 px-4 text-center">Promedio</th>
-          <th class="py-3 px-4 text-center">Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td class="py-3 px-4">
-            <span class="text-pill light-light-blue d-block">Cantidad de fallas por Heladera</span>
-          </td>
-          <td class="py-3 px-4 text-center">0.456</td>
-          <td class="py-3 px-4 text-center">347</td>
-        </tr>
-        <tr>
-          <td class="py-3 px-4">
-            <span class="text-pill light-green d-block">Cantidad de Viandas Retiradas/Colocadas por Heladera</span>
-          </td>
-          <td class="py-3 px-4 text-center">56</td>
-          <td class="py-3 px-4 text-center">1249</td>
-        </tr>
-        <tr>
-          <td class="py-3 px-4">
-            <span class="text-pill light-red d-block">Cantidad de Viandas Donadas por colaborador</span>
-          </td>
-          <td class="py-3 px-4 text-center">2.67</td>
-          <td class="py-3 px-4 text-center">2457</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="report-card mt-5">
-    <div class="row p-3">
-      <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
-        <h3 class="fw-bold text-center text-md-start">15/05/2024</h3>
+      <div class="table-responsive mt-3">
+        <table class="table mb-0">
+          <thead>
+          <tr>
+            <th class="py-3 px-4">Tipo</th>
+            <th class="py-3 px-4 text-center">Promedio</th>
+            <th class="py-3 px-4 text-center">Total</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td class="py-3 px-4">
+              <span class="text-pill light-light-blue d-block">Cantidad de fallas por Heladera</span>
+            </td>
+            <td class="py-3 px-4 text-center">0.456</td>
+            <td class="py-3 px-4 text-center">347</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4">
+              <span class="text-pill light-green d-block">Cantidad de Viandas Retiradas/Colocadas por Heladera</span>
+            </td>
+            <td class="py-3 px-4 text-center">56</td>
+            <td class="py-3 px-4 text-center">1249</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4">
+              <span class="text-pill light-red d-block">Cantidad de Viandas Donadas por colaborador</span>
+            </td>
+            <td class="py-3 px-4 text-center">2.67</td>
+            <td class="py-3 px-4 text-center">2457</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
-        <div class="dropdown">
-          <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton-two" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Descargar completo
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-two">
-            <a class="dropdown-item" href="#">Cantidad de fallas por Heladera</a>
-            <a class="dropdown-item" href="#">Cantidad de Viandas Retiradas/Colocadas por Heladera</a>
-            <a class="dropdown-item" href="#">Cantidad de Viandas Donadas por colaborador</a>
-            <a class="dropdown-item" href="#">Todos</a>
+    </div>
+    <div class="report-card mt-5">
+      <div class="row p-3">
+        <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
+          <h3 class="fw-bold text-center text-md-start">15/05/2024</h3>
+        </div>
+        <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
+          <div class="dropdown">
+            <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton-two" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Descargar completo
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-two">
+              <a class="dropdown-item" href="#">Cantidad de fallas por Heladera</a>
+              <a class="dropdown-item" href="#">Cantidad de Viandas Retiradas/Colocadas por Heladera</a>
+              <a class="dropdown-item" href="#">Cantidad de Viandas Donadas por colaborador</a>
+              <a class="dropdown-item" href="#">Todos</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="table-responsive mt-3">
-      <table class="table mb-0">
-        <thead>
-        <tr>
-          <th class="py-3 px-4">Tipo</th>
-          <th class="py-3 px-4 text-center">Promedio</th>
-          <th class="py-3 px-4 text-center">Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td class="py-3 px-4">
-            <span class="text-pill light-light-blue d-block">Cantidad de fallas por Heladera</span>
-          </td>
-          <td class="py-3 px-4 text-center">0.456</td>
-          <td class="py-3 px-4 text-center">347</td>
-        </tr>
-        <tr>
-          <td class="py-3 px-4">
-            <span class="text-pill light-green d-block">Cantidad de Viandas Retiradas/Colocadas por Heladera</span>
-          </td>
-          <td class="py-3 px-4 text-center">56</td>
-          <td class="py-3 px-4 text-center">1249</td>
-        </tr>
-        <tr>
-          <td class="py-3 px-4">
-            <span class="text-pill light-red d-block">Cantidad de Viandas Donadas por colaborador</span>
-          </td>
-          <td class="py-3 px-4 text-center">2.67</td>
-          <td class="py-3 px-4 text-center">2457</td>
-        </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive mt-3">
+        <table class="table mb-0">
+          <thead>
+          <tr>
+            <th class="py-3 px-4">Tipo</th>
+            <th class="py-3 px-4 text-center">Promedio</th>
+            <th class="py-3 px-4 text-center">Total</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td class="py-3 px-4">
+              <span class="text-pill light-light-blue d-block">Cantidad de fallas por Heladera</span>
+            </td>
+            <td class="py-3 px-4 text-center">0.456</td>
+            <td class="py-3 px-4 text-center">347</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4">
+              <span class="text-pill light-green d-block">Cantidad de Viandas Retiradas/Colocadas por Heladera</span>
+            </td>
+            <td class="py-3 px-4 text-center">56</td>
+            <td class="py-3 px-4 text-center">1249</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4">
+              <span class="text-pill light-red d-block">Cantidad de Viandas Donadas por colaborador</span>
+            </td>
+            <td class="py-3 px-4 text-center">2.67</td>
+            <td class="py-3 px-4 text-center">2457</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
-<div class="footer m-5">
-  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
-    <p class="col-md-4 mb-0 text-muted">&copy; 2024 SMAACVS - UTN FRBA</p>
-    <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-    </a>
+  <footer class="m-5 d-flex flex-wrap justify-content-between align-items-center py-3 border-top mt-auto">
+    <div class="col-md-4 mb-0 text-muted">
+      <p class="fw-bold">&copy; 2024 SMAACVS</p>
+      <p class="fst-italic">Universidad Tecnológica Nacional FRBA</p>
+      <p class="fst-italic">Diseño de Sistemas - Grupo 8 - Miércoles Noche</p>
+    </div>
     <ul class="nav col-md-4 justify-content-end">
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2">Página principal</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2">Colaborar</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2">Mapa de heladeras</a></li>
     </ul>
   </footer>
 </div>

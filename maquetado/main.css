@@ -37,15 +37,14 @@ button {
     border-radius: 20px;
     padding: 15px;
     color: white;
+    border: none;
     background-color: #222;
     font-weight: bold;
-    border: 1px solid #222;
     transition: background-color 0.3s, color 0.3s;
 }
 
 button:hover {
-    background-color: #F9F9F9;
-    color: #222222;
+    background-color: #444444;
 }
 
 h1 {
@@ -71,14 +70,6 @@ hr{
     border: 0;
     height: 1px;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1.75), rgba(0, 0, 0, 0));
-}
-
-.footer {
-    margin-top: 100px;
-}
-
-.footer {
-    margin-top: 200px;
 }
 
 .card-custom {
@@ -180,10 +171,26 @@ select:focus {
 
 .btn-dropdown {
     padding: 5px 20px 5px 20px;
-
 }
 
 .dropdown-item:focus {
     background: #222222;
     color:#FFFFFF;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.nav-link {
+    border-radius: 10px;
+    color: #555555;
+    transition: background 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #FFFFFF;
+    background: #222222;
 }
