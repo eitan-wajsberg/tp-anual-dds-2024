@@ -198,3 +198,41 @@ select:focus {
 .dark-text {
   color: #222222;
 }
+
+.file-input {
+    display: none;
+}
+
+.boton {
+    border-radius: 20px;
+    padding: 15px;
+    color: white;
+    border: none;
+    background-color: #222;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    align-items: center;
+}
+
+.boton:hover {
+    background-color: #444444;
+}
+
+.form-floating {
+    position: relative;
+}
+
+.form-floating .form-control {
+    border: 1px solid #999;
+    border-radius: 10px;
+    outline: none;
+    padding: 0.75rem 1rem; /* Ajusta el padding si es necesario */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-floating .form-control:focus {
+    border: 1px solid #222;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
