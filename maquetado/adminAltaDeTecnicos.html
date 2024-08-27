@@ -12,91 +12,94 @@
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 </head>
 <body>
-<header class="main-navbar">
-    <div class="align-items-baseline justify-content-between d-flex ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
-        <h2 class="fw-bold fs-4 d-inline-block">SMAACVS
-            <span class="fw-normal">|</span>
-            <span class="fw-medium fs-5 mr-2">Alta de técnicos</span>
-        </h2>
-        <div class="d-none d-md-block">
-            <span class="fw-bold fs-6 pe-4 ps-4">Administrador Martinez</span>
-            <button class="btn btn-dark p-2">
-                <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
-            </button>
+<div class="wrapper">
+    <header class="main-navbar">
+        <div class="align-items-baseline justify-content-between d-flex ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
+            <h2 class="fw-bold fs-4 d-inline-block">SMAACVS
+                <span class="fw-normal">|</span>
+                <span class="fw-medium fs-5 mr-2">Alta de técnicos</span>
+            </h2>
+            <div class="d-none d-md-block">
+                <span class="fw-bold fs-6 pe-4 ps-4">Administrador Martinez</span>
+                <button class="btn btn-dark p-2">
+                    <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
+                </button>
+            </div>
         </div>
-    </div>
-</header>
-<div class="pt-3 pb-5"></div>
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <form class="col-12 col-md-10">
-            <h4 class="fw-bold fs-5">Información básica</h4>
-            <p class="mb-3">Ingresar los datos personales básicos del técnico.</p>
+    </header>
 
-            <div class="row mb-3">
-                <div class="col-12 col-md-6 mb-2 mb-md-0">
-                    <input type="text" class="w-100" placeholder="Nombre">
-                </div>
-                <div class="col-12 col-md-6 mb-2 mb-md-0">
-                    <input type="text" class="w-100" placeholder="Apellido">
-                </div>
-            </div>
+    <div class="m-5">
+        <div class="row justify-content-center">
+            <form>
+                <h4 class="fw-bold fs-5">Información básica</h4>
+                <p class="mb-3">Ingresar los datos personales básicos del técnico.</p>
 
-            <div class="row mb-3">
-                <div class="col-12 col-md-6 mb-2 mb-md-0">
-                    <input type="text" class="w-100" placeholder="Dirección">
-                </div>
-                <div class="col-12 col-md-6 mb-2 mb-md-0">
-                    <input type="text" class="w-100" placeholder="CUIL">
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="input-group">
-                        <select id="documentos" name="documentos" class="custom-select">
-                            <option value="dni">DNI</option>
-                            <option value="libreta-civica">LIBRETA CÍVICA</option>
-                            <option value="libreta-enrolamiento">LIBRETA DE ENROLAMIENTO</option>
-                            <option value="pasaporte">PASAPORTE</option>
-                        </select>
-                        <input type="text" class="custom-input" placeholder="Número de documento">
+                <div class="row mb-3">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input type="text" class="w-100" placeholder="Nombre">
+                    </div>
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input type="text" class="w-100" placeholder="Apellido">
                     </div>
                 </div>
-            </div>
 
-            <h4 class="fw-bold fs-5 mt-5">Medios de contacto</h4>
-            <p class="mb-3">Indicar al menos un medio de contacto.</p>
+                <div class="row mb-3">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input type="text" class="w-100" placeholder="Dirección">
+                    </div>
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input type="text" class="w-100" placeholder="CUIL">
+                    </div>
+                </div>
 
-            <div class="row mb-3">
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                    <input type="text" class="w-100" placeholder="WhatsApp">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <select id="documentos" name="documentos" class="custom-select">
+                                <option value="dni">DNI</option>
+                                <option value="libreta-civica">LIBRETA CÍVICA</option>
+                                <option value="libreta-enrolamiento">LIBRETA DE ENROLAMIENTO</option>
+                                <option value="pasaporte">PASAPORTE</option>
+                            </select>
+                            <input type="text" class="custom-input" placeholder="Número de documento">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                    <input type="text" class="w-100" placeholder="Telegram">
-                </div>
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-                    <input type="text" class="w-100" placeholder="Correo electrónico">
-                </div>
-            </div>
 
-            <div class="row mb-4">
-                <div class="col-12">
-                    <button class="w-100">Dar de alta</button>
+                <h4 class="fw-bold fs-5 mt-5">Medios de contacto</h4>
+                <p class="mb-3">Indicar al menos un medio de contacto.</p>
+
+                <div class="row mb-3">
+                    <div class="col-12 col-md-4 mb-2 mb-md-0">
+                        <input type="text" class="w-100" placeholder="WhatsApp">
+                    </div>
+                    <div class="col-12 col-md-4 mb-2 mb-md-0">
+                        <input type="text" class="w-100" placeholder="Telegram">
+                    </div>
+                    <div class="col-12 col-md-4 mb-2 mb-md-0">
+                        <input type="text" class="w-100" placeholder="Correo electrónico">
+                    </div>
                 </div>
-            </div>
-        </form>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <button class="w-100">Dar de alta</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-<div class="container footer">
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
-        <p class="col-md-4 mb-0 text-muted">&copy; 2024 SMAACVS - UTN FRBA</p>
+
+    <footer class="m-5 d-flex flex-wrap justify-content-between align-items-center py-3 border-top mt-auto">
+        <div class="col-md-4 mb-0 text-muted">
+            <p class="fw-bold">&copy; 2024 SMAACVS</p>
+            <p class="fst-italic">Universidad Tecnológica Nacional FRBA</p>
+            <p class="fst-italic">Diseño de Sistemas - Grupo 8 - Miércoles Noche</p>
+        </div>
         <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2">Página principal</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2">Colaborar</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2">Mapa de heladeras</a></li>
         </ul>
     </footer>
 </div>
