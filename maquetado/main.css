@@ -236,3 +236,55 @@ select:focus {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
+
+
+/*---Busquedas---*/
+
+.card-result-body {
+    position: relative;
+    padding: 15px;
+    z-index: 1;
+}
+
+.card-result-title {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.card-result-text {
+    color: #787878;
+    font-size: 0.7rem;
+    margin: 1px 0;
+}
+
+.transition-card{
+    transition: box-shadow 0.3s ease;
+    color: rgb(0, 0, 0);
+}
+
+.scrollable-results {
+    max-height: 70vh;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Para navegadores basados en WebKit */
+}
+
+/* Para navegadores basados en WebKit (como Chrome y Safari) */
+.scrollable-results::-webkit-scrollbar {
+    display: none;
+}
+
+/*---Mapa---*/
+
+.contenido-mapa{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+
+#map {
+    flex-grow: 1;
+    width: 100%;
+    border-radius: 10px;
+    min-height: 70vh;
+}
