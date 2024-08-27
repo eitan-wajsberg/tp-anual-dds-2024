@@ -194,3 +194,7 @@ select:focus {
     color: #FFFFFF;
     background: #222222;
 }
+
+.dark-text {
+  color: #222222;
+}
