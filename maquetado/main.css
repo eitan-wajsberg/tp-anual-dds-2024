@@ -92,8 +92,8 @@ hr{
     height: 100%;
     width: 100%;
     object-fit: cover;
-    opacity: 30%;
-    transition: transform 0.3s ease;
+    opacity: 28%;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .card-title {
@@ -109,13 +109,13 @@ hr{
 }
 
 .card-text {
-    color: #D0D0D0;
+    color: #E0E0E0;
     font-size: 1rem;
 }
 
 .card-custom:hover img {
     transform: scale(1.02);
-    opacity: 32%;
+    opacity: 30%;
 }
 
 select {
