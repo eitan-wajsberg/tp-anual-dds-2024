@@ -376,6 +376,12 @@ select:focus {
     margin: 1px 0;
 }
 
+.search {
+    background-color: #FFFFFF;
+    border: 1px solid #999;
+    border-radius: 10px;
+    cursor: pointer;
+}
 
 /*---Formulario- Falla---*/
 
@@ -383,4 +389,12 @@ select:focus {
     margin-left: 10vh;
     margin-right: 10vh;
     min-height: 80vh;
+}
+
+.selection {
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #222222;
+    border: 1px solid #222222;
+    outline: none;
 }
