@@ -18,6 +18,18 @@ a {
     border-color: #999 !important;
 }
 
+.color-cc0808{
+    color: #cc0808;
+}
+
+.fw-600{
+    font-weight: 600;
+}
+
+.fs-09{
+    font-size: 0.9rem !important;
+}
+
 input {
     border: 1px solid #999;
     border-radius: 10px;
