@@ -7,7 +7,7 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
 
 
-    <title>SMAACVS - Heladera</title>
+    <title>SMAACVS - Distribución de viandas</title>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,30 +55,27 @@
     <nav class="col-md-3 p-4 sidebar border border-color-999 rounded-4 my-4">
         <div class="pt-5 pb-4"></div> <!-- separador -->
         <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
-        <form>
+        <form class="dark-text fw-600">
             <div class="row mb-2">
-                <input type="text" name="heladeraOrigen" placeholder="Seleccionar heladera de origen">
+                <label>Fecha: <span class="color-777">28/08/24</span></label>
             </div>
             <div class="row mb-2">
-                <input type="text" name="heladeraDestino" placeholder="Seleccionar heladera de destino">
-            </div>
-            <div class="row mb-1">
-                <input type="number" name="cantidadViandas" placeholder="Viandas a mover">
+                <label>Origen: <span class="color-777">Heladera de Medrano</span></label>
             </div>
             <div class="row mb-2">
-                <fieldset class="pb-2 rounded-3">
-                    <legend>Motivo</legend>
-                    <select name="motivo" class="custom-select fw-light py-0">
-                        <option>Desperfecto de heladera</option>
-                        <option>Falta de viandas en destino</option>
-                    </select>
-                </fieldset>
+                <label>Destino: <span class="color-777">Heladera de Lugano</span></label>
+            </div>
+            <div class="row mb-2">
+                <label>Viandas a mover: <span class="color-777">3</span></label>
+            </div>
+            <div class="row mb-2">
+                <label>Hora en la que inició el viaje al origen: <span class="color-777">15:20:00</span></label>
             </div>
             <div class="row">
-                <button class="w-100">Comenzar ahora</button>
+                <button class="w-100">Iniciar viaje a destino</button>
             </div>
             <div class="row">
-                <p class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para retirar las viandas del origen.</p>
+                <label class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para depositar las viandas en el destino.</label>
             </div>
         </form>
     </nav>

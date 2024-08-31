@@ -18,6 +18,27 @@ a {
     border-color: #999 !important;
 }
 
+.bs-4-4{
+    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
+}
+
+.fw-500{
+    font-weight: 500;
+}
+
+.distribution-card{
+    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
+    font-weight: 500;
+    padding: .5rem;
+    border-radius: 10px;
+    border: 1px solid #777;
+
+}
+
 .color-cc0808{
     color: #cc0808;
 }
@@ -209,6 +230,10 @@ select:focus {
 
 .light-green {
     background: #6A9373;
+}
+
+.color-777{
+    color: #777;
 }
 
 .btn-dropdown {
