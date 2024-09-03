@@ -53,8 +53,7 @@
 <section class="row flex-grow-1  ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
     <!-- Sidebar -->
     <nav class="col-md-3 p-4 sidebar border border-color-999 rounded-4 my-4">
-        <div class="pt-5 pb-4"></div> <!-- separador -->
-        <h1 class="fs-4 text-center mb-5">Encargarse de heladera</h1>
+        <h1 class="fs-4 text-center mb-5">Recomendación de puntos</h1>
         <form>
             <div class="row mb-2">
                 <fieldset class="rounded-3 border-999">
@@ -80,13 +79,47 @@
                 </fieldset>
             </div>
             <div class="row mb-2">
-                <input type="text" name="nombre" placeholder="Nombre">
+                <input type="number" name="radio" placeholder="Radio (en km)" min=1 step=1>
             </div>
             <div class="row mb-2">
-                <button class="w-100">Encargarse</button>
+                <button class="w-100">Buscar</button>
             </div>
             <div class="row">
-                <a href="recomienda-puntos.html" class="text-center fs-09 fw-600">Recomiendame puntos</a>
+            <p class="fs-5 fw-500">Resultados</p>
+            </div>
+            <div class="row">
+                <div class="scrollable-results max-vh-20">
+                    <div class="card rounded-3 transition-card mb-2" role="button">
+                        <div class="card-result-body" >
+                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
+                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
+                        </div>
+                    </div>
+                    <div class="card rounded-3 transition-card mb-2" role="button">
+                        <div class="card-result-body" >
+                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
+                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
+                        </div>
+                    </div>
+                    <div class="card rounded-3 transition-card mb-2" role="button">
+                        <div class="card-result-body" >
+                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
+                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
+                        </div>
+                    </div>
+                    <div class="card rounded-3 transition-card mb-2" role="button">
+                        <div class="card-result-body" >
+                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
+                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
+                        </div>
+                    </div>
+                    <div class="card rounded-3 transition-card mb-2" role="button">
+                        <div class="card-result-body" >
+                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
+                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </nav>
