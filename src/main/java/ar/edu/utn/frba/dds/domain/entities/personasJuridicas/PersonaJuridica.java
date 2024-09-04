@@ -1,10 +1,9 @@
 package ar.edu.utn.frba.dds.domain.entities.personasJuridicas;
 
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
-import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
+import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import java.util.HashSet;
@@ -26,29 +25,34 @@ public class PersonaJuridica {
   private TipoPersonaJuridica tipo;
   @Setter
   private Rubro rubro;
-  private Set<FormasContribucionJuridicas> contribucionesElegidas;
-  private Set<Heladera> heladerasAcargo;
-  private Set<Contribucion> contribuciones;
-  private Set<OfertaCanjeada> ofertasCanjeadas;
+  private final Set<FormasContribucionJuridicas> contribucionesElegidas;
+  private final Set<Heladera> heladerasAcargo;
+  private final Set<Contribucion> contribuciones;
+  private final Set<Oferta> ofertas;
 
   public PersonaJuridica(){
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
     this.heladerasAcargo = new HashSet<>();
-    this.ofertasCanjeadas = new HashSet<>();
+    this.ofertas = new HashSet<>();
   }
 
   public void hacerseCargoDeHeladera(Heladera heladera) {
     this.heladerasAcargo.add(heladera);
     this.contribuciones.add(heladera);
   }
+
   public void darDeBajaHeladera(Heladera heladera) {
     this.heladerasAcargo.remove(heladera);
     this.contribuciones.remove(heladera);
   }
+
   public void agregarContribucion(Contribucion contribucion) {
     contribuciones.add(contribucion);
   }
+
+  //TODO: esto debería morir, no?
+  /*
   public float puntosGastados() {
     float sum = 0;
     for (OfertaCanjeada ofertaCanjeada: ofertasCanjeadas) {
@@ -56,8 +60,11 @@ public class PersonaJuridica {
     }
     return sum;
   }
+  */
+  /*
   public float calcularPuntajeNeto() {
     ReconocimientoTrabajoRealizado reconocimientoTrabajoRealizado = ReconocimientoTrabajoRealizado.getInstance();
     return reconocimientoTrabajoRealizado.calcularPuntaje(this.getContribuciones(), this.puntosGastados());
   }
+  */
 }
