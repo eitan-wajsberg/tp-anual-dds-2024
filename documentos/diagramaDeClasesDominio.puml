@@ -12,7 +12,6 @@ class PersonaHumana {
  - nombre: String
  - apellido: String
  - fechaNacimiento: LocalDate
- - ofertasCanjeadas: List<OfertaCanjeada>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
@@ -817,7 +816,7 @@ class PersonaJuridica {
  - contribucionesElegidas: Set<FormasContribucionJuridicas>
  - heladerasACargo: Set<Heladera>
  - contribuciones: Set<Contribucion>
- - ofertasCanjeadas: Set<OfertaCanjeada>
+ - ofertas: Set<Oferta>
 
  + hacerseCargoDeHeladera(heladera: Heladera): void
  + darDeBajaHeladera(heladera: Heladera): void
@@ -827,6 +826,7 @@ class PersonaJuridica {
 }
 
 PersonaJuridica --> " * " FormasContribucionJuridica
+PersonaJuridica --> " * " Oferta
 PersonaJuridica --> Rubro
 PersonaJuridica --> Contacto
 PersonaJuridica --> Direccion
