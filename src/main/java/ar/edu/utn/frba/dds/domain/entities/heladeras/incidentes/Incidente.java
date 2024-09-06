@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioTecnicos;
@@ -10,6 +11,7 @@ import ar.edu.utn.frba.dds.domain.repositories.IRepositorioTecnicos;
 import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.deser.BasicDeserializerFactory;
+import java.awt.*;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,6 +35,11 @@ public class Incidente {
     @Setter
     private TipoIncidente tipoIncidente;
     private IRepositorioTecnicos repositorioTecnicos;
+
+    private PersonaHumana colaborador;
+    private String descripcionDelColaborador;
+    private Image foto;
+    private TipoAlerta tipoAlerta;
 
     public Incidente(IRepositorioTecnicos repositorioTecnicos, Heladera heladera) throws MessagingException, UnsupportedEncodingException {
         this.repositorioTecnicos = repositorioTecnicos;
@@ -70,7 +77,7 @@ public class Incidente {
             "Estimado tecnico,\n"
                 + "Fue elegido para revisar la heladera " + heladera.getNombre()
                 + "en la direccion " + heladera.getDireccion().direccionSegunGeoRef() + ".\n"
-                + tipoIncidente.obtenerDescripcionIncidente() + "\n"
+                + tipoIncidente.obtenerDescripcionIncidente(this) + "\n"
                 + "Saludos, "
                 + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica",
             LocalDateTime.now()
