@@ -335,6 +335,10 @@ class Incidente {
  - visitas: List<Visita>
  - solucionado: bool
  - tipoIncidente: TipoIncidente
+ - tipoAlerta: TipoAlerta
+ - colaborador: PersonaHumana
+ - descripcionDelColaborador: String
+ - foto: Image
  + registrarVisita(visita: Visita): void
  + asignarTecnico(): void
 }
@@ -342,10 +346,14 @@ class Incidente {
 Incidente --> TipoIncidente
 Incidente --> " * " Visita
 Incidente --> Tecnico
+Incidente --> TipoAlerta
+Incidente --> PersonaHumana
 
 interface TipoIncidente {
- + obtenerDescripcionIncidente(): String
-} 
+ + obtenerDescripcionIncidente(incidente: Incidente): String
+}
+
+TipoIncidente ..> Incidente
 
 class Visita {
  - descripcion: String
@@ -353,18 +361,13 @@ class Visita {
 }
 
 class Alerta {
- - tipo: TipoAlerta
- + obtenerDescripcionIncidente(): String
+ + obtenerDescripcionIncidente(incidente: Incidente): String
 }
 
 Alerta ..|> TipoIncidente
-Alerta --> TipoAlerta
 
 class FallaTecnica {
- - colaborador: PersonaHumana
- - descripcion: String
- - foto: Image
- + obtenerDescripcionIncidente(): String
+ + obtenerDescripcionIncidente(incidente: Incidente): String
 }
 
 FallaTecnica ..|> TipoIncidente

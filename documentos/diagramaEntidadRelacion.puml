@@ -212,8 +212,7 @@ entity viandas_distribuidas {
 
 }
 
-entity donacion_dinero
- propietario{
+entity donacion_dinero{
  * id: INTEGER(11)
  --
  * id_personaHumana: INTEGER(11) <<FK>>
@@ -272,9 +271,17 @@ entity incidente {
  * id_alerta: INTEGER(11) <<FK>>
  * fecha: DATE
  * solucionado: BIT(1)
- (tipoIncidente: TipoIncidente) y esto?
- 'TODO solucionar tema tipoIncidente
+ * tipo_incidente: ENUM
+ tipo_alerta: ENUM
+ id_personaHumana: INTEGER(11) <<FK>>
+ descripcion_del_colaborador: VARCHAR(255)
+ ruta_foto: VARCHAR(255)
 }
+
+note right
+tipo_incidente: ALERTA, FALLA_TECNICA
+tipo_alerta: FRAUDE, FALLA_CONEXION, FALLA_TEMPERATURA
+end note
 
 entity visita {
  * id: INTEGER(11)
@@ -373,13 +380,6 @@ entity sugerencia_distribucion {
  * escogida: BIT(1)
 }
 
-' TODO: REVISAR!!!!
-entity alerta {
- * id : INTEGER(11)
- --
- * tipo: ENUM
-}
-
 tecnico }o--|| contacto
 tecnico }o--|| coordenada
 tecnico |o--|| usuario
@@ -415,7 +415,7 @@ tarjeta ||--o{ tarjeta_usada_persona_vulnerable
 
 incidente ||--o{ visita
 incidente }o--|| heladera
-alerta ||--|| incidente
+incidente }o--o| persona_humana
 
 oferta }o--|| rubro
 oferta_canjeada }o--|| oferta
