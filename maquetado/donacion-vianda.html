@@ -7,7 +7,7 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
 
 
-    <title>SMAACVS - Distribución de viandas</title>
+    <title>SMAACVS - Donación de viandas</title>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +37,7 @@
     <div class="align-items-baseline justify-content-between d-flex ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
         <h2 class="fw-bold fs-4 d-inline-block">SMAACVS
             <span class="fw-normal">|</span>
-            <span class="fw-medium fs-5 mr-2">Heladera</span>
+            <span class="fw-medium fs-5 mr-2">Donar Vianda</span>
         </h2>
         <div class="d-none d-md-block"> <!-- Oculta en pantallas menores a md -->
             <span class="fw-bold fs-6 pe-4 ps-4">Martinez Martinez</span>
@@ -59,28 +59,25 @@
             </div>
         </div>
         <div class="pt-2 pb-4"></div> <!-- separador -->
-        <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
+        <h1 class="fs-4 text-center mb-5">Donar una vianda</h1>
         <form>
             <div class="row mb-2">
-                <input type="text" name="heladeraOrigen" placeholder="Seleccionar heladera de origen">
+                <input type="text" name="comida" placeholder="Descripción de la comida">
             </div>
             <div class="row mb-2">
-                <input type="text" name="heladeraDestino" placeholder="Seleccionar heladera de destino">
-            </div>
-            <div class="row mb-1">
-                <input type="number" name="cantidadViandas" placeholder="Viandas a mover">
+                <input type="text" name="fechaCaducidad" placeholder="Fecha de caducidad">
             </div>
             <div class="row mb-2">
-                <fieldset class="pb-2 rounded-3">
-                    <legend>Motivo</legend>
-                    <select name="motivo" class="custom-select fw-light py-0">
-                        <option>Desperfecto de heladera</option>
-                        <option>Falta de viandas en destino</option>
-                    </select>
-                </fieldset>
+                <input type="text" name="heladera" placeholder="Seleccionar heladera">
             </div>
             <div class="row mb-2">
-                <button class="w-100">Comenzar ahora</button>
+                <input type="number" name="calorias" placeholder="Calorias (opcional)">
+            </div>
+            <div class="row mb-2">
+                <input type="number" name="peso" placeholder="Peso en gramos (opcional)">
+            </div>
+            <div class="row mb-2">
+                <button class="w-100">Donar</button>
             </div>
             <div class="row">
                 <p class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para retirar las viandas del origen.</p>
