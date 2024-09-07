@@ -24,10 +24,10 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../../main.css">
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="js/include.js"></script>
+    <script src="../../js/include.js"></script>
 
 </head>
 
@@ -53,7 +53,8 @@
 <section class="row flex-grow-1  ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
     <!-- Sidebar -->
     <nav class="col-md-3 p-4 sidebar border border-color-999 rounded-4 my-4">
-        <h1 class="fs-4 text-center mb-5">Recomendación de puntos</h1>
+        <div class="pt-5 pb-4"></div> <!-- separador -->
+        <h1 class="fs-4 text-center mb-5">Encargarse de heladera</h1>
         <form>
             <div class="row mb-2">
                 <fieldset class="rounded-3 border-999">
@@ -79,47 +80,13 @@
                 </fieldset>
             </div>
             <div class="row mb-2">
-                <input type="number" name="radio" placeholder="Radio (en km)" min=1 step=1>
+                <input type="text" name="nombre" placeholder="Nombre">
             </div>
             <div class="row mb-2">
-                <button class="w-100">Buscar</button>
+                <button class="w-100">Encargarse</button>
             </div>
             <div class="row">
-            <p class="fs-5 fw-500">Resultados</p>
-            </div>
-            <div class="row">
-                <div class="scrollable-results max-vh-20">
-                    <div class="card rounded-3 transition-card mb-2" role="button">
-                        <div class="card-result-body" >
-                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
-                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
-                        </div>
-                    </div>
-                    <div class="card rounded-3 transition-card mb-2" role="button">
-                        <div class="card-result-body" >
-                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
-                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
-                        </div>
-                    </div>
-                    <div class="card rounded-3 transition-card mb-2" role="button">
-                        <div class="card-result-body" >
-                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
-                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
-                        </div>
-                    </div>
-                    <div class="card rounded-3 transition-card mb-2" role="button">
-                        <div class="card-result-body" >
-                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
-                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
-                        </div>
-                    </div>
-                    <div class="card rounded-3 transition-card mb-2" role="button">
-                        <div class="card-result-body" >
-                            <p class="color-444 fw-600 mb-1">Calle1 1234</p>
-                            <p class="fs-509 color-777 mb-0">Provincia, Municipio</p>
-                        </div>
-                    </div>
-                </div>
+                <a href="../heladeras/recomendacionDePuntosDeHeladera.html" class="text-center fs-09 fw-600">Recomiendame puntos</a>
             </div>
         </form>
     </nav>
@@ -189,7 +156,7 @@
     </main>
 
     <!-- Footer -->
-    <div data-include="footer" class="mt-auto"></div>
+    <div data-include="../footer" class="mt-auto"></div>
 </section>
 
 
