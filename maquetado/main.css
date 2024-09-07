@@ -172,7 +172,7 @@ select {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-fieldset{
+fieldset {
     margin-inline-start: 2px;
     margin-inline-end: 2px;
     border-width: 2px;
@@ -181,7 +181,7 @@ fieldset{
     border-image: initial;
 }
 
-legend{
+legend {
     float: unset;
     width: auto;
     padding: 0px;
@@ -212,6 +212,7 @@ select:focus {
 .custom-select {
     flex: 1 1 30%;
     min-width: 0;
+    font-weight: 550;
 }
 
 .custom-input {
@@ -437,10 +438,10 @@ select:focus {
 }
 
 .selection {
-    font-weight: bold;
-    color: #FFFFFF;
-    background-color: #222222;
-    border: 1px solid #222222;
+    font-weight: 500;
+    color: #222222;
+    background-color: #e5e5e5;
+    border: 1px solid #999999;
     outline: none;
 }
 
