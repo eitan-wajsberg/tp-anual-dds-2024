@@ -5,19 +5,20 @@ import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 public class Vianda implements Contribucion {
-  private LocalDate fechaCaducidad;
+  private LocalDateTime fechaCaducidad;
   private boolean entregada;
   private String comida;
   private float calorias;
   private float pesoEnGramos;
   private LocalDate fechaDonacion;
 
-  public Vianda(LocalDate fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
+  public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;
     this.entregada = entregada;
     this.comida = comida;
@@ -32,8 +33,7 @@ public class Vianda implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDonadas");
-    return coeficiente;
+    return ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDonadas");
   }
 
   public TipoContribucion obtenerTipoContribucion() {
@@ -45,7 +45,7 @@ public class Vianda implements Contribucion {
   }
 
   public boolean estaVencida() {
-    return fechaCaducidad.isBefore(LocalDate.now());
+    return fechaCaducidad.isBefore(LocalDateTime.now());
   }
 
   @Override
