@@ -244,6 +244,10 @@ select:focus {
     background: #6A9373;
 }
 
+.dark-grey-text {
+    color: #666;
+}
+
 .color-777{
     color: #777;
 }
@@ -438,4 +442,76 @@ select:focus {
     background-color: #222222;
     border: 1px solid #222222;
     outline: none;
+}
+
+.alternative-button {
+    border-radius: 20px;
+    padding: 15px;
+    color: #222222;
+    border: 1px solid #222222;
+    background-color: #FFFFFF;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.alternative-button:hover {
+    background-color: #efefef;
+}
+
+.checkbox {
+    border-radius: 10px;
+    color: #222222;
+    background-color: #222222;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #999;
+}
+
+.form-check-input:checked {
+    background-color: #222222;
+    outline: none;
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid #999;
+}
+
+.choice {
+    border-radius: 8px;
+    border: 1px solid #999;
+    color: #222222;
+    padding: 20px;
+}
+
+input[type="radio"] {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid #999;
+}
+
+input[type="radio"]:focus {
+    outline: none;
+    box-shadow: none;
+    border: 1px solid #999;
+}
+
+.info-card {
+    background-color: #222222;
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.info-card-alternative {
+    background-color: #FFFFFF;
+    color: #222222;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #999;
 }
