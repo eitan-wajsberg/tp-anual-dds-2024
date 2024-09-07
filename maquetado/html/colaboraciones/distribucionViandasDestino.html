@@ -24,10 +24,10 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../../main.css">
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="js/include.js"></script>
+    <script src="../../js/include.js"></script>
 
 </head>
 
@@ -53,37 +53,29 @@
 <section class="row flex-grow-1  ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
     <!-- Sidebar -->
     <nav class="col-md-3 p-4 sidebar border border-color-999 rounded-4 my-4">
-        <div class="flex-row-reverse d-flex">
-            <div role="button">
-                <svg style="width:24;height:24;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="m9 8l6 8m-6 0l6-8"/></g></svg>
-            </div>
-        </div>
-        <div class="pt-2 pb-4"></div> <!-- separador -->
+        <div class="pt-5 pb-4"></div> <!-- separador -->
         <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
-        <form>
+        <form class="dark-text fw-600">
             <div class="row mb-2">
-                <input type="text" name="heladeraOrigen" placeholder="Seleccionar heladera de origen">
+                <label>Fecha: <span class="color-777">28/08/24</span></label>
             </div>
             <div class="row mb-2">
-                <input type="text" name="heladeraDestino" placeholder="Seleccionar heladera de destino">
-            </div>
-            <div class="row mb-1">
-                <input type="number" name="cantidadViandas" placeholder="Viandas a mover">
+                <label>Origen: <span class="color-777">Heladera de Medrano</span></label>
             </div>
             <div class="row mb-2">
-                <fieldset class="pb-2 rounded-3">
-                    <legend>Motivo</legend>
-                    <select name="motivo" class="custom-select fw-light py-0">
-                        <option>Desperfecto de heladera</option>
-                        <option>Falta de viandas en destino</option>
-                    </select>
-                </fieldset>
+                <label>Destino: <span class="color-777">Heladera de Lugano</span></label>
             </div>
             <div class="row mb-2">
-                <button class="w-100">Comenzar ahora</button>
+                <label>Viandas a mover: <span class="color-777">3</span></label>
+            </div>
+            <div class="row mb-2">
+                <label>Hora en la que inició el viaje al origen: <span class="color-777">15:20:00</span></label>
             </div>
             <div class="row">
-                <p class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para retirar las viandas del origen.</p>
+                <button class="w-100">Iniciar viaje a destino</button>
+            </div>
+            <div class="row">
+                <label class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para depositar las viandas en el destino.</label>
             </div>
         </form>
     </nav>
@@ -153,7 +145,7 @@
     </main>
 
     <!-- Footer -->
-    <div data-include="footer" class="mt-auto"></div>
+    <div data-include="../footer" class="mt-auto"></div>
 </section>
 
 

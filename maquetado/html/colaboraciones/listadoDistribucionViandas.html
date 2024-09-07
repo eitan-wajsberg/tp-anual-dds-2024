@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SMAACVS - Donación de viandas</title>
+    <title>SMAACVS - Distribución de viandas</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="../../main.css">
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="js/include.js"></script>
+    <script src="../../js/include.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -33,7 +33,7 @@
 
     <div class="mt-5 ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3 mb-5">
         <div class="d-flex justify-content-between mb-3 align-items-center">
-            <p class="fs-4 mb-0 fw-bold">Donación de viandas</p>
+            <p class="fs-4 mb-0 fw-bold">Distribución de viandas</p>
             <button class="px-5">Agregar</button>
         </div>
 
@@ -41,26 +41,23 @@
             <div class="col-md-4">
                 <div class="distribution-card">
                     <div class="row mb-2">
-                        <span class="flex-row-reverse d-flex color-777">28/08/2024</span>
+                        <span class="flex-row-reverse d-flex color-777">28/08/24</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Heladera:</strong> Heladera UTN Medrano</span>
+                        <span><strong>Origen:</strong> Heladera de Medrano</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Comida:</strong> Filet de cerdo</span>
+                        <span><strong>Destino:</strong> Heladera de Lugano</span>
                     </div>
-                    <div class="row mb-2">
-                        <span><strong>Fecha de caducidad:</strong> 20/09/2024</span>
+                    <div class="row mb-2 invisible">
+                        <span>Inicio viaje al origen: 15:20:00</span>
                     </div>
-                    <div class="row mb-2">
-                        <span><strong>Calorías:</strong> 1100 kcal</span>
-                    </div>
-                    <div class="row mb-2">
-                        <span><strong>Peso en gramos:</strong> 400 gr</span>
+                    <div class="row mb-3 invisible">
+                        <span>Inicio viaje al destino: 16:00:00</span>
                     </div>
                     <div class="row">
                         <p class="d-flex flex-row-reverse mb-1">
-                            <span class="ms-1">En curso</span>
+                            <span class="ms-1">Sin comenzar</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg>
                         </p>
                     </div>
@@ -70,27 +67,24 @@
             <div class="col-md-4">
                 <div class="distribution-card">
                     <div class="row mb-2">
-                        <span class="flex-row-reverse d-flex color-777">10/09/2024</span>
+                        <span class="flex-row-reverse d-flex color-777">28/08/24</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Heladera:</strong> Heladera UTN Medrano</span>
+                        <span><strong>Origen:</strong> Heladera de Medrano</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Comida:</strong> Filet de merluza</span>
+                        <span><strong>Destino:</strong> Heladera de Lugano</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Fecha de caducidad:</strong> 22/09/2024</span>
+                        <span><strong>Inicio viaje al origen:</strong> 15:20:00</span>
                     </div>
-                    <div class="row mb-2">
-                        <span><strong>Calorías:</strong> 800 kcal</span>
-                    </div>
-                    <div class="row mb-2">
-                        <span><strong>Peso en gramos:</strong> 300 gr</span>
+                    <div class="row mb-3 invisible">
+                        <span>Inicio viaje al destino: 16:00:00</span>
                     </div>
                     <div class="row">
                         <p class="d-flex flex-row-reverse mb-1">
-                            <span class="ms-1">Entregada</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg>
+                            <span class="ms-1">Yendo al origen</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.832 3 3 8.832 3 16s5.832 13 13 13s13-5.832 13-13S23.168 3 16 3m0 2c6.087 0 11 4.913 11 11s-4.913 11-11 11S5 22.087 5 16S9.913 5 16 5m.72 4.594L15.28 11l4 4H9v2h10.28l-4 4l1.44 1.406l5.686-5.687l.72-.72l-.72-.72l-5.687-5.686z"/></svg>
                         </p>
                     </div>
                 </div>
@@ -99,27 +93,24 @@
             <div class="col-md-4">
                 <div class="distribution-card">
                     <div class="row mb-2">
-                        <span class="flex-row-reverse d-flex color-777">02/09/2024</span>
+                        <span class="flex-row-reverse d-flex color-777">28/08/24</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Heladera:</strong> Heladera UTN Lugano</span>
+                        <span><strong>Origen:</strong> Heladera de Medrano</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Comida:</strong> Milanesa con puré</span>
+                        <span><strong>Destino:</strong> Heladera de Lugano</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Fecha de caducidad:</strong> 05/09/2024</span>
+                        <span><strong>Inicio viaje al origen:</strong> 15:20:00</span>
                     </div>
-                    <div class="row mb-2">
-                        <span><strong>Calorías:</strong> 800 kcal</span>
-                    </div>
-                    <div class="row mb-2">
-                        <span><strong>Peso en gramos:</strong> 300 gr</span>
+                    <div class="row mb-3">
+                        <span><strong>Inicio viaje al destino:</strong> 16:00:00</span>
                     </div>
                     <div class="row">
                         <p class="d-flex flex-row-reverse mb-1">
-                            <span class="ms-1">Entregada</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg>
+                            <span class="ms-1">Yendo al destino</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.832 3 3 8.832 3 16s5.832 13 13 13s13-5.832 13-13S23.168 3 16 3m0 2c6.087 0 11 4.913 11 11s-4.913 11-11 11S5 22.087 5 16S9.913 5 16 5m-.72 4.594L9.595 15.28l-.72.72l.72.72l5.687 5.686L16.72 21l-4-4H23v-2H12.72l4-4z"/></svg>
                         </p>
                     </div>
                 </div>
@@ -128,26 +119,23 @@
             <div class="col-md-4">
                 <div class="distribution-card">
                     <div class="row mb-2">
-                        <span class="flex-row-reverse d-flex color-777">02/09/2024</span>
+                        <span class="flex-row-reverse d-flex color-777">28/08/24</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Heladera:</strong> Heladera UTN Lugano</span>
+                        <span><strong>Origen:</strong> Heladera de Medrano</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Comida:</strong> Bondiola braseada</span>
+                        <span><strong>Destino:</strong> Heladera de Lugano</span>
                     </div>
                     <div class="row mb-2">
-                        <span><strong>Fecha de caducidad:</strong> 05/09/2024</span>
+                        <span><strong>Inicio viaje al origen:</strong> 15:20:00</span>
                     </div>
-                    <div class="row mb-2">
-                        <span><strong>Calorías:</strong> 2000 kcal</span>
-                    </div>
-                    <div class="row mb-2">
-                        <span><strong>Peso en gramos:</strong> 500 gr</span>
+                    <div class="row mb-3">
+                        <span><strong>Inicio viaje al destino:</strong> 16:00:00</span>
                     </div>
                     <div class="row">
                         <p class="d-flex flex-row-reverse mb-1">
-                            <span class="ms-1">Entregada</span>
+                            <span class="ms-1">Completado</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg>
                         </p>
                     </div>
@@ -156,7 +144,7 @@
         </div>
     </div>
 
-    <div data-include="footer" class="mt-auto"></div>
+    <div data-include="../footer" class="mt-auto"></div>
 </div>
 </body>
 </html>
