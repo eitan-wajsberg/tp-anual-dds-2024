@@ -1,7 +1,7 @@
 @startuml diagramaEntidadRelacion.
 
 entity heladera {
-  * id: INTEGER(11)
+  * id: INTEGER(11) <<PK>>
   --
   * id_direccion: INTEGER(11) <<FK>>
   * id_modelo: INTEGER(11) <<FK>>
@@ -15,7 +15,7 @@ entity heladera {
 }
 
 entity modelo {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * modelo: VARCHAR(255)
  * temperaturaMinima: DECIMAL
@@ -23,7 +23,7 @@ entity modelo {
 }
 
 entity cambio_estado {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_heladera: INTEGER(11) <<FK>>
  * fechaCambio: DATE
@@ -35,7 +35,7 @@ estado: FALLA_TEMPERATURA, ACTIVA, FRAUDE, FALLA_CONEXION, FALLA_TECNICA
 end note
 
 entity cambio_temperatura {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_heladera: INTEGER(11) <<FK>>
  * fechaCambio: DATE
@@ -43,7 +43,7 @@ entity cambio_temperatura {
 }
 
 entity solicitud_apertura {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_heladera: INTEGER(11) <<FK>>
  * id_tarjeta: INTEGER(11) <<FK>>
@@ -60,7 +60,7 @@ end note
 'TODO cómo diferenciar si la persona humana ya entregó la tarjeta a la persona vulnerable o la sigue teniendo en posesión
 'TODO se podrían separar los dos tipos de tarjeta en dos entidades (nivel dominio también)?
 entity tarjeta {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * codigo: VARCHAR(255) (ESTO SE GUARDA?)
  ' TODO lo de arriba
@@ -73,7 +73,7 @@ propietario: PERSONA_VULNERABLE, COLABORADOR
 end note
 
 entity uso_tarjeta {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_heladera: INTEGER(11) <<FK>>
  * id_tarjeta: INTEGER(11) <<FK>>
@@ -81,7 +81,7 @@ entity uso_tarjeta {
 }
 
 entity direccion {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_municipio: INTEGER(11) <<FK>>
  * id_provincia: INTEGER(11) <<FK>>
@@ -90,25 +90,25 @@ entity direccion {
 }
 
 entity calle {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * calle: VARCHAR(255)
 }
 
 entity municipio {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * municipio: VARCHAR(255)
 }
 
 entity provincia {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * provincia: VARCHAR(255)
 }
 
 entity vianda {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_persona_humana: INTEGER(11) <<FK>>
  * fechaCaducidad: DATE
@@ -119,7 +119,7 @@ entity vianda {
 }
 
 entity persona_vulnerable {
- *id: INTEGER(11)
+ *id: INTEGER(11) <<PK>>
  --
  *nombre: VARCHAR(255)
  *fechaDeNacimiento: DATE
@@ -133,14 +133,14 @@ entity persona_vulnerable {
 }
 
 entity tarjeta_usada_persona_vulnerable {
- *id_persona_vulnerable: INTEGER(11) <<FK>>
- *id_tarjeta: INTEGER(11) <<FK>>
+ *id_persona_vulnerable: INTEGER(11) <<PK, FK>>
+ *id_tarjeta: INTEGER(11) <<PK, FK>>
  --
  fecha_de_baja: DATE
 }
 
 entity persona_humana {
-  * id : INTEGER(11)
+  * id : INTEGER(11) <<PK>>
   --
   * id_tarjeta : INTEGER(11) <<FK>>
   * id_direccion: INTEGER(11) <<FK>>
@@ -158,7 +158,7 @@ entity persona_humana {
 'TODO agregar tabla similar a la de tarjetas-personas_vulnerables porque el colaborador puede tener varias tarjetas
 
 entity respuesta{
-  *id: INTEGER(11) <<FK>>
+  *id: INTEGER(11) <<PK>>
   --
   *id_pregunta: INTEGER(11) <<FK>>
   *id_personaHumana: INTEGER(11) <<FK>>
@@ -166,13 +166,13 @@ entity respuesta{
 }
 
 entity opcion_respuesta{
- * id_respuesta: INTEGER(11) <<FK>>
- * id_opcion: INTEGER(11) <<FK>>
+ * id_respuesta: INTEGER(11) <<PK, FK>>
+ * id_opcion: INTEGER(11) <<PK, FK>>
  --
 }
 
 entity pregunta{
- * id : INTEGER(11) <<FK>>
+ * id : INTEGER(11) <<PK>>
  --
  * tipo: ENUM
  * campo: TEXT
@@ -181,19 +181,19 @@ entity pregunta{
 }
 
 entity opcion_pregunta{
- * id_pregunta: INTEGER(11) <<FK>>
- * id_opcion: INTEGER(11) <<FK>>
+ * id_pregunta: INTEGER(11) <<PK, FK>>
+ * id_opcion: INTEGER(11) <<PK, FK>>
  --
 }
 
 entity opcion{
- * id : INTEGER(11)
+ * id : INTEGER(11) <<PK>>
  --
  * campo : VARCHAR(100)
 }
 
 entity distribucion_vianda {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_personaHumana: INTEGER(11) <<FK>>
  * id_heladeraOrigen: INTEGER(11) <<FK>>
@@ -206,14 +206,14 @@ entity distribucion_vianda {
 }
 
 entity viandas_distribuidas {
- * id_distribucion_viandas: INTEGER(11) <<FK>>
- * id_vianda: INTEGER(11) <<FK>>
+ * id_distribucion_viandas: INTEGER(11) <<PK, FK>>
+ * id_vianda: INTEGER(11) <<PK, FK>>
  --
 
 }
 
 entity donacion_dinero{
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_personaHumana: INTEGER(11) <<FK>>
  * monto: DECIMAL
@@ -227,7 +227,7 @@ unidadFrecuencia: DIARIO, SEMANAL, MENSUAL, ANUAL
 end note
 
 entity persona_juridica {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_usuario: INTEGER(11) <<FK>>
  * id_direccion: INTEGER(11) <<FK>>
@@ -241,14 +241,14 @@ entity persona_juridica {
 }
 
 entity oferta_canjeada {
-  *id_oferta: INTEGER(11) <<FK>>
-  *id_persona_humana: INTEGER(11) <<FK>>
+  *id_oferta: INTEGER(11) <<PK, FK>>
+  *id_persona_humana: INTEGER(11) <<PK, FK>>
   --
   * fecha_canje : DATETIME
 }
 
 entity oferta {
-  * id : INTEGER(11)
+  * id : INTEGER <<PK>>
   --
   * nombre : VARCHAR(255)
   * cantidad_puntos_necesarios : DECIMAL
@@ -258,13 +258,13 @@ entity oferta {
 }
 
 entity rubro {
-  * id : INTEGER(11)
+  * id : INTEGER(11) <<PK>>
   --
   * nombre : VARCHAR(255)
 }
 
 entity incidente {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_heladera: INTEGER(11) <<FK>>
  * id_tecnico: INTEGER(11) <<FK>>
@@ -284,7 +284,7 @@ tipo_alerta: FRAUDE, FALLA_CONEXION, FALLA_TEMPERATURA
 end note
 
 entity visita {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_incidente: INTEGER(11) <<FK>>
  * descripcion: VARCHAR(255)
@@ -292,7 +292,7 @@ entity visita {
 }
 
 entity mensaje {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_destinatario: INTEGER(11) <<FK>>
  * asunto: VARCHAR(255)
@@ -301,7 +301,7 @@ entity mensaje {
 }
 
 entity usuario {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * id_rol: INTEGER(11) <<FK>>
  * nombre: VARCHAR(255)
@@ -310,25 +310,25 @@ entity usuario {
 }
 
 entity rol {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * nombre: VARCHAR(255)
 }
 
 entity rol_permiso {
- * id_rol: INTEGER(11) <<FK>>
- * id_permiso: INTEGER(11) <<FK>>
+ * id_rol: INTEGER(11) <<PK, FK>>
+ * id_permiso: INTEGER(11) <<PK, FK>>
  --
 }
 
 entity permiso {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * nombre: VARCHAR(255)
 }
 
 entity tecnico {
-  * id : INTEGER(11)
+  * id : INTEGER(11) <<PK>>
   --
   * nombre : VARCHAR(255)
   * apellido : VARCHAR(255)
@@ -343,7 +343,8 @@ entity tecnico {
 }
 
 entity contacto {
-    * id : INTEGER(11)
+    * id : INTEGER(11) <<PK>>
+    --
     * id_persona: INTEGER(11) <<FK>>
     * tipo_persona: ENUM
     * valor: VARCHAR(255)
@@ -354,14 +355,14 @@ entity contacto {
 }
 
 entity coordenada {
- * id: INTEGER(11)
+ * id: INTEGER(11) <<PK>>
  --
  * latitud : DOUBLE
  * longitud : DOUBLE
 }
 
 entity area {
- * id : INTEGER(11)
+ * id : INTEGER(11) <<PK>>
  --
  * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
  * radio : FLOAT
@@ -369,14 +370,15 @@ entity area {
 'TODO el area se usa?
 
 entity sugerencia_heladeras {
- * id : INTEGER(11)
+ * id : INTEGER(11) <<PK>>
  --
  * fechaRealizacion: DATE
 }
 ' TODO: COMPLETAR con relación a incidente o lo que corresponda
 entity sugerencia_distribucion {
- * id_sugerencia_heladeras: INTEGER(11)
- * id_heladera: INTEGER(11)
+ * id_sugerencia_heladeras: INTEGER(11) <<PK, FK>>
+ * id_heladera: INTEGER(11) <<PK, FK>>
+ --
  * escogida: BIT(1)
 }
 
