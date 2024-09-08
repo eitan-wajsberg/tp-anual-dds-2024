@@ -29,14 +29,13 @@ a {
 }
 
 .distribution-card{
-    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
-    -webkit-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.15);
     font-weight: 500;
-    padding: .5rem;
+    padding: 15px;
     border-radius: 10px;
     border: 1px solid #777;
-
 }
 
 .color-cc0808{
@@ -516,4 +515,9 @@ input[type="radio"]:focus {
     border-radius: 10px;
     padding: 20px;
     border: 1px solid #999;
+}
+
+.little-button {
+    padding: 4px;
+    border-radius: 10px;
 }
