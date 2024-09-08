@@ -36,7 +36,7 @@
     <header class="main-navbar">
         <div class="d-flex align-items-center justify-content-between ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
             <div class="d-flex align-items-center">
-                <a href="#" class="fw-bold fs-4 d-inline-block dark-text">
+                <a href="../pantallaInicioJuridica.html" class="fw-bold fs-4 d-inline-block dark-text">
                     SMAACVS
                     <span class="fw-normal">|</span>
                     <span class="fw-medium fs-5">Heladera</span>
@@ -44,8 +44,8 @@
             </div>
             <div class="d-none d-md-flex align-items-center">
                 <span class="fw-bold fs-6 pe-2">Google LLC</span>
-                <button class="btn btn-dark p-2">
-                    <span class="iconify" data-icon="fluent:building-multiple-20-regular" data-width="24" data-height="24"></span>
+                <button class="btn btn-dark p-2" onclick="window.location.href='../cuenta/formularioPersonaJuridica.html'">
+                    <span class="iconify" data-icon="mingcute:building-2-line" data-width="24" data-height="24"></span>
                 </button>
             </div>
         </div>
@@ -53,23 +53,24 @@
 
     <!-- Side Bar -->
 
-    <section class="row flex-grow-1  ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
+    <section class="row flex-grow-1 ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
         <!-- Sidebar -->
-        <nav class="col-md-3  p-4 sidebar">
+        <nav class="col-md-4 pt-4 sidebar">
+
             <!-- Barra de Búsqueda-->
             <div class="input-group mb-2 pt-1 ">
-                <input type="text" class="form-control" placeholder="Buscar...">
-                <span class="input-group-text bg-white border-start-0">
-                   <span class="iconify" data-icon="mdi:magnify" data-width="24" data-height="24"></span>
+                <input type="text" class="form-control search" placeholder="Buscar...">
+                <span class="input-group-text border-start-0 clic-card">
+                   <span class="iconify" data-icon="mdi:magnify" data-width="20" data-height="20"></span>
                </span>
             </div>
 
             <!-- Filtro -->
-            <div class="dropdown mb-4 w-50">
-                <button class="btn btn-secondary dropdown-toggle w-100 text-truncate" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="dropdown mb-4">
+                <button class="filter-button dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                     Seleccionar Filtro
                 </button>
-                <ul class="dropdown-menu w-50" aria-labelledby="dropdownMenuButton">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="#">
                             <span class="iconify me-2" data-icon="tabler:world" data-width="24"></span>
@@ -84,7 +85,7 @@
                     </li>
                     <li>
                         <a class="dropdown-item d-flex align-items-center" href="#">
-                            <span class="iconify me-2" data-icon="mdi:alert-outline" data-width="24"></span>
+                            <span class="iconify me-2" data-icon="mingcute:alert-fill" data-width="24"></span>
                             <span class="text-truncate">Mis heladeras con alerta</span>
                         </a>
                     </li>
@@ -93,59 +94,59 @@
 
             <!-- Resultados de Búsqueda -->
             <div class="scrollable-results">
-                <div class="card rounded-3 transition-card mb-2">
+                <a href='heladeraParticularPersonaJuridica.html' class="card rounded-3 transition-card mb-2 clic-card">
                     <div class="card-result-body" >
                         <h5 class="card-result-title">Heladera UTN Medrano</h5>
                         <p class="card-result-text">Av. Medrano 951</p>
                         <p class="card-result-text">Tiene 10 viandas</p>
                         <p class="card-result-text">Capacidad de 50 viandas</p>
                     </div>
-                </div>
-                <div class="card rounded-3 mb-2">
+                </a>
+                <a class="card rounded-3 mb-2 clic-card">
                     <div class="card-result-body">
                         <h5 class="card-result-title">Heladera UTN Lugano</h5>
                         <p class="card-result-text">Mozart 2300</p>
                         <p class="card-result-text">Tiene 40 viandas</p>
                         <p class="card-result-text">Capacidad de 60 viandas</p>
                     </div>
-                </div>
-                <div class="card rounded-3 mb-2">
+                </a>
+                <a class="card rounded-3 mb-2 clic-card">
                     <div class="card-result-body">
                         <h5 class="card-result-title">Heladera Parque Centenario</h5>
                         <p class="card-result-text">Av. Díaz Vélez</p>
                         <p class="card-result-text">Tiene 100 viandas</p>
                         <p class="card-result-text">Capacidad de 200 viandas</p>
                     </div>
-                </div>
-                <div class="card rounded-3 mb-2">
+                </a>
+                <a class="card rounded-3 mb-2 clic-card">
                     <div class="card-result-body">
                         <h5 class="card-result-title">Heladera Parque Rivadavia</h5>
                         <p class="card-result-text">Av. Rivadavia 4950</p>
                         <p class="card-result-text">Tiene 70 viandas</p>
                         <p class="card-result-text">Capacidad de 100 viandas</p>
                     </div>
-                </div>
-                <div class="card rounded-3 mb-2">
+                </a>
+                <a class="card rounded-3 mb-2 clic-card">
                     <div class="card-result-body">
                         <h5 class="card-result-title">Heladera Parque Saavedra</h5>
                         <p class="card-result-text">Av. Díaz Vélez</p>
                         <p class="card-result-text">Tiene 105 viandas</p>
                         <p class="card-result-text">Capacidad de 220 viandas</p>
                     </div>
-                </div>
-                <div class="card rounded-3 transition-card mb-2">
+                </a>
+                <a class="card rounded-3 transition-card mb-2 clic-card">
                     <div class="card-result-body" >
                         <h5 class="card-result-title">Heladera Plaza Irlanda</h5>
                         <p class="card-result-text">Av. Medrano 951</p>
                         <p class="card-result-text">Tiene 10 viandas</p>
                         <p class="card-result-text">Capacidad de 50 viandas</p>
                     </div>
-                </div>
+                </a>
             </div>
         </nav>
 
         <!-- Mapa -->
-        <main class="col-md-9 p-4 d-flex flex-column">
+        <main class="col-md-8 pt-4 d-flex flex-column">
             <div id="map"></div>
         </main>
 
