@@ -3,7 +3,6 @@
 entity heladera {
   * id: INTEGER(11) <<PK>>
   --
-  * id_direccion: INTEGER(11) <<FK>>
   * id_modelo: INTEGER(11) <<FK>>
   * id_persona_juridica: INTEGER(11) <<FK>>
   * nombre: VARCHAR(255)
@@ -11,7 +10,10 @@ entity heladera {
   * capacidadMaximaViandas: : INTEGER(11)
   * estado: ENUM
   * temperaturaEsperada: DECIMAL
-  * minutosMargenFallaConexion: DECIMAL ? esto va ?
+  * provincia: VARCHAR(255)
+  * municipio: VARCHAR(255)
+  * calle: VARCHAR(255)
+  * altura: VARCHAR(4)
 }
 
 entity modelo {
@@ -56,21 +58,18 @@ note right
 accion: QUITAR_VIANDA, INGRESAR_VIANDA
 end note
 
-'TODO: REVISAR si La persona humana tiene la FK de tarjeta o la tarjeta tiene la FK de la persona?
-'TODO cómo diferenciar si la persona humana ya entregó la tarjeta a la persona vulnerable o la sigue teniendo en posesión
-'TODO se podrían separar los dos tipos de tarjeta en dos entidades (nivel dominio también)?
 entity tarjeta {
  * id: INTEGER(11) <<PK>>
  --
+ * id_colaborador_donador: INTEGER(11) <<FK>>
+ * id_persona_vulnerable: INTEGER(11) <<FK>>
  * codigo: VARCHAR(255) (ESTO SE GUARDA?)
- ' TODO lo de arriba
- fechaEntrega: DATE
+ ' TODO cómo guardar código
+ * fechaRecepcionColaborador: DATE
+ * fechaRecepcionPersonaVulnerable: DATE
  * fechaBaja: DATE
- * propietario: ENUM
+ * id_colaborador_repartidor: INTEGER(11) <<FK>>
 }
-note right
-propietario: PERSONA_VULNERABLE, COLABORADOR
-end note
 
 entity uso_tarjeta {
  * id: INTEGER(11) <<PK>>
@@ -78,33 +77,6 @@ entity uso_tarjeta {
  * id_heladera: INTEGER(11) <<FK>>
  * id_tarjeta: INTEGER(11) <<FK>>
  * fechaUso: DATE
-}
-
-entity direccion {
- * id: INTEGER(11) <<PK>>
- --
- * id_municipio: INTEGER(11) <<FK>>
- * id_provincia: INTEGER(11) <<FK>>
- * id_calle: INTEGER(11) <<FK>>
- * altura: VARCHAR(4)
-}
-
-entity calle {
- * id: INTEGER(11) <<PK>>
- --
- * calle: VARCHAR(255)
-}
-
-entity municipio {
- * id: INTEGER(11) <<PK>>
- --
- * municipio: VARCHAR(255)
-}
-
-entity provincia {
- * id: INTEGER(11) <<PK>>
- --
- * provincia: VARCHAR(255)
 }
 
 entity vianda {
@@ -119,43 +91,53 @@ entity vianda {
 }
 
 entity persona_vulnerable {
- *id: INTEGER(11) <<PK>>
+ * id: INTEGER(11) <<PK>>
  --
- *nombre: VARCHAR(255)
- *fechaDeNacimiento: DATE
- *fechaDeRegistro: DATE
- *menoresACargo: INTEGER(2)
+ * nombre: VARCHAR(255)
+ * fechaDeNacimiento: DATE
+ * fechaDeRegistro: DATE
+ * menoresACargo: INTEGER(2)
  tipo_documento : ENUM
  nro_documento : VARCHAR(50)
- id_dirección: INTEGER(11): <<FK>>
+ * provincia: VARCHAR(255)
+ * municipio: VARCHAR(255)
+ * calle: VARCHAR(255)
+ * altura: VARCHAR(4)
  id_persona_que_lo_registro: INTEGER(11): <<FK>>
  id_tarjeta_en_uso: INTEGER(11): <<FK>>
-}
-
-entity tarjeta_usada_persona_vulnerable {
- *id_persona_vulnerable: INTEGER(11) <<PK, FK>>
- *id_tarjeta: INTEGER(11) <<PK, FK>>
- --
- fecha_de_baja: DATE
 }
 
 entity persona_humana {
   * id : INTEGER(11) <<PK>>
   --
-  * id_tarjeta : INTEGER(11) <<FK>>
-  * id_direccion: INTEGER(11) <<FK>>
   * id_usuario: INTEGER(11) <<FK>>
+  * id_contacto: INTEGER(11) <<FK>>
   * tipo_documento : ENUM
   * nro_documento : VARCHAR(50)
   * nombre: VARCHAR(255)
   * apellido: VARCHAR(255)
   * fechaNacimiento: DATE
-  ' TODO: Definir contribuciones elegidas
-  ' ONETOMANY contribucionesElegidas: Set<FormasContribucionHumanas> TODO: cómo haremos esto? es una pregunta y respuesta? cómo lo identificamos?
-  ' ONETOMANY ofertasCanjeadas: Set<OfertaCanjeada>
-  ' ONETOMANY formulario: List<Respuesta>
+  * provincia: VARCHAR(255)
+  * municipio: VARCHAR(255)
+  * calle: VARCHAR(255)
+  * altura: VARCHAR(4)
+  ' la lista de contribuciones es transient
 }
-'TODO agregar tabla similar a la de tarjetas-personas_vulnerables porque el colaborador puede tener varias tarjetas
+
+entity formas_de_contribucion_humana {
+    * id: INTEGER(11) <<PK>>
+    * id_persona_humana: INTEGER(11) <<FK>>
+    * formaContribucion: ENUM
+}
+note right
+formaContribucion: DISTRIBUCION_VIANDAS, DONACION_DINERO, DONACION_VIANDA, ENTREGA_TARGETAS
+end note
+
+entity formas_de_contribucion_juridica {
+    * id: INTEGER(11) <<PK>>
+    * id_persona_juridica:  INTEGER(11) <<FK>>
+    * formaContribucion: ENUM
+}
 
 entity respuesta{
   *id: INTEGER(11) <<PK>>
@@ -202,20 +184,19 @@ entity distribucion_vianda {
  * motivo: TEXT
  * fecha: DATE
  * terminada: BIT(1)
- ' MANYTOMANY viandasAMover: List<Vianda>
 }
 
-entity viandas_distribuidas {
- * id_distribucion_viandas: INTEGER(11) <<PK, FK>>
+entity vianda_por_distribucion {
+ * id_distribucion_vianda: INTEGER(11) <<PK, FK>>
  * id_vianda: INTEGER(11) <<PK, FK>>
  --
-
 }
 
-entity donacion_dinero{
+entity donacion_dinero {
  * id: INTEGER(11) <<PK>>
  --
- * id_personaHumana: INTEGER(11) <<FK>>
+ * id_persona_humana: INTEGER(11) <<FK>>
+ * id_persona_juridica: INTEGER(11) <<FK>>
  * monto: DECIMAL
  * frecuencia: INTEGER(3)
  * unidadFrecuencia: ENUM
@@ -230,14 +211,15 @@ entity persona_juridica {
  * id: INTEGER(11) <<PK>>
  --
  * id_usuario: INTEGER(11) <<FK>>
- * id_direccion: INTEGER(11) <<FK>>
  * id_rubro: INTEGER(11) <<FK>>
-' * contacto: Contacto
+ * id_contacto: INTEGER(11) <<FK>>
  * razonSocial: VARCHAR(255)
  * tipo: ENUM
  * contribucionesElegidas: ENUM
-' TODO: Definir contribuciones elegidas
-' * ofertasCanjeadas: Set<OfertaCanjeada> ??
+ * provincia: VARCHAR(255)
+ * municipio: VARCHAR(255)
+ * calle: VARCHAR(255)
+ * altura: VARCHAR(4)
 }
 
 entity oferta_canjeada {
@@ -335,69 +317,73 @@ entity tecnico {
   * tipo_documento : VARCHAR(50)
   * nro_documento : VARCHAR(50)
   * cuil : VARCHAR(50)
-  * id_contacto : INTEGER(11) <<FK>> -- Contacto
-  * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
+  * id_contacto : INTEGER(11) <<FK>>
+  * latitud : DOUBLE
+  * longitud : DOUBLE
   * id_usuario: INTEGER(11) <<FK>>
   * distancia_maxima_en_km_para_ser_avisado : DOUBLE
-  'TODO la distancia máxima es igual para todos los técnicos?
 }
 
 entity contacto {
     * id : INTEGER(11) <<PK>>
     --
-    * id_persona: INTEGER(11) <<FK>>
-    * tipo_persona: ENUM
-    * valor: VARCHAR(255)
-    * telefono : VARCHAR(20)
-    * email : VARCHAR(255)
-    * userTelegram : VARCHAR(255)
-    'TODO cómo diferenciar wpp, telegram, etc. porque necesitan distintos datos
+    celular: VARCHAR(20)
+    telefono: VARCHAR(20)
+    mail : VARCHAR(255)
+    userIDTelegram : VARCHAR(255)
 }
 
-entity coordenada {
- * id: INTEGER(11) <<PK>>
- --
- * latitud : DOUBLE
- * longitud : DOUBLE
+entity medio_contacto{
+    * id: INTEGER(11) <<PK>>
+    --
+    * id_contacto: INTEGER(11) <<FK>>
+    * medio: ENUM
 }
 
-entity area {
- * id : INTEGER(11) <<PK>>
- --
- * id_coordenada : INTEGER(11) <<FK>> -- Coordenada
- * radio : FLOAT
-}
-'TODO el area se usa?
+note right
+medio: WHATSAPP, TELEFONO, TELEGRAM, EMAIL
+end note
 
 entity sugerencia_heladeras {
  * id : INTEGER(11) <<PK>>
  --
+ * id_incidente: INTEGER(11) <<FK>>
+ * id_suscripcion: INTEGER(11) <<FK>>
  * fechaRealizacion: DATE
 }
-' TODO: COMPLETAR con relación a incidente o lo que corresponda
+
 entity sugerencia_distribucion {
  * id_sugerencia_heladeras: INTEGER(11) <<PK, FK>>
  * id_heladera: INTEGER(11) <<PK, FK>>
  --
- * escogida: BIT(1)
 }
 
+entity suscripcion {
+ * id : INTEGER(11) <<PK>>
+ --
+ * id_persona_humana: INTEGER(11) <<PK>>
+ * id_heladera: INTEGER(11) <<PK>>
+ * cantidadViandasFaltantes: INTEGER(11)
+ * cantidadViandasQueQuedan: INTEGER(11)
+ * tipoSuscripcion: ENUM
+}
+
+note right
+tipoSuscripcion: QuedanNViandas, FaltanNViandas, Desperfecto
+end note
+
+suscripcion }o--|| heladera
+suscripcion }o--|| persona_humana
+
 tecnico }o--|| contacto
-tecnico }o--|| coordenada
 tecnico |o--|| usuario
-area }o--|| coordenada
 
 heladera ||--o{ vianda
 heladera ||--o{ cambio_estado
 heladera ||--o{ cambio_temperatura
 heladera ||--o{ solicitud_apertura
-heladera ||-u-|| direccion
 heladera ||--o{ uso_tarjeta
 heladera }o--|| modelo
-
-direccion }o--|| municipio
-direccion }o--|| provincia
-direccion }o--|| calle
 
 tarjeta ||--o{ uso_tarjeta
 tarjeta ||--o{ solicitud_apertura
@@ -406,14 +392,10 @@ persona_humana ||--o{ distribucion_vianda
 persona_humana ||--o{ donacion_dinero
 persona_juridica ||--o{ donacion_dinero
 persona_humana ||--o{ vianda
-persona_humana ||--|| direccion
 persona_humana ||--o{ tarjeta
 persona_humana ||--o{ vianda
 
-persona_vulnerable |o--|| direccion
 persona_vulnerable }o--|| persona_humana
-persona_vulnerable ||--o{ tarjeta_usada_persona_vulnerable
-tarjeta ||--o{ tarjeta_usada_persona_vulnerable
 
 incidente ||--o{ visita
 incidente }o--|| heladera
@@ -441,24 +423,31 @@ mensaje }o--|| usuario
 
 sugerencia_heladeras ||--|{ sugerencia_distribucion
 heladera ||--o{ sugerencia_distribucion
+sugerencia_heladeras }o--|| suscripcion
+sugerencia_heladeras }o--|| incidente
 
 'heladera origen
 distribucion_vianda }o--|| heladera
 'heladera destino
 distribucion_vianda }o--|| heladera
 
-viandas_distribuidas }o--|| distribucion_vianda
-viandas_distribuidas }o--|| vianda
+vianda_por_distribucion }o--|| distribucion_vianda
+vianda_por_distribucion }o--|| vianda
 
 persona_juridica ||--|| usuario
-persona_juridica ||--|| direccion
 persona_juridica ||--|| rubro
 persona_juridica ||--o{ heladera
 persona_juridica ||--|{ contacto
 
 persona_humana ||--|{ contacto
-'TODO esta relación y la de contacto y persona juridica es cuestionable, quizás se podría hacer de una mejor manera
-'TODO falta agregar tema suscripciones
+persona_humana ||--o{ formas_de_contribucion_humana
+persona_juridica ||--o{ formas_de_contribucion_juridica
+
+contacto ||--|{ medio_contacto
+persona_juridica ||--|| contacto
+tecnico ||--|| contacto
+persona_humana ||--|| contacto
+
 @enduml
 
 

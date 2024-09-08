@@ -162,7 +162,7 @@ public class Heladera implements Contribucion {
     this.solicitudesDeApertura.add(solicitud);
     PublicadorSolicitudApertura
         .getInstance()
-        .publicarSolicitudApertura(solicitud.getTarjeta().getCodigo(), solicitud.getFecha(), this.id);
+        .publicarSolicitudApertura(solicitud.getTarjeta().getCodigo(), solicitud.getFechaSolicitud(), this.id);
   }
 
   public int cantidadViandas() {
