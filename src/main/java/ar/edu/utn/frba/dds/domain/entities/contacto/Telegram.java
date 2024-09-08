@@ -5,10 +5,10 @@ import ar.edu.utn.frba.dds.domain.adapters.AdapterTelegram;
 public class Telegram implements MedioDeContacto {
 
   private AdapterTelegram adaptador;
-  //private String chatId;
 
   @Override
-  public void enviar(Mensaje mensaje) {
+  public void enviar(Mensaje mensaje, Contacto contacto) {
     adaptador.enviar(mensaje.getCuerpo());
   }
+  // TODO en qué momento está aclarando que le envía el mensaje a ese contacto en específico? jaja
 }

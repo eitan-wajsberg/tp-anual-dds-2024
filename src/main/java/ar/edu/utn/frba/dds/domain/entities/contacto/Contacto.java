@@ -18,6 +18,11 @@ public class Contacto {
   @Setter
   private static IRepositorioMensajes repositorioMensajes;
 
+  private String telefono;
+  private String celular;
+  private String mail;
+  private String userIDTelegram;
+
   public Contacto() {
     this.mediosDeContacto = new HashSet<>();
   }
@@ -34,7 +39,7 @@ public class Contacto {
     List<MedioDeContacto> medios = new ArrayList<>();
     medios.addAll(this.mediosDeContacto);
     for(MedioDeContacto medio: medios){
-      medio.enviar(mensaje);
+      medio.enviar(mensaje, this);
     }
     // repositorioMensajes.guardar(mensaje); // guardamos todos los mensajes o solo los que eran por las notif de eventos?
   }
@@ -51,8 +56,9 @@ public class Contacto {
 
     Contacto contacto = (Contacto) o;
 
-    return this.mediosDeContacto.stream().allMatch(medio1 ->
-        contacto.mediosDeContacto.stream().anyMatch(medio2 ->
-            medio2.equals(medio1)));
+    return this.telefono.equals(contacto.telefono)
+        && this.celular.equals(contacto.celular)
+        && this.mail.equals(contacto.mail)
+        && this.userIDTelegram.equals(contacto.userIDTelegram);
   }
 }

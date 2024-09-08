@@ -540,7 +540,7 @@ Documento --> TipoDocumento
 ' -----------------------------------------
 
 interface MedioDeContacto {
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 MedioDeContacto ..> Mensaje
@@ -548,7 +548,6 @@ MedioDeContacto ..> Mensaje
 ' -----------------------------------------
 
 class WhatsApp {
- - numero: String
  - adaptador: AdapterWhatsApp
  + enviar(mensaje: Mensaje)
 }
@@ -573,9 +572,8 @@ AdaptadaWhatsAppTwillio ..|> AdapterWhatsApp
 ' -----------------------------------------
 
 class Telegram {
- - userID: String
  - adaptador: AdapterTelegram
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 Telegram ..|> MedioDeContacto
@@ -599,8 +597,7 @@ AdaptadaTelegramBot ..|> AdapterTelegram
 
 
 class Telefono {
- - numero: String
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 Telefono ..|> MedioDeContacto
@@ -608,9 +605,8 @@ Telefono ..|> MedioDeContacto
 ' -----------------------------------------
 
 class Mail {
- - correo: String
  - adapterMail: AdapterMail
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 Mail ..|> MedioDeContacto
@@ -716,6 +712,10 @@ Mensaje --> Usuario
 ' -----------------------------------------
 
 class Contacto {
+ - telefono: String
+ - celular: String
+ - mail: String
+ - userIDTelegram: String
  - mediosDeContacto: Set<MedioDeContacto>
  + agregarMedioDeContacto(medioDeContacto: MedioDeContacto): void
  + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
