@@ -29,22 +29,22 @@
     <script src="../../js/include.js"></script>
 
 </head>
-
 <body>
+<div class="wrapper">
 <!-- Header-->
 <header class="main-navbar">
     <div class="d-flex align-items-center justify-content-between ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3">
         <div class="d-flex align-items-center">
-            <a href="#" class="fw-bold fs-4 d-inline-block dark-text">
+            <a href="../pantallaInicioJuridica.html" class="fw-bold fs-4 d-inline-block dark-text">
                 SMAACVS
                 <span class="fw-normal">|</span>
                 <span class="fw-medium fs-5">Heladera</span>
             </a>
         </div>
         <div class="d-none d-md-flex align-items-center">
-            <span class="fw-bold fs-6 pe-2">Martín Martinez</span>
-            <button class="btn btn-dark p-2">
-                <span class="iconify" data-icon="iconoir:user" data-width="24" data-height="24"></span>
+            <span class="fw-bold fs-6 pe-2">Google LLC</span>
+            <button class="btn btn-dark p-2" onclick="window.location.href='../cuenta/formularioPersonaJuridica.html'">
+                <span class="iconify" data-icon="mingcute:building-2-line" data-width="24" data-height="24"></span>
             </button>
         </div>
     </div>
@@ -91,7 +91,7 @@
                 <button class="w-100">Buscar</button>
             </div>
             <div class="row">
-            <p class="fs-4 fw-500 mt-4">Resultados</p>
+            <p class="fs-7 fw-500 mt-4">Resultados</p>
             </div>
             <div class="row">
                 <div class="scrollable-results max-vh-20">
@@ -131,13 +131,14 @@
     </nav>
 
     <!-- Mapa -->
-    <main class="col-md-8 p-4 d-flex flex-column">
+    <main class="col-md-8 pt-4 ps-4 d-flex flex-column">
         <div id="map"></div>
     </main>
 
     <!-- Footer -->
     <div data-include="../footer" class="mt-auto"></div>
 </section>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
 <script src="../../js/mapaDeHeladeras.js"></script>

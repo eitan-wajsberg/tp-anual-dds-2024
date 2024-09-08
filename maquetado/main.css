@@ -198,8 +198,6 @@ fieldset select{
 }
 
 select:focus {
-    border-color: #222222;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     outline: none;
 }
 
@@ -211,7 +209,7 @@ select:focus {
 .custom-select {
     flex: 1 1 30%;
     min-width: 0;
-    font-weight: 550;
+    font-weight: 400;
 }
 
 .custom-input {
@@ -256,9 +254,16 @@ select:focus {
     padding: 5px 20px 5px 20px;
 }
 
+.dropdown-item {
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #e8e8e8;
+}
+
 .dropdown-item:focus {
-    background: #222222;
-    color:#FFFFFF;
+    background: #e8e8e8;
 }
 
 .wrapper {
@@ -270,12 +275,10 @@ select:focus {
 .nav-link {
     border-radius: 10px;
     color: #555555;
-    transition: background 0.2s ease;
 }
 
 .nav-link:hover {
-    color: #FFFFFF;
-    background: #222222;
+    color: #000;
 }
 
 .dark-text {
@@ -376,10 +379,12 @@ select:focus {
 /*---Info Heladera---*/
 
 .info-heladera{
-    max-height: 70vh;
-    position: relative;
+    min-height: 10vh;
     padding: 15px;
-    z-index: 1;
+    border: 1px solid #999999;
+    border-radius: 10px;
+    display: block;
+    overflow: auto;
 }
 
 .scrollable-Items {
@@ -388,14 +393,13 @@ select:focus {
     scrollbar-width: none;
 }
 
-
 .scrollable-Items::-webkit-scrollbar {
     display: none;
 }
 
 .card-Item-body {
     position: relative;
-    padding: 15px;
+    padding: 10px;
     z-index: 1;
 }
 
@@ -419,9 +423,13 @@ select:focus {
 
 .search {
     background-color: #FFFFFF;
-    border: 1px solid #999;
-    border-radius: 10px;
     cursor: pointer;
+
+}
+
+.search:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 .border-999{
@@ -444,6 +452,10 @@ select:focus {
     outline: none;
 }
 
+.selection:focus {
+    border: 1px solid #999999;
+}
+
 .alternative-button {
     border-radius: 20px;
     padding: 15px;
@@ -451,6 +463,7 @@ select:focus {
     border: 1px solid #222222;
     background-color: #FFFFFF;
     font-weight: bold;
+    cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -520,4 +533,31 @@ input[type="radio"]:focus {
 .little-button {
     padding: 4px;
     border-radius: 10px;
+}
+
+.little-font {
+    font-size: small;
+}
+
+.textarea {
+    border: 1px solid #999999;
+    outline: none;
+}
+
+.textarea:focus {
+    border: 1px solid #222222;
+    outline: none;
+    box-shadow: none;
+}
+
+.clic-card {
+    cursor: pointer;
+}
+
+.filter-button {
+    padding: 8px;
+    background-color: #777777;
+    border-radius: 5px;
+    font-size: small;
+    font-weight: normal;
 }
