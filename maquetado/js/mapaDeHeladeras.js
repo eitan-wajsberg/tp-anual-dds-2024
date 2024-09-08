@@ -1,4 +1,4 @@
-src="heladera.js";
+src="mapaDeHeladeras.js";
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmdhdW5hc29tYSIsImEiOiJjbHY0NjdlcTcwNXN1Mmpsc2twNHJ4NWs2In0.1rFiIv1sJZ16-xbd4zWnyw';
 
 var map = new mapboxgl.Map({
