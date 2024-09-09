@@ -9,18 +9,41 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity
+@Table(name = "tarjeta")
 @Getter
 public class Tarjeta implements Contribucion {
+
+  @Id
+  @GeneratedValue
+  long id;
+
   @Setter
+  @Column(name = "codigo", nullable = false)
   private String codigo;
+
   @Setter
   private LocalDate fechaEntrega;
+
   @Setter
   private LocalDate fechaBaja;
+
+  @OneToMany
+  @JoinColumn(name = "tarjeta_id")
   private List<UsoDeTarjeta> historialUsos;
+
+  @Transient
   private static final int HASH_LENGTH = 11;
 
   public Tarjeta() {

@@ -6,6 +6,10 @@ import lombok.Setter;
 
 @Getter @Setter
 public class CambioEstado {
+  @Id @GeneratedValue
+  private long id;
+  @Enumerated (EnumType.STRING)
+  @Column(name="estado",nullable = false)
   private EstadoHeladera estado;
   private LocalDate fechaCambio;
 

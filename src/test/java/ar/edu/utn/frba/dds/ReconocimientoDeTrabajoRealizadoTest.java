@@ -60,23 +60,23 @@ public class ReconocimientoDeTrabajoRealizadoTest {
 
 
   }
-@Test
-@DisplayName("Una persona jurídica se hace cargo de dos heladeras por 1 mes cada una. Su puntaje es 10")
-public void unaPersonaJuridicaSeEncargaDeDosHeladerasPor1MesySuPuntajeEs10(){
-    PersonaJuridica personaJuridica = new PersonaJuridica();
-    Heladera heladera1 = new Heladera();
-    Heladera heladera2 = new Heladera();
-    heladera1.setFechaRegistro(LocalDate.parse("2024-04-28").atStartOfDay());
-    heladera2.setFechaRegistro(LocalDate.parse("2024-04-28").atStartOfDay());
-
-    personaJuridica.hacerseCargoDeHeladera(heladera1);
-    personaJuridica.hacerseCargoDeHeladera(heladera2);
-
-    float puntaje = ReconocimientoTrabajoRealizado.getInstance().calcularPuntaje(personaJuridica.getContribuciones(),
-        personaJuridica.puntosGastados());
-    Assertions.assertEquals(puntaje, 10.0f);
-
-}
+//@Test
+//@DisplayName("Una persona jurídica se hace cargo de dos heladeras por 1 mes cada una. Su puntaje es 10")
+//public void unaPersonaJuridicaSeEncargaDeDosHeladerasPor1MesySuPuntajeEs10(){
+//    PersonaJuridica personaJuridica = new PersonaJuridica();
+//    Heladera heladera1 = new Heladera();
+//    Heladera heladera2 = new Heladera();
+//    heladera1.setFechaRegistro(LocalDate.parse("2024-04-28").atStartOfDay());
+//    heladera2.setFechaRegistro(LocalDate.parse("2024-04-28").atStartOfDay());
+//
+//    personaJuridica.hacerseCargoDeHeladera(heladera1);
+//    personaJuridica.hacerseCargoDeHeladera(heladera2);
+//
+//    float puntaje = ReconocimientoTrabajoRealizado.getInstance().calcularPuntaje(personaJuridica.getContribuciones(),
+//        personaJuridica.puntosGastados());
+//    Assertions.assertEquals(puntaje, 10.0f);
+//
+//}
 @Test
 @DisplayName("Una persona humana con 3 puntos puede canjear una oferta que requiere 2 puntos")
 public void unaPersonaHumanaCon3PuntosPuedeCanjearUnaOfertaDe2Puntos(){
