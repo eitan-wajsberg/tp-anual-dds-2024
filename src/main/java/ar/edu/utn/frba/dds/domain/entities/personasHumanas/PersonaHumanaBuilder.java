@@ -55,8 +55,9 @@ public class PersonaHumanaBuilder {
     this.persona.setUsuario(usuarioDePersona);
   }
 
-  public PersonaHumanaBuilder construirDocumento(Documento doc) {
-    this.persona.setDocumento(doc);
+  public PersonaHumanaBuilder construirDocumento(String nroDocumento, TipoDocumento tipoDocumento) {
+    this.persona.setNroDocumento(nroDocumento);
+    this.persona.setTipoDocumento(tipoDocumento);
     return this;
   }
 

@@ -4,52 +4,42 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
-import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
-import ar.edu.utn.frba.dds.domain.entities.validador.ValidadorDeClave;
 import ar.edu.utn.frba.dds.dtos.inputs.personasHumanas.PersonaHumanaInputDTO;
 import ar.edu.utn.frba.dds.dtos.outputs.personasHumanas.PersonaHumanaOutputDTO;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioDocumento;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.services.IPersonaHumanaServices;
-import ar.edu.utn.frba.dds.services.exceptions.DocumentoNoEncontradoException;
 import ar.edu.utn.frba.dds.services.exceptions.PersonaHumanaNoEncontradaException;
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
 
-import java.io.UnsupportedEncodingException;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import javax.mail.MessagingException;
 
 public class PersonaHumanaServices implements IPersonaHumanaServices {
-  private IRepositorioDocumento repoDocumento;
   private IRepositorioPersonaHumana repoPersonaHumana;
   private VerificadorDePermisos verificadorDePermisos;
 
-  public PersonaHumanaServices(IRepositorioDocumento repoDocumento, IRepositorioPersonaHumana repoPersonaHumana, VerificadorDePermisos verificadorDePermisos) {
+  public PersonaHumanaServices(IRepositorioPersonaHumana repoPersonaHumana, VerificadorDePermisos verificadorDePermisos) {
     this.repoPersonaHumana = repoPersonaHumana;
     this.verificadorDePermisos = verificadorDePermisos;
-    this.repoDocumento = repoDocumento;
   }
 
   public PersonaHumanaOutputDTO crear(PersonaHumanaInputDTO personaInputDTO, Usuario usuario, AdapterMail mailSender) {
     verificadorDePermisos.verificarSiUsuarioPuede("CREAR-PERSONA-HUMANA", usuario);
 
     // obtener documento
-    Optional<Documento> posibleDocumento = this.repoDocumento.buscar(personaInputDTO.getDocumentoId());
-    if(posibleDocumento.isEmpty()) {
+    // TODO: REVISAR, por que se consulta esto?
+    /*Optional<Documento> posibleDocumento = this.repoDocumento.buscar();
+    if (posibleDocumento.isEmpty()) {
       throw new DocumentoNoEncontradoException();
-    }
+    }*/
 
     // crear persona
     PersonaHumana nuevaPersona = new PersonaHumana();
     nuevaPersona.setNombre(personaInputDTO.getNombre());
     nuevaPersona.setApellido(personaInputDTO.getApellido());
-    nuevaPersona.setDocumento(posibleDocumento.get());
+    nuevaPersona.setNroDocumento(personaInputDTO.getDocumentoId());
 
     // TODO: no creo que esta sea el momento de añadir un contacto realmente, o que sea la mejor manera
     // agregar mail
@@ -68,7 +58,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     output.setId(nuevaPersona.getId());
     output.setNombre(nuevaPersona.getNombre());
     output.setApellido(nuevaPersona.getApellido());
-    output.setDocumentoId(nuevaPersona.getDocumento().getId());
+    output.setDocumentoId(nuevaPersona.getNroDocumento());
 
     return output;
   }

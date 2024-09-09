@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.personasVulnerables;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraInactivaException;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoMaximoDeTarjetasPorDiaExcedidoException;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -51,8 +53,9 @@ public class PersonaVulnerable {
   @Column(name="menoresAcargo")
   private Integer menoresAcargo;
 
-  @Enumerated
-  private String tipoDocumento;
+  @Enumerated(EnumType.STRING)
+  @Column(name="tipoDocumento")
+  private TipoDocumento tipoDocumento;
 
   @Column(name="nroDocumento")
   private String nroDocumento;
@@ -69,7 +72,7 @@ public class PersonaVulnerable {
   @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
   private Tarjeta tarjetaEnUso;
 
-  public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, Direccion direccion, Integer menoresAcargo, String nroDocumento, String tipoDocumento, PersonaHumana personaQueLoRegistro) {
+  public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, Direccion direccion, Integer menoresAcargo, String nroDocumento, TipoDocumento tipoDocumento, PersonaHumana personaQueLoRegistro) {
     this.nombre = nombre;
     this.fechaDeNacimiento = fechaDeNacimiento;
     this.fechaDeRegistro = fechaDeRegistro;
