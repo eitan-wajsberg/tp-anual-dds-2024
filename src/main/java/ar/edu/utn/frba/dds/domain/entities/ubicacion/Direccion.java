@@ -1,12 +1,10 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
-import ar.edu.utn.frba.dds.domain.entities.tecnicos.Area;
 import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
 import java.io.IOException;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
