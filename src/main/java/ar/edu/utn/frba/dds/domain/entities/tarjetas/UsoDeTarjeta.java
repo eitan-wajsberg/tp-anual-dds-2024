@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "usoDeTarjeta")
+@Table(name = "uso_de_tarjeta")
 @NoArgsConstructor
 @Data
 public class UsoDeTarjeta {
@@ -30,7 +30,7 @@ public class UsoDeTarjeta {
   private LocalDateTime fechaDeUso;
 
   @ManyToOne
-  @JoinColumn(name = "heladera_id")
+  @JoinColumn(name = "heladera_id", referencedColumnName = "id")
   private Heladera heladera;
 
   public UsoDeTarjeta(LocalDateTime fecha, Heladera heladera) {

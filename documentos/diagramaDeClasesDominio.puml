@@ -807,17 +807,18 @@ class PersonaVulnerable {
  - nombre: String
  - fechaDeNacimiento: LocalDate
  - fechaDeRegistro: LocalDate
- - dirección: String
+ - dirección: Direccion
  - menoresACargo: int
- - documento: Documento
+ - nroDocumento: String
+ - tipoDocumento: String
  - donanteQueLoRegistro: PersonaHumana
  - tarjetas: List<Tarjeta>
  - tarjetaEnUso: Tarjeta
  + usarTarjeta(heladera: Heladera, vianda: Vianda): void
 }
 
+PersonaVulnerable --> Direccion
 PersonaVulnerable --> PersonaHumana
-PersonaVulnerable --> Documento
 PersonaVulnerable --> " * " Tarjeta
 
 ' -----------------------------------------
