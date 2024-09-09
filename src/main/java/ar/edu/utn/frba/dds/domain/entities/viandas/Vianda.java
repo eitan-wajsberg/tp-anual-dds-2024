@@ -6,11 +6,21 @@ import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
+@Entity @Table(name="vianda")
+@NoArgsConstructor
 public class Vianda implements Contribucion {
+  @Id
+  @GeneratedValue
+  private Long id;
   private LocalDateTime fechaCaducidad;
   private boolean entregada;
   private String comida;

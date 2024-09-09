@@ -8,11 +8,18 @@ import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Getter
+@Entity @Table(name="persona_juridica")
 public class PersonaJuridica {
+  @Id @GeneratedValue
+  private Long id;
   @Setter
   private Usuario usuario;
   @Setter

@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.personasHumanas;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
+import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
@@ -29,7 +30,7 @@ import lombok.Setter;
 
 import javax.mail.MessagingException;
 
-public class PersonaHumana {
+public class PersonaHumana extends IObserverNotificacion {
   @Getter @Setter
   private Long id;
   @Getter @Setter

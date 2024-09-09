@@ -9,13 +9,28 @@ import java.util.HashSet;
 import javax.mail.MessagingException;
 
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioMensajes;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Entity @Table(name="contacto")
 public class Contacto {
+  @Id
+  @GeneratedValue
+  private Long id;
+  @OneToMany
+  @JoinColumn(name = "medio_de_contacto_id", referencedColumnName = "id")
   private Set<MedioDeContacto> mediosDeContacto;
   @Setter
+  @Transient
   private static IRepositorioMensajes repositorioMensajes;
 
   private String telefono;

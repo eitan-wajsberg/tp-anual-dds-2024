@@ -11,36 +11,76 @@ import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioTecnicos;
 
 import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.databind.deser.BasicDeserializerFactory;
-import java.awt.*;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.mail.MessagingException;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
+@Table(name="incidente")
 @Getter
+@NoArgsConstructor
 public class Incidente {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @Setter
+    @Column(name="fecha", columnDefinition = "DATE")
     private LocalDateTime fecha;
+
     @Setter
+    @ManyToOne
+    @JoinColumn(name="id_tecnico", referencedColumnName = "id")
     private Tecnico tecnicoSeleccionado;
+
+    @OneToMany
+    @JoinColumn(name = "id_incidente")
     private List<Visita> visitas;
+
     @Setter
+    @Column(name="solucionado", columnDefinition = "BIT(1)")
     private boolean solucionado;
+
     @Setter
+    @ManyToOne
+    @JoinColumn(name="id_heladera", referencedColumnName = "id")
     private Heladera heladera;
+
     @Setter
+    @Convert(converter= TipoIncidenteConverter.class)
+    @Column(name="tipo_incidente")
     private TipoIncidente tipoIncidente;
+
+    @Transient
     private IRepositorioTecnicos repositorioTecnicos;
 
+    @ManyToOne
+    @JoinColumn(name="id_personaHumana", referencedColumnName = "id", nullable = false)
     private PersonaHumana colaborador;
+
+    @Column(name="descripcion_del_colaborador", nullable = false)
     private String descripcionDelColaborador;
-    private Image foto;
+
+    @Column(name="ruta_foto", nullable = false)
+    private String foto;
+
+    @Convert(converter= TipoAlertaConverter.class)
+    @Column(name="tipo_alerta", nullable = false)
     private TipoAlerta tipoAlerta;
 
     public Incidente(IRepositorioTecnicos repositorioTecnicos, Heladera heladera) throws MessagingException, UnsupportedEncodingException {

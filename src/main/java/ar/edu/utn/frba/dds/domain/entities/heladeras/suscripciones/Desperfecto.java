@@ -8,10 +8,22 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.GeoRefServicio;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
 import java.util.List;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+import lombok.NoArgsConstructor;
 
+@Entity
+@DiscriminatorValue("DESPERFECTO")
+@NoArgsConstructor
 public class Desperfecto extends Suscripcion {
+  @Transient
   private boolean aceptado;
-  private SugerenciaHeladera sugerencia;
+
+
+  private List<SugerenciaHeladera> sugerencias;
+
+  @Transient
   private IRepositorioHeladera repositorioHeladeras;
 
   public Desperfecto(IObserverNotificacion suscriptor) {
@@ -38,6 +50,8 @@ public class Desperfecto extends Suscripcion {
       heladerasSugeridas = heladerasSugeridas.concat("   - " + nombreHeladera + "\n");
     }
 
+    
+    sugerencias.add(s)
     return heladerasSugeridas;
   }
 }

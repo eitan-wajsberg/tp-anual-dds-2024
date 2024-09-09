@@ -1,11 +1,15 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
 import java.util.Objects;
+import javax.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Embeddable
+@NoArgsConstructor
 public class Coordenada {
   public String latitud;
   public String longitud;

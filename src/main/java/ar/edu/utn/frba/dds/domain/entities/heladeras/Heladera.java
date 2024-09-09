@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
+import ar.edu.utn.frba.dds.domain.converters.LocalTimeConverter;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
@@ -20,33 +21,80 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@Entity @Table(name="heladera")
 public class Heladera implements Contribucion {
   @Getter @Setter
+  @Id @GeneratedValue
   private Long id;
+
   @Setter
+  @Column(name="nombre")
   private String nombre;
+
   @Setter
+  @Embedded
   private Direccion direccion;
+
   @Setter
+  @Convert(converter = LocalTimeConverter.class)
+  @Column(name = "fechaRegistro")
   private LocalDateTime fechaRegistro;
+
   @Setter
+  @Column(name = "capacidadMaximaVianda")
   private int capacidadMaximaViandas;
+
   @Setter
+  @ManyToOne
+  @JoinColumn(name = "modelo_id", referencedColumnName = "id")
   private Modelo modelo;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private Set<Vianda> viandas;
+
   @Setter
+  @Enumerated(EnumType.STRING)
+  @Column(name="estadoHeladera")
   private EstadoHeladera estado;
+
   @Setter
+  @Column(name="temperaturaEsperada")
   private float temperaturaEsperada;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioEstado> historialEstados;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioTemperatura> historialTemperaturas;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<SolicitudApertura> solicitudesDeApertura;
-  // private List<Incidente> incidentes; // TODO: preguntar que honduras con eso
+
+  @Transient
   private GestorSuscripciones gestorSuscripciones;
+
+  @Transient
   private static int minutosMargenFallaConexion = 7;
 
   public Heladera() {
@@ -113,7 +161,8 @@ public class Heladera implements Contribucion {
   public void cambiarEstado(EstadoHeladera nuevoEstado) {
     if (this.estado != nuevoEstado) {
       this.estado = nuevoEstado;
-      this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now()));
+      this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now())); //TODO cambioEstado tiene constructor vacio, setear params.
+
     }
   }
 
