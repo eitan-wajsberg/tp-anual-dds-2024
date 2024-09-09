@@ -1,0 +1,81 @@
+@startuml
+
+entity contacto {
+    * id : INTEGER(11)
+    * telefono : VARCHAR(20)
+    * email : VARCHAR(255)
+    * userTelegram : VARCHAR(255)
+    'TODO cómo diferenciar wpp, telegram, etc. porque necesitan distintos datos
+}
+
+entity medio_contacto{
+    * id
+    * id_contacto
+    * medio: ENUM
+}
+note right
+medio: WPP, TEL, TELEGRAM, MAIL
+end note
+
+contacto ||--|{ medio_contacto
+
+entity tecnico {
+  * id_contacto : INTEGER(11) <<FK>> -- Contacto
+}
+
+entity p_humana {
+  * id_contacto : INTEGER(11) <<FK>> -- Contacto
+}
+entity p_juridica {
+  * id_contacto : INTEGER(11) <<FK>> -- Contacto
+}
+
+p_juridica ||--|| contacto
+p_humana ||--|| contacto
+tecnico ||--|| contacto
+
+
+class Contacto {
+ - mediosDeContacto: Set<MedioDeContacto>
+ + agregarMedioDeContacto(medioDeContacto: MedioDeContacto): void
+ + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
+ + enviarMensaje(mensaje: Mensaje): void
+}
+
+Contacto --> "*" MedioDeContacto
+
+interface MedioDeContacto {
+ + enviar(mensaje: Mensaje, contacto: Contacto)
+}
+
+class WhatsApp {}
+
+WhatsApp ..|> MedioDeContacto
+
+class Telegram {}
+
+Telegram ..|> MedioDeContacto
+
+class Telefono {}
+
+Telefono ..|> MedioDeContacto
+
+class Mail {}
+
+Mail ..|> MedioDeContacto
+
+class PersonaJuridica{
+- contacto: Contacto
+}
+PersonaJuridica --> Contacto
+
+class PersonaHumana{
+- contacto: Contacto
+}
+PersonaHumana --> Contacto
+
+class Tecnico{
+- contacto: Contacto
+}
+Tecnico --> Contacto
+@end_uml
