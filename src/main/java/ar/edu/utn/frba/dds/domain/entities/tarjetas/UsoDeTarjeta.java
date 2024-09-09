@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter @Setter
 public class UsoDeTarjeta {
 
+
   private LocalDateTime fecha;
   private Heladera heladera;
 

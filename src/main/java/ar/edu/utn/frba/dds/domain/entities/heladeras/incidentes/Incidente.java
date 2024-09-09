@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes;
 
+import ar.edu.utn.frba.dds.domain.converters.TipoAlertaConverter;
+import ar.edu.utn.frba.dds.domain.converters.TipoIncidenteConverter;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
