@@ -6,7 +6,7 @@ import javax.persistence.AttributeConverter;
 public class TipoAlertaConverter implements AttributeConverter<TipoAlerta, String> {
   @Override
   public String convertToDatabaseColumn(TipoAlerta tipo) {
-    switch(tipo){
+    switch (tipo) {
       case FRAUDE -> {
         return "FRAUDE";
       }
