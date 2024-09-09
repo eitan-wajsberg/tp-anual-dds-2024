@@ -28,20 +28,20 @@ public class Vianda implements Contribucion {
   @Column(name="comida")
   private String comida;
 
-  @Column(name="calorias") // TODO: en qué (k?) y cuántos nros dsp de la coma?
-  private float calorias;
+  @Column(name="caloriasEnKcal", columnDefinition = "DECIMAL(5,2)")
+  private float caloriasEnKcal;
 
   @Column(name="pesoEnGramos", columnDefinition = "DECIMAL(5,2)")
   private float pesoEnGramos;
 
-  @Column(name="fechaDonacion", columnDefinition = "DATE")
+  @Column(name="fechaDonacion", columnDefinition = "DATE", nullable = true)
   private LocalDate fechaDonacion;
 
   public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;
     this.entregada = entregada;
     this.comida = comida;
-    this.calorias = calorias;
+    this.caloriasEnKcal = calorias;
     this.pesoEnGramos = pesoEnGramos;
     this.fechaDonacion = fechaDonacion;
   }
