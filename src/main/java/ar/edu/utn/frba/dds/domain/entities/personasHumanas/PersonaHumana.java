@@ -12,6 +12,7 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripci
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
+import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
@@ -25,40 +26,87 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.mail.MessagingException;
 
+@Entity
+@Table(name = "persona_humana")
 public class PersonaHumana extends IObserverNotificacion {
+
+  @Id @GeneratedValue
   @Getter @Setter
   private Long id;
+
   @Getter @Setter
-  private Usuario usuario;
+  @OneToOne
+  @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+  private Usuario usuario; //TODO: Está bien
+
   @Getter @Setter
-  private Documento documento;
+  @Column(name="tipoDocumento") //TODO: Shouldn't it be an Enum? Cambiar Técnico
+  private String tipoDocumento;
+
   @Getter @Setter
+  @Column(name="nroDocumento")
+  private String nroDocumento;
+
+  @Getter @Setter
+  @OneToOne
+  @JoinColumn(name = "contacto_id", referencedColumnName = "id")
   private Contacto contacto;
+
   @Getter @Setter
+  @Embedded
   private Direccion direccion;
+
   @Getter @Setter
+  @Column(name="nombre")
   private String nombre;
+
   @Getter @Setter
+  @Column(name="apellido")
   private String apellido;
+
   @Getter @Setter
+  @Column(name = "fechaNacimiento", columnDefinition = "DATE")
   private LocalDate fechaNacimiento;
-  @Getter
+
+  @Getter //TODO:
   private Set<FormasContribucionHumanas> contribucionesElegidas;
-  @Getter
+
+  @Getter //TODO:
   private Set<Contribucion> contribuciones;
-  @Getter
+
+  @Getter //TODO:
   private Set<OfertaCanjeada> ofertasCanjeadas;
+
   @Getter
+  @OneToMany
+  @JoinColumn(name = "personaHumana_id", referencedColumnName = "id")
   private List<Tarjeta> tarjetasSinEntregar;
-  @Getter
+
+  @Getter //TODO:
   private List<Respuesta> formulario;
+
   @Getter
+  @OneToMany
+  @JoinColumn(name = "personaHumana_id", referencedColumnName = "id")
   private List<Tarjeta> tarjetasColaboracion;
+
+  @Getter
+  @OneToOne
+  @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
   private Tarjeta tarjetaEnUso;
 
   public PersonaHumana() {
@@ -168,7 +216,7 @@ public class PersonaHumana extends IObserverNotificacion {
         mismasContribuciones
         && this.nombre.equals(persona.nombre)
         && this.apellido.equals(persona.apellido)
-        && this.documento.equals(persona.documento)
+        && this.nroDocumento.equals(persona.nroDocumento)
         && this.contacto.equals(persona.contacto);
   }
 }
