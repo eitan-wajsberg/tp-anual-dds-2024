@@ -32,8 +32,10 @@ public class PersonaVulnerable {
   @Column(name = "fechaDeRegistro", columnDefinition = "DATE")
   private LocalDate fechaDeRegistro;
 
+  @Column(name="direccion")
   private String direccion;
 
+  @Column(name="menoresAcargo")
   private Integer menoresAcargo;
 
   @Column(name="tipoDocumento")
@@ -48,13 +50,14 @@ public class PersonaVulnerable {
 
   private Tarjeta tarjetaEnUso;
 
-  public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, String direccion, Integer menoresAcargo, S documento, PersonaHumana donanteQueLoRegistro) {
+  public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, String direccion, Integer menoresAcargo, String nroDocumento, String tipoDocumento, PersonaHumana donanteQueLoRegistro) {
     this.nombre = nombre;
     this.fechaDeNacimiento = fechaDeNacimiento;
     this.fechaDeRegistro = fechaDeRegistro;
     this.direccion = direccion;
     this.menoresAcargo = menoresAcargo;
-    this.tipoDocumento = documento;
+    this.tipoDocumento = tipoDocumento;
+    this.nroDocumento = nroDocumento;
     this.donanteQueLoRegistro = donanteQueLoRegistro;
   }
 
