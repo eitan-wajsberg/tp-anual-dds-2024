@@ -23,11 +23,12 @@ public class PersonaHumanaBuilder {
   }
 
   public PersonaHumanaBuilder construirMail(String mail, AdapterMail adapterMail) {
-    Mail contactoMail = new Mail(mail);
+    Mail contactoMail = new Mail();
     contactoMail.setAdaptador(adapterMail);
 
     Contacto contacto = new Contacto();
     contacto.agregarMedioDeContacto(contactoMail);
+    contacto.setMail(mail);
 
     this.persona.setContacto(contacto);
 

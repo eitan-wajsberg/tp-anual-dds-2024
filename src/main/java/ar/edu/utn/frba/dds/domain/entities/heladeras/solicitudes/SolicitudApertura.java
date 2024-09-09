@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes;
 
-import ar.edu.utn.frba.dds.domain.converters.LocalTimeConverter;
+import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -23,10 +23,11 @@ import javax.persistence.Id;
 public class SolicitudApertura {
   @Id @GeneratedValue
   private long id;
-  @Convert(converter = LocalTimeConverter.class)
+  @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fechaSolicitud")
   private LocalDateTime fechaSolicitud;
-  @Convert(converter = LocalTimeConverter.class)
+  @Getter
+  @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fechaConcrecion")
   private LocalDateTime fechaConcrecion;
   @ManyToOne
@@ -65,5 +66,8 @@ public class SolicitudApertura {
     }
 
     return esValido;
+  }
+  public void setCodigoTarjeta(String codigo){
+    this.tarjeta.setCodigo(codigo);
   }
 }

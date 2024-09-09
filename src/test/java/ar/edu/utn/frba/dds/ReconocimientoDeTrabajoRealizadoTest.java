@@ -10,6 +10,7 @@ import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -94,7 +95,7 @@ public void unaPersonaHumanaCon3PuntosPuedeCanjearUnaOfertaDe2Puntos(){
 }
 
   private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
-    return new Vianda(LocalDate.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
+    return new Vianda(LocalDateTime.parse(fecha), true, nombre, calorias, peso, LocalDate.now()); //TODO REVISAR
   }
 
   private DistribucionVianda crearDistribucion(int cantidad, Heladera origen, Heladera destino){

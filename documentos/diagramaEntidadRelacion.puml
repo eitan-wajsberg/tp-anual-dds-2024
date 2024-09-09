@@ -160,7 +160,6 @@ entity pregunta{
  * tipo: ENUM
  * campo: TEXT
  * activa: BIT(1)
- * opciones: Set<String>
 }
 
 entity opcion_pregunta{
@@ -328,10 +327,9 @@ entity tecnico {
 entity contacto {
     * id : INTEGER(11) <<PK>>
     --
-    celular: VARCHAR(20)
-    telefono: VARCHAR(20)
-    mail : VARCHAR(255)
-    userIDTelegram : VARCHAR(255)
+    whatsapp: VARCHAR(255)
+    mail: VARCHAR(255)
+    userTelegram : VARCHAR(255)
 }
 
 entity medio_contacto{

@@ -25,22 +25,23 @@ import lombok.Setter;
 @Getter
 public class Tarjeta implements Contribucion {
 
-  @Id
-  @GeneratedValue
-  long id;
+  @Id @GeneratedValue
+  private long id;
 
   @Setter
   @Column(name = "codigo", nullable = false)
   private String codigo;
 
   @Setter
+  @Column(name = "fechaDeEntrega", columnDefinition = "DATE")
   private LocalDate fechaEntrega;
 
   @Setter
+  @Column(name = "fechaDeBaja", columnDefinition = "DATE")
   private LocalDate fechaBaja;
 
   @OneToMany
-  @JoinColumn(name = "tarjeta_id")
+  @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
   private List<UsoDeTarjeta> historialUsos;
 
   @Transient

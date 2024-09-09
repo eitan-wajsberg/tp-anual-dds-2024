@@ -15,10 +15,13 @@ import lombok.Setter;
 public class Modelo {
   @Id @GeneratedValue
   private Long id;
+
   @Column(name="modelo")
   private String modelo;
+
   @Column(name="temperaturaMinima")
   private float temperaturaMinima;
+
   @Column(name="temperaturaMaxima")
   private float temperaturaMaxima;
 
