@@ -20,8 +20,7 @@ public class Desperfecto extends Suscripcion {
   @Transient
   private boolean aceptado;
 
-
-  private List<SugerenciaHeladera> sugerencias;
+  //private List<SugerenciaHeladera> sugerencias;
 
   @Transient
   private IRepositorioHeladera repositorioHeladeras;
@@ -50,8 +49,6 @@ public class Desperfecto extends Suscripcion {
       heladerasSugeridas = heladerasSugeridas.concat("   - " + nombreHeladera + "\n");
     }
 
-    
-    sugerencias.add(s)
     return heladerasSugeridas;
   }
 }
