@@ -1,10 +1,9 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
-import ar.edu.utn.frba.dds.domain.converters.LocalTimeConverter;
+import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
@@ -53,7 +52,7 @@ public class Heladera implements Contribucion {
   private Direccion direccion;
 
   @Setter
-  @Convert(converter = LocalTimeConverter.class)
+  @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fechaRegistro")
   private LocalDateTime fechaRegistro;
 

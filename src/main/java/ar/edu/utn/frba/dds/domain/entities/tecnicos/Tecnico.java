@@ -24,21 +24,29 @@ public class Tecnico {
   @Id
   @GeneratedValue
   private Long id;
+
   @Column(name="nombre")
   private String nombre;
+
   @Column(name="apellido")
   private String apellido;
+
   @Column(name="tipoDocumento")
   private String tipoDocumento;
+
   @Column(name="nroDocumento")
   private String nroDocumento;
+
   @Column(name="cuil")
   private String cuil;
+
   @OneToOne
   @JoinColumn(name = "contacto_id", referencedColumnName = "id")
   private Contacto contacto;
+
   @Embedded
   private Coordenada coordenada;
+
   @Column(name="distanciaMaximaEnKMParaSerAvisado")
   private double distanciaMaximaEnKmParaSerAvisado;
 

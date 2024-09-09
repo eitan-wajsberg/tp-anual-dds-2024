@@ -704,7 +704,6 @@ class Mensaje {
  - cuerpo: String
  - fecha: LocalDateTime
  - destinatario: Usuario
- - repositorioMensajes: IRepositorioMensajes
 }
 
 Mensaje --> Usuario
@@ -726,31 +725,34 @@ Contacto --> "*" MedioDeContacto
 Contacto ..> Mensaje
 
 ' -----------------------------------------
-
+class Opcion{
+ - campo: String
+}
 class Respuesta {
  - pregunta: Pregunta
- - contenido: String
+ - respuestaLibre: String
+ - opcionesElegidas: Set<Opcion>
 }
 
-Respuesta ---> Pregunta
+Respuesta --> Pregunta
+Respuesta --> "*" Opcion
 
 ' -----------------------------------------
-interface Pregunta {
+abstract class Pregunta {
+ - campo: String
+ - activa: boolean
  + esValida(respuesta: String): boolean
 }
 
 class MultipleChoice {
- - campo: String
- - activa: boolean
- - opciones: Set<String>
+ - opciones: Set<Opcion>
  + esValida(respuesta: String): boolean
 }
 
 MultipleChoice ..|> Pregunta
+MultipleChoice --> "*" Opcion
 
 class PreguntaAbierta {
- - campo: String
- - activa: boolean
  + esValida(respuesta: String): boolean
 }
 

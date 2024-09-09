@@ -1,15 +1,29 @@
 package ar.edu.utn.frba.dds.domain.entities.usuarios;
 
 import ar.edu.utn.frba.dds.domain.entities.validador.ValidadorDeClave;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
+@Getter @Setter
+@Entity @Table(name = "usuario")
+@NoArgsConstructor
 public class Usuario {
-  @Setter
+  @Id @GeneratedValue
+  private Long id;
+  @Column(name="nombre")
   private String nombre;
+  @Column(name="clave")
   private String clave;
-  @Setter
+  @ManyToOne
+  @JoinColumn(name="rol_id", referencedColumnName = "id")
   private Rol rol;
 
   public Usuario(String nombre) {

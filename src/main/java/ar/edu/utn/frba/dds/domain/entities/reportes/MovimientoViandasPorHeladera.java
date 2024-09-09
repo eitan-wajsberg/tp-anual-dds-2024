@@ -32,7 +32,7 @@ public class MovimientoViandasPorHeladera implements Reporte {
     // como para meter o sacar cosas en la heladera primero hay que solicitarlas
     return heladera.getSolicitudesDeApertura().stream().filter(sol ->
         sol.isAperturaConcretada() && sol.getAccion().equals(accion)
-        && ManejoFechas.fechaEnRango(sol.getFecha().toLocalDate(), fechaInicio, fechaFin)
+        && ManejoFechas.fechaEnRango(sol.getFechaConcrecion().toLocalDate(), fechaInicio, fechaFin)
     ).mapToInt(sol -> sol.getCantidadViandas()).sum();
   }
 

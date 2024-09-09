@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.contacto;
 
-import ar.edu.utn.frba.dds.domain.converters.LocalTimeConverter;
+import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -8,6 +8,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class Mensaje {
   @Column(name = "mensaje")
   private String cuerpo;
 
-  @Convert(converter = LocalTimeConverter.class)
+  @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fechaEmision")
   private LocalDateTime fechaEmision;
 

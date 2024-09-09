@@ -9,6 +9,8 @@ import java.util.HashSet;
 import javax.mail.MessagingException;
 
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioMensajes;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,22 +23,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+
 @Entity @Table(name="contacto")
 public class Contacto {
   @Id
   @GeneratedValue
   private Long id;
-  @OneToMany
-  @JoinColumn(name = "medio_de_contacto_id", referencedColumnName = "id")
-  private Set<MedioDeContacto> mediosDeContacto;
-  @Setter
-  @Transient
-  private static IRepositorioMensajes repositorioMensajes;
 
-  private String telefono;
-  private String celular;
+  @Transient
+  private Set<MedioDeContacto> mediosDeContacto;
+
+  @Column(name = "whatsapp")
+  private String whatsapp;
+  @Setter
+  @Column(name = "mail")
   private String mail;
-  private String userIDTelegram;
+
+  @Column(name = "userTelegram")
+  private Long telegramChatId;
 
   public Contacto() {
     this.mediosDeContacto = new HashSet<>();
@@ -71,9 +75,8 @@ public class Contacto {
 
     Contacto contacto = (Contacto) o;
 
-    return this.telefono.equals(contacto.telefono)
-        && this.celular.equals(contacto.celular)
+    return this.whatsapp.equals(contacto.whatsapp)
         && this.mail.equals(contacto.mail)
-        && this.userIDTelegram.equals(contacto.userIDTelegram);
+        && this.telegramChatId.equals(contacto.telegramChatId);
   }
 }

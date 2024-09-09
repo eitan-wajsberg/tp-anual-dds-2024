@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
-import ar.edu.utn.frba.dds.domain.converters.LocalTimeConverter;
+import ar.edu.utn.frba.dds.domain.converters.LocalDateAttributeConverter;
 import java.time.LocalDate;
 import javax.persistence.Convert;
 import javax.persistence.EnumType;
@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,7 +23,7 @@ public class CambioEstado {
   @Enumerated (EnumType.STRING)
   @Column(name="estado",nullable = false)
   private EstadoHeladera estado;
-  @Convert(converter = LocalTimeConverter.class)
+  @Convert(converter = LocalDateAttributeConverter.class)
   @Column(name = "fechaCambio")
   private LocalDate fechaCambio;
 

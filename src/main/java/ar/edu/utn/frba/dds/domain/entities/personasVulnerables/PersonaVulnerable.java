@@ -12,30 +12,49 @@ import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity
+@Table(name = "personaJuridica")
 @Setter
 @Getter
 public class PersonaVulnerable {
 
   private String nombre;
+
+  @Column(name = "fechaDeNacimiento", columnDefinition = "DATE")
   private LocalDate fechaDeNacimiento;
+
+  @Column(name = "fechaDeRegistro", columnDefinition = "DATE")
   private LocalDate fechaDeRegistro;
+
   private String direccion;
+
   private Integer menoresAcargo;
-  private Documento documento;
+
+  @Column(name="tipoDocumento")
+  private String tipoDocumento;
+
+  @Column(name="nroDocumento")
+  private String nroDocumento;
+
   private PersonaHumana donanteQueLoRegistro;
+
   private List<Tarjeta> tarjetas;
+
   private Tarjeta tarjetaEnUso;
 
-  public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, String direccion, Integer menoresAcargo, Documento documento, PersonaHumana donanteQueLoRegistro) {
+  public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, String direccion, Integer menoresAcargo, S documento, PersonaHumana donanteQueLoRegistro) {
     this.nombre = nombre;
     this.fechaDeNacimiento = fechaDeNacimiento;
     this.fechaDeRegistro = fechaDeRegistro;
     this.direccion = direccion;
     this.menoresAcargo = menoresAcargo;
-    this.documento = documento;
+    this.tipoDocumento = documento;
     this.donanteQueLoRegistro = donanteQueLoRegistro;
   }
 

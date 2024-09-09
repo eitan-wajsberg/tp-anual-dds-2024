@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
-import ar.edu.utn.frba.dds.domain.converters.LocalTimeConverter;
+import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -19,7 +19,7 @@ public class CambioTemperatura {
   @Id
   @GeneratedValue
   private long id;
-  @Convert(converter = LocalTimeConverter.class)
+  @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fecha")
   private LocalDateTime fecha;
   @Column(name = "temperaturaEnCelsius")

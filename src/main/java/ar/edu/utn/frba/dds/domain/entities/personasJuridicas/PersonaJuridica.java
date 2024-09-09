@@ -18,23 +18,34 @@ import javax.persistence.Table;
 @Getter
 @Entity @Table(name="persona_juridica")
 public class PersonaJuridica {
+
   @Id @GeneratedValue
   private Long id;
+
   @Setter
   private Usuario usuario;
+
   @Setter
   private Contacto contacto;
+
   @Setter
   private Direccion direccion;
+
   @Setter
   private String razonSocial;
+
   @Setter
   private TipoPersonaJuridica tipo;
+
   @Setter
   private Rubro rubro;
+
   private Set<FormasContribucionJuridicas> contribucionesElegidas;
+
   private Set<Heladera> heladerasAcargo;
+
   private Set<Contribucion> contribuciones;
+
   private Set<Oferta> ofertas;
 
   public PersonaJuridica(){

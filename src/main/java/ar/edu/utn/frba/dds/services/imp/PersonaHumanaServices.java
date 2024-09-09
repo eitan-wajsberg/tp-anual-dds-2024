@@ -54,9 +54,10 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     // TODO: no creo que esta sea el momento de añadir un contacto realmente, o que sea la mejor manera
     // agregar mail
     Contacto contacto = new Contacto();
-    Mail mail = new Mail(personaInputDTO.getMail());
+    Mail mail = new Mail();
     mail.setAdaptador(mailSender);
     contacto.agregarMedioDeContacto(mail);
+    contacto.setMail(personaInputDTO.getMail());
     nuevaPersona.setContacto(contacto);
 
     // guardar persona
