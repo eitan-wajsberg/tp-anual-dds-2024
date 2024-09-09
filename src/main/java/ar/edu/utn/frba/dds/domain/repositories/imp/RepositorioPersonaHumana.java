@@ -37,10 +37,10 @@ public class RepositorioPersonaHumana implements IRepositorioPersonaHumana {
   }
 
   @Override
-  public Optional<PersonaHumana> buscarPorDocumento(Long documentoId) {
+  public Optional<PersonaHumana> buscarPorDocumento(String documentoId) {
     return this.personas
         .stream()
-        .filter(c -> c.getDocumento().getId().equals(documentoId))
+        .filter(c -> c.getNroDocumento().equals(documentoId))
         .findFirst();
   }
 

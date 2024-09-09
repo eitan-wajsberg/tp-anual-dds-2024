@@ -29,6 +29,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -54,8 +56,9 @@ public class PersonaHumana extends IObserverNotificacion {
   private Usuario usuario; //TODO: Está bien
 
   @Getter @Setter
-  @Column(name="tipoDocumento") //TODO: Shouldn't it be an Enum? Cambiar Técnico
-  private String tipoDocumento;
+  @Enumerated(EnumType.STRING)
+  @Column(name="tipoDocumento")
+  private TipoDocumento tipoDocumento;
 
   @Getter @Setter
   @Column(name="nroDocumento")

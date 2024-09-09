@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.tecnicos;
 
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +32,9 @@ public class Tecnico {
   @Column(name="apellido")
   private String apellido;
 
+
   @Column(name="tipoDocumento")
-  private String tipoDocumento;
+  private TipoDocumento tipoDocumento;
 
   @Column(name="nroDocumento")
   private String nroDocumento;

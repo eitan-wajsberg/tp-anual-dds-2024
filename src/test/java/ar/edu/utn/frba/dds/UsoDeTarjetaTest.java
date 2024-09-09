@@ -1,12 +1,12 @@
 package ar.edu.utn.frba.dds;
 
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoMaximoDeTarjetasPorDiaExcedidoException;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,9 +63,9 @@ public class UsoDeTarjetaTest {
 
   private PersonaVulnerable crearPersonaVulnerable(int menoresACargo){
     return new PersonaVulnerable("Eduardo", LocalDate.parse("1995-05-04"),
-        LocalDate.parse("2024-05-20"),"caba", menoresACargo, new Documento(TipoDocumento.DNI, "34021485"), mock(PersonaHumana.class));
+        LocalDate.parse("2024-05-20"), null, menoresACargo, "46644007", TipoDocumento.DNI, mock(PersonaHumana.class));
   }
   private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
-    return new Vianda(LocalDateTime.parse(fecha), true, nombre, calorias, peso, LocalDate.now()); //TODO REVISAR
+    return new Vianda(LocalDateTime.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
   }
 }

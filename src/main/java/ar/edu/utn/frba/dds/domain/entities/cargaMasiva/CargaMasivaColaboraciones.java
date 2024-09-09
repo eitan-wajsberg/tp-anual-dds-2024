@@ -4,14 +4,12 @@ import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumanaBuilder;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioDocumento;
 import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
 import java.io.*;
 import java.time.LocalDate;
@@ -29,12 +27,10 @@ import org.apache.commons.csv.CSVRecord;
 @Setter
 public class CargaMasivaColaboraciones {
   private IRepositorioPersonaHumana personaHumanaRepo;
-  private IRepositorioDocumento documentoRepo;
   private AdapterMail adapterMail;
 
-  public CargaMasivaColaboraciones(IRepositorioPersonaHumana personaHumanaRepo, IRepositorioDocumento documentoRepo, AdapterMail adapterMail) {
+  public CargaMasivaColaboraciones(IRepositorioPersonaHumana personaHumanaRepo, AdapterMail adapterMail) {
     this.personaHumanaRepo = personaHumanaRepo;
-    this.documentoRepo = documentoRepo;
     this.adapterMail = adapterMail;
   }
 
@@ -65,11 +61,8 @@ public class CargaMasivaColaboraciones {
       TipoDocumento tipoDocumento = TipoDocumento.valueOf(record.get(0));
       String nroDocumento = record.get(1);
 
-      Long idDoc = descubrirDocumento(tipoDocumento, nroDocumento);
-      Documento doc = this.documentoRepo.buscar(idDoc).get();
-
       // Aseguro existencia de la persona humana
-      Optional<PersonaHumana> posiblePersona = this.personaHumanaRepo.buscarPorDocumento(idDoc);
+      Optional<PersonaHumana> posiblePersona = this.personaHumanaRepo.buscarPorDocumento(nroDocumento);
       PersonaHumana persona;
 
       if (posiblePersona.isEmpty()) {
@@ -80,7 +73,7 @@ public class CargaMasivaColaboraciones {
         persona = builder.construirNombre(nombre)
             .construirApellido(apellido)
             .construirMail(mail, adapterMail)
-            .construirDocumento(doc)
+            .construirDocumento(nroDocumento, tipoDocumento)
             .construir();
         this.personaHumanaRepo.guardar(persona);
         notificarAltaPersona(persona);
@@ -135,22 +128,6 @@ public class CargaMasivaColaboraciones {
 
       this.personaHumanaRepo.actualizar(persona);
     }
-  }
-
-  private Long descubrirDocumento(TipoDocumento tipoDocumento, String nroDocumento){
-    Optional<Documento> posibleDocumento = this.documentoRepo.buscarPorNro(tipoDocumento, nroDocumento);
-    Documento documento;
-    Long id;
-
-    if (posibleDocumento.isEmpty()) {
-      documento = new Documento(tipoDocumento, nroDocumento);
-      id = this.documentoRepo.guardar(documento);
-    } else {
-      documento = posibleDocumento.get();
-      id = documento.getId();
-    }
-
-    return id;
   }
 
   private void notificarAltaPersona(PersonaHumana persona) {
