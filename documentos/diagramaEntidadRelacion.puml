@@ -88,6 +88,7 @@ entity vianda {
  * comida: VARCHAR(255)
  * pesoEnGramos: DECIMAL
  * fechaDonacion: DATE
+ caloriasEnKcal: DECIMAL()
 }
 
 entity persona_vulnerable {
