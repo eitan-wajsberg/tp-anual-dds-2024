@@ -4,12 +4,18 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Entity
+@DiscriminatorValue("QUEDAN_N_VIANDAS")
 public class QuedanNViandas extends Suscripcion {
   @Getter
+  @Column(name="cantidadViandasQueQuedan")
   private int cantidadViandasDisponibles;
 
   public QuedanNViandas(IObserverNotificacion suscriptor, int cantidadViandasDisponibles) {
