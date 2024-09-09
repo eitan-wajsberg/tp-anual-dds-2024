@@ -70,17 +70,17 @@ public class Incidente {
     private IRepositorioTecnicos repositorioTecnicos;
 
     @ManyToOne
-    @JoinColumn(name="id_personaHumana", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="id_personaHumana", referencedColumnName = "id", nullable = true)
     private PersonaHumana colaborador;
 
-    @Column(name="descripcion_del_colaborador", nullable = false)
+    @Column(name="descripcion_del_colaborador", nullable = true)
     private String descripcionDelColaborador;
 
-    @Column(name="ruta_foto", nullable = false)
+    @Column(name="ruta_foto", nullable = true)
     private String foto;
 
     @Convert(converter= TipoAlertaConverter.class)
-    @Column(name="tipo_alerta", nullable = false)
+    @Column(name="tipo_alerta", nullable = true)
     private TipoAlerta tipoAlerta;
 
     public Incidente(IRepositorioTecnicos repositorioTecnicos, Heladera heladera) throws MessagingException, UnsupportedEncodingException {
