@@ -46,7 +46,7 @@ public class ReceptorMovimiento implements IMqttMessageListener {
   }
 
   private void procesarMensaje(Long idHeladera, String tipoMensaje, Boolean valor) {
-    Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera);
+    Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera, Heladera.class);
     if (optionalHeladera.isPresent()) {
       Heladera heladera = optionalHeladera.get();
       if (!tipoMensaje.equals("Fraude")) {

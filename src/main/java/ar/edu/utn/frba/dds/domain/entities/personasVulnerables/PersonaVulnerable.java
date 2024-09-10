@@ -28,41 +28,41 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "personaJuridica")
 @Setter
 @Getter
 @NoArgsConstructor
+@Entity
+@Table(name = "persona_vulnerable")
 public class PersonaVulnerable {
 
   @Id @GeneratedValue
   private long id;
 
-  @Column(name = "nombre")
+  @Column(name = "nombre", nullable = false)
   private String nombre;
 
-  @Column(name = "fechaDeNacimiento", columnDefinition = "DATE")
+  @Column(name = "fechaDeNacimiento", columnDefinition = "DATE", nullable = false)
   private LocalDate fechaDeNacimiento;
 
-  @Column(name = "fechaDeRegistro", columnDefinition = "DATE")
+  @Column(name = "fechaDeRegistro", columnDefinition = "DATE", nullable = false)
   private LocalDate fechaDeRegistro;
 
   @Embedded
   private Direccion direccion;
 
-  @Column(name="menoresAcargo")
+  @Column(name="menoresAcargo", nullable = false)
   private Integer menoresAcargo;
 
   @Enumerated(EnumType.STRING)
-  @Column(name="tipoDocumento")
+  @Column(name="tipoDocumento", nullable = false)
   private TipoDocumento tipoDocumento;
 
-  @Column(name="nroDocumento")
+  @Column(name="nroDocumento", nullable = false)
   private String nroDocumento;
 
   @ManyToOne
-  @JoinColumn(name = "personaHumana_id", referencedColumnName = "id")
-  private PersonaHumana personaQueLoRegistro; //TODO: What's wrong?
+  @JoinColumn(name = "personaQueLoRegistro_id", referencedColumnName = "id", nullable = false)
+  private PersonaHumana personaQueLoRegistro;
 
   @OneToMany
   @JoinColumn(name = "personaVulnerable_id", referencedColumnName = "id")

@@ -4,11 +4,15 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,6 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 @Getter @Setter
 @Entity @Table(name="tecnico")
@@ -26,24 +31,27 @@ public class Tecnico {
   @GeneratedValue
   private Long id;
 
-  @Column(name="nombre")
+  @Column(name="nombre", nullable = false)
   private String nombre;
 
-  @Column(name="apellido")
+  @Column(name="apellido", nullable = false)
   private String apellido;
 
+  @OneToOne
+  @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+  private Usuario usuario;
 
-  @Column(name="tipoDocumento")
+  @Enumerated(EnumType.STRING)
+  @Column(name="tipoDocumento", nullable = false)
   private TipoDocumento tipoDocumento;
 
-  @Column(name="nroDocumento")
+  @Column(name="nroDocumento", nullable = false)
   private String nroDocumento;
 
-  @Column(name="cuil")
+  @Column(name="cuil", nullable = false)
   private String cuil;
 
-  @OneToOne
-  @JoinColumn(name = "contacto_id", referencedColumnName = "id")
+  @Embedded
   private Contacto contacto;
 
   @Embedded

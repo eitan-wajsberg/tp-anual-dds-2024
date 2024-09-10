@@ -21,7 +21,7 @@ public class Rol {
   @Id @GeneratedValue
   private Long id;
   @Setter
-  @Column(name="nombre")
+  @Column(name="nombre", nullable = false)
   private String nombre;
   @ManyToMany
   @JoinTable(

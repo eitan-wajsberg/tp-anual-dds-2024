@@ -102,7 +102,7 @@ public class ManejoDeSolicitudesTest {
         heladera.setId(1L);
 
         RepositorioHeladera repositorioHeladeraMock = mock(RepositorioHeladera.class);
-        when(repositorioHeladeraMock.buscarPorId(1L)).thenReturn(Optional.of(heladera));
+        when(repositorioHeladeraMock.buscarPorId(1L, Heladera.class)).thenReturn(Optional.of(heladera));
 
         PublicadorSolicitudApertura publicador = PublicadorSolicitudApertura.getInstance();
         publicador.setMqttClient(mqttClientMock);

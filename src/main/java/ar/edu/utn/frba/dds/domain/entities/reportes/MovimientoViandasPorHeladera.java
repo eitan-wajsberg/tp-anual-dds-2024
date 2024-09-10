@@ -2,7 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.reportes;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.utils.manejoFechas.ManejoFechas;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,11 +12,11 @@ import lombok.Setter;
 
 public class MovimientoViandasPorHeladera implements Reporte {
   @Getter @Setter
-  IRepositorioHeladera repositorioHeladera;
+  RepositorioHeladera repositorioHeladera;
 
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
-    for (Heladera heladera : this.repositorioHeladera.listar()) {
+    for (Heladera heladera : this.repositorioHeladera.buscarTodos(Heladera.class)) {
       int cantidadViandasRetiradas = cantidadViandasSegunAccion(heladera, AccionApertura.QUITAR_VIANDA, fechaInicio, fechaFin);
       int cantidadViandasColocadas = cantidadViandasSegunAccion(heladera, AccionApertura.INGRESAR_VIANDA, fechaInicio, fechaFin);
       String parrafo = heladera.getNombre() + ": "

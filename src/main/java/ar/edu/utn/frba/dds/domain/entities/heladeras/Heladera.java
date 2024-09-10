@@ -44,7 +44,7 @@ public class Heladera implements Contribucion {
   private Long id;
 
   @Setter
-  @Column(name="nombre")
+  @Column(name="nombre", nullable = false)
   private String nombre;
 
   @Setter
@@ -53,16 +53,16 @@ public class Heladera implements Contribucion {
 
   @Setter
   @Convert(converter = LocalDateTimeAttributeConverter.class)
-  @Column(name = "fechaRegistro")
+  @Column(name = "fechaRegistro", nullable = false)
   private LocalDateTime fechaRegistro;
 
   @Setter
-  @Column(name = "capacidadMaximaVianda")
+  @Column(name = "capacidadMaximaVianda", nullable = false)
   private int capacidadMaximaViandas;
 
   @Setter
   @ManyToOne
-  @JoinColumn(name = "modelo_id", referencedColumnName = "id")
+  @JoinColumn(name = "modelo_id", referencedColumnName = "id", nullable = false)
   private Modelo modelo;
 
   @OneToMany
@@ -71,7 +71,7 @@ public class Heladera implements Contribucion {
 
   @Setter
   @Enumerated(EnumType.STRING)
-  @Column(name="estadoHeladera")
+  @Column(name="estadoHeladera", nullable = false)
   private EstadoHeladera estado;
 
   @Setter

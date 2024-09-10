@@ -10,7 +10,7 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,10 +26,10 @@ import org.apache.commons.csv.CSVRecord;
 
 @Setter
 public class CargaMasivaColaboraciones {
-  private IRepositorioPersonaHumana personaHumanaRepo;
+  private RepositorioPersonaHumana personaHumanaRepo;
   private AdapterMail adapterMail;
 
-  public CargaMasivaColaboraciones(IRepositorioPersonaHumana personaHumanaRepo, AdapterMail adapterMail) {
+  public CargaMasivaColaboraciones(RepositorioPersonaHumana personaHumanaRepo, AdapterMail adapterMail) {
     this.personaHumanaRepo = personaHumanaRepo;
     this.adapterMail = adapterMail;
   }
@@ -114,7 +114,7 @@ public class CargaMasivaColaboraciones {
           Tarjeta tarjetaRepartida;
           for (int i = 0; i < cantidad; i++) {
             tarjetaRepartida = new Tarjeta();
-            tarjetaRepartida.setFechaEntrega(fecha);
+            tarjetaRepartida.setFechaRecepcionPersonaVulnerable(fecha);
 
             contribuciones.add(tarjetaRepartida);
           }

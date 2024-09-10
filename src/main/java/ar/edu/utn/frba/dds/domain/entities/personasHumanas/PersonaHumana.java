@@ -26,7 +26,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -37,6 +39,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,7 +48,6 @@ import javax.mail.MessagingException;
 @Entity
 @Table(name = "persona_humana")
 public class PersonaHumana extends IObserverNotificacion {
-
   @Id @GeneratedValue
   @Getter @Setter
   private Long id;
@@ -53,7 +55,7 @@ public class PersonaHumana extends IObserverNotificacion {
   @Getter @Setter
   @OneToOne
   @JoinColumn(name = "usuario_id", referencedColumnName = "id")
-  private Usuario usuario; //TODO: Está bien
+  private Usuario usuario;
 
   @Getter @Setter
   @Enumerated(EnumType.STRING)
@@ -65,8 +67,7 @@ public class PersonaHumana extends IObserverNotificacion {
   private String nroDocumento;
 
   @Getter @Setter
-  @OneToOne
-  @JoinColumn(name = "contacto_id", referencedColumnName = "id")
+  @Embedded
   private Contacto contacto;
 
   @Getter @Setter
@@ -74,37 +75,47 @@ public class PersonaHumana extends IObserverNotificacion {
   private Direccion direccion;
 
   @Getter @Setter
-  @Column(name="nombre")
+  @Column(name="nombre", nullable = false)
   private String nombre;
 
   @Getter @Setter
-  @Column(name="apellido")
+  @Column(name="apellido", nullable = false)
   private String apellido;
 
   @Getter @Setter
   @Column(name = "fechaNacimiento", columnDefinition = "DATE")
   private LocalDate fechaNacimiento;
 
-  @Getter //TODO:
+  @Getter
+  @Enumerated(EnumType.STRING)
+  @ElementCollection()
+  @CollectionTable(name = "formas_contribucion_humana",
+      joinColumns = @JoinColumn(name = "personaHumana_id",
+          referencedColumnName = "id"))
+  @Column(name = "contribucionesElegidas")
   private Set<FormasContribucionHumanas> contribucionesElegidas;
 
-  @Getter //TODO:
+  @Getter
+  @Transient
   private Set<Contribucion> contribuciones;
 
-  @Getter //TODO:
+  @Getter
+  @OneToMany
+  @JoinColumn(name = "personaHumana_id", referencedColumnName = "id")
   private Set<OfertaCanjeada> ofertasCanjeadas;
 
   @Getter
   @OneToMany
-  @JoinColumn(name = "personaHumana_id", referencedColumnName = "id")
+  @JoinColumn(name = "id_colaborador_repartidor", referencedColumnName = "id")
   private List<Tarjeta> tarjetasSinEntregar;
 
-  @Getter //TODO:
+  @Getter
+  @Transient
   private List<Respuesta> formulario;
 
   @Getter
   @OneToMany
-  @JoinColumn(name = "personaHumana_id", referencedColumnName = "id")
+  @JoinColumn(name = "id_colaborador_donador", referencedColumnName = "id")
   private List<Tarjeta> tarjetasColaboracion;
 
   @Getter

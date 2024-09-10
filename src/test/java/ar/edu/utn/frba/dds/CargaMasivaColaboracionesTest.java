@@ -10,7 +10,6 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.*;
 
 public class CargaMasivaColaboracionesTest {
   static CargaMasivaColaboraciones carga;
-  static IRepositorioPersonaHumana repoPersonaHumana;
+  static RepositorioPersonaHumana repoPersonaHumana;
 
   @BeforeAll
   public static void antesDeTestear() throws MessagingException, UnsupportedEncodingException {
@@ -48,13 +47,13 @@ public class CargaMasivaColaboracionesTest {
   @Test
   @DisplayName("Se cargan todas las nuevas personas")
   public void seCarganTodasLasPersonas() {
-    Assertions.assertEquals(repoPersonaHumana.contar(), 6);
+    Assertions.assertEquals(repoPersonaHumana.buscarTodos(PersonaHumana.class).size(), 6);
   }
 
   @Test
   @DisplayName("Se cargan bien todos los datos de una nueva persona")
   public void cargaCompletaDePersona(){
-    PersonaHumana personaEnRepo = repoPersonaHumana.listar().get(0);
+    PersonaHumana personaEnRepo = repoPersonaHumana.buscarTodos(PersonaHumana.class).get(0);
     PersonaHumana personaEsperada = construirPrimeraPersona();
 
     float puntajeReal = ReconocimientoTrabajoRealizado.getInstance().
@@ -68,7 +67,7 @@ public class CargaMasivaColaboracionesTest {
 
   private PersonaHumana construirPrimeraPersona(){
     Tarjeta tarjeta = new Tarjeta();
-    tarjeta.setFechaEntrega(fecha("04/06/2024"));
+    tarjeta.setFechaRecepcionColaborador(fecha("04/06/2024"));
 
     PersonaHumanaBuilder builder = new PersonaHumanaBuilder();
     PersonaHumana persona =

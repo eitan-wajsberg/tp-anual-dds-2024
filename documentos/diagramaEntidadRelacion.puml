@@ -53,6 +53,7 @@ entity solicitud_apertura {
  * aperturaConcretada: BIT(1)
  * fechaConcrecion: DATE
  * accion: ENUM
+ * cantidadViandas: NUMBER
 }
 note right
 accion: QUITAR_VIANDA, INGRESAR_VIANDA
@@ -63,11 +64,10 @@ entity tarjeta {
  --
  * id_colaborador_donador: INTEGER(11) <<FK>>
  * id_persona_vulnerable: INTEGER(11) <<FK>>
- * codigo: VARCHAR(255) (ESTO SE GUARDA?)
- ' TODO cómo guardar código
+ * codigo: VARCHAR(255)
  * fechaRecepcionColaborador: DATE
- * fechaRecepcionPersonaVulnerable: DATE
- * fechaBaja: DATE
+  fechaRecepcionPersonaVulnerable: DATE
+  fechaBaja: DATE
  * id_colaborador_repartidor: INTEGER(11) <<FK>>
 }
 
@@ -112,7 +112,10 @@ entity persona_humana {
   * id : INTEGER(11) <<PK>>
   --
   * id_usuario: INTEGER(11) <<FK>>
-  * id_contacto: INTEGER(11) <<FK>>
+  whatsapp: VARCHAR(255)
+  mail: VARCHAR(255)
+  userTelegram: VARCHAR(255)
+  * medioPreferido: VARCHAR(255)
   * tipo_documento : ENUM
   * nro_documento : VARCHAR(50)
   * nombre: VARCHAR(255)
@@ -122,11 +125,11 @@ entity persona_humana {
   * municipio: VARCHAR(255)
   * calle: VARCHAR(255)
   * altura: VARCHAR(4)
-  ' la lista de contribuciones es transient
+
 }
 
 entity formas_de_contribucion_humana {
-    * id: INTEGER(11) <<PK>>
+    '* id: INTEGER(11) <<PK>>
     * id_persona_humana: INTEGER(11) <<FK>>
     * formaContribucion: ENUM
 }
@@ -135,7 +138,7 @@ formaContribucion: DISTRIBUCION_VIANDAS, DONACION_DINERO, DONACION_VIANDA, ENTRE
 end note
 
 entity formas_de_contribucion_juridica {
-    * id: INTEGER(11) <<PK>>
+    '* id: INTEGER(11) <<PK>>
     * id_persona_juridica:  INTEGER(11) <<FK>>
     * formaContribucion: ENUM
 }
@@ -212,7 +215,10 @@ entity persona_juridica {
  --
  * id_usuario: INTEGER(11) <<FK>>
  * id_rubro: INTEGER(11) <<FK>>
- * id_contacto: INTEGER(11) <<FK>>
+ whatsapp: VARCHAR(255)
+ mail: VARCHAR(255)
+ userTelegram: VARCHAR(255)
+ *medioPreferido: VARCHAR(255)
  * razonSocial: VARCHAR(255)
  * tipo: ENUM
  * contribucionesElegidas: ENUM
@@ -317,26 +323,14 @@ entity tecnico {
   * tipo_documento : VARCHAR(50)
   * nro_documento : VARCHAR(50)
   * cuil : VARCHAR(50)
-  * id_contacto : INTEGER(11) <<FK>>
+  whatsapp: VARCHAR(255)
+  mail: VARCHAR(255)
+  userTelegram: VARCHAR(255)
+  * medioPreferido: VARCHAR(255)
   * latitud : DOUBLE
   * longitud : DOUBLE
   * id_usuario: INTEGER(11) <<FK>>
   * distancia_maxima_en_km_para_ser_avisado : DOUBLE
-}
-
-entity contacto {
-    * id : INTEGER(11) <<PK>>
-    --
-    whatsapp: VARCHAR(255)
-    mail: VARCHAR(255)
-    userTelegram : VARCHAR(255)
-}
-
-entity medio_contacto{
-    * id: INTEGER(11) <<PK>>
-    --
-    * id_contacto: INTEGER(11) <<FK>>
-    * medio: ENUM
 }
 
 note right
@@ -391,7 +385,6 @@ entity tipo_reporte {
 suscripcion }o--|| heladera
 suscripcion }o--|| persona_humana
 
-tecnico }o--|| contacto
 tecnico |o--|| usuario
 
 heladera ||--o{ vianda
@@ -453,16 +446,9 @@ vianda_por_distribucion }o--|| vianda
 persona_juridica ||--|| usuario
 persona_juridica ||--|| rubro
 persona_juridica ||--o{ heladera
-persona_juridica ||--|{ contacto
 
-persona_humana ||--|{ contacto
 persona_humana ||--o{ formas_de_contribucion_humana
 persona_juridica ||--o{ formas_de_contribucion_juridica
-
-contacto ||--|{ medio_contacto
-persona_juridica ||--|| contacto
-tecnico ||--|| contacto
-persona_humana ||--|| contacto
 
 reporte ||--|{ tipo_reporte
 @enduml

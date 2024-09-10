@@ -20,9 +20,9 @@ public class CambioTemperatura {
   @GeneratedValue
   private long id;
   @Convert(converter = LocalDateTimeAttributeConverter.class)
-  @Column(name = "fecha")
+  @Column(name = "fecha", nullable = false)
   private LocalDateTime fecha;
-  @Column(name = "temperaturaEnCelsius")
+  @Column(name = "temperaturaEnCelsius", nullable = false)
   private float temperaturaCelsius;
 
   public CambioTemperatura(LocalDateTime fecha, float temperaturaCelsius) {

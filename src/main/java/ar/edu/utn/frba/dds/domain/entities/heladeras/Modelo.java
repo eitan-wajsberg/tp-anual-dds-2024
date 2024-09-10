@@ -16,13 +16,13 @@ public class Modelo {
   @Id @GeneratedValue
   private Long id;
 
-  @Column(name="modelo")
+  @Column(name="modelo", nullable = false)
   private String modelo;
 
-  @Column(name="temperaturaMinima")
+  @Column(name="temperaturaMinima", nullable = false)
   private float temperaturaMinima;
 
-  @Column(name="temperaturaMaxima")
+  @Column(name="temperaturaMaxima", nullable = false)
   private float temperaturaMaxima;
 
   public Modelo(String modelo, float temperaturaMinima, float temperaturaMaxima) {

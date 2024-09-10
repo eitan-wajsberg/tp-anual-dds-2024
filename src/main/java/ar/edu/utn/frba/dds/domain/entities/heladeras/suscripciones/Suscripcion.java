@@ -26,11 +26,11 @@ public abstract class Suscripcion {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "id_persona_humana", referencedColumnName = "id")
-  protected IObserverNotificacion suscriptor;
+  @JoinColumn(name = "id_persona_humana", referencedColumnName = "id", nullable = false)
+  protected PersonaHumana suscriptor;
 
   @ManyToOne
-  @JoinColumn(name = "id_heladera", referencedColumnName = "id")
+  @JoinColumn(name = "id_heladera", referencedColumnName = "id", nullable = false)
   private Heladera heladera;
 
   public void notificar(Heladera heladera) {

@@ -8,8 +8,8 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioTecnicos;
 
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
@@ -40,50 +40,50 @@ public class Incidente {
     private Long id;
 
     @Setter
-    @Column(name="fecha", columnDefinition = "DATE")
+    @Column(name="fecha", columnDefinition = "DATE", nullable = false)
     private LocalDateTime fecha;
 
     @Setter
     @ManyToOne
-    @JoinColumn(name="id_tecnico", referencedColumnName = "id")
+    @JoinColumn(name="id_tecnico", referencedColumnName = "id", nullable = false)
     private Tecnico tecnicoSeleccionado;
 
     @OneToMany
-    @JoinColumn(name = "id_incidente")
+    @JoinColumn(name = "id_incidente", nullable = false)
     private List<Visita> visitas;
 
     @Setter
-    @Column(name="solucionado", columnDefinition = "BIT(1)")
+    @Column(name="solucionado", columnDefinition = "BIT(1)", nullable = false)
     private boolean solucionado;
 
     @Setter
     @ManyToOne
-    @JoinColumn(name="id_heladera", referencedColumnName = "id")
+    @JoinColumn(name="id_heladera", referencedColumnName = "id", nullable = false)
     private Heladera heladera;
 
     @Setter
     @Convert(converter= TipoIncidenteConverter.class)
-    @Column(name="tipo_incidente")
+    @Column(name="tipo_incidente", nullable = false)
     private TipoIncidente tipoIncidente;
 
     @Transient
-    private IRepositorioTecnicos repositorioTecnicos;
+    private RepositorioTecnicos repositorioTecnicos;
 
     @ManyToOne
-    @JoinColumn(name="id_personaHumana", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name="id_personaHumana", referencedColumnName = "id")
     private PersonaHumana colaborador;
 
-    @Column(name="descripcion_del_colaborador", nullable = true)
+    @Column(name="descripcion_del_colaborador")
     private String descripcionDelColaborador;
 
-    @Column(name="ruta_foto", nullable = true)
+    @Column(name="ruta_foto")
     private String foto;
 
     @Convert(converter= TipoAlertaConverter.class)
-    @Column(name="tipo_alerta", nullable = true)
+    @Column(name="tipo_alerta")
     private TipoAlerta tipoAlerta;
 
-    public Incidente(IRepositorioTecnicos repositorioTecnicos, Heladera heladera) throws MessagingException, UnsupportedEncodingException {
+    public Incidente(RepositorioTecnicos repositorioTecnicos, Heladera heladera) throws MessagingException, UnsupportedEncodingException {
         this.repositorioTecnicos = repositorioTecnicos;
         this.solucionado = false;
         this.visitas = new ArrayList<>();
@@ -102,7 +102,7 @@ public class Incidente {
     public void asignarTecnico(Heladera heladera) throws MessagingException, UnsupportedEncodingException {
         // FIXME: Hace falta parametrizar eso? yo creeria que si
         double distanciaMaximaConsideradaParaLlamarTecnico = 50;
-        for (Tecnico tecnico : repositorioTecnicos.listar()) {
+        for (Tecnico tecnico : repositorioTecnicos.buscarTodos(Tecnico.class)) {
             double distanciaActualEnKm = ManejoDistancias.distanciaHaversineConCoordenadasEnKm(
                 heladera.getDireccion().getCoordenada(),
                 tecnico.getCoordenada()

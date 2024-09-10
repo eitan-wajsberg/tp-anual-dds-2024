@@ -10,9 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.Table;
 import javax.persistence.Id;
@@ -20,32 +22,36 @@ import javax.persistence.Id;
 @Getter @Setter
 @Entity
 @Table(name = "solicitud_apertura")
+@NoArgsConstructor
 public class SolicitudApertura {
   @Id @GeneratedValue
   private long id;
+
   @Convert(converter = LocalDateTimeAttributeConverter.class)
-  @Column(name = "fechaSolicitud")
+  @Column(name = "fechaSolicitud", nullable = false)
   private LocalDateTime fechaSolicitud;
+
   @Getter
   @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fechaConcrecion")
   private LocalDateTime fechaConcrecion;
+
   @ManyToOne
-  @Column (name = "tarjeta")
+  @JoinColumn(name="tarjeta_id", referencedColumnName = "id", nullable = false)
   private Tarjeta tarjeta;
+
   @Column(name = "apreturaConcretada")
   private boolean aperturaConcretada;
+
   @Enumerated(EnumType.STRING)
-  @Column(name = "accion")
+  @Column(name = "accion", nullable = false)
   private AccionApertura accion;
-  @Column(name = "cantidadViandas")
+
+  @Column(name = "cantidadViandas", nullable = false)
   private int cantidadViandas;
+
   @Transient
   private final int horasParaEjecutarAccion = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
-
-  public SolicitudApertura() {
-
-  }
 
   public boolean esIngresadaVirtualmente() {
     return !this.isAperturaConcretada()  && this.getAccion() == AccionApertura.INGRESAR_VIANDA

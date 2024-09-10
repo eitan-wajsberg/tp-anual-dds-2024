@@ -2,7 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.reportes;
 
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.utils.manejoFechas.ManejoFechas;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import lombok.Setter;
 
 public class CantidadViandasPorColaborador implements Reporte {
   @Getter @Setter
-  private IRepositorioPersonaHumana repositorioColaboradores;
+  private RepositorioPersonaHumana repositorioColaboradores;
 
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
     int cantidadViandas;
     String parrafo;
 
-    for (PersonaHumana persona : repositorioColaboradores.listar()) {
+    for (PersonaHumana persona : repositorioColaboradores.buscarTodos(PersonaHumana.class)) {
       cantidadViandas = cantidadViandasDonadadas(persona, fechaInicio, fechaFin);
       parrafo = "Cantidad de viandas donadas de " + persona.getNombre() + ": " + cantidadViandas;
       parrafos.add(parrafo);
