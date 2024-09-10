@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.Column;
@@ -10,8 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 @Entity
 @Table(name="sugerencia_heladeras")
 public class SugerenciaHeladera {
@@ -21,6 +26,10 @@ public class SugerenciaHeladera {
 
   @Column(name="fechaRealizacion", nullable = false)
   private LocalDate fechaRealizacion;
+  
+  @OneToOne
+  @JoinColumn(name = "incidente_id", referencedColumnName = "id")
+  private Incidente incidente;
 
   @ManyToMany
   @JoinTable(
@@ -30,5 +39,8 @@ public class SugerenciaHeladera {
       inverseJoinColumns = @JoinColumn(name = "id_heladera", referencedColumnName = "id")
   )
   private List<Heladera> heladerasSugeridas;
-  //private List<Heladera> heladerasEscogidas;
+
+  public void agregarHeladera(Heladera heladera) {
+    heladerasSugeridas.add(heladera);
+  }
 }

@@ -39,6 +39,7 @@ public class PersonaJuridica {
 
   @Setter
   @Embedded
+
   private Contacto contacto;
 
   @Setter
@@ -46,12 +47,12 @@ public class PersonaJuridica {
   private Direccion direccion;
 
   @Setter
-  @Column(name = "razonSocial")
+  @Column(name = "razonSocial", nullable = false)
   private String razonSocial;
 
   @Setter
   @Enumerated(EnumType.STRING)
-  @Column(name="tipo")
+  @Column(name="tipo", nullable = false)
   private TipoPersonaJuridica tipo;
 
   @Setter
@@ -60,11 +61,11 @@ public class PersonaJuridica {
   private Rubro rubro;
 
   @Enumerated(EnumType.STRING)
-  @ElementCollection()
+  @ElementCollection
   @CollectionTable(name = "formas_contribucion_juridicas",
       joinColumns = @JoinColumn(name = "personaJuridica_id",
           referencedColumnName = "id"))
-  @Column(name = "contribucionesElegidas")
+  @Column(name = "contribucionesElegidas", nullable = false)
   private Set<FormasContribucionJuridicas> contribucionesElegidas;
 
   @OneToMany

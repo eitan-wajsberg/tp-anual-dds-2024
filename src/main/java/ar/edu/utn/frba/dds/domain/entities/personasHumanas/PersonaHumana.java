@@ -92,7 +92,7 @@ public class PersonaHumana extends IObserverNotificacion {
   @CollectionTable(name = "formas_contribucion_humana",
       joinColumns = @JoinColumn(name = "personaHumana_id",
           referencedColumnName = "id"))
-  @Column(name = "contribucionesElegidas")
+  @Column(name = "contribucionesElegidas", nullable = false)
   private Set<FormasContribucionHumanas> contribucionesElegidas;
 
   @Getter

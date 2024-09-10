@@ -3,11 +3,15 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import lombok.NoArgsConstructor;
 
@@ -15,13 +19,16 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("DESPERFECTO")
 @NoArgsConstructor
 public class Desperfecto extends Suscripcion {
+
   @Transient
   private boolean aceptado;
 
-  //private List<SugerenciaHeladera> sugerencias;
+  @OneToMany
+  @JoinColumn(name = "suscripcion_id", referencedColumnName = "id")
+  private List<SugerenciaHeladera> sugerencias;
 
   @Transient
-  private RepositorioHeladera repositorioHeladeras;
+  private RepositorioHeladera repositorioHeladeras; // TODO: REVISAR repositorio
 
   public Desperfecto(PersonaHumana suscriptor) {
     this.suscriptor = suscriptor;
@@ -39,13 +46,16 @@ public class Desperfecto extends Suscripcion {
         + this.sugerirHeladeras(heladera);
   }
 
-  private String sugerirHeladeras(Heladera heladera) {
-    List<String> heladerasRecomendadas = repositorioHeladeras.recomendarHeladeras(heladera.getDireccion());
+  private String sugerirHeladeras(Heladera heladeraConDesperfecto) {
+    List<Heladera> heladerasRecomendadas = repositorioHeladeras.recomendarHeladeras(heladeraConDesperfecto.getDireccion());
 
+    SugerenciaHeladera sugerencia = new SugerenciaHeladera();
     String heladerasSugeridas = "";
-    for (String nombreHeladera : heladerasRecomendadas) {
-      heladerasSugeridas = heladerasSugeridas.concat("   - " + nombreHeladera + "\n");
+    for (Heladera heladera : heladerasRecomendadas) {
+      heladerasSugeridas = heladerasSugeridas.concat("   - " + heladera.getNombre() + "\n");
+      sugerencia.agregarHeladera(heladera);
     }
+    sugerencias.add(sugerencia);
 
     return heladerasSugeridas;
   }
