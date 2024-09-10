@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.reportes;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.utils.manejoFechas.ManejoFechas;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,14 +11,14 @@ import lombok.Setter;
 
 public class CantidadFallasPorHeladera implements Reporte {
   @Getter @Setter
-  IRepositorioHeladera repositorioHeladera;
+  RepositorioHeladera repositorioHeladera;
 
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
     int cantidadFallas;
     String parrafo;
 
-    for (Heladera heladera : repositorioHeladera.listar()) {
+    for (Heladera heladera : repositorioHeladera.buscarTodos(Heladera.class)) {
       cantidadFallas = cantidadFallas(heladera, fechaInicio, fechaFin);
       parrafo = "Heladera " + heladera.getNombre() + "Id: " + heladera.getId() + ": " + cantidadFallas;
       parrafos.add(parrafo);

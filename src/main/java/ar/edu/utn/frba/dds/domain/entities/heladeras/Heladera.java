@@ -1,14 +1,15 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
+import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import java.time.LocalDate;
@@ -19,33 +20,80 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@Entity @Table(name="heladera")
 public class Heladera implements Contribucion {
   @Getter @Setter
+  @Id @GeneratedValue
   private Long id;
+
   @Setter
+  @Column(name="nombre", nullable = false)
   private String nombre;
+
   @Setter
+  @Embedded
   private Direccion direccion;
+
   @Setter
+  @Convert(converter = LocalDateTimeAttributeConverter.class)
+  @Column(name = "fechaRegistro", nullable = false)
   private LocalDateTime fechaRegistro;
+
   @Setter
+  @Column(name = "capacidadMaximaVianda", nullable = false)
   private int capacidadMaximaViandas;
+
   @Setter
+  @ManyToOne
+  @JoinColumn(name = "modelo_id", referencedColumnName = "id", nullable = false)
   private Modelo modelo;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private Set<Vianda> viandas;
+
   @Setter
+  @Enumerated(EnumType.STRING)
+  @Column(name="estadoHeladera", nullable = false)
   private EstadoHeladera estado;
+
   @Setter
+  @Column(name="temperaturaEsperada")
   private float temperaturaEsperada;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioEstado> historialEstados;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioTemperatura> historialTemperaturas;
+
+  @OneToMany
+  @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<SolicitudApertura> solicitudesDeApertura;
-  // private List<Incidente> incidentes; // TODO: preguntar que honduras con eso
+
+  @Transient
   private GestorSuscripciones gestorSuscripciones;
+
+  @Transient
   private static int minutosMargenFallaConexion = 7;
 
   public Heladera() {
@@ -112,7 +160,8 @@ public class Heladera implements Contribucion {
   public void cambiarEstado(EstadoHeladera nuevoEstado) {
     if (this.estado != nuevoEstado) {
       this.estado = nuevoEstado;
-      this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now()));
+      this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now())); //TODO cambioEstado tiene constructor vacio, setear params.
+
     }
   }
 
@@ -140,8 +189,8 @@ public class Heladera implements Contribucion {
     return this.estado == EstadoHeladera.ACTIVA;
   }
 
-  public boolean validarApertura(String codigoTarjeta) {
-    return this.solicitudesDeApertura.stream().anyMatch(sol -> sol.esValida(codigoTarjeta));
+  public boolean validarApertura(Tarjeta tarjeta) {
+    return this.solicitudesDeApertura.stream().anyMatch(sol -> sol.esValida(tarjeta));
   }
 
   public void agregarSolicitudApertura(SolicitudApertura solicitud) {
@@ -161,7 +210,7 @@ public class Heladera implements Contribucion {
     this.solicitudesDeApertura.add(solicitud);
     PublicadorSolicitudApertura
         .getInstance()
-        .publicarSolicitudApertura(solicitud.getCodigoTarjeta(), solicitud.getFecha(), this.id);
+        .publicarSolicitudApertura(solicitud.getTarjeta().getCodigo(), solicitud.getFechaSolicitud(), this.id);
   }
 
   public int cantidadViandas() {

@@ -83,27 +83,26 @@ public class ManejoDeSolicitudesTest {
         solicitudA.setCantidadViandas(4);
         solicitudA.setCodigoTarjeta("1111");
         solicitudA.setAperturaConcretada(false);
-        solicitudA.setFecha(LocalDateTime.now());
+        solicitudA.setFechaConcrecion(LocalDateTime.now());
 
         solicitudB = new SolicitudApertura();
         solicitudB.setAccion(AccionApertura.QUITAR_VIANDA);
         solicitudB.setCantidadViandas(1);
         solicitudB.setCodigoTarjeta("1111");
         solicitudB.setAperturaConcretada(false);
-        solicitudB.setFecha(LocalDateTime.now());
-
+        solicitudB.setFechaConcrecion(LocalDateTime.now());
         solicitudC = new SolicitudApertura();
         solicitudC.setAccion(AccionApertura.INGRESAR_VIANDA);
         solicitudC.setCantidadViandas(1);
         solicitudC.setCodigoTarjeta("0000");
         solicitudC.setAperturaConcretada(false);
-        solicitudC.setFecha(LocalDateTime.now());
+        solicitudC.setFechaConcrecion(LocalDateTime.now());
 
         heladera = new Heladera();
         heladera.setId(1L);
 
         RepositorioHeladera repositorioHeladeraMock = mock(RepositorioHeladera.class);
-        when(repositorioHeladeraMock.buscarPorId(1L)).thenReturn(Optional.of(heladera));
+        when(repositorioHeladeraMock.buscarPorId(1L, Heladera.class)).thenReturn(Optional.of(heladera));
 
         PublicadorSolicitudApertura publicador = PublicadorSolicitudApertura.getInstance();
         publicador.setMqttClient(mqttClientMock);
@@ -155,7 +154,7 @@ public class ManejoDeSolicitudesTest {
     public void testPublicarSolicitudApertura() throws MqttException {
         SolicitudApertura solicitud = new SolicitudApertura();
         solicitud.setCodigoTarjeta("12345");
-        solicitud.setFecha(LocalDateTime.now());
+        solicitud.setFechaSolicitud(LocalDateTime.now());
         solicitud.setAccion(AccionApertura.INGRESAR_VIANDA);
         solicitud.setCantidadViandas(2);
 
@@ -169,7 +168,7 @@ public class ManejoDeSolicitudesTest {
 
         String expectedTopic = "mqqt/heladeras/1";
         int expectedHoras = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
-        String expectedMessageContent = "12345 " + solicitud.getFecha().plusHours(expectedHoras);
+        String expectedMessageContent = "12345 " + solicitud.getFechaSolicitud().plusHours(expectedHoras);
 
         assertEquals(expectedTopic, topicCaptor.getValue());
         assertEquals(expectedMessageContent, new String(messageCaptor.getValue().getPayload()));
@@ -177,6 +176,6 @@ public class ManejoDeSolicitudesTest {
     }
 
     private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
-        return new Vianda(LocalDate.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
+        return new Vianda(LocalDateTime.parse(fecha), true, nombre, calorias, peso, LocalDate.now()); //TODO REVISAR
     }
 }

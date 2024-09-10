@@ -1,5 +1,4 @@
 @startuml diagramaDeClasesDominio.
-!theme reddress-darkblue
 
 ' -----------------------------------------
 
@@ -12,12 +11,12 @@ class PersonaHumana {
  - nombre: String
  - apellido: String
  - fechaNacimiento: LocalDate
- - ofertasCanjeadas: List<OfertaCanjeada>
  - contribucionesElegidas: Set<FormasContribucionHumanas>
  - contribuciones: Set<Contribucion>
  - ofertasCanjeadas: Set<OfertaCanjeada>
  - formulario: List<Respuesta>
- - tarjetaColaboracion: Tarjeta
+ - tarjetasColaboracion: List<Tarjeta>
+ - tarjetaEnUso: Tarjeta
  + puntosGastados(): float
  + calcularPuntajeNeto(): float
  + agregarContribucion(contribucion: Contribucion): void
@@ -39,6 +38,7 @@ PersonaHumana --> " * " FormasContribucionHumanas
 PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
+PersonaHumana --> " * "Tarjeta
 PersonaHumana --> Tarjeta
 PersonaHumana ..|> IObserverNotificacion 
 
@@ -202,7 +202,8 @@ class FaltanNViandas {
 
 class Desperfecto {
  - aceptada: boolean
- + sugerirHeladeras(heladera: Heladera): String
+ - sugerencia: SugerenciaHeladera
+ + sugerirHeladeras(heladera: Heladera): SugerenciaHeladera
  # cumpleCondicion(heladera: Heladera): void
  # armarCuerpo(heladera: Heladera): String
 }
@@ -210,6 +211,13 @@ class Desperfecto {
 QuedanNViandas --|> Suscripcion
 FaltanNViandas --|> Suscripcion
 Desperfecto --|> Suscripcion
+Desperfecto --> SugerenciaHeladera
+
+class SugerenciaHeladera {
+ - fechaRealizacion: LocalDate
+ - heladerasSugeridas: List<Heladera>
+ - heladerasEscogidas: List<Heladera>
+}
 
 ' -----------------------------------------
 
@@ -291,9 +299,10 @@ CantidadViandasPorColaborador ..> PersonaHumana
 ' -----------------------------------------
 
 class SolicitudApertura {
- - fecha: LocalDateTime
- - codigoTarjeta: String 
+ - fechaSolicitud: LocalDateTime
+ - tarjeta: Tarjeta
  - aperturaConcretada: boolean
+ - fechaConcrecion: LocalDateTime
  - accion: AccionApertura
 }
 
@@ -326,6 +335,10 @@ class Incidente {
  - visitas: List<Visita>
  - solucionado: bool
  - tipoIncidente: TipoIncidente
+ - tipoAlerta: TipoAlerta
+ - colaborador: PersonaHumana
+ - descripcionDelColaborador: String
+ - foto: Image
  + registrarVisita(visita: Visita): void
  + asignarTecnico(): void
 }
@@ -333,10 +346,14 @@ class Incidente {
 Incidente --> TipoIncidente
 Incidente --> " * " Visita
 Incidente --> Tecnico
+Incidente --> TipoAlerta
+Incidente --> PersonaHumana
 
 interface TipoIncidente {
- + obtenerDescripcionIncidente(): String
-} 
+ + obtenerDescripcionIncidente(incidente: Incidente): String
+}
+
+TipoIncidente ..> Incidente
 
 class Visita {
  - descripcion: String
@@ -344,18 +361,13 @@ class Visita {
 }
 
 class Alerta {
- - tipo: TipoAlerta
- + obtenerDescripcionIncidente(): String
+ + obtenerDescripcionIncidente(incidente: Incidente): String
 }
 
 Alerta ..|> TipoIncidente
-Alerta --> TipoAlerta
 
 class FallaTecnica {
- - colaborador: PersonaHumana
- - descripcion: String
- - foto: Image
- + obtenerDescripcionIncidente(): String
+ + obtenerDescripcionIncidente(incidente: Incidente): String
 }
 
 FallaTecnica ..|> TipoIncidente
@@ -528,7 +540,7 @@ Documento --> TipoDocumento
 ' -----------------------------------------
 
 interface MedioDeContacto {
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 MedioDeContacto ..> Mensaje
@@ -536,7 +548,6 @@ MedioDeContacto ..> Mensaje
 ' -----------------------------------------
 
 class WhatsApp {
- - numero: String
  - adaptador: AdapterWhatsApp
  + enviar(mensaje: Mensaje)
 }
@@ -561,9 +572,8 @@ AdaptadaWhatsAppTwillio ..|> AdapterWhatsApp
 ' -----------------------------------------
 
 class Telegram {
- - userID: String
  - adaptador: AdapterTelegram
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 Telegram ..|> MedioDeContacto
@@ -587,8 +597,7 @@ AdaptadaTelegramBot ..|> AdapterTelegram
 
 
 class Telefono {
- - numero: String
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 Telefono ..|> MedioDeContacto
@@ -596,9 +605,8 @@ Telefono ..|> MedioDeContacto
 ' -----------------------------------------
 
 class Mail {
- - correo: String
  - adapterMail: AdapterMail
- + enviar(mensaje: Mensaje)
+ + enviar(mensaje: Mensaje, contacto: Contacto)
 }
 
 Mail ..|> MedioDeContacto
@@ -697,7 +705,6 @@ class Mensaje {
  - cuerpo: String
  - fecha: LocalDateTime
  - destinatario: Usuario
- - repositorioMensajes: IRepositorioMensajes
 }
 
 Mensaje --> Usuario
@@ -705,6 +712,10 @@ Mensaje --> Usuario
 ' -----------------------------------------
 
 class Contacto {
+ - telefono: String
+ - celular: String
+ - mail: String
+ - userIDTelegram: String
  - mediosDeContacto: Set<MedioDeContacto>
  + agregarMedioDeContacto(medioDeContacto: MedioDeContacto): void
  + quitarMedioDeContacto(medioDeContacto: MedioDeContacto): void
@@ -715,31 +726,34 @@ Contacto --> "*" MedioDeContacto
 Contacto ..> Mensaje
 
 ' -----------------------------------------
-
+class Opcion{
+ - campo: String
+}
 class Respuesta {
  - pregunta: Pregunta
- - contenido: String
+ - respuestaLibre: String
+ - opcionesElegidas: Set<Opcion>
 }
 
-Respuesta ---> Pregunta
+Respuesta --> Pregunta
+Respuesta --> "*" Opcion
 
 ' -----------------------------------------
-interface Pregunta {
+abstract class Pregunta {
+ - campo: String
+ - activa: boolean
  + esValida(respuesta: String): boolean
 }
 
 class MultipleChoice {
- - campo: String
- - activa: boolean
- - opciones: Set<String>
+ - opciones: Set<Opcion>
  + esValida(respuesta: String): boolean
 }
 
 MultipleChoice ..|> Pregunta
+MultipleChoice --> "*" Opcion
 
 class PreguntaAbierta {
- - campo: String
- - activa: boolean
  + esValida(respuesta: String): boolean
 }
 
@@ -766,6 +780,7 @@ class Tarjeta {
  - codigo: String
  - historialUsos: List<UsoDeTarjeta>
  - fechaEntrega: LocalDate
+ - fechaBaja: LocalDate
  + calcularPuntaje(): float
  + agregarUso(usoTarjeta: UsoDeTarjeta): void
  + cantidadDeUsos(dia: LocalDate): int
@@ -793,17 +808,19 @@ class PersonaVulnerable {
  - nombre: String
  - fechaDeNacimiento: LocalDate
  - fechaDeRegistro: LocalDate
- - dirección: String
+ - dirección: Direccion
  - menoresACargo: int
- - documento: Documento
+ - nroDocumento: String
+ - tipoDocumento: String
  - donanteQueLoRegistro: PersonaHumana
- - tarjeta: Tarjeta
+ - tarjetas: List<Tarjeta>
+ - tarjetaEnUso: Tarjeta
  + usarTarjeta(heladera: Heladera, vianda: Vianda): void
 }
 
+PersonaVulnerable --> Direccion
 PersonaVulnerable --> PersonaHumana
-PersonaVulnerable --> Documento
-PersonaVulnerable --> Tarjeta
+PersonaVulnerable --> " * " Tarjeta
 
 ' -----------------------------------------
 
@@ -928,7 +945,7 @@ Usuario ..> ValidadorDeClave
 
 ' -----------------------------------------
 
-class ValidadorDeClave{
+class ValidadorDeClave {
  - validadores: Set<TipoValidacion>
  + esValido(clave: String): boolean
 }
@@ -937,14 +954,14 @@ ValidadorDeClave --> " * " TipoValidacion
 
 ' -----------------------------------------
 
-interface TipoValidacion{
+interface TipoValidacion {
  + validar(clave: String): boolean
  + getMensajeError(): String
 }
 
 ' -----------------------------------------
 
-class LongitudEstipulada{
+class LongitudEstipulada {
  - longitudMaxima: int
  - longitudMinima: int
  + validar(clave: String): boolean
@@ -955,7 +972,7 @@ LongitudEstipulada ..|> TipoValidacion
 
 ' -----------------------------------------
 
-class ListaDePeoresClavesMemorizados{
+class ListaDePeoresClavesMemorizados {
  + validar(clave: String): boolean
  + getMensajeError(): String
 }
@@ -964,7 +981,7 @@ ListaDePeoresClavesMemorizados ..|> TipoValidacion
 
 ' -----------------------------------------
 
-class AusenciaDeCredencialesPorDefecto{
+class AusenciaDeCredencialesPorDefecto {
  - usuario: String
  + validar(clave: String): boolean
  + getMensajeError(): String

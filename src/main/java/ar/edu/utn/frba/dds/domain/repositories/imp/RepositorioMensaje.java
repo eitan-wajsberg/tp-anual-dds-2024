@@ -1,24 +1,19 @@
 package ar.edu.utn.frba.dds.domain.repositories.imp;
 
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioMensajes;
 
+import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class RepositorioMensaje implements IRepositorioMensajes {
-    List<Mensaje> mensajes;
-
-    public RepositorioMensaje(){
-        this.mensajes = new ArrayList<>();
+public class RepositorioMensaje extends Repositorio {
+    public List<Mensaje> buscarPorFecha(LocalDateTime fecha) {
+        return entityManager().createQuery("from" + Mensaje.class.getName() + "fechaEmision = " + fecha).getResultList();
     }
-
-    public void guardar(Mensaje mensaje) {
-        this.mensajes.add(mensaje);
-    }
-
-    public List<Mensaje> listar() {
-        return this.mensajes;
+    public List<Mensaje> buscarPorUsuario(Usuario usuario) {
+        return entityManager().createQuery("from" + Mensaje.class.getName() + "usuario_id = " + usuario.getId()).getResultList();
     }
 }
