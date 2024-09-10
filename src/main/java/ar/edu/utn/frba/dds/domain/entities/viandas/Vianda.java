@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.*;
@@ -19,23 +20,27 @@ public class Vianda implements Contribucion {
   @GeneratedValue
   private Long id;
 
-  @Column(name="fechaCaducidad", columnDefinition = "DATE")
+  @Column(name="fechaCaducidad", columnDefinition = "DATE", nullable = false)
   private LocalDateTime fechaCaducidad;
 
-  @Column(name="entregada", columnDefinition = "BIT(1)")
+  @Column(name="entregada", columnDefinition = "BIT(1)", nullable = false)
   private boolean entregada;
 
-  @Column(name="comida")
+  @Column(name="comida", nullable = false)
   private String comida;
 
-  @Column(name="caloriasEnKcal", columnDefinition = "DECIMAL(5,2)")
+  @Column(name="caloriasEnKcal", columnDefinition = "DECIMAL(5,2)", nullable = false)
   private float caloriasEnKcal;
 
-  @Column(name="pesoEnGramos", columnDefinition = "DECIMAL(5,2)")
+  @Column(name="pesoEnGramos", columnDefinition = "DECIMAL(5,2)", nullable = false)
   private float pesoEnGramos;
 
-  @Column(name="fechaDonacion", columnDefinition = "DATE", nullable = true)
+  @Column(name="fechaDonacion", columnDefinition = "DATE", nullable = false)
   private LocalDate fechaDonacion;
+
+  @ManyToOne
+  @JoinColumn(name = "personaHumana_id", referencedColumnName= "id", nullable = false)
+  private PersonaHumana personaHumana;
 
   public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;

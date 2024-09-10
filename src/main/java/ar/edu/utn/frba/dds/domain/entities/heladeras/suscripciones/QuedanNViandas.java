@@ -10,15 +10,17 @@ import javax.persistence.Entity;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Entity
 @DiscriminatorValue("QUEDAN_N_VIANDAS")
+@NoArgsConstructor
 public class QuedanNViandas extends Suscripcion {
   @Getter
   @Column(name="cantidadViandasQueQuedan")
   private int cantidadViandasDisponibles;
 
-  public QuedanNViandas(IObserverNotificacion suscriptor, int cantidadViandasDisponibles) {
+  public QuedanNViandas(PersonaHumana suscriptor, int cantidadViandasDisponibles) {
     this.cantidadViandasDisponibles = cantidadViandasDisponibles;
     this.suscriptor = suscriptor;
   }

@@ -67,7 +67,7 @@ public class ReceptorTemperatura implements MqttCallback {
 
 
     private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor) {
-        Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera);
+        Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera, Heladera.class);
         if (optionalHeladera.isPresent()) {
             Heladera heladera = optionalHeladera.get();
             if (tipoMensaje.equals("Temperatura")) {

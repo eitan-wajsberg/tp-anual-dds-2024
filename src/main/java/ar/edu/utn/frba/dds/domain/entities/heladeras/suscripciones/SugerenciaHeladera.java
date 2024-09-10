@@ -19,7 +19,7 @@ public class SugerenciaHeladera {
   @GeneratedValue
   private Long id;
 
-  @Column(name="fechaRealizacion")
+  @Column(name="fechaRealizacion", nullable = false)
   private LocalDate fechaRealizacion;
 
   @ManyToMany

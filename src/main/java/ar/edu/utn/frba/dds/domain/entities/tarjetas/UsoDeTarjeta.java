@@ -30,7 +30,7 @@ public class UsoDeTarjeta {
   private LocalDateTime fechaDeUso;
 
   @ManyToOne
-  @JoinColumn(name = "heladera_id", referencedColumnName = "id")
+  @JoinColumn(name = "heladera_id", referencedColumnName = "id", nullable = false)
   private Heladera heladera;
 
   public UsoDeTarjeta(LocalDateTime fecha, Heladera heladera) {

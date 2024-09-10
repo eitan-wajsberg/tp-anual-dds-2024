@@ -1,12 +1,10 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 
 import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
-import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.GeoRefServicio;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -23,9 +21,9 @@ public class Desperfecto extends Suscripcion {
   //private List<SugerenciaHeladera> sugerencias;
 
   @Transient
-  private IRepositorioHeladera repositorioHeladeras;
+  private RepositorioHeladera repositorioHeladeras;
 
-  public Desperfecto(IObserverNotificacion suscriptor) {
+  public Desperfecto(PersonaHumana suscriptor) {
     this.suscriptor = suscriptor;
   }
 

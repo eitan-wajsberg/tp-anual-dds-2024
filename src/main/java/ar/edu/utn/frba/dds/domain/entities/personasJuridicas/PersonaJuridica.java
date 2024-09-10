@@ -8,14 +8,18 @@ import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.Entity;
@@ -31,11 +35,10 @@ public class PersonaJuridica {
   @Setter
   @OneToOne
   @JoinColumn(name = "usuario_id", referencedColumnName = "id")
-  private Usuario usuario;                                      //TODO: Está bien?
+  private Usuario usuario;
 
   @Setter
-  @OneToOne
-  @JoinColumn(name = "contacto_id", referencedColumnName = "id")
+  @Embedded
   private Contacto contacto;
 
   @Setter
@@ -48,6 +51,7 @@ public class PersonaJuridica {
 
   @Setter
   @Enumerated(EnumType.STRING)
+  @Column(name="tipo")
   private TipoPersonaJuridica tipo;
 
   @Setter
@@ -55,16 +59,22 @@ public class PersonaJuridica {
   @JoinColumn(name = "rubro_id", referencedColumnName = "id")
   private Rubro rubro;
 
-  //TODO:
+  @Enumerated(EnumType.STRING)
+  @ElementCollection()
+  @CollectionTable(name = "formas_contribucion_juridicas",
+      joinColumns = @JoinColumn(name = "personaJuridica_id",
+          referencedColumnName = "id"))
+  @Column(name = "contribucionesElegidas")
   private Set<FormasContribucionJuridicas> contribucionesElegidas;
 
-  //TODO:
+  @OneToMany
+  @JoinColumn(name = "personaJuridica_id", referencedColumnName = "id")
   private Set<Heladera> heladerasAcargo;
 
-  //TODO:
+  @Transient
   private Set<Contribucion> contribuciones;
 
-  //TODO:
+  @Transient
   private Set<Oferta> ofertas;
 
   public PersonaJuridica(){

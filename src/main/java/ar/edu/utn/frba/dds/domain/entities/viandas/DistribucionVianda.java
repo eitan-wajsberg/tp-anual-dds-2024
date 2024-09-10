@@ -4,38 +4,45 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
 @Table(name="distribucion_vianda")
+@NoArgsConstructor
 public class DistribucionVianda implements Contribucion {
   @Id
   @GeneratedValue
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "id_heladeraOrigen", referencedColumnName = "id")
+  @JoinColumn(name = "id_heladeraOrigen", referencedColumnName = "id", nullable = false)
   private Heladera heladeraOrigen;
 
   @ManyToOne
-  @JoinColumn(name = "id_heladeraDestino", referencedColumnName = "id")
+  @JoinColumn(name = "id_heladeraDestino", referencedColumnName = "id", nullable = false)
   private Heladera heladeraDestino;
 
-  @Column(name="cantidadViandas")
+  @ManyToOne
+  @JoinColumn(name = "id_personaHumana", referencedColumnName = "id", nullable = false)
+  private PersonaHumana colaborador;
+
+  @Column(name="cantidadViandas", nullable = false)
   private int cantidadViandas;
 
-  @Column(name="motivo", columnDefinition = "TEXT")
+  @Column(name="motivo", columnDefinition = "TEXT", nullable = false)
   private String motivo;
 
-  @Column(name="fecha", columnDefinition = "DATE")
+  @Column(name="fecha", columnDefinition = "DATE", nullable = false)
   private LocalDate fecha;
 
-  @Column(name="fecha", columnDefinition = "BIT(1)")
+  @Column(name="terminada", columnDefinition = "BIT(1)", nullable = false)
   private boolean terminada;
 
   @ManyToMany

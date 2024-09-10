@@ -17,9 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+@EqualsAndHashCode
 @Entity
 @Table(name = "tarjeta")
 @Getter
@@ -33,8 +35,12 @@ public class Tarjeta implements Contribucion {
   private String codigo;
 
   @Setter
-  @Column(name = "fechaDeEntrega", columnDefinition = "DATE")
-  private LocalDate fechaEntrega;
+  @Column(name = "fechaRecepcionPersonaVulnerable", columnDefinition = "DATE")
+  private LocalDate fechaRecepcionPersonaVulnerable;
+
+  @Setter
+  @Column(name = "fechaRecepcionColaborador", columnDefinition = "DATE")
+  private LocalDate fechaRecepcionColaborador;
 
   @Setter
   @Column(name = "fechaDeBaja", columnDefinition = "DATE")
@@ -82,20 +88,5 @@ public class Tarjeta implements Contribucion {
     return (int) this.historialUsos.stream()
         .filter(uso -> uso.getFecha().isEqual(dia))
         .count();
-  }
-
-  @Override
-  public boolean equals(Object o){
-    if (o == this) {
-      return true;
-    }
-
-    if (!(o instanceof Tarjeta)) {
-      return false;
-    }
-
-    Tarjeta tarjeta = (Tarjeta) o;
-
-    return this.fechaEntrega.equals(tarjeta.fechaEntrega);
   }
 }

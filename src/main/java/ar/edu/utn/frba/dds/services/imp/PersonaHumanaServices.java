@@ -6,9 +6,9 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.dtos.inputs.personasHumanas.PersonaHumanaInputDTO;
 import ar.edu.utn.frba.dds.dtos.outputs.personasHumanas.PersonaHumanaOutputDTO;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.services.IPersonaHumanaServices;
 import ar.edu.utn.frba.dds.services.exceptions.PersonaHumanaNoEncontradaException;
 import ar.edu.utn.frba.dds.utils.permisos.VerificadorDePermisos;
@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class PersonaHumanaServices implements IPersonaHumanaServices {
-  private IRepositorioPersonaHumana repoPersonaHumana;
+  private RepositorioPersonaHumana repoPersonaHumana;
   private VerificadorDePermisos verificadorDePermisos;
 
-  public PersonaHumanaServices(IRepositorioPersonaHumana repoPersonaHumana, VerificadorDePermisos verificadorDePermisos) {
+  public PersonaHumanaServices(RepositorioPersonaHumana repoPersonaHumana, VerificadorDePermisos verificadorDePermisos) {
     this.repoPersonaHumana = repoPersonaHumana;
     this.verificadorDePermisos = verificadorDePermisos;
   }

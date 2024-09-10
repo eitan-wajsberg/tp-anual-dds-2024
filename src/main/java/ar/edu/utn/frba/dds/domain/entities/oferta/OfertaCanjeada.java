@@ -20,11 +20,14 @@ import java.time.LocalDateTime;
 public class OfertaCanjeada {
     @Id @GeneratedValue
     private Long id;
+
     @ManyToOne
-    @JoinColumn(name="oferta_id", referencedColumnName = "id")
+    @JoinColumn(name="oferta_id", referencedColumnName = "id", nullable = false)
     private Oferta oferta;
-    @Column(name="fecha_chanje")
+
+    @Column(name="fechaCanje", nullable = false)
     private LocalDateTime fechaCanje;
+
     public OfertaCanjeada(Oferta oferta, LocalDateTime fechaCanje) {
         this.oferta = oferta;
         this.fechaCanje = fechaCanje;

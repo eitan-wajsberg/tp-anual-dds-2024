@@ -24,16 +24,22 @@ import java.time.LocalDateTime;
 public class Oferta{
     @Id @GeneratedValue
     private Long id;
-    @Column(name ="nombre")
+
+    @Column(name ="nombre", nullable = false)
     private String nombre;
-    @Column(name ="cantidad_puntos_necesarios")
+
+    @Column(name ="cantidad_puntos_necesarios", nullable = false)
     private float cantidadPuntosNecesarios;
-    //private Object imagen;  No se especificó el tipo de imagen, fuera de dominio actual
+
+    @Column(name ="imagen_ruta")
+    private String imagen;
+
     @ManyToOne
-    @JoinColumn(name = "rubro_id", referencedColumnName = "id")
+    @JoinColumn(name = "rubro_id", referencedColumnName = "id", nullable = false)
     private Rubro rubro;
+
     @ManyToOne
-    @JoinColumn(name = "persona_juridica_id", referencedColumnName = "id")
+    @JoinColumn(name = "persona_juridica_id", referencedColumnName = "id", nullable = false)
     private PersonaJuridica organizacion;
 
     public Oferta(Long id, String nombre, float puntosNecesarios, Rubro rubro, PersonaJuridica org){

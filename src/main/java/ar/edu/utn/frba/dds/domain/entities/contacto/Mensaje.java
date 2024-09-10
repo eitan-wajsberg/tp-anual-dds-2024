@@ -23,18 +23,18 @@ public class Mensaje {
   @GeneratedValue
   private Long id;
 
-  @Column(name = "mensaje")
+  @Column(name = "asunto", nullable = false)
   private String asunto;
 
-  @Column(name = "mensaje")
+  @Column(name = "cuerpo", nullable = false)
   private String cuerpo;
 
   @Convert(converter = LocalDateTimeAttributeConverter.class)
-  @Column(name = "fechaEmision")
+  @Column(name = "fechaEmision", nullable = false)
   private LocalDateTime fechaEmision;
 
   @ManyToOne
-  @JoinColumn(name="usuario_id",referencedColumnName="id")
+  @JoinColumn(name="usuario_id",referencedColumnName="id", nullable = false)
   private Usuario usuario;
 
   public Mensaje(String asunto, String cuerpo, LocalDateTime fecha) {

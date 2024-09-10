@@ -21,9 +21,9 @@ public abstract class Pregunta {
   @Id
   @GeneratedValue
   private long id;
-  @Column(name = "campo")
+  @Column(name = "campo", nullable = false)
   private String campo;
-  @Column(name = "activa")
+  @Column(name = "activa", nullable = false)
   private boolean activa;
   public abstract boolean esValida(String respuesta);
 }

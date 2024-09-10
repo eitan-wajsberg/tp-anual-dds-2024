@@ -1,27 +1,12 @@
 package ar.edu.utn.frba.dds.domain.repositories.imp;
 
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Permiso;
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioPermisos;
-import java.util.ArrayList;
+import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import java.util.List;
 import java.util.Optional;
 
-public class RepositorioPermisos implements IRepositorioPermisos {
-  private List<Permiso> permisos;
-
-  public RepositorioPermisos(){
-    permisos = new ArrayList<>();
-  }
-
-  @Override
-  public void guardar(Permiso permiso) {
-    permisos.add(permiso);
-  }
-
-  public Optional<Permiso> buscar(String nombre) {
-    return this.permisos
-        .stream()
-        .filter(c -> c.getNombre().equals(nombre))
-        .findFirst();
+public class RepositorioPermisos extends Repositorio {
+  public Optional<Permiso> buscarPorAccion(String accion) {
+    return entityManager().createQuery("from" + Permiso.class.getName() + "where nombre = " + accion, Permiso.class).getResultList().stream().findFirst();
   }
 }

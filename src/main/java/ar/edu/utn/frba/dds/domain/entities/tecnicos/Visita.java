@@ -16,7 +16,7 @@ public class Visita {
     @GeneratedValue
     private Long id;
 
-    @Column(name="descripcion")
+    @Column(name="descripcion", nullable = false)
     private String descripcion;
 
     @Column(name="foto_ruta")

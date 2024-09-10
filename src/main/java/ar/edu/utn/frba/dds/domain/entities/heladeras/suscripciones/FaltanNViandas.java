@@ -15,7 +15,7 @@ public class FaltanNViandas extends Suscripcion {
   @Column(name="cantidadViandasFaltantes")
   private int cantidadViandasParaLlenarse;
 
-  public FaltanNViandas(IObserverNotificacion suscriptor, int cantidadViandasParaLlenarse) {
+  public FaltanNViandas(PersonaHumana suscriptor, int cantidadViandasParaLlenarse) {
     this.cantidadViandasParaLlenarse = cantidadViandasParaLlenarse;
     this.suscriptor = suscriptor;
   }
