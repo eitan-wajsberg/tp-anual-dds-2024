@@ -561,3 +561,138 @@ input[type="radio"]:focus {
     font-size: small;
     font-weight: normal;
 }
+
+/*--Ofertas--*/
+
+.category-container {
+    background-color: #f0f0f0; /* Gris clarito */
+    border-radius: 10px; /* Bordes suaves */
+    display: flex; /* Alinear las columnas en una fila */
+    gap: 5px; /* Espacio entre las columnas */
+    align-items: center; /* Centra verticalmente los elementos */
+    padding: 0; /* Ajusta el padding para que el contenedor se ajuste a las columnas */
+    height: auto; /* Ajusta la altura automáticamente */
+    justify-content: space-between;
+}
+
+.category-box {
+    border-right: 1px solid #ddd; /* Borde derecho para separar cada columna */
+    padding: 10px; /* Ajusta el padding interno en cada columna */
+    text-align: center; /* Centra el texto en las columnas */
+    color: #333; /* Color del texto para que sea visible */
+    font-size: 0.9em; /* Ajusta el tamaño de la fuente si es necesario */
+    background-color: #f0f0f0; /* Asegúrate de que el fondo coincida */
+    border: none; /* Quita el borde del botón */
+    border-radius: 0; /* Quita los bordes redondeados */
+    cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+    transition: background-color 0.3s; /* Efecto de transición para el fondo */
+    flex: 1;
+}
+
+.category-box:hover {
+    background-color: #e0e0e0; /* Cambia el color al pasar el ratón */
+}
+
+.category-box:last-child {
+    border-right: none; /* El último elemento no tiene borde derecho */
+}
+
+.input-group {
+    margin-left: auto; /* Alinea el campo de búsqueda a la derecha */
+}
+
+.btn-search {
+    border-radius: 0; /* Quita los bordes redondeados */
+    padding: 0.25rem 0.5rem; /* Ajusta el padding */
+    cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+}
+
+.category-box {
+    font-weight: normal; /* Elimina el negrita */
+}
+.offer-card {
+    background-color: #d9d8d8; /* Gris claro */
+    border-radius: 8px;
+    padding: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: stretch;
+}
+.offer-card img {
+    width: 175px;
+    height: 172px;
+    object-fit: contain;
+    border-radius: 8px 0 0 8px; /* Bordes redondeados solo en la esquina superior izquierda e inferior izquierda */
+    flex-shrink: 0;
+}
+.offer-details {
+    flex: 1;
+    padding-left: 8px;
+    padding-bottom: 2px;
+}
+.offer-details h4 {
+    margin-top: 0;
+}
+.offer-details p {
+    margin: 0; /* Elimina los márgenes */
+    padding: 0; /* Elimina el relleno */
+    font-size: 14px; /* Ajusta el tamaño de la fuente si es necesario */
+    line-height: 1.2; /* Controla la altura de la línea */
+    color: #666;
+    display: inline-block; /* Asegura que solo ocupe el espacio necesario */
+}
+
+.offerForm-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.offerForm-title {
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.offerForm-description {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #555;
+    font-size: 16px;
+}
+
+.offerForm-label {
+    font-weight: bold;
+    font-size: 22px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.offerForm-control,
+.offerForm-select,
+.offerForm-control-file {
+    width: 100%; /* Hacer que los campos ocupen todo el ancho */
+    margin-bottom: 15px;
+}
+
+.submit-btn {
+    background-color: #000;
+    color: white;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 10px 40px;
+    display: block;
+    margin: 20px auto 0 auto;
+    text-align: center;
+    border: none;
+    width: 50%;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #333;
+}
