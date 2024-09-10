@@ -1,13 +1,20 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Embeddable
+@NoArgsConstructor
 public class Coordenada {
+  @Column(name = "latitud")
   public String latitud;
+  @Column(name = "longitud")
   public String longitud;
 
   public Coordenada(String latitud, String longitud) {

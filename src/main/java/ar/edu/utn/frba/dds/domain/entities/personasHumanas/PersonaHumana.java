@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.personasHumanas;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
+import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
@@ -11,6 +12,7 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripci
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
+import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
@@ -24,40 +26,102 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.mail.MessagingException;
 
-public class PersonaHumana {
+@Entity
+@Table(name = "persona_humana")
+public class PersonaHumana extends IObserverNotificacion {
+  @Id @GeneratedValue
   @Getter @Setter
   private Long id;
+
   @Getter @Setter
+  @OneToOne
+  @JoinColumn(name = "usuario_id", referencedColumnName = "id")
   private Usuario usuario;
+
   @Getter @Setter
-  private Documento documento;
+  @Enumerated(EnumType.STRING)
+  @Column(name="tipoDocumento")
+  private TipoDocumento tipoDocumento;
+
   @Getter @Setter
+  @Column(name="nroDocumento")
+  private String nroDocumento;
+
+  @Getter @Setter
+  @Embedded
   private Contacto contacto;
+
   @Getter @Setter
+  @Embedded
   private Direccion direccion;
+
   @Getter @Setter
+  @Column(name="nombre", nullable = false)
   private String nombre;
+
   @Getter @Setter
+  @Column(name="apellido", nullable = false)
   private String apellido;
+
   @Getter @Setter
+  @Column(name = "fechaNacimiento", columnDefinition = "DATE")
   private LocalDate fechaNacimiento;
+
   @Getter
+  @Enumerated(EnumType.STRING)
+  @ElementCollection()
+  @CollectionTable(name = "formas_contribucion_humana",
+      joinColumns = @JoinColumn(name = "personaHumana_id",
+          referencedColumnName = "id"))
+  @Column(name = "contribucionesElegidas", nullable = false)
   private Set<FormasContribucionHumanas> contribucionesElegidas;
+
   @Getter
+  @Transient
   private Set<Contribucion> contribuciones;
+
   @Getter
+  @OneToMany
+  @JoinColumn(name = "personaHumana_id", referencedColumnName = "id")
   private Set<OfertaCanjeada> ofertasCanjeadas;
+
   @Getter
+  @OneToMany
+  @JoinColumn(name = "id_colaborador_repartidor", referencedColumnName = "id")
   private List<Tarjeta> tarjetasSinEntregar;
+
   @Getter
+  @Transient
   private List<Respuesta> formulario;
+
   @Getter
-  private Tarjeta tarjetaColaboracion;
+  @OneToMany
+  @JoinColumn(name = "id_colaborador_donador", referencedColumnName = "id")
+  private List<Tarjeta> tarjetasColaboracion;
+
+  @Getter
+  @OneToOne
+  @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
+  private Tarjeta tarjetaEnUso;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
@@ -122,15 +186,25 @@ public class PersonaHumana {
     if (this.direccion == null) {
       throw new DireccionIncompletaException();
     }
-    this.tarjetaColaboracion = tarjeta;
+
+    darTarjetaDeBaja();
+    this.tarjetasColaboracion.add(tarjeta);
+    this.tarjetaEnUso = tarjeta;
+  }
+
+  public void darTarjetaDeBaja(){
+    if (this.tarjetaEnUso != null) {
+      this.tarjetaEnUso.setFechaBaja(LocalDate.now());
+    }
+    this.tarjetaEnUso = null;
   }
 
   public void usarTarjeta(Heladera heladera){
-    if(!heladera.validarApertura(this.tarjetaColaboracion.getCodigo())){
+    if (!heladera.validarApertura(this.tarjetaEnUso)) {
       throw new NoHaySolicitudActivaException();
     }
 
-    this.tarjetaColaboracion.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
+    this.tarjetaEnUso.agregarUso(new UsoDeTarjeta(LocalDateTime.now(), heladera));
   }
 
   @Override
@@ -156,7 +230,7 @@ public class PersonaHumana {
         mismasContribuciones
         && this.nombre.equals(persona.nombre)
         && this.apellido.equals(persona.apellido)
-        && this.documento.equals(persona.documento)
+        && this.nroDocumento.equals(persona.nroDocumento)
         && this.contacto.equals(persona.contacto);
   }
 }
