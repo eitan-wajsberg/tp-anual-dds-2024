@@ -6,11 +6,10 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import java.util.List;
 
 public class RepositorioHeladera extends Repositorio {
-  public List<String> recomendarHeladeras(Direccion direccion) {
+  public List<Heladera> recomendarHeladeras(Direccion direccion) {
     return entityManager().createQuery("from Heladera", Heladera.class)
         .getResultList().stream()
         .filter(heladera -> heladera.getDireccion().estaCercaDe(direccion))
-        .map(Heladera::getNombre)
         .toList();
   }
 }
