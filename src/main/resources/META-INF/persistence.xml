@@ -23,10 +23,11 @@
         <property name="hibernate.connection.password" value=""/>
         <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/> -->
 
+        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
         <property name="hibernate.show_sql" value="true"/>
         <property name="hibernate.format_sql" value="true"/>
         <property name="use_sql_comments" value="true"/>
-        <property name="hibernate.hbm2ddl.auto" value="create-drop"/> <!--TODO: Cambiar cuando corresponda-->
+        <property name="hibernate.hbm2ddl.auto" value="create-drop"/> <!--TODO: Cambiar cuando corresponda a 'update'-->
      </properties>
 
    </persistence-unit>
