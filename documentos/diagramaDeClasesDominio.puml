@@ -824,7 +824,7 @@ class PersonaJuridica {
  - contribucionesElegidas: Set<FormasContribucionJuridicas>
  - heladerasACargo: Set<Heladera>
  - contribuciones: Set<Contribucion>
- - ofertasCanjeadas: Set<OfertaCanjeada>
+ - ofertas: Set<Oferta>
 
  + hacerseCargoDeHeladera(heladera: Heladera): void
  + darDeBajaHeladera(heladera: Heladera): void
@@ -840,6 +840,7 @@ PersonaJuridica --> Direccion
 PersonaJuridica --> " * " Heladera
 PersonaJuridica --> TipoPersonaJuridica
 PersonaJuridica --> Usuario
+PersonaJuridica --> " * " Oferta
 
 ' -----------------------------------------
 
