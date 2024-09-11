@@ -564,6 +564,22 @@ input[type="radio"]:focus {
 
 /*--Ofertas--*/
 
+.offer-image {
+    width: 165px;
+    height: 160px;
+    background-color: #f0f0f0; /* Gris claro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px 0 0 8px; /* Bordes redondeados solo en la esquina superior izquierda e inferior izquierda */
+    flex-shrink: 0;
+}
+
+.offer-image span {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
 .category-container {
     background-color: #f0f0f0; /* Gris clarito */
     border-radius: 10px; /* Bordes suaves */
@@ -620,7 +636,7 @@ input[type="radio"]:focus {
 }
 .offer-card img {
     width: 165px;
-    height: 160px;
+    height: 150px;
     object-fit: contain;
     border-radius: 8px 0 0 8px; /* Bordes redondeados solo en la esquina superior izquierda e inferior izquierda */
     flex-shrink: 0;
@@ -631,8 +647,8 @@ input[type="radio"]:focus {
     padding-bottom: 2px;
 }
 .offer-details h4 {
-    margin-top: 5px;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     font-weight: bold;
 }
 .offer-details p {
