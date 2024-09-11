@@ -611,7 +611,7 @@ input[type="radio"]:focus {
     font-weight: normal; /* Elimina el negrita */
 }
 .offer-card {
-    background-color: #d9d8d8; /* Gris claro */
+    background-color: #f8f3f3; /* Gris claro */
     border-radius: 8px;
     padding: 0;
     margin-bottom: 20px;
@@ -619,8 +619,8 @@ input[type="radio"]:focus {
     align-items: stretch;
 }
 .offer-card img {
-    width: 175px;
-    height: 172px;
+    width: 165px;
+    height: 160px;
     object-fit: contain;
     border-radius: 8px 0 0 8px; /* Bordes redondeados solo en la esquina superior izquierda e inferior izquierda */
     flex-shrink: 0;
@@ -631,15 +631,26 @@ input[type="radio"]:focus {
     padding-bottom: 2px;
 }
 .offer-details h4 {
-    margin-top: 0;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
 }
 .offer-details p {
-    margin: 0; /* Elimina los márgenes */
+    margin-bottom:8px; /* Elimina los márgenes */
+    margin-top: 5px;
     padding: 0; /* Elimina el relleno */
     font-size: 14px; /* Ajusta el tamaño de la fuente si es necesario */
     line-height: 1.2; /* Controla la altura de la línea */
     color: #666;
-    display: inline-block; /* Asegura que solo ocupe el espacio necesario */
+    display: block; /* Asegura que solo ocupe el espacio necesario */
+}
+.btn-canjear {
+    font-size: 16px; /* Ajusta el tamaño de la fuente */
+    padding: 8px 15px; /* Ajusta el relleno interno */
+    margin-right: 35px; /* Ajusta los márgenes a tu gusto */
+    margin-top: 6px;
+    border-radius: 5px; /* Opcional: bordes redondeados */
+    align-self: center; /* Asegura que el botón se alinee verticalmente */
 }
 
 .offerForm-container {
