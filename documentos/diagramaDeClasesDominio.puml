@@ -40,7 +40,8 @@ PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
 PersonaHumana --> " * "Tarjeta
 PersonaHumana --> Tarjeta
-PersonaHumana ..|> IObserverNotificacion 
+PersonaHumana ..|> IObserverNotificacion
+PersonaHumana --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -680,6 +681,7 @@ class Tecnico {
 Tecnico --> Contacto
 Tecnico --> Coordenada
 Tecnico --> Usuario
+Tecnico --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -811,6 +813,7 @@ class PersonaVulnerable {
 PersonaVulnerable --> Direccion
 PersonaVulnerable --> PersonaHumana
 PersonaVulnerable --> " * " Tarjeta
+PersonaVulnerable --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -841,6 +844,7 @@ PersonaJuridica --> " * " Heladera
 PersonaJuridica --> TipoPersonaJuridica
 PersonaJuridica --> Usuario
 PersonaJuridica --> " * " Oferta
+PersonaJuridica --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -891,7 +895,7 @@ AdapterRecomendacionPuntosHeladera ..> " * " Coordenada
 enum FormasContribucionHumanas {
  DISTRIBUCION_VIANDAS
  DONACION_DINERO
- DONACION_VIANDA
+ DONACION_VIANDA y
  ENTREGA_TARGETAS
 }
 
