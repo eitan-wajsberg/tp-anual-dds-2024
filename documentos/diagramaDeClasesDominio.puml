@@ -5,7 +5,8 @@
 class PersonaHumana {
  - id: Long
  - usuario: Usuario
- - documento: Documento
+ - tipoDocumento: TipoDocumento
+ - nroDocumento: String
  - contacto: Contacto
  - direccion: Direccion
  - nombre: String
@@ -33,7 +34,6 @@ class PersonaHumana {
 PersonaHumana --> " * " Contribucion
 PersonaHumana --> Contacto
 PersonaHumana --> Direccion
-PersonaHumana --> Documento
 PersonaHumana --> " * " FormasContribucionHumanas
 PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
@@ -530,15 +530,6 @@ class Rubro {
 
 ' -----------------------------------------
 
-class Documento {
- - tipo: TipoDocumento
- - documento: String
-}
-
-Documento --> TipoDocumento
-
-' -----------------------------------------
-
 interface MedioDeContacto {
  + enviar(mensaje: Mensaje, contacto: Contacto)
 }
@@ -678,7 +669,8 @@ AdaptadaJavaXMail ..|> AdapterMail
 class Tecnico {
  - nombre: String
  - apellido: String
- - documento: Documento
+ - tipoDocumento: TipoDocumento
+ - nroDocumento: String
  - cuil: String
  - contacto: Contacto
  - coordenada: Coordenada
@@ -687,7 +679,6 @@ class Tecnico {
 
 Tecnico --> Contacto
 Tecnico --> Coordenada
-Tecnico --> Documento
 Tecnico --> Usuario
 
 ' -----------------------------------------
