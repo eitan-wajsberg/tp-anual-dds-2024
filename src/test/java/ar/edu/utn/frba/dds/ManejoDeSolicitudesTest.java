@@ -72,11 +72,11 @@ public class ManejoDeSolicitudesTest {
 
         Tarjeta tarjetaA = new Tarjeta();
         tarjetaA.setCodigo("1111");
-        tarjetaA.setFechaEntrega(LocalDate.now());
+        tarjetaA.setFechaRecepcionColaborador(LocalDate.now());
 
         Tarjeta tarjetaB = new Tarjeta();
         tarjetaB.setCodigo("0000");
-        tarjetaB.setFechaEntrega(LocalDate.now());
+        tarjetaB.setFechaRecepcionColaborador(LocalDate.now());
 
         solicitudA = new SolicitudApertura();
         solicitudA.setAccion(AccionApertura.INGRESAR_VIANDA);

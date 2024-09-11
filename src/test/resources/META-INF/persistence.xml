@@ -8,25 +8,59 @@
   <persistence-unit name="simple-persistence-unit" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
+    <class>ar.edu.utn.frba.dds.domain.entities.contacto.Contacto</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.oferta.Oferta</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.usuarios.Rol</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.usuarios.Permiso</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.heladeras.Modelo</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.viandas.Vianda</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.heladeras.CambioTemperatura</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.heladeras.CambioEstado</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasJuridicas.FormasContribucionJuridicas</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Pregunta</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Opcion</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.ubicacion.Municipio</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.ubicacion.Provincia</class>
+    <class>ar.edu.utn.frba.dds.domain.entities.ubicacion.Calle</class>
+
     <properties>
       <property name="hibernate.archive.autodetection" value="class"/>
 
       <!--<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
       <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/2024-tpa-mi-no-grupo-08" />
       <property name="hibernate.connection.username" value="root" />
-      <property name="hibernate.connection.password" value="1234" />-->
+      <property name="hibernate.connection.password" value="123456" />-->
 
       <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
       <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:app-db"/>
       <property name="hibernate.connection.username" value="sa"/>
       <property name="hibernate.connection.password" value=""/>
-      <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
 
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <property name="use_sql_comments" value="true"/>
-      <property name="hibernate.hbm2ddl.auto" value="create"/>
+      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
     </properties>
+
   </persistence-unit>
 
 </persistence> 
