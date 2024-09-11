@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.adapters;
 
+import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,11 +9,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class AdaptadaTelegramBot extends TelegramLongPollingBot implements AdapterTelegram {
-
   public Long chatId;
 
   @Override
-  public void enviar(String texto) {
+  public void enviar(String texto, Long chatId) {
     sendMessage(chatId, texto);
   }
 
@@ -30,7 +30,6 @@ public class AdaptadaTelegramBot extends TelegramLongPollingBot implements Adapt
   @Override
   public String getBotUsername() {
     return "DdeSisBot"; // https://t.me/DdeSisBot
-
   }
 
   @Override

@@ -6,9 +6,32 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 
 import java.time.LocalDateTime;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="suscripcion")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="tipoSuscripcion")
 public abstract class Suscripcion {
-  protected IObserverNotificacion suscriptor;
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "id_persona_humana", referencedColumnName = "id", nullable = false)
+  protected PersonaHumana suscriptor;
+
+  @ManyToOne
+  @JoinColumn(name = "id_heladera", referencedColumnName = "id", nullable = false)
+  private Heladera heladera;
 
   public void notificar(Heladera heladera) {
     if (cumpleCondicion(heladera)) {

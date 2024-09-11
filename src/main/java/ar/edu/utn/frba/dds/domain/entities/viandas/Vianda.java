@@ -4,24 +4,49 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
+@Entity @Table(name="vianda")
+@NoArgsConstructor
 public class Vianda implements Contribucion {
-  private LocalDate fechaCaducidad;
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @Column(name="fechaCaducidad", columnDefinition = "DATE", nullable = false)
+  private LocalDateTime fechaCaducidad;
+
+  @Column(name="entregada", columnDefinition = "BIT(1)", nullable = false)
   private boolean entregada;
+
+  @Column(name="comida", nullable = false)
   private String comida;
-  private float calorias;
+
+  @Column(name="caloriasEnKcal", columnDefinition = "DECIMAL(5,2)", nullable = false)
+  private float caloriasEnKcal;
+
+  @Column(name="pesoEnGramos", columnDefinition = "DECIMAL(5,2)", nullable = false)
   private float pesoEnGramos;
+
+  @Column(name="fechaDonacion", columnDefinition = "DATE", nullable = false)
   private LocalDate fechaDonacion;
 
-  public Vianda(LocalDate fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
+  @ManyToOne
+  @JoinColumn(name = "personaHumana_id", referencedColumnName= "id", nullable = false)
+  private PersonaHumana personaHumana;
+
+  public Vianda(LocalDateTime fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;
     this.entregada = entregada;
     this.comida = comida;
-    this.calorias = calorias;
+    this.caloriasEnKcal = calorias;
     this.pesoEnGramos = pesoEnGramos;
     this.fechaDonacion = fechaDonacion;
   }
@@ -32,8 +57,7 @@ public class Vianda implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDonadas");
-    return coeficiente;
+    return ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDonadas");
   }
 
   public TipoContribucion obtenerTipoContribucion() {
@@ -45,7 +69,7 @@ public class Vianda implements Contribucion {
   }
 
   public boolean estaVencida() {
-    return fechaCaducidad.isBefore(LocalDate.now());
+    return fechaCaducidad.isBefore(LocalDateTime.now());
   }
 
   @Override

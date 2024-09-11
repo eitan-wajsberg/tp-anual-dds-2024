@@ -9,16 +9,48 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+@EqualsAndHashCode
+@Entity
+@Table(name = "tarjeta")
 @Getter
 public class Tarjeta implements Contribucion {
+
+  @Id @GeneratedValue
+  private long id;
+
   @Setter
+  @Column(name = "codigo", nullable = false)
   private String codigo;
+
   @Setter
-  private LocalDate fechaEntrega;
+  @Column(name = "fechaRecepcionPersonaVulnerable", columnDefinition = "DATE")
+  private LocalDate fechaRecepcionPersonaVulnerable;
+
+  @Setter
+  @Column(name = "fechaRecepcionColaborador", columnDefinition = "DATE", nullable = false)
+  private LocalDate fechaRecepcionColaborador;
+
+  @Setter
+  @Column(name = "fechaDeBaja", columnDefinition = "DATE")
+  private LocalDate fechaBaja;
+
+  @OneToMany
+  @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
   private List<UsoDeTarjeta> historialUsos;
+
+  @Transient
   private static final int HASH_LENGTH = 11;
 
   public Tarjeta() {
@@ -56,20 +88,5 @@ public class Tarjeta implements Contribucion {
     return (int) this.historialUsos.stream()
         .filter(uso -> uso.getFecha().isEqual(dia))
         .count();
-  }
-
-  @Override
-  public boolean equals(Object o){
-    if (o == this) {
-      return true;
-    }
-
-    if (!(o instanceof Tarjeta)) {
-      return false;
-    }
-
-    Tarjeta tarjeta = (Tarjeta) o;
-
-    return this.fechaEntrega.equals(tarjeta.fechaEntrega);
   }
 }

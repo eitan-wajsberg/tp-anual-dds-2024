@@ -31,7 +31,7 @@ public class HeladeraCambioDeEstadoTest {
     heladera.setModelo(modelo);
     heladera.setId(1L);
 
-    when(repositorioHeladeraMock.buscarPorId(1L)).thenReturn(Optional.of(heladera));
+    when(repositorioHeladeraMock.buscarPorId(1L, Heladera.class)).thenReturn(Optional.of(heladera));
 
     try (MockedConstruction<MqttClient> mocked = mockConstruction(MqttClient.class, (mock, context) -> {
       doNothing().when(mock).connect();
