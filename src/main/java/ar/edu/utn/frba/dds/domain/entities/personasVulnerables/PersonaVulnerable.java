@@ -48,16 +48,16 @@ public class PersonaVulnerable {
   private LocalDate fechaDeRegistro;
 
   @Embedded
-  private Direccion direccion;
+  private Direccion direccion; //Si posee
 
-  @Column(name="menoresAcargo", nullable = false)
-  private Integer menoresAcargo;
+  @Column(name="menoresAcargo")
+  private Integer menoresAcargo; //Si posee
 
   @Enumerated(EnumType.STRING)
-  @Column(name="tipoDocumento", nullable = false)
+  @Column(name="tipoDocumento") //Si posee
   private TipoDocumento tipoDocumento;
 
-  @Column(name="nroDocumento", nullable = false)
+  @Column(name="nroDocumento")
   private String nroDocumento;
 
   @ManyToOne

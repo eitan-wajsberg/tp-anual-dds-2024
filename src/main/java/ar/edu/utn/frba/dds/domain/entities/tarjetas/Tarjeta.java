@@ -39,7 +39,7 @@ public class Tarjeta implements Contribucion {
   private LocalDate fechaRecepcionPersonaVulnerable;
 
   @Setter
-  @Column(name = "fechaRecepcionColaborador", columnDefinition = "DATE")
+  @Column(name = "fechaRecepcionColaborador", columnDefinition = "DATE", nullable = false)
   private LocalDate fechaRecepcionColaborador;
 
   @Setter
