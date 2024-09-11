@@ -668,6 +668,7 @@ AdaptadaJavaXMail ..|> AdapterMail
 ' -----------------------------------------
 
 class Tecnico {
+ - usuario: Usuario
  - nombre: String
  - apellido: String
  - tipoDocumento: TipoDocumento
@@ -837,6 +838,7 @@ class PersonaJuridica {
 }
 
 PersonaJuridica --> " * " FormasContribucionJuridica
+PersonaJuridica --> " * " Oferta
 PersonaJuridica --> Rubro
 PersonaJuridica --> Contacto
 PersonaJuridica --> Direccion
