@@ -5,7 +5,8 @@
 class PersonaHumana {
  - id: Long
  - usuario: Usuario
- - documento: Documento
+ - tipoDocumento: TipoDocumento
+ - nroDocumento: String
  - contacto: Contacto
  - direccion: Direccion
  - nombre: String
@@ -33,14 +34,14 @@ class PersonaHumana {
 PersonaHumana --> " * " Contribucion
 PersonaHumana --> Contacto
 PersonaHumana --> Direccion
-PersonaHumana --> Documento
 PersonaHumana --> " * " FormasContribucionHumanas
 PersonaHumana --> Usuario
 PersonaHumana --> " * " OfertaCanjeada
 PersonaHumana --> " * " Respuesta
 PersonaHumana --> " * "Tarjeta
 PersonaHumana --> Tarjeta
-PersonaHumana ..|> IObserverNotificacion 
+PersonaHumana ..|> IObserverNotificacion
+PersonaHumana --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -530,15 +531,6 @@ class Rubro {
 
 ' -----------------------------------------
 
-class Documento {
- - tipo: TipoDocumento
- - documento: String
-}
-
-Documento --> TipoDocumento
-
-' -----------------------------------------
-
 interface MedioDeContacto {
  + enviar(mensaje: Mensaje, contacto: Contacto)
 }
@@ -679,7 +671,8 @@ class Tecnico {
  - usuario: Usuario
  - nombre: String
  - apellido: String
- - documento: Documento
+ - tipoDocumento: TipoDocumento
+ - nroDocumento: String
  - cuil: String
  - contacto: Contacto
  - coordenada: Coordenada
@@ -688,8 +681,8 @@ class Tecnico {
 
 Tecnico --> Contacto
 Tecnico --> Coordenada
-Tecnico --> Documento
 Tecnico --> Usuario
+Tecnico --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -821,6 +814,7 @@ class PersonaVulnerable {
 PersonaVulnerable --> Direccion
 PersonaVulnerable --> PersonaHumana
 PersonaVulnerable --> " * " Tarjeta
+PersonaVulnerable --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -834,7 +828,7 @@ class PersonaJuridica {
  - contribucionesElegidas: Set<FormasContribucionJuridicas>
  - heladerasACargo: Set<Heladera>
  - contribuciones: Set<Contribucion>
- - ofertasCanjeadas: Set<OfertaCanjeada>
+ - ofertas: Set<Oferta>
 
  + hacerseCargoDeHeladera(heladera: Heladera): void
  + darDeBajaHeladera(heladera: Heladera): void
@@ -844,12 +838,15 @@ class PersonaJuridica {
 }
 
 PersonaJuridica --> " * " FormasContribucionJuridica
+PersonaJuridica --> " * " Oferta
 PersonaJuridica --> Rubro
 PersonaJuridica --> Contacto
 PersonaJuridica --> Direccion
 PersonaJuridica --> " * " Heladera
 PersonaJuridica --> TipoPersonaJuridica
 PersonaJuridica --> Usuario
+PersonaJuridica --> " * " Oferta
+PersonaJuridica --> TipoDocumento
 
 ' -----------------------------------------
 
@@ -900,7 +897,7 @@ AdapterRecomendacionPuntosHeladera ..> " * " Coordenada
 enum FormasContribucionHumanas {
  DISTRIBUCION_VIANDAS
  DONACION_DINERO
- DONACION_VIANDA
+ DONACION_VIANDA y
  ENTREGA_TARGETAS
 }
 

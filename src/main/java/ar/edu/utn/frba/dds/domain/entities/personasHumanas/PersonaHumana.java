@@ -6,19 +6,14 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.RespuestaNoValidaException;
-import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 
-import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,13 +35,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.mail.MessagingException;
 
 @Entity
 @Table(name = "persona_humana")
+@Builder
+@AllArgsConstructor
 public class PersonaHumana extends IObserverNotificacion {
   @Id @GeneratedValue
   @Getter @Setter
@@ -231,6 +231,8 @@ public class PersonaHumana extends IObserverNotificacion {
         && this.nombre.equals(persona.nombre)
         && this.apellido.equals(persona.apellido)
         && this.nroDocumento.equals(persona.nroDocumento)
+        && this.tipoDocumento.equals(persona.tipoDocumento)
+        && this.fechaNacimiento.isEqual(persona.fechaNacimiento)
         && this.contacto.equals(persona.contacto);
   }
 }

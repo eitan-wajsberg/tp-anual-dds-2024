@@ -97,13 +97,13 @@ entity persona_vulnerable {
  * nombre: VARCHAR(255)
  * fechaDeNacimiento: DATE
  * fechaDeRegistro: DATE
- * menoresACargo: INTEGER(2)
+ menoresACargo: INTEGER(2)
  tipo_documento : ENUM
  nro_documento : VARCHAR(50)
- * provincia: VARCHAR(255)
- * municipio: VARCHAR(255)
- * calle: VARCHAR(255)
- * altura: VARCHAR(4)
+ provincia: VARCHAR(255)
+ municipio: VARCHAR(255)
+ calle: VARCHAR(255)
+ altura: VARCHAR(4)
  id_persona_que_lo_registro: INTEGER(11): <<FK>>
  id_tarjeta_en_uso: INTEGER(11): <<FK>>
 }
@@ -120,11 +120,11 @@ entity persona_humana {
   * nro_documento : VARCHAR(50)
   * nombre: VARCHAR(255)
   * apellido: VARCHAR(255)
-  * fechaNacimiento: DATE
-  * provincia: VARCHAR(255)
-  * municipio: VARCHAR(255)
-  * calle: VARCHAR(255)
-  * altura: VARCHAR(4)
+  fechaNacimiento: DATE
+  provincia: VARCHAR(255)
+  municipio: VARCHAR(255)
+  calle: VARCHAR(255)
+  altura: VARCHAR(4)
 
 }
 
@@ -134,7 +134,7 @@ entity formas_de_contribucion_humana {
     * formaContribucion: ENUM
 }
 note right
-formaContribucion: DISTRIBUCION_VIANDAS, DONACION_DINERO, DONACION_VIANDA, ENTREGA_TARGETAS
+formaContribucion: DISTRIBUCION_VIANDAS, DONACION_DINERO, DONACION_VIANDA, ENTREGA_TARJETAS
 end note
 
 entity formas_de_contribucion_juridica {
@@ -218,14 +218,15 @@ entity persona_juridica {
  whatsapp: VARCHAR(255)
  mail: VARCHAR(255)
  userTelegram: VARCHAR(255)
- *medioPreferido: VARCHAR(255)
+ * medioPreferido: VARCHAR(255)
  * razonSocial: VARCHAR(255)
  * tipo: ENUM
  * contribucionesElegidas: ENUM
- * provincia: VARCHAR(255)
- * municipio: VARCHAR(255)
- * calle: VARCHAR(255)
- * altura: VARCHAR(4)
+ provincia: VARCHAR(255)
+ municipio: VARCHAR(255)
+ calle: VARCHAR(255)
+ altura: VARCHAR(4)
+ 'En caso de poseer, puede indicar una dirección
 }
 
 entity oferta_canjeada {
@@ -293,8 +294,7 @@ entity usuario {
  --
  * id_rol: INTEGER(11) <<FK>>
  * nombre: VARCHAR(255)
- (* clave: VARCHAR(255))!!!! 'no creo que vaya asi, supongo que se encripta
- 'TODO arriba
+ * clave: VARCHAR(255))
 }
 
 entity rol {
