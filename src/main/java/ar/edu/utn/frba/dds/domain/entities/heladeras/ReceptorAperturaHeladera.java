@@ -1,16 +1,21 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras;
 
-import ar.edu.utn.frba.dds.domain.repositories.IRepositorioHeladera;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
+import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTarjetas;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import java.util.Optional;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class ReceptorAperturaHeladera implements IMqttMessageListener {
-  IRepositorioHeladera repositorioHeladeras;
+  private RepositorioHeladera repositorioHeladeras;
+  private RepositorioTarjetas repositorioTarjeta;
 
-  public ReceptorAperturaHeladera(RepositorioHeladera repositorioHeladeras) {
+  public ReceptorAperturaHeladera(RepositorioHeladera repositorioHeladeras, RepositorioTarjetas repositorioTarjeta) {
     this.repositorioHeladeras = repositorioHeladeras;
+    this.repositorioTarjeta = repositorioTarjeta;
   }
 
   public void messageArrived(String topic, MqttMessage mensaje) { // formato: idHeladera | codigoTarjeta
@@ -46,13 +51,18 @@ public class ReceptorAperturaHeladera implements IMqttMessageListener {
   }
 
   private void procesarMensaje(Long idHeladera, String tipoMensaje, String codigoTarjeta) {
-    Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera);
+    Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera, Heladera.class);
     if (optionalHeladera.isPresent()) {
       Heladera heladera = optionalHeladera.get();
       if (!tipoMensaje.equals("Apertura")) {
         System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
       } else {
-        heladera.validarApertura(codigoTarjeta);
+        Optional<Tarjeta> optionalTarjeta =  repositorioTarjeta.buscarCodigo(codigoTarjeta);
+        if (optionalTarjeta.isPresent()) {
+          heladera.validarApertura(optionalTarjeta.get());
+        } else {
+          System.err.println("Tarjeta no encontrada para el código: " + codigoTarjeta);
+        }
       }
     } else {
       System.err.println("Heladera no encontrada para el ID: " + idHeladera);
