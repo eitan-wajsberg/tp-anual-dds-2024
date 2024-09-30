@@ -1,0 +1,119 @@
+{{#partial "contenido"}}
+    <div class="m-5">
+        <h2 class="fw-bold">Reportes</h2>
+        <p>
+            Los reportes se generan semanalmente para hacer un seguimiento detallado del trabajo de todos los involucrados en la causa. Estos informes incluyen información clave, como el número de fallas por heladera, la cantidad de viandas retiradas y colocadas por cada heladera, y el número de viandas donadas por cada colaborador durante la semana.
+        </p>
+        <div class="report-card mt-5">
+            <div class="row p-3">
+                <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
+                    <h3 class="fw-bold text-center text-md-start">22/05/2024</h3>
+                </div>
+                <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
+                    <div class="dropdown">
+                        <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Descargar
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Cantidad de fallas por Heladera</a>
+                            <a class="dropdown-item" href="#">Cantidad de Viandas Retiradas/Colocadas por Heladera</a>
+                            <a class="dropdown-item" href="#">Cantidad de Viandas Donadas por colaborador</a>
+                            <a class="dropdown-item" href="#">Todos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive mt-3">
+                <table class="table mb-0">
+                    <thead>
+                    <tr>
+                        <th class="py-3 px-4">Tipo</th>
+                        <th class="py-3 px-4 text-center">Promedio</th>
+                        <th class="py-3 px-4 text-center">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="text-pill light-light-blue d-block">Cantidad de fallas por Heladera</span>
+                        </td>
+                        <td class="py-3 px-4 text-center">0.456</td>
+                        <td class="py-3 px-4 text-center">347</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="text-pill light-green d-block">Cantidad de Viandas Retiradas/Colocadas por Heladera</span>
+                        </td>
+                        <td class="py-3 px-4 text-center">56</td>
+                        <td class="py-3 px-4 text-center">1249</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="text-pill light-red d-block">Cantidad de Viandas Donadas por colaborador</span>
+                        </td>
+                        <td class="py-3 px-4 text-center">2.67</td>
+                        <td class="py-3 px-4 text-center">2457</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="report-card mt-5">
+            <div class="row p-3">
+                <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
+                    <h3 class="fw-bold text-center text-md-start">15/05/2024</h3>
+                </div>
+                <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
+                    <div class="dropdown">
+                        <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton-two" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Descargar
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-two">
+                            <a class="dropdown-item" href="#">Cantidad de fallas por Heladera</a>
+                            <a class="dropdown-item" href="#">Cantidad de Viandas Retiradas/Colocadas por Heladera</a>
+                            <a class="dropdown-item" href="#">Cantidad de Viandas Donadas por colaborador</a>
+                            <a class="dropdown-item" href="#">Todos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive mt-3">
+                <table class="table mb-0">
+                    <thead>
+                    <tr>
+                        <th class="py-3 px-4">Tipo</th>
+                        <th class="py-3 px-4 text-center">Promedio</th>
+                        <th class="py-3 px-4 text-center">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="text-pill light-light-blue d-block">Cantidad de fallas por Heladera</span>
+                        </td>
+                        <td class="py-3 px-4 text-center">0.456</td>
+                        <td class="py-3 px-4 text-center">347</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="text-pill light-green d-block">Cantidad de Viandas Retiradas/Colocadas por Heladera</span>
+                        </td>
+                        <td class="py-3 px-4 text-center">56</td>
+                        <td class="py-3 px-4 text-center">1249</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4">
+                            <span class="text-pill light-red d-block">Cantidad de Viandas Donadas por colaborador</span>
+                        </td>
+                        <td class="py-3 px-4 text-center">2.67</td>
+                        <td class="py-3 px-4 text-center">2457</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+{{/partial}}
+
+{{> templates/base titulo="Reportes" mostrarAdmin=true mostrarIrAtras=true paginaAtras="/admin"}}
