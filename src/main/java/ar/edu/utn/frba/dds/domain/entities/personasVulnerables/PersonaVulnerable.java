@@ -41,6 +41,9 @@ public class PersonaVulnerable {
   @Column(name = "nombre", nullable = false)
   private String nombre;
 
+  @Column(name = "apellido", nullable = false)
+  private String apellido;
+
   @Column(name = "fechaDeNacimiento", columnDefinition = "DATE", nullable = false)
   private LocalDate fechaDeNacimiento;
 
@@ -48,13 +51,13 @@ public class PersonaVulnerable {
   private LocalDate fechaDeRegistro;
 
   @Embedded
-  private Direccion direccion; //Si posee
+  private Direccion direccion;
 
   @Column(name="menoresAcargo")
-  private Integer menoresAcargo; //Si posee
+  private Integer menoresAcargo;
 
   @Enumerated(EnumType.STRING)
-  @Column(name="tipoDocumento") //Si posee
+  @Column(name="tipoDocumento")
   private TipoDocumento tipoDocumento;
 
   @Column(name="nroDocumento")

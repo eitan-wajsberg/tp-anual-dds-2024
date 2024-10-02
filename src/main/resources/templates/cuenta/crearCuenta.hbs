@@ -3,8 +3,8 @@
     <div class="m-5">
         <div class="row justify-content-center">
             <div class="col-md-5 col-12">
-                <form class="me-4 ms-4">
-                    <h1 class="title text-center">Crea tu cuenta</h1>
+                <form class="me-4 ms-4" method="POST" action="/usuarios">
+                    <h1 class="title text-center">Crear {{#if personaHumana}}persona humana{{else}}persona jurídica{{/if}}</h1>
                     <div class="pt-5 pb-4"></div> <!-- separador -->
                     <div class="row">
                         <input type="text" name="usuario" placeholder="Usuario">
@@ -13,7 +13,7 @@
                         <input type="password" name="clave" placeholder="Contraseña">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" name="clave" placeholder="Confirmar contraseña">
+                        <input type="password" name="claveRepetida" placeholder="Confirmar contraseña">
                     </div>
                     <div class="row mt-2">
                         <div class="form-check d-flex align-items-center">
@@ -35,4 +35,4 @@
         </div>
     </div>
 {{/partial}}
-{{> templates/base titulo="Registro" mostrarInicioSesion=true mostrarIrAtras=true }}
+{{> templates/base titulo="Registro" mostrarInicioSesion=true mostrarIrAtras=true paginaAtras="/eleccion" }}
