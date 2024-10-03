@@ -1,25 +1,25 @@
 {{#partial "contenido"}}
     <div class="m-5">
         <div class="row justify-content-center">
-            <form>
+            <form method="POST" action="/">
                 <h4 class="fw-bold fs-5">Información básica</h4>
                 <p class="mb-3">Ingresar los datos personales básicos del técnico.</p>
 
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input type="text" class="w-100" placeholder="Nombre">
+                        <input name="nombre" type="text" class="w-100" placeholder="Nombre">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input type="text" class="w-100" placeholder="Apellido">
+                        <input name="apellido" type="text" class="w-100" placeholder="Apellido">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input type="text" class="w-100" placeholder="Dirección">
+                        <input name="direccion" type="text" class="w-100" placeholder="Dirección">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input type="text" class="w-100" placeholder="CUIL">
+                        <input name="cuil" type="text" class="w-100" placeholder="CUIL">
                     </div>
                 </div>
 
@@ -45,13 +45,13 @@
 
                 <div class="row mb-3">
                     <div class="col-12 col-md-4 mb-2 mb-md-0">
-                        <input type="text" class="w-100" placeholder="WhatsApp">
+                        <input name="whatsapp" type="text" class="w-100" placeholder="WhatsApp">
                     </div>
                     <div class="col-12 col-md-4 mb-2 mb-md-0">
-                        <input type="text" class="w-100" placeholder="Telegram">
+                        <input name="telegram" type="text" class="w-100" placeholder="Telegram">
                     </div>
                     <div class="col-12 col-md-4 mb-2 mb-md-0">
-                        <input type="text" class="w-100" placeholder="Correo electrónico">
+                        <input name="correo" type="text" class="w-100" placeholder="Correo electrónico">
                     </div>
                 </div>
 

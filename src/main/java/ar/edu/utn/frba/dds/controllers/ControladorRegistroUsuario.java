@@ -3,14 +3,13 @@ package ar.edu.utn.frba.dds.controllers;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
-import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ControladorRegistroUsuario implements ICrudViewsHandler, WithSimplePersistenceUnit {
+public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   private Repositorio repositorioUsuario;
   private Repositorio repositorioRol;
 
@@ -19,21 +18,10 @@ public class ControladorRegistroUsuario implements ICrudViewsHandler, WithSimple
     this.repositorioRol = repositorioRol;
   }
 
-  @Override
-  public void index(Context context) {
-    // TODO
-  }
-
-  @Override
-  public void show(Context context) {
-    // TODO
-  }
-
-  @Override
   public void create(Context context) {
     String tipoCuenta = context.sessionAttribute("tipoCuenta");
     if (tipoCuenta == null) {
-      context.redirect("/");
+      context.redirect("");
       return;
     }
     System.out.println(tipoCuenta);
@@ -47,7 +35,6 @@ public class ControladorRegistroUsuario implements ICrudViewsHandler, WithSimple
   }
 
 
-  @Override
   public void save(Context context) {
     Usuario usuario = new Usuario();
 
@@ -58,6 +45,10 @@ public class ControladorRegistroUsuario implements ICrudViewsHandler, WithSimple
     }
 
     usuario.setNombre(context.formParam("usuario"));
+
+    // TODO: COMPLETAR Y MEJORAR
+
+    // utilizar el validador de contraseñas
     usuario.setClave(context.formParam("clave"));
 
     withTransaction(() -> {
@@ -66,21 +57,7 @@ public class ControladorRegistroUsuario implements ICrudViewsHandler, WithSimple
       this.repositorioUsuario.guardar(usuario);
     });
 
-    context.redirect("");
-  }
-
-  @Override
-  public void edit(Context context) {
-    // TODO
-  }
-
-  @Override
-  public void update(Context context) {
-    // TODO
-  }
-
-  @Override
-  public void delete(Context context) {
-    // TODO
+    // redireccionar al login?
+    context.redirect("/");
   }
 }

@@ -10,9 +10,6 @@ import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,6 +49,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
     Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
     registrador.ifPresent(nuevaPersona::setPersonaQueLoRegistro);
+
+    // TODO: COMPLETAR Y MEJORAR
 
     Direccion direccion = new Direccion();
     // direccion.normalizar("Cabildo y Juramento 500");

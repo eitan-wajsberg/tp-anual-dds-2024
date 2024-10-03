@@ -3,19 +3,19 @@
     <div class="m-5">
         <div class="row justify-content-center">
             <div class="col-md-5 col-12">
-                <form class="me-4 ms-4" method="POST" action="/usuarios">
+                <form id="registroForm" class="me-4 ms-4" method="POST" action="/usuarios">
                     <h1 class="title text-center">Crear {{#if personaHumana}}persona humana{{else}}persona jurídica{{/if}}</h1>
                     <div class="pt-5 pb-4"></div> <!-- separador -->
                     <div class="row">
-                        <input type="text" name="usuario" placeholder="Usuario">
+                        <input type="text" name="usuario" required pattern="[a-zA-Z0-9]+" minlength="5" placeholder="Usuario">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" name="clave" placeholder="Contraseña">
+                        <input type="password" id="clave" name="clave" required minlength="8" maxlength="40" placeholder="Contraseña">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" name="claveRepetida" placeholder="Confirmar contraseña">
+                        <input type="password" id="claveRepetida" name="claveRepetida" required minlength="8" maxlength="40" placeholder="Confirmar contraseña">
                     </div>
-                    <div class="row mt-2">
+                    <div id="visibilidadClave" class="row mt-2">
                         <div class="form-check d-flex align-items-center">
                             <input class="form-check-input" type="checkbox" id="flexCheckDefault">
                             <label class="form-check-label ms-2" for="flexCheckDefault">
@@ -24,15 +24,24 @@
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <button>Registrarse</button>
+                        <button type="submit">Registrarse</button>
                     </div>
                 </form>
                 <div class="row mt-5 mb-5 text-center">
                     <hr>
-                    <label class="dark-grey-text fw-bold">¿Ya ténes una cuenta? <a href="login.html" class="light-blue">Inicia sesión</a> </label>
+                    <label class="dark-grey-text fw-bold">¿Ya tienes una cuenta? <a href="login.html" class="light-blue">Inicia sesión</a></label>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#flexCheckDefault').on('change', function() {
+                let passwordFieldType = $('#clave').attr('type') === 'password' ? 'text' : 'password';
+                $('#clave, #claveRepetida').attr('type', passwordFieldType);
+            });
+        });
+    </script>
 {{/partial}}
 {{> templates/base titulo="Registro" mostrarInicioSesion=true mostrarIrAtras=true paginaAtras="/eleccion" }}
