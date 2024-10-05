@@ -8,7 +8,9 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
 import ar.edu.utn.frba.dds.dtos.inputs.personasHumanas.PersonaHumanaInputDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
+import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
@@ -23,6 +25,7 @@ import javax.validation.ValidatorFactory;
 public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private Repositorio repositorioPersonaVulnerable;
   private RepositorioPersonaHumana repositorioPersonaHumana;
+  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_registro_persona_vulnerable");
 
   public ControladorPersonaVulnerable(Repositorio repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana) {
     this.repositorioPersonaVulnerable = repositorioPersonaVulnerable;
@@ -41,49 +44,29 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void create(Context context) {
-    context.render("colaboraciones/registroPersonaVulnerable.hbs");
+    context.render(rutaHbs);
   }
 
   @Override
   public void save(Context context) {
     PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
-    dto.setNombre(context.formParam("nombre"));
-    dto.setApellido(context.formParam("apellido"));
-    dto.setFechaDeNacimiento(LocalDate.parse(Objects.requireNonNull(context.formParam("fecha"))));
-    dto.setMenoresAcargo(Integer.parseInt(Objects.requireNonNull(context.formParam("cantidadMenores"))));
-    dto.setNroDocumento(context.formParam("nroDocumento"));
-    dto.setTipoDocumento(context.formParam("tipoDocumento"));
+    dto.obtenerFormulario(context, rutaHbs);
+    PersonaVulnerable nuevaPersona = (PersonaVulnerable) dto.convertirAEntidad();
 
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    Validator validator = factory.getValidator();
-    Set<ConstraintViolation<PersonaVulnerableDTO>> violations = validator.validate(dto);
-    if (!violations.isEmpty()) {
-      context.status(400);
-      context.json(violations);
-      return;
+    if (nuevaPersona == null) {
+      throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la persona vulnerable", rutaHbs);
     }
 
-    // Convertir el DTO a la entidad PersonaVulnerable
-    PersonaVulnerable nuevaPersona = dto.toPersonaVulnerable();
-
     Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
-    registrador.ifPresent(nuevaPersona::setPersonaQueLoRegistro);
+    if (registrador.isEmpty()) {
+      throw new ValidacionFormularioException("No se ha encontrado la persona que lo está registrando. Reintentar.", rutaHbs);
+    }
+    nuevaPersona.setPersonaQueLoRegistro(registrador.get());
 
-    // TODO: COMPLETAR Y MEJORAR
-
-    Direccion direccion = new Direccion();
-    // direccion.normalizar("Cabildo y Juramento 500");
-
-    nuevaPersona.setDireccion(direccion);
-    nuevaPersona.setNroDocumento(context.formParam("nroDocumento"));
-    nuevaPersona.setTipoDocumento(TipoDocumento.valueOf(context.formParam("tipoDocumento")));
-
-    withTransaction(() -> {
-      this.repositorioPersonaVulnerable.guardar(nuevaPersona);
-    });
-
+    withTransaction(() -> repositorioPersonaVulnerable.guardar(nuevaPersona));
     context.redirect("/inicio");
   }
+
 
   @Override
   public void edit(Context context) {

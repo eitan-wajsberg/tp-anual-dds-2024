@@ -21,6 +21,6 @@ public class LongitudEstipulada implements TipoValidacion {
   }
 
   public String getMensajeError() {
-    return String.format("La contraseña debe tener entre 8 y %d caracteres.", longitudMaxima);
+    return String.format("La clave debe tener entre 8 y %d caracteres.", longitudMaxima);
   }
 }

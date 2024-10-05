@@ -1,50 +1,67 @@
 package ar.edu.utn.frba.dds.dtos;
 
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import io.javalin.http.Context;
 import java.time.LocalDate;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import java.util.Objects;
 import lombok.Data;
 
 @Data
-public class PersonaVulnerableDTO {
-
-  @NotNull(message = "El nombre es obligatorio")
-  @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
+public class PersonaVulnerableDTO implements DTO {
   private String nombre;
-
-  @NotNull(message = "El apellido es obligatorio")
-  @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
   private String apellido;
-
-  @NotNull(message = "La fecha de nacimiento es obligatoria")
-  @Past(message = "La fecha de nacimiento debe ser en el pasado")
   private LocalDate fechaDeNacimiento;
-
-  @NotNull(message = "Debe especificar el número de documento")
-  @Pattern(regexp = "\\d{7,8}", message = "El número de documento debe tener entre 7 y 8 dígitos")
-  private String nroDocumento;
-
+  private Integer menoresAcargo;
   private String tipoDocumento;
+  private String nroDocumento;
+  private String calle;
+  private Integer altura;
+  private String provincia;
+  private String municipio;
+  private String rutaHbs;
 
-  @Min(value = 0, message = "La cantidad de menores a cargo no puede ser negativa")
-  private int menoresAcargo;
+  @Override
+  public void obtenerFormulario(Context context, String rutaHbs) {
+    this.setNombre(context.formParam("nombre"));
+    this.setApellido(context.formParam("apellido"));
+    this.setFechaDeNacimiento(LocalDate.parse(Objects.requireNonNull(context.formParam("fecha"))));
+    this.setMenoresAcargo(Integer.parseInt(Objects.requireNonNull(context.formParam("cantidadMenores"))));
+    this.setNroDocumento(context.formParam("nroDocumento"));
+    this.setTipoDocumento(context.formParam("tipoDocumento"));
+    this.setCalle(context.formParam("calle"));
+    this.setAltura(Integer.parseInt(Objects.requireNonNull(context.formParam("altura"))));
+    this.setProvincia(context.formParam("provincia"));
+    this.setMunicipio(context.formParam("municipio"));
+    this.setRutaHbs(rutaHbs);
+  }
 
-  public PersonaVulnerable toPersonaVulnerable() {
+  @Override
+  public Object convertirAEntidad() {
+    if (this.nombre.isEmpty() || this.apellido.isEmpty() || this.fechaDeNacimiento == null) {
+      throw new ValidacionFormularioException("Ciertos campos que son obligatorios se encuentran vacíos", rutaHbs);
+    }
+
+    if (this.menoresAcargo < 0) {
+      throw new ValidacionFormularioException("La cantidad de menores a cargo no puede ser negativa", rutaHbs);
+    }
+
+    if (this.nroDocumento.matches("^[a-zA-Z0-9-]{5,50}$")) {
+      throw new ValidacionFormularioException("Numero de documento inválido", rutaHbs);
+    }
+
+    if (this.fechaDeNacimiento.isBefore(LocalDate.now())) {
+      throw new ValidacionFormularioException("Fecha de nacimiento inválida", rutaHbs);
+    }
+
     return PersonaVulnerable.builder()
         .nombre(this.nombre)
         .apellido(this.apellido)
-        .fechaDeNacimiento(this.fechaDeNacimiento)
+        .fechaDeNacimiento(fechaDeNacimiento)
         .menoresAcargo(this.menoresAcargo)
+        .tipoDocumento(TipoDocumento.valueOf(this.tipoDocumento))
+        .nroDocumento(this.nroDocumento)
         .build();
   }
-
 }

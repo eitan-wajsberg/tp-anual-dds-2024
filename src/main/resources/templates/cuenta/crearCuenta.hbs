@@ -7,7 +7,7 @@
                     <h1 class="title text-center">Crear {{#if personaHumana}}persona humana{{else}}persona jurídica{{/if}}</h1>
                     <div class="pt-5 pb-4"></div> <!-- separador -->
                     <div class="row">
-                        <input type="text" name="usuario" required pattern="[a-zA-Z0-9]+" minlength="5" placeholder="Usuario">
+                        <input type="text" name="usuario" required pattern="^(?![._-])[a-zA-Z0-9._-]{5,50}(?<![._-])$" minlength="5" placeholder="Usuario">
                     </div>
                     <div class="row mt-2">
                         <input type="password" id="clave" name="clave" required minlength="8" maxlength="50" placeholder="Contraseña">
