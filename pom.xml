@@ -87,7 +87,7 @@
       <version>10.4.0</version>
     </dependency>
 
-    <!-- Para encriptar las claves -->
+    <!-- Encriptador y verificador de secretos memorizados -->
     <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
