@@ -7,6 +7,7 @@ import java.util.Arrays;
 public class AppHandlers {
   private IHandler[] handlers = new IHandler[]{
       new AccesoDenegadoHandler(),
+      new ValidadorRegistroHandler()
   };
 
   public static void applyHandlers(Javalin app) {

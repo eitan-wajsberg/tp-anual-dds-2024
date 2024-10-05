@@ -24,7 +24,7 @@ public class PrettyProperties {
 
   private void readProperties() {
     try {
-      InputStream input = new FileInputStream("src/properties/config.properties");
+      InputStream input = new FileInputStream("src/main/resources/config.properties");
       this.prop.load(input);
     }
     catch (IOException ex) {

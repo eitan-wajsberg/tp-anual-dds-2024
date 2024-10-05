@@ -10,10 +10,10 @@
                         <input type="text" name="usuario" required pattern="[a-zA-Z0-9]+" minlength="5" placeholder="Usuario">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" id="clave" name="clave" required minlength="8" maxlength="40" placeholder="Contraseña">
+                        <input type="password" id="clave" name="clave" required minlength="8" maxlength="50" placeholder="Contraseña">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" id="claveRepetida" name="claveRepetida" required minlength="8" maxlength="40" placeholder="Confirmar contraseña">
+                        <input type="password" id="claveRepetida" name="claveRepetida" required minlength="8" maxlength="50" placeholder="Confirmar contraseña">
                     </div>
                     <div id="visibilidadClave" class="row mt-2">
                         <div class="form-check d-flex align-items-center">
@@ -26,6 +26,11 @@
                     <div class="row mt-2">
                         <button type="submit">Registrarse</button>
                     </div>
+                    {{#if error}}
+                        <div class="row mt-2 justify-content-center">
+                            <p class="error text-center">{{error}}</p>
+                        </div>
+                    {{/if}}
                 </form>
                 <div class="row mt-5 mb-5 text-center">
                     <hr>
@@ -42,6 +47,20 @@
                 $('#clave, #claveRepetida').attr('type', passwordFieldType);
             });
         });
+
+        const clave = document.getElementById('clave');
+        const claveRepetida = document.getElementById('claveRepetida');
+
+        function validarClave() {
+            if (clave.value !== claveRepetida.value) {
+                claveRepetida.setCustomValidity("Las claves no coinciden");
+            } else {
+                claveRepetida.setCustomValidity("");
+            }
+        }
+
+        clave.addEventListener('input', validarClave);
+        claveRepetida.addEventListener('input', validarClave);
     </script>
 {{/partial}}
 {{> templates/base titulo="Registro" mostrarInicioSesion=true mostrarIrAtras=true paginaAtras="/eleccion" }}

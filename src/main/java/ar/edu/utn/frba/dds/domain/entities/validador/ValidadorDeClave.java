@@ -1,5 +1,8 @@
 package ar.edu.utn.frba.dds.domain.entities.validador;
 
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -9,27 +12,25 @@ import lombok.Setter;
 @Getter
 public class ValidadorDeClave {
   private Set<TipoValidacion> validadores;
+  private String erroresFinales;
 
-  public ValidadorDeClave(){
+  public ValidadorDeClave(TipoValidacion ...tipoValidacion) {
     validadores = new HashSet<>();
+    Collections.addAll(validadores, tipoValidacion);
   }
 
   public boolean validar(String clave) {
-    String errores = "";
+    StringBuilder errores = new StringBuilder();
     boolean esValido = true;
 
     for (TipoValidacion validador : validadores) {
       if (!validador.validar(clave)) {
-        errores += validador.getMensajeError() + '\n';
+        errores.append(validador.getMensajeError()).append('\n');
         esValido = false;
       }
     }
-    final String erroresFinales = errores;
 
-    if (!esValido) {
-      throw new RuntimeException(erroresFinales);
-    }
-
+    erroresFinales = errores.toString();
     return esValido;
   }
 }
