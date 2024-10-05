@@ -5,13 +5,21 @@ import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
+import ar.edu.utn.frba.dds.domain.entities.validador.AusenciaDeCredencialesPorDefecto;
+import ar.edu.utn.frba.dds.domain.entities.validador.ListaDePeoresClavesMemorizadas;
+import ar.edu.utn.frba.dds.domain.entities.validador.LongitudEstipulada;
+import ar.edu.utn.frba.dds.domain.entities.validador.TipoValidacion;
+import ar.edu.utn.frba.dds.domain.entities.validador.ValidadorDeClave;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import java.util.Set;
 
 public class ServiceLocator {
   private static Map<String, Object> instances = new HashMap<>();
@@ -25,7 +33,7 @@ public class ServiceLocator {
         ControladorPersonaVulnerable instance = new ControladorPersonaVulnerable(instanceOf(Repositorio.class), instanceOf(RepositorioPersonaHumana.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorRegistroUsuario.class.getName())) {
-        ControladorRegistroUsuario instance = new ControladorRegistroUsuario(instanceOf(Repositorio.class), instanceOf(Repositorio.class));
+        ControladorRegistroUsuario instance = new ControladorRegistroUsuario(instanceOf(RepositorioUsuario.class), instanceOf(Repositorio.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorEleccionTipoCuenta.class.getName())) {
         ControladorEleccionTipoCuenta instance = new ControladorEleccionTipoCuenta();
@@ -36,6 +44,9 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
         ControladorCargaMasiva instance = new ControladorCargaMasiva();
         instances.put(componentName, instance);
+      } else if (componentName.equals(ValidadorDeClave.class.getName())) {
+        ValidadorDeClave instance = new ValidadorDeClave(new LongitudEstipulada(50), new ListaDePeoresClavesMemorizadas());
+        instances.put(componentName, instance);
       } else if (componentName.equals(Repositorio.class.getName())) {
         Repositorio instance = new Repositorio();
         instances.put(componentName, instance);
@@ -44,6 +55,9 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(RepositorioTecnicos.class.getName())) {
         RepositorioTecnicos instance = new RepositorioTecnicos();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioUsuario.class.getName())) {
+        RepositorioUsuario instance = new RepositorioUsuario();
         instances.put(componentName, instance);
       }
     }

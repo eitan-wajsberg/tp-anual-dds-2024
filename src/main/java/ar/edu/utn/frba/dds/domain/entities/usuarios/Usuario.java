@@ -19,7 +19,7 @@ import lombok.Setter;
 public class Usuario {
   @Id @GeneratedValue
   private Long id;
-  @Column(name="nombre", nullable = false)
+  @Column(name="nombre", nullable = false, unique = true)
   private String nombre;
   @Column(name="clave", nullable = false)
   private String clave;

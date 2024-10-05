@@ -238,6 +238,10 @@ select:focus {
     background: #A77575;
 }
 
+.error {
+    color: #8c2828;
+}
+
 .light-green {
     background: #6A9373;
 }
