@@ -1,18 +1,18 @@
 package ar.edu.utn.frba.dds.server.handlers;
 
-import ar.edu.utn.frba.dds.exceptions.ValidadorRegistroException;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import io.javalin.Javalin;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ValidadorRegistroHandler implements IHandler {
+public class ValidacionFormularioHandler implements IHandler {
 
   @Override
   public void setHandle(Javalin app) {
-    app.exception(ValidadorRegistroException.class, (e, context) -> {
+    app.exception(ValidacionFormularioException.class, (e, context) -> {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
-      context.render("/cuenta/crearCuenta.hbs", model);
+      context.render(e.getRutaHandlebar(), model);
     });
   }
 }

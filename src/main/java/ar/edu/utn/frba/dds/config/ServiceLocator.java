@@ -44,9 +44,6 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
         ControladorCargaMasiva instance = new ControladorCargaMasiva();
         instances.put(componentName, instance);
-      } else if (componentName.equals(ValidadorDeClave.class.getName())) {
-        ValidadorDeClave instance = new ValidadorDeClave(new LongitudEstipulada(50), new ListaDePeoresClavesMemorizadas());
-        instances.put(componentName, instance);
       } else if (componentName.equals(Repositorio.class.getName())) {
         Repositorio instance = new Repositorio();
         instances.put(componentName, instance);

@@ -3,13 +3,13 @@
         <div class="row justify-content-center">
             <form method="POST" action="/colaboraciones/personasVulnerables">
                 <h4 class="fw-bold fs-5">Información básica</h4>
-                <p class="mb-3">Ingresar los datos personales básicos de la persona en situacion vulnerable.</p>
+                <p class="mb-3">Ingresar los datos personales básicos de la persona en situación vulnerable.</p>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="nombre" type="text" class="w-100" placeholder="Nombre">
+                        <input name="nombre" required pattern="[A-Z][a-z]+{2, 50}" type="text" class="w-100" placeholder="Nombre">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="apellido" type="text" class="w-100" placeholder="Apellido">
+                        <input name="apellido" type="text" class="w-100" placeholder="Apellido" required pattern="[A-Z][a-z]+{2, 50}">
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -21,26 +21,39 @@
                     </div>
                 </div>
                 <h4 class="fw-bold fs-5 mt-5">Campos específicos</h4>
-                <p class="mb-3">Si no se ingresa un campo, se considerará que no se tiene la información correspondiente. Si no se proporciona una dirección, se considerará que la persona está en situación de calle. Del mismo modo, si no se ingresa un número de documento, se asumirá que es indocumentado, y si no se especifica una cantidad de menores a cargo, se entenderá que no tiene.</p>
+                <p class="mb-3">Si no se ingresa un campo, se considerará que no se tiene la información correspondiente. Si no se ingresa un número de documento, se asumirá que es indocumentado, y si no se especifica una cantidad de menores a cargo, se entenderá que no tiene.</p>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="cantidadMenores" type="text" class="w-100" placeholder="Cantidad de menores a cargo">
+                        <input name="cantidadMenores" type="number" class="w-100" placeholder="Cantidad de menores a cargo">
                     </div>
-                    <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="direccion" type="text" class="w-100" placeholder="Dirección">
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="input-group">
-                            <select id="documentos" name="tipoDocumento" class="custom-select">
+                            <select id="documentos" name="tipoDocumento" class="custom-select" required>
                                 <option value="DNI">DNI</option>
                                 <option value="LC">LIBRETA CÍVICA</option>
                                 <option value="LE">LIBRETA DE ENROLAMIENTO</option>
                                 <option value="PASAPORTE">PASAPORTE</option>
                             </select>
-                            <input name="nroDocumento" type="text" class="custom-input" placeholder="Número de documento">
+                            <input name="nroDocumento" type="text" class="custom-input" placeholder="Número de documento" pattern="^[a-zA-Z0-9-]{5,50}$">
                         </div>
+                    </div>
+                </div>
+                <h4 class="fw-bold fs-5 mt-5">Dirección</h4>
+                <p class="mb-3">Si no se proporciona una dirección, se asumirá que la persona está en situación de calle. Aunque la dirección no es obligatoria, si decides proporcionarla, asegúrate de incluir al menos la calle, el municipio y la provincia.</p>
+                <div class="row mb-3">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input name="calle" type="text" class="w-100" placeholder="Calle" aria-label="Calle">
+                    </div>
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input name="altura" type="number" class="w-100" placeholder="Altura" aria-label="Altura">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input name="provincia" type="text" class="w-100" placeholder="Provincia" aria-label="Provincia">
+                    </div>
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <input name="municipio" type="text" class="w-100" placeholder="Municipio" aria-label="Municipio">
                     </div>
                 </div>
                 <div class="row">
@@ -48,6 +61,11 @@
                         <button type="submit" class="w-100">Dar de alta</button>
                     </div>
                 </div>
+                {{#if error}}
+                    <div class="row mt-2 justify-content-center">
+                        <p class="error text-center">{{error}}</p>
+                    </div>
+                {{/if}}
             </form>
         </div>
     </div>

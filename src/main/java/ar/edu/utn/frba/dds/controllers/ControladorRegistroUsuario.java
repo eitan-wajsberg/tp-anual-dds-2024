@@ -5,7 +5,8 @@ import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.dtos.UsuarioDTO;
-import ar.edu.utn.frba.dds.exceptions.ValidadorRegistroException;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   private RepositorioUsuario repositorioUsuario;
   private Repositorio repositorioRol;
+  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_crear_cuenta");
 
   public ControladorRegistroUsuario(RepositorioUsuario repositorioUsuario, Repositorio repositorioRol) {
     this.repositorioUsuario = repositorioUsuario;
@@ -28,43 +30,38 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
       return;
     }
 
+    // FIXME: Arreglar el manejo de roles
     Map<String, Object> model = new HashMap<>();
     if (tipoCuenta.equals("2")) {
       model.put("personaHumana", true);
     }
 
-    context.render("/cuenta/crearCuenta.hbs", model);
+    context.render(rutaHbs, model);
   }
 
   public void save(Context context) {
     UsuarioDTO dto = new UsuarioDTO();
-    dto.setNombre(context.formParam("usuario"));
-    dto.setClave(context.formParam("clave"));
-    dto.setClaveRepetida(context.formParam("claveRepetida"));
-    dto.setRol(context.sessionAttribute("tipoCuenta"));
+    dto.obtenerFormulario(context, rutaHbs);
+    Usuario usuario = (Usuario) dto.convertirAEntidad();
 
-    Usuario usuario = dto.toUsuario();
-
-    if (usuario != null) {
-      if (this.repositorioUsuario.existeUsuarioPorNombre(usuario.getNombre())) {
-        throw new ValidadorRegistroException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.");
-      }
-
-      Optional<Rol> rol = this.repositorioRol.buscarPorId(Long.parseLong(dto.getRol()), Rol.class);
-      if (rol.isEmpty()) {
-        throw new ValidadorRegistroException("El rol indicado no existe. Por favor, elige uno diferente.");
-      }
-
-      usuario.setRol(rol.get());
-
-      withTransaction(() -> {
-        this.repositorioUsuario.guardar(usuario);
-      });
-    } else {
-      throw new ValidadorRegistroException("Los datos del usuario son inválidos.");
+    if (usuario == null) {
+      throw new ValidacionFormularioException("Los datos del usuario son inválidos.", rutaHbs);
     }
 
-    // Redireccionar al login si todo salió bien
+    if (repositorioUsuario.existeUsuarioPorNombre(usuario.getNombre())) {
+      throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.", rutaHbs);
+    }
+
+    Optional<Rol> rol = repositorioRol.buscarPorId(Long.parseLong(dto.getRol()), Rol.class);
+    if (rol.isEmpty()) {
+      throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.", rutaHbs);
+    }
+    usuario.setRol(rol.get());
+
+
+    withTransaction(() -> repositorioUsuario.guardar(usuario));
+
+    // FIXME: Redireccionar al login si salió bien
     context.redirect("/");
   }
 }

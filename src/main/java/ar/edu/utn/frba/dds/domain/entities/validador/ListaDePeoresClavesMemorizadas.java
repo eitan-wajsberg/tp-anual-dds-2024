@@ -22,6 +22,6 @@ public class ListaDePeoresClavesMemorizadas implements TipoValidacion {
 
   @Override
   public String getMensajeError() {
-    return "La contraseña no debe estar entre las 10,000 más comunes y vulnerables.";
+    return "La clave no debe estar entre las 10,000 más comunes y vulnerables.";
   }
 }

@@ -10,9 +10,10 @@ public class AusenciaDeCredencialesPorDefecto implements TipoValidacion {
   @Override
   public boolean validar(String clave) {
     return !usuario.equals(clave);
-    }
+  }
+
   @Override
   public String getMensajeError() {
-    return "La clave no debe coincidir con el nombre de usuario";
+    return "La clave no debe coincidir con el nombre de usuario.";
   }
 }

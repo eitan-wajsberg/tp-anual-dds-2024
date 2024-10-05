@@ -25,7 +25,7 @@ public class ValidadorDeClave {
 
     for (TipoValidacion validador : validadores) {
       if (!validador.validar(clave)) {
-        errores.append(validador.getMensajeError()).append('\n');
+        errores.append(validador.getMensajeError()).append(' ');
         esValido = false;
       }
     }
