@@ -5,11 +5,10 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.*;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.HorasParaEjecutarAccion;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
+import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -18,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.MockedConstruction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -167,7 +165,7 @@ public class ManejoDeSolicitudesTest {
         verify(mqttClientMock, times(1)).publish(topicCaptor.capture(), messageCaptor.capture());
 
         String expectedTopic = "mqqt/heladeras/1";
-        int expectedHoras = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
+        int expectedHoras = Integer.parseInt(PrettyProperties.getInstance().propertyFromName("horas_para_ejecutar_accion"));
         String expectedMessageContent = "12345 " + solicitud.getFechaSolicitud().plusHours(expectedHoras);
 
         assertEquals(expectedTopic, topicCaptor.getValue());
