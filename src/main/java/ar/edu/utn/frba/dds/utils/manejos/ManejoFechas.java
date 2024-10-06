@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.utils.manejoFechas;
+package ar.edu.utn.frba.dds.utils.manejos;
 
 import java.time.LocalDate;
 

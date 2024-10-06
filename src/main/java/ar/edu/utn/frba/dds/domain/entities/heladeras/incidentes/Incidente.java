@@ -10,7 +10,8 @@ import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
 
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
-import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
+import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
+import ar.edu.utn.frba.dds.utils.manejos.ManejoDistancias;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -100,12 +101,11 @@ public class Incidente {
     }
 
     public void asignarTecnico(Heladera heladera) throws MessagingException, UnsupportedEncodingException {
-        // FIXME: Hace falta parametrizar eso? yo creeria que si
-        double distanciaMaximaConsideradaParaLlamarTecnico = 50;
+        double distanciaMaximaConsideradaParaLlamarTecnico = Double.parseDouble(PrettyProperties.getInstance().propertyFromName("distancia_maxima_para_llamar_tecnico_en_km"));
         for (Tecnico tecnico : repositorioTecnicos.buscarTodos(Tecnico.class)) {
             double distanciaActualEnKm = ManejoDistancias.distanciaHaversineConCoordenadasEnKm(
                 heladera.getDireccion().getCoordenada(),
-                tecnico.getCoordenada()
+                tecnico.getDireccion().getCoordenada()
             );
             if (distanciaActualEnKm < distanciaMaximaConsideradaParaLlamarTecnico
                 && distanciaActualEnKm <= tecnico.getDistanciaMaximaEnKmParaSerAvisado()) {

@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes;
 
+import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -32,7 +33,7 @@ public class PublicadorSolicitudApertura {
   public void publicarSolicitudApertura(String codigoTarjeta, LocalDateTime fecha, Long idHeladera) {
     // FIXME: La ruta del broker debe compartirse con los receptores y utilizar distintos topicos?
     String topic = "mqqt/heladeras/" + idHeladera;
-    int cantidadHoras = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
+    int cantidadHoras = Integer.parseInt(PrettyProperties.getInstance().propertyFromName("horas_para_ejecutar_accion"));
     String contenido = codigoTarjeta + " " + fecha.plusHours(cantidadHoras);
     int qos = 2;
 
