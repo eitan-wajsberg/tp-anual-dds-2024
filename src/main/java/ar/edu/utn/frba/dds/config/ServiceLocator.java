@@ -36,7 +36,7 @@ public class ServiceLocator {
         ControladorPersonaVulnerable instance = new ControladorPersonaVulnerable(instanceOf(Repositorio.class), instanceOf(RepositorioPersonaHumana.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorRegistroUsuario.class.getName())) {
-        ControladorRegistroUsuario instance = new ControladorRegistroUsuario(instanceOf(RepositorioUsuario.class), instanceOf(Repositorio.class));
+        ControladorRegistroUsuario instance = new ControladorRegistroUsuario(instanceOf(RepositorioUsuario.class), instanceOf(RepositorioRol.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorEleccionTipoCuenta.class.getName())) {
         ControladorEleccionTipoCuenta instance = new ControladorEleccionTipoCuenta();

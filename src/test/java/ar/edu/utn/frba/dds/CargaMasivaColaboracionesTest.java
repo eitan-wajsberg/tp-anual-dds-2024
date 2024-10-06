@@ -36,7 +36,7 @@ public class CargaMasivaColaboracionesTest {
     doNothing().when(mailSender).enviar(any(), any());
 
     // Preparo archivo
-    String nombreArchivo = "TestCargaMasivaColaboraciones.csv";
+    String nombreArchivo = "properties/TestCargaMasivaColaboraciones.csv";
     File nuevoArchivo = new File("src/resources/" + nombreArchivo);
 
     // Realizo carga

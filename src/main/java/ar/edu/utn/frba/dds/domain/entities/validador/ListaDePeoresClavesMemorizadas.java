@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 public class ListaDePeoresClavesMemorizadas implements TipoValidacion {
   @Override
   public boolean validar(String clave) {
-    InputStream inputStream = getClass().getClassLoader().getResourceAsStream("ListaDeClavesComunes.txt");
+    InputStream inputStream = getClass().getClassLoader().getResourceAsStream("properties/ListaDeClavesComunes.txt");
     if (inputStream != null) {
       try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
         return reader.lines().noneMatch(linea -> linea.trim().equals(clave.trim()));

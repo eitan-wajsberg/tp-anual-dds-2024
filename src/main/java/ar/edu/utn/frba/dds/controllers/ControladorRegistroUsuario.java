@@ -1,12 +1,11 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoCuentaRegistro;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
-import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.dtos.UsuarioDTO;
-import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
@@ -17,23 +16,22 @@ import java.util.Optional;
 
 public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   private RepositorioUsuario repositorioUsuario;
-  private Repositorio repositorioRol;
+  private RepositorioRol repositorioRol;
   private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_crear_cuenta");
 
-  public ControladorRegistroUsuario(RepositorioUsuario repositorioUsuario, Repositorio repositorioRol) {
+  public ControladorRegistroUsuario(RepositorioUsuario repositorioUsuario, RepositorioRol repositorioRol) {
     this.repositorioUsuario = repositorioUsuario;
     this.repositorioRol = repositorioRol;
   }
 
   public void create(Context context) {
-    // FIXME: Distingir el tipo de cuenta del rol
     String tipoCuenta = context.sessionAttribute("tipoCuenta");
     if (tipoCuenta == null) {
       throw new ValidacionFormularioException("No se ha indicado un tipo de cuenta.", rutaHbs);
     }
 
     Map<String, Object> model = new HashMap<>();
-    if (TipoRol.valueOf(tipoCuenta) == TipoRol.PERSONA_HUMANA) {
+    if (TipoCuentaRegistro.valueOf(tipoCuenta) == TipoCuentaRegistro.PERSONA_HUMANA) {
       model.put("personaHumana", true);
     }
 
@@ -53,7 +51,7 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
       throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.", rutaHbs);
     }
 
-    Optional<Rol> rol = repositorioRol.buscarPorId(Long.parseLong(dto.getRol()), Rol.class);
+    Optional<Rol> rol = repositorioRol.buscarPorNombre(dto.getRol());
     if (rol.isEmpty()) {
       throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.", rutaHbs);
     }
