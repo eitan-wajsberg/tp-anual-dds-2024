@@ -1,8 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
-import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoCuentaRegistro;
 import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
-import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.javalin.http.Context;
 
@@ -28,8 +27,8 @@ public class ControladorEleccionTipoCuenta {
 
   private void validarTipoCuenta(String tipoCuenta) {
     if (tipoCuenta == null
-        || !(tipoCuenta.equals(TipoRol.PERSONA_HUMANA.name())
-        || tipoCuenta.equals(TipoRol.PERSONA_JURIDICA.name()))) {
+        || !(tipoCuenta.equals(TipoCuentaRegistro.PERSONA_HUMANA.name())
+        || tipoCuenta.equals(TipoCuentaRegistro.PERSONA_JURIDICA.name()))) {
       throw new IllegalArgumentException();
     }
   }

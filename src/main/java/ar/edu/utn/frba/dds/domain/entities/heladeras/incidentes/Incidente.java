@@ -118,7 +118,7 @@ public class Incidente {
             "SMAACVS: Aviso para revisar una heladera",
             "Estimado tecnico,\n"
                 + "Fue elegido para revisar la heladera " + heladera.getNombre()
-                + "en la direccion " + heladera.getDireccion().direccionSegunGeoRef() + ".\n"
+                + "en la direccion " + heladera.getDireccion().getNomenclatura() + ".\n"
                 + tipoIncidente.obtenerDescripcionIncidente(this) + "\n"
                 + "Saludos, "
                 + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica",

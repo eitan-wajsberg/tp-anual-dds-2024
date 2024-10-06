@@ -1,11 +1,13 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefServicio;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
 import java.io.IOException;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,39 +16,41 @@ import lombok.Setter;
 @Embeddable
 @NoArgsConstructor
 public class Direccion {
-  @Embedded
-  private Calle calle;
-  @Column(name="altura")
-  private Integer altura;
-  @Embedded
-  private Municipio municipio;
-  @Embedded
-  private Provincia provincia;
+  @Column(name = "direccion")
+  private String nomenclatura;
   @Embedded
   private Coordenada coordenada;
-
-  public Direccion(String calle, Integer altura, String municipio, String provincia, String rutaHbs) throws IOException {
-    if (!GeoRefServicio.getInstancia().direccionExiste(calle, altura, municipio, provincia)) {
-      throw new ValidacionFormularioException("Dirección inexistente, revisar los datos", rutaHbs);
-    }
-
-    this.calle = new Calle(calle);
-    this.altura = altura;
-    this.municipio = new Municipio(municipio);
-    this.provincia = new Provincia(provincia);
-    this.coordenada = obtenerCoordenada();
-  }
 
   public boolean estaCercaDe(Direccion direccion) {
     int umbralKm = UmbralDistanciaEnKm.getInstance().getUmbralDistanciaEnKm();
     return ManejoDistancias.distanciaHaversineConCoordenadasEnKm(direccion.getCoordenada(), this.coordenada) <= umbralKm;
   }
 
-  public String direccionSegunGeoRef() {
-    return calle.getCalle() + altura;
+  public String getDireccion() {
+    return nomenclatura.split(",")[0];
   }
 
-  private Coordenada obtenerCoordenada() throws IOException {
-    return GeoRefServicio.getInstancia().coordenadaDeDireccion(this);
+  public String getCalle() {
+    return getDireccion().replaceAll("\\d+", "").trim();
+  }
+
+  public String getAltura() {
+    return getDireccion().replaceAll("\\D+", "").trim();
+  }
+
+  public String getMunicipio() {
+    String[] partes = nomenclatura.split(",");
+    if (partes.length > 1) {
+      return partes[1].trim();
+    }
+    return "";
+  }
+
+  public String getProvincia() {
+    String[] partes = nomenclatura.split(",");
+    if (partes.length > 2) {
+      return partes[2].trim();
+    }
+    return "";
   }
 }

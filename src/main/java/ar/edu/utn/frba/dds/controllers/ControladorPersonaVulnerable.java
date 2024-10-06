@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.dtos.DireccionDTO;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
 import ar.edu.utn.frba.dds.dtos.inputs.personasHumanas.PersonaHumanaInputDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
