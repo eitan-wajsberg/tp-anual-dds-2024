@@ -2,7 +2,9 @@ package ar.edu.utn.frba.dds.dtos;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejoDocumentos.ManejoDocumentos;
 import io.javalin.http.Context;
 import java.util.Objects;
 import lombok.Data;
@@ -19,6 +21,7 @@ public class TecnicoDTO implements DTO {
   private String telegram;
   private String correo;
   private String rutaHbs;
+  private DireccionDTO direccionDTO;
 
   @Override
   public void obtenerFormulario(Context context, String rutaHbs) {
@@ -32,6 +35,8 @@ public class TecnicoDTO implements DTO {
     this.setTelegram(context.formParam("telegram"));
     this.setCorreo(context.formParam("correo"));
     this.setRutaHbs(rutaHbs);
+    this.direccionDTO = new DireccionDTO();
+    this.direccionDTO.obtenerFormulario(context, rutaHbs);
   }
 
   @Override
@@ -46,11 +51,8 @@ public class TecnicoDTO implements DTO {
     if (this.cuil == null || this.cuil.isEmpty()) {
       throw new ValidacionFormularioException("El CUIL es obligatorio.", rutaHbs);
     }
-    if (this.nroDocumento == null || this.nroDocumento.isEmpty()) {
-      throw new ValidacionFormularioException("El número de documento es obligatorio.", rutaHbs);
-    }
-    if (this.tipoDocumento == null || this.tipoDocumento.isEmpty()) {
-      throw new ValidacionFormularioException("El tipo de documento es obligatorio.", rutaHbs);
+    if (ManejoDocumentos.validarDocumento(this.nroDocumento, TipoDocumento.valueOf(this.tipoDocumento))) {
+      throw new ValidacionFormularioException("Numero de documento inválido", rutaHbs);
     }
 
     // Validaciones de longitud
@@ -81,7 +83,9 @@ public class TecnicoDTO implements DTO {
       throw new ValidacionFormularioException("El formato del correo electrónico es inválido.", rutaHbs);
     }
 
-    // TODO: Agregar direccion y usuario
+    Direccion direccion = (Direccion) direccionDTO.convertirAEntidad();
+
+    // TODO: Otorgarle un usuario
     return Tecnico.builder()
         .nombre(this.nombre)
         .apellido(this.apellido)
@@ -89,6 +93,7 @@ public class TecnicoDTO implements DTO {
         .nroDocumento(nroDocumento)
         .tipoDocumento(TipoDocumento.valueOf(tipoDocumento))
         .distanciaMaximaEnKmParaSerAvisado(this.radioMaximoParaSerAvisado)
+        .direccion(direccion)
         .build();
   }
 }

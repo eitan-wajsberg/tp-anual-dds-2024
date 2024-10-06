@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class Tecnico {
   private Contacto contacto;
 
   @Embedded
-  private Coordenada coordenada;
+  private Direccion direccion;
 
   @Column(name="distanciaMaximaEnKMParaSerAvisado")
   private double distanciaMaximaEnKmParaSerAvisado;
