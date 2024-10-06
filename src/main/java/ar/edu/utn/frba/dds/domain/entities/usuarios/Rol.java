@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.usuarios;
 
+import io.javalin.security.RouteRole;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -17,7 +18,8 @@ import javax.persistence.ManyToMany;
 @Getter
 @Entity
 @Table(name ="rol")
-public class Rol {
+@NoArgsConstructor
+public class Rol implements RouteRole {
   @Id @GeneratedValue
   private Long id;
   @Setter
@@ -32,7 +34,7 @@ public class Rol {
   )
   private Set<Permiso> permisos;
 
-  public Rol() {
+  public Rol(String personaHumana) {
     this.permisos = new HashSet<>();
   }
 

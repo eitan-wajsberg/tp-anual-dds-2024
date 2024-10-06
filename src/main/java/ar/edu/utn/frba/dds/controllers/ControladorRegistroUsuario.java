@@ -1,10 +1,12 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.dtos.UsuarioDTO;
+import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
@@ -26,13 +28,11 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   public void create(Context context) {
     String tipoCuenta = context.sessionAttribute("tipoCuenta");
     if (tipoCuenta == null) {
-      context.redirect("");
-      return;
+      throw new ValidacionFormularioException("No se ha indicado un tipo de cuenta.", rutaHbs);
     }
 
-    // FIXME: Arreglar el manejo de roles
     Map<String, Object> model = new HashMap<>();
-    if (tipoCuenta.equals("2")) {
+    if (TipoRol.valueOf(tipoCuenta) == TipoRol.PERSONA_HUMANA) {
       model.put("personaHumana", true);
     }
 

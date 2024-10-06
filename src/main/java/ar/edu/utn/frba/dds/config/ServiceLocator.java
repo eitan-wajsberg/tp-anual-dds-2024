@@ -12,8 +12,10 @@ import ar.edu.utn.frba.dds.domain.entities.validador.TipoValidacion;
 import ar.edu.utn.frba.dds.domain.entities.validador.ValidadorDeClave;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
+import ar.edu.utn.frba.dds.middlewares.AuthMiddleware;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,6 +57,9 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(RepositorioUsuario.class.getName())) {
         RepositorioUsuario instance = new RepositorioUsuario();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioRol.class.getName())) {
+        RepositorioRol instance = new RepositorioRol();
         instances.put(componentName, instance);
       }
     }

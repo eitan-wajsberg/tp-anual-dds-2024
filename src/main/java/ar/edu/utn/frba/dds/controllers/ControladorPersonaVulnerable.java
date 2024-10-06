@@ -57,11 +57,14 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la persona vulnerable", rutaHbs);
     }
 
+    // FIXME: obtener de alguna forma de la sesion el id del registrador
     Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
     if (registrador.isEmpty()) {
       throw new ValidacionFormularioException("No se ha encontrado la persona que lo está registrando. Reintentar.", rutaHbs);
     }
+
     nuevaPersona.setPersonaQueLoRegistro(registrador.get());
+    nuevaPersona.setFechaDeRegistro(LocalDate.now());
 
     withTransaction(() -> repositorioPersonaVulnerable.guardar(nuevaPersona));
     context.redirect("/inicio");

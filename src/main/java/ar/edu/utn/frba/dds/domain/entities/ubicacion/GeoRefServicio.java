@@ -28,10 +28,12 @@ public class GeoRefServicio {
   }
 
   public Coordenada coordenadaDeDireccion(Direccion direccion) throws IOException {
-    IGeoRef servicioGeoRef = this.retrofit.create(IGeoRef.class);
-    Call<Coordenada> requestCoordenada = servicioGeoRef.coordenadaSegunDireccion(direccion.direccionSegunGeoRef(),
-        direccion.getProvincia().getProvincia());
-    Response<Coordenada> responseCoordenada = requestCoordenada.execute();
-    return responseCoordenada.body();
+    // TODO
+    return null;
+  }
+
+  public boolean direccionExiste(String calle, Integer altura, String municipio, String provincia) throws IOException {
+    // TODO
+    return true;
   }
 }

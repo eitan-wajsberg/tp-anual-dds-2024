@@ -2,8 +2,10 @@ package ar.edu.utn.frba.dds.dtos;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import io.javalin.http.Context;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.Data;
@@ -47,12 +49,19 @@ public class PersonaVulnerableDTO implements DTO {
       throw new ValidacionFormularioException("La cantidad de menores a cargo no puede ser negativa", rutaHbs);
     }
 
-    if (this.nroDocumento.matches("^[a-zA-Z0-9-]{5,50}$")) {
+    if (!this.nroDocumento.matches("^[a-zA-Z0-9-]{5,50}$")) {
       throw new ValidacionFormularioException("Numero de documento inválido", rutaHbs);
     }
 
-    if (this.fechaDeNacimiento.isBefore(LocalDate.now())) {
+    if (this.fechaDeNacimiento.isAfter(LocalDate.now())) {
       throw new ValidacionFormularioException("Fecha de nacimiento inválida", rutaHbs);
+    }
+
+    Direccion direccion;
+    try {
+      direccion = new Direccion(this.calle, this.altura, this.municipio, this.provincia, rutaHbs);
+    } catch (IOException e) {
+      throw new ValidacionFormularioException("La dirección proporcionada es incorrecta. Por favor, revisa los datos ingresados.", rutaHbs);
     }
 
     return PersonaVulnerable.builder()
@@ -62,6 +71,7 @@ public class PersonaVulnerableDTO implements DTO {
         .menoresAcargo(this.menoresAcargo)
         .tipoDocumento(TipoDocumento.valueOf(this.tipoDocumento))
         .nroDocumento(this.nroDocumento)
+        .direccion(direccion)
         .build();
   }
 }
