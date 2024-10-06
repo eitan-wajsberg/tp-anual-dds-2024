@@ -7,5 +7,5 @@ import retrofit2.http.Query;
 
 public interface IGeoRef {
   @GET("direcciones")
-  Call<Coordenada> coordenadaSegunDireccion(@Query("direccion") String direcion, @Query("provincia") String provincia);
+  Call<Coordenada> coordenadaSegunDireccion(@Query("direccion") String direccion, @Query("provincia") String provincia);
 }

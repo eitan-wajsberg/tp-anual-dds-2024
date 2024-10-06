@@ -6,7 +6,15 @@ import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import com.itextpdf.text.ListLabel;
 import io.javalin.Javalin;
+import io.javalin.http.Handler;
+import io.javalin.security.RouteRole;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Router {
 

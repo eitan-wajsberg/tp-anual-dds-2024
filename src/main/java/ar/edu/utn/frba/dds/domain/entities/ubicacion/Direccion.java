@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
 import java.io.IOException;
 import javax.persistence.Column;
@@ -16,7 +17,7 @@ public class Direccion {
   @Embedded
   private Calle calle;
   @Column(name="altura")
-  private String altura;
+  private Integer altura;
   @Embedded
   private Municipio municipio;
   @Embedded
@@ -24,11 +25,15 @@ public class Direccion {
   @Embedded
   private Coordenada coordenada;
 
-  public Direccion(Calle calle, String altura, Municipio municipio, Provincia provincia) throws IOException {
-    this.calle = calle;
+  public Direccion(String calle, Integer altura, String municipio, String provincia, String rutaHbs) throws IOException {
+    if (!GeoRefServicio.getInstancia().direccionExiste(calle, altura, municipio, provincia)) {
+      throw new ValidacionFormularioException("Dirección inexistente, revisar los datos", rutaHbs);
+    }
+
+    this.calle = new Calle(calle);
     this.altura = altura;
-    this.municipio = municipio;
-    this.provincia = provincia;
+    this.municipio = new Municipio(municipio);
+    this.provincia = new Provincia(provincia);
     this.coordenada = obtenerCoordenada();
   }
 

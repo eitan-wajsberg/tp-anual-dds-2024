@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.javalin.http.Context;
@@ -12,13 +14,22 @@ public class ControladorEleccionTipoCuenta {
   }
 
   public void save(Context context) {
-    // FIXME: Arreglar el manejo de roles
-    String tipoCuenta =   context.formParam("tipoCuenta");
-    if (tipoCuenta != null && (tipoCuenta.equals("2") || tipoCuenta.equals("3"))) {
+    String tipoCuenta = context.formParam("tipoCuenta");
+
+    try {
+      validarTipoCuenta(tipoCuenta);
       context.sessionAttribute("tipoCuenta", tipoCuenta);
       context.redirect("/registro");
-    } else {
-      context.result("Tipo de cuenta inválido.");
+    } catch (IllegalArgumentException e) {
+      throw new AccesoDenegadoException("Se ha indicado un tipo de cuenta inválido.", 400);
+    }
+  }
+
+  private void validarTipoCuenta(String tipoCuenta) {
+    if (tipoCuenta == null
+        || !(tipoCuenta.equals(TipoRol.PERSONA_HUMANA.name())
+        || tipoCuenta.equals(TipoRol.PERSONA_JURIDICA.name()))) {
+      throw new IllegalArgumentException();
     }
   }
 }
