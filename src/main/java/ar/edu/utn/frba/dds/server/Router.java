@@ -4,17 +4,21 @@ import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.controllers.ControladorAltaTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
+import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import com.itextpdf.text.ListLabel;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.security.RouteRole;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Router {
 
@@ -29,10 +33,9 @@ public class Router {
 
     // Admin
     app.get("/admin/altaTecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::create);
-    app.get("/admin/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::save);
+    app.post("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::save);
     app.get("/admin/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
     app.get("/admin/cargados", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);
-    app.get("/admin", context -> context.render("admin/adminInicio.hbs"));
     app.get("/admin/reportes", context -> context.render("admin/adminReportes.hbs"));
 
     // Persona vulnerable
@@ -40,13 +43,7 @@ public class Router {
     app.post("/colaboraciones/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save);
 
     // Inicio
-    app.get("", context -> context.render("pantallaInicio.hbs"));
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
-    // TODO: (PROVISIONAL) - Falta ver el concepto de session
-    if (true) {
-      app.get("/inicio", context -> context.render("pantallaInicioHumana.hbs"));
-    } else {
-      app.get("/inicio", context -> context.render("pantallaInicioJuridica.hbs"));
-    }
+    app.get("", ServiceLocator.instanceOf(ControladorInicio.class)::create);
   }
 }

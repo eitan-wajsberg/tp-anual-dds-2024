@@ -6,10 +6,10 @@
                 <p class="mb-3">Ingresar los datos personales básicos de la persona en situación vulnerable.</p>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="nombre" required pattern="[A-Z][a-z]+{2, 50}" type="text" class="w-100" placeholder="Nombre">
+                        <input name="nombre" required pattern="^[A-Z][a-zA-Zà-ÿ]+(?: [A-Z][a-zA-Zà-ÿ]+){0,2}$" type="text" class="w-100" placeholder="Nombre">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="apellido" type="text" class="w-100" placeholder="Apellido" required pattern="[A-Z][a-z]+{2, 50}">
+                        <input name="apellido" type="text" class="w-100" placeholder="Apellido" required pattern="^[A-Z][a-zA-Zà-ÿ]+(?: [A-Z][a-zA-Zà-ÿ]+){0,2}$">
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -42,18 +42,18 @@
                 <p class="mb-3">Si no se proporciona una dirección, se asumirá que la persona está en situación de calle. Aunque la dirección no es obligatoria, si decides proporcionarla, asegúrate de incluir al menos la calle, el municipio y la provincia.</p>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="calle" type="text" class="w-100" placeholder="Calle" aria-label="Calle">
+                        <input name="calle" type="text" class="w-100" placeholder="Calle" required aria-label="Calle" pattern="[A-Z][a-z]+{2, 50}">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="altura" type="number" class="w-100" placeholder="Altura" aria-label="Altura">
+                        <input name="altura" type="number" class="w-100" placeholder="Altura" required aria-label="Altura">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="provincia" type="text" class="w-100" placeholder="Provincia" aria-label="Provincia">
+                        <input name="provincia" type="text" class="w-100" placeholder="Provincia" required aria-label="Provincia" pattern="^[A-Z][a-zA-Zà-ÿ]+(?: [A-Z][a-zA-Zà-ÿ]+){0,2}$">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="municipio" type="text" class="w-100" placeholder="Municipio" aria-label="Municipio">
+                        <input name="municipio" type="text" class="w-100" placeholder="Municipio" required aria-label="Municipio" pattern="^[A-Z][a-zA-Zà-ÿ]+(?: [A-Z][a-zA-Zà-ÿ]+){0,2}$">
                     </div>
                 </div>
                 <div class="row">

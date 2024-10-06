@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.config;
 import ar.edu.utn.frba.dds.controllers.ControladorAltaTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
+import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
 import ar.edu.utn.frba.dds.domain.entities.validador.AusenciaDeCredencialesPorDefecto;
@@ -45,6 +46,9 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
         ControladorCargaMasiva instance = new ControladorCargaMasiva();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(ControladorInicio.class.getName())) {
+        ControladorInicio instance = new ControladorInicio();
         instances.put(componentName, instance);
       } else if (componentName.equals(Repositorio.class.getName())) {
         Repositorio instance = new Repositorio();
