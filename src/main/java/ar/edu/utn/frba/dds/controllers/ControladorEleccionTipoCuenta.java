@@ -7,13 +7,14 @@ import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.javalin.http.Context;
 
 public class ControladorEleccionTipoCuenta {
-  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("ruta_eleccion_tipo_cuenta");
+  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_eleccion_tipo_cuenta");
 
   public void create(Context context) {
     context.render(rutaHbs);
   }
 
   public void save(Context context) {
+    // FIXME: Distingir el tipo de cuenta del rol
     String tipoCuenta = context.formParam("tipoCuenta");
 
     try {

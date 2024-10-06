@@ -19,6 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -26,6 +28,8 @@ import lombok.Setter;
 @Getter @Setter
 @Entity @Table(name="tecnico")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Tecnico {
   @Id
   @GeneratedValue

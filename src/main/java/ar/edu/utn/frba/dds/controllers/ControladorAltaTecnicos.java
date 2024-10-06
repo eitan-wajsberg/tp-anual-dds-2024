@@ -3,12 +3,18 @@ package ar.edu.utn.frba.dds.controllers;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
+import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
+import ar.edu.utn.frba.dds.dtos.UsuarioDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioTecnicos repositorioTecnicos;
@@ -35,25 +41,15 @@ public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePer
 
   @Override
   public void save(Context context) {
-    Tecnico nuevoTecnico = new Tecnico();
+    TecnicoDTO dto = new TecnicoDTO();
+    dto.obtenerFormulario(context, rutaHbs);
+    Tecnico nuevoTecnico = (Tecnico) dto.convertirAEntidad();
 
-    nuevoTecnico.setNombre(context.formParam("nombre"));
-    nuevoTecnico.setApellido(context.formParam("apellido"));
-    nuevoTecnico.setDistanciaMaximaEnKmParaSerAvisado(Double.parseDouble(Objects.requireNonNull(context.formParam("distancia"))));
-
-    context.formParam("direccion");
-    Coordenada coordenada = new Coordenada();
-    // direccion.normalizar("Cabildo y Juramento 500");
-
-    // TODO: COMPLETAR Y MEJORAR
-
-    nuevoTecnico.setCoordenada(coordenada);
-    nuevoTecnico.setNroDocumento(context.formParam("nroDocumento"));
-    nuevoTecnico.setTipoDocumento(TipoDocumento.valueOf(context.formParam("tipoDocumento")));
-
-    withTransaction(() -> {
-      this.repositorioTecnicos.guardar(nuevoTecnico);
-    });
+    if (nuevoTecnico == null) {
+      throw new ValidacionFormularioException("Los datos del técnico son inválidos.", rutaHbs);
+    }
+    
+    withTransaction(() -> repositorioTecnicos.guardar(nuevoTecnico));
 
     context.redirect("/admin");
   }

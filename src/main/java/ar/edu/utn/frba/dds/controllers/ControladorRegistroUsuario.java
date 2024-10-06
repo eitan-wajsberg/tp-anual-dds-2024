@@ -26,6 +26,7 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   }
 
   public void create(Context context) {
+    // FIXME: Distingir el tipo de cuenta del rol
     String tipoCuenta = context.sessionAttribute("tipoCuenta");
     if (tipoCuenta == null) {
       throw new ValidacionFormularioException("No se ha indicado un tipo de cuenta.", rutaHbs);
