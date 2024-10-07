@@ -50,7 +50,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="provincia" type="text" class="w-100" placeholder="Provincia" aria-label="Provincia" pattern="^[A-Z][a-zA-Zà-ÿ]+(?: [A-Z][a-zA-Zà-ÿ]+){0,2}$" value="{{dto.direccionDTO.provincia}}">
+                        <input name="provincia" type="text" class="w-100" placeholder="Provincia" aria-label="Provincia" pattern="^[A-Za-zÀ-ÿ]+(?: [A-Za-zÀ-ÿ]+)*$" value="{{dto.direccionDTO.provincia}}">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
                         <input name="municipio" type="text" class="w-100" placeholder="Municipio" aria-label="Municipio" pattern="^[A-Za-zÀ-ÿ0-9]+(?: [A-Za-zÀ-ÿ0-9]+)*$" value="{{dto.direccionDTO.municipio}}">
