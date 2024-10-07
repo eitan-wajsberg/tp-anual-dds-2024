@@ -5,6 +5,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorAltaTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorOferta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
@@ -41,6 +42,11 @@ public class Router {
     // Persona vulnerable
     app.get("/colaboraciones/registroPersonaVulnerable", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create);
     app.post("/colaboraciones/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save);
+
+    //ofertas. Persona humana: ver ofertas, canjear oferta
+    //         Persona jurídica: ver sus ofertas, agregar oferta.
+    app.get("/colaboraciones/ofertas", ServiceLocator.instanceOf(ControladorOferta.class)::index);
+
 
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));

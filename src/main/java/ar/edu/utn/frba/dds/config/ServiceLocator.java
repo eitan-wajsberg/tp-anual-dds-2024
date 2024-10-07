@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorAltaTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorOferta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
 import ar.edu.utn.frba.dds.domain.entities.validador.AusenciaDeCredencialesPorDefecto;
@@ -12,6 +13,7 @@ import ar.edu.utn.frba.dds.domain.entities.validador.LongitudEstipulada;
 import ar.edu.utn.frba.dds.domain.entities.validador.TipoValidacion;
 import ar.edu.utn.frba.dds.domain.entities.validador.ValidadorDeClave;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOferta;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
@@ -50,6 +52,9 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorInicio.class.getName())) {
         ControladorInicio instance = new ControladorInicio();
         instances.put(componentName, instance);
+      } else if (componentName.equals(ControladorOferta.class.getName())) {
+        ControladorOferta instance = new ControladorOferta(instanceOf(RepositorioOferta.class));
+        instances.put(componentName, instance);
       } else if (componentName.equals(Repositorio.class.getName())) {
         Repositorio instance = new Repositorio();
         instances.put(componentName, instance);
@@ -65,6 +70,9 @@ public class ServiceLocator {
       } else if (componentName.equals(RepositorioRol.class.getName())) {
         RepositorioRol instance = new RepositorioRol();
         instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioOferta.class.getName())) {
+        RepositorioOferta instance = new RepositorioOferta();
+      instances.put(componentName, instance);
       }
     }
 
