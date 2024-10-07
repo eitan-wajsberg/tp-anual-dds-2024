@@ -69,7 +69,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
       withTransaction(() -> repositorioPersonaVulnerable.guardar(nuevaPersona));
 
-      context.redirect(rutaListadoHbs);
+      context.redirect("/personasVulnerables");
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
@@ -78,15 +78,51 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
     }
   }
 
-
   @Override
   public void edit(Context context) {
-    // TODO
+    Map<String, Object> model = new HashMap<>();
+    try {
+      Optional<PersonaVulnerable> vulnerable = this.repositorioPersonaVulnerable.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
+
+      if (vulnerable.isEmpty()) {
+        throw new RuntimeException("");
+      }
+
+      PersonaVulnerableDTO dto = new PersonaVulnerableDTO(vulnerable.get());
+      model.put("dto", dto);
+      context.render(rutaRegistroHbs, model);
+    } catch (Exception e) {
+      model.put("error", e.getMessage());
+      context.render(rutaListadoHbs, model);
+    }
   }
 
   @Override
   public void update(Context context) {
-    // TODO
+    Map<String, Object> model = new HashMap<>();
+    PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
+    dto.obtenerFormulario(context);
+
+    try {
+      Optional<PersonaVulnerable> vulnerableOpt = repositorioPersonaVulnerable.buscarPorId(
+          Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
+
+      if (vulnerableOpt.isEmpty()) {
+        throw new ValidacionFormularioException("La persona vulnerable no existe.");
+      }
+
+      PersonaVulnerable vulnerableExistente = PersonaVulnerable.fromDTO(dto);
+      withTransaction(() -> repositorioPersonaVulnerable.actualizar(vulnerableExistente));
+
+      context.redirect("/inicio");
+    } catch (ValidacionFormularioException e) {
+      model.put("error", e.getMessage());
+      model.put("dto", dto);
+      context.render(rutaRegistroHbs, model);
+    } catch (Exception e) {
+      model.put("error", "Error al intentar actualizar la información de la persona vulnerable.");
+      context.render(rutaListadoHbs, model);
+    }
   }
 
   @Override
