@@ -1,14 +1,19 @@
 package ar.edu.utn.frba.dds.domain.entities.personasVulnerables;
 
+import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraInactivaException;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
+import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoMaximoDeTarjetasPorDiaExcedidoException;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
+import ar.edu.utn.frba.dds.dtos.DocumentoDTO;
+import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +34,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Setter
 @Getter
@@ -60,12 +66,8 @@ public class PersonaVulnerable {
   @Column(name="menoresAcargo")
   private Integer menoresAcargo;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name="tipoDocumento")
-  private TipoDocumento tipoDocumento;
-
-  @Column(name="nroDocumento")
-  private String nroDocumento;
+  @Embedded
+  private Documento documento;
 
   @ManyToOne
   @JoinColumn(name = "personaQueLoRegistro_id", referencedColumnName = "id", nullable = false)
@@ -78,17 +80,6 @@ public class PersonaVulnerable {
   @OneToOne
   @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
   private Tarjeta tarjetaEnUso;
-
-  public PersonaVulnerable(String nombre, LocalDate fechaDeNacimiento, LocalDate fechaDeRegistro, Direccion direccion, Integer menoresAcargo, String nroDocumento, TipoDocumento tipoDocumento, PersonaHumana personaQueLoRegistro) {
-    this.nombre = nombre;
-    this.fechaDeNacimiento = fechaDeNacimiento;
-    this.fechaDeRegistro = fechaDeRegistro;
-    this.direccion = direccion;
-    this.menoresAcargo = menoresAcargo;
-    this.tipoDocumento = tipoDocumento;
-    this.nroDocumento = nroDocumento;
-    this.personaQueLoRegistro = personaQueLoRegistro;
-  }
 
   public void usarTarjeta(Heladera heladera, Vianda vianda) throws UsoMaximoDeTarjetasPorDiaExcedidoException, HeladeraInactivaException {
     // FIXME: Revisar si es correcto que este metodo reciba la vianda
@@ -119,5 +110,61 @@ public class PersonaVulnerable {
       this.tarjetaEnUso.setFechaBaja(LocalDate.now());
     }
     this.tarjetaEnUso = null;
+  }
+
+  public static PersonaVulnerable fromDTO(PersonaVulnerableDTO dto) {
+    validarCamposObligatorios(dto);
+    validarFechaDeNacimiento(dto);
+
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+
+    return PersonaVulnerable.builder()
+        .nombre(dto.getNombre())
+        .apellido(dto.getApellido())
+        .fechaDeNacimiento(LocalDate.parse(dto.getFechaDeNacimiento()))
+        .menoresAcargo(obtenerMenoresACargo(dto))
+        .documento(documento)
+        .direccion(direccion)
+        .build();
+  }
+
+  private static void validarCamposObligatorios(PersonaVulnerableDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        dto.getRutaHbs(),
+        Pair.of("nombre", dto.getNombre()),
+        Pair.of("apellido", dto.getApellido()),
+        Pair.of("fecha de nacimiento", dto.getFechaDeNacimiento())
+    );
+
+    if (dto.getNombre().isEmpty() || dto.getApellido().isEmpty() || dto.getFechaDeNacimiento() == null) {
+      throw new ValidacionFormularioException("Ciertos campos que son obligatorios se encuentran vacíos", dto.getRutaHbs());
+    }
+  }
+
+  private static void validarFechaDeNacimiento(PersonaVulnerableDTO dto) {
+    LocalDate fechaNacimiento = LocalDate.parse(dto.getFechaDeNacimiento());
+    if (fechaNacimiento.isAfter(LocalDate.now())) {
+      throw new ValidacionFormularioException("Fecha de nacimiento inválida", dto.getRutaHbs());
+    }
+  }
+
+  private static int obtenerMenoresACargo(PersonaVulnerableDTO dto) {
+    if (dto.getMenoresAcargo().isEmpty()) {
+      return 0;
+    }
+
+    int menores;
+    try {
+      menores = Integer.parseInt(dto.getMenoresAcargo());
+    } catch (NumberFormatException e) {
+      throw new ValidacionFormularioException("El campo de menores a cargo debe ser un número", dto.getRutaHbs());
+    }
+
+    if (menores < 0) {
+      throw new ValidacionFormularioException("La cantidad de menores a cargo no puede ser negativa", dto.getRutaHbs());
+    }
+
+    return menores;
   }
 }

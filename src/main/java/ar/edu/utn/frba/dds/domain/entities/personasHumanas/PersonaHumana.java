@@ -5,6 +5,8 @@ import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
+import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
+import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
@@ -38,7 +40,6 @@ import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.mail.MessagingException;
@@ -58,13 +59,8 @@ public class PersonaHumana extends IObserverNotificacion {
   private Usuario usuario;
 
   @Getter @Setter
-  @Enumerated(EnumType.STRING)
-  @Column(name="tipoDocumento")
-  private TipoDocumento tipoDocumento;
-
-  @Getter @Setter
-  @Column(name="nroDocumento")
-  private String nroDocumento;
+  @Embedded
+  private Documento documento;
 
   @Getter @Setter
   @Embedded
@@ -230,8 +226,7 @@ public class PersonaHumana extends IObserverNotificacion {
         mismasContribuciones
         && this.nombre.equals(persona.nombre)
         && this.apellido.equals(persona.apellido)
-        && this.nroDocumento.equals(persona.nroDocumento)
-        && this.tipoDocumento.equals(persona.tipoDocumento)
+        && this.documento.equals(persona.documento)
         && this.fechaNacimiento.isEqual(persona.fechaNacimiento)
         && this.contacto.equals(persona.contacto);
   }

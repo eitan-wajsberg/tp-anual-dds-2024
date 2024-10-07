@@ -2,13 +2,14 @@ package ar.edu.utn.frba.dds.domain.entities.tecnicos;
 
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
+import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
+import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
-import java.util.HashSet;
-import java.util.Set;
-import javax.annotation.Nullable;
+import ar.edu.utn.frba.dds.dtos.DocumentoDTO;
+import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -17,15 +18,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
+import org.apache.commons.lang3.tuple.Pair;
+
 @Getter @Setter
 @Entity @Table(name="tecnico")
 @NoArgsConstructor
@@ -46,12 +47,8 @@ public class Tecnico {
   @JoinColumn(name = "usuario_id", referencedColumnName = "id")
   private Usuario usuario;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name="tipoDocumento", nullable = false)
-  private TipoDocumento tipoDocumento;
-
-  @Column(name="nroDocumento", nullable = false)
-  private String nroDocumento;
+  @Embedded
+  private Documento documento;
 
   @Column(name="cuil", nullable = false)
   private String cuil;
@@ -67,5 +64,57 @@ public class Tecnico {
 
   public Tecnico(Contacto contacto) {
     this.contacto = contacto;
+  }
+
+  public static Tecnico fromDTO(TecnicoDTO dto) {
+    validarCamposObligatorios(dto);
+    validarLongitudNombreYApellido(dto);
+    validarFormatoCUIL(dto);
+    validarRadioMaximo(dto);
+
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+
+    return Tecnico.builder()
+        .nombre(dto.getNombre())
+        .apellido(dto.getApellido())
+        .cuil(dto.getCuil())
+        .documento(documento)
+        .distanciaMaximaEnKmParaSerAvisado(dto.getRadioMaximoParaSerAvisado())
+        .direccion(direccion)
+        .contacto(contacto)
+        .build();
+  }
+
+  private static void validarCamposObligatorios(TecnicoDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        dto.getRutaHbs(),
+        Pair.of("nombre", dto.getNombre()),
+        Pair.of("apellido", dto.getApellido()),
+        Pair.of("CUIL", dto.getCuil()),
+        Pair.of("radio máximo para ser avisado", String.valueOf(dto.getRadioMaximoParaSerAvisado()))
+    );
+  }
+
+  private static void validarLongitudNombreYApellido(TecnicoDTO dto) {
+    if (dto.getNombre().length() < 2 || dto.getNombre().length() > 50) {
+      throw new ValidacionFormularioException("El nombre debe tener entre 2 y 50 caracteres.", dto.getRutaHbs());
+    }
+    if (dto.getApellido().length() < 2 || dto.getApellido().length() > 50) {
+      throw new ValidacionFormularioException("El apellido debe tener entre 2 y 50 caracteres.", dto.getRutaHbs());
+    }
+  }
+
+  private static void validarFormatoCUIL(TecnicoDTO dto) {
+    if (!dto.getCuil().matches("^\\d{2}-\\d{8}-\\d{1}$")) {
+      throw new ValidacionFormularioException("El formato del CUIL es incorrecto. Debe ser XX-XXXXXXXX-X.", dto.getRutaHbs());
+    }
+  }
+
+  private static void validarRadioMaximo(TecnicoDTO dto) {
+    if (dto.getRadioMaximoParaSerAvisado() <= 0) {
+      throw new ValidacionFormularioException("El radio máximo debe ser un número positivo.", dto.getRutaHbs());
+    }
   }
 }

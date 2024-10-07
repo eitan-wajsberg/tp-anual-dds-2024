@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.contacto;
 
+import ar.edu.utn.frba.dds.dtos.ContactoDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,33 @@ public class Contacto {
       medio.enviar(mensaje, this);
     }
     // repositorioMensajes.guardar(mensaje); // guardamos todos los mensajes o solo los que eran por las notif de eventos?
+  }
+
+  public static Contacto fromDTO(ContactoDTO dto) {
+    validarContacto(dto);
+
+    Contacto contacto = new Contacto();
+    contacto.setWhatsapp(dto.getWhatsapp());
+    contacto.setMail(dto.getCorreo());
+
+    if (dto.getTelegram() != null && !dto.getTelegram().isEmpty()) {
+      contacto.setTelegramChatId(Long.valueOf(dto.getTelegram()));
+    }
+
+    return contacto;
+  }
+
+  private static void validarContacto(ContactoDTO dto) {
+    if ((dto.getWhatsapp() == null || dto.getWhatsapp().isEmpty())
+        && (dto.getTelegram() == null || dto.getTelegram().isEmpty())
+        && (dto.getCorreo() == null || dto.getCorreo().isEmpty())) {
+      throw new ValidacionFormularioException("Por favor, indique al menos un medio de contacto.", dto.getRutaHbs());
+    }
+
+    if (dto.getCorreo() != null && !dto.getCorreo().isEmpty()
+        && !dto.getCorreo().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+      throw new ValidacionFormularioException("El formato del correo electrónico es inválido.", dto.getRutaHbs());
+    }
   }
 
   @Override

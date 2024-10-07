@@ -41,13 +41,8 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   public void save(Context context) {
     UsuarioDTO dto = new UsuarioDTO();
     dto.obtenerFormulario(context, rutaHbs);
-    Usuario usuario = (Usuario) dto.convertirAEntidad();
 
-    if (usuario == null) {
-      throw new ValidacionFormularioException("Los datos del usuario son inválidos.", rutaHbs);
-    }
-
-    if (repositorioUsuario.existeUsuarioPorNombre(usuario.getNombre())) {
+    if (repositorioUsuario.existeUsuarioPorNombre(dto.getNombre())) {
       throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.", rutaHbs);
     }
 
@@ -55,9 +50,9 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
     if (rol.isEmpty()) {
       throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.", rutaHbs);
     }
+
+    Usuario usuario = Usuario.fromDTO(dto);
     usuario.setRol(rol.get());
-
-
     withTransaction(() -> repositorioUsuario.guardar(usuario));
 
     // FIXME: Redireccionar al login si salió bien
