@@ -39,7 +39,7 @@ public class PersonaVulnerableDTO implements DTO {
       throw new ValidacionFormularioException("Ciertos campos que son obligatorios se encuentran vacíos", rutaHbs);
     }
 
-    if (ManejoDocumentos.validarDocumento(this.nroDocumento, TipoDocumento.valueOf(this.tipoDocumento))) {
+    if (!ManejoDocumentos.validarDocumento(this.nroDocumento, TipoDocumento.valueOf(this.tipoDocumento))) {
       throw new ValidacionFormularioException("Numero de documento inválido", rutaHbs);
     }
 
