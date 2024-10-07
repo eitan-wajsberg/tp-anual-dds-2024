@@ -4,7 +4,6 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
-import ar.edu.utn.frba.dds.utils.manejos.ManejoDocumentos;
 import io.javalin.http.Context;
 import java.time.LocalDate;
 import lombok.Data;
@@ -15,9 +14,8 @@ public class PersonaVulnerableDTO implements DTO {
   private String apellido;
   private String fechaDeNacimiento;
   private String menoresAcargo;
-  private String tipoDocumento;
-  private String nroDocumento;
   private String rutaHbs;
+  private DocumentoDTO documentoDTO;
   private DireccionDTO direccionDTO;
 
   @Override
@@ -26,9 +24,9 @@ public class PersonaVulnerableDTO implements DTO {
     this.setApellido(context.formParam("apellido"));
     this.setFechaDeNacimiento(context.formParam("fecha"));
     this.setMenoresAcargo(context.formParam("cantidadMenores"));
-    this.setNroDocumento(context.formParam("nroDocumento"));
-    this.setTipoDocumento(context.formParam("tipoDocumento"));
     this.setRutaHbs(rutaHbs);
+    this.documentoDTO = new DocumentoDTO();
+    this.documentoDTO.obtenerFormulario(context, rutaHbs);
     this.direccionDTO = new DireccionDTO();
     this.direccionDTO.obtenerFormulario(context, rutaHbs);
   }
@@ -39,10 +37,6 @@ public class PersonaVulnerableDTO implements DTO {
       throw new ValidacionFormularioException("Ciertos campos que son obligatorios se encuentran vacíos", rutaHbs);
     }
 
-    if (!ManejoDocumentos.validarDocumento(this.nroDocumento, TipoDocumento.valueOf(this.tipoDocumento))) {
-      throw new ValidacionFormularioException("Numero de documento inválido", rutaHbs);
-    }
-
     if (!this.fechaDeNacimiento.isEmpty()) {
       if (LocalDate.parse(this.fechaDeNacimiento).isAfter(LocalDate.now())) {
         throw new ValidacionFormularioException("Fecha de nacimiento inválida", rutaHbs);
@@ -50,13 +44,15 @@ public class PersonaVulnerableDTO implements DTO {
     }
 
     Direccion direccion = (Direccion) direccionDTO.convertirAEntidad();
+    DocumentoDTO documento = (DocumentoDTO) documentoDTO.convertirAEntidad();
+
     return PersonaVulnerable.builder()
         .nombre(this.nombre)
         .apellido(this.apellido)
         .fechaDeNacimiento(LocalDate.parse(this.fechaDeNacimiento))
         .menoresAcargo(obtenerMenoresACargo())
-        .tipoDocumento(TipoDocumento.valueOf(this.tipoDocumento))
-        .nroDocumento(this.nroDocumento)
+        .tipoDocumento(TipoDocumento.valueOf(documento.getTipoDocumento()))
+        .nroDocumento(documento.getNroDocumento())
         .direccion(direccion)
         .build();
   }
