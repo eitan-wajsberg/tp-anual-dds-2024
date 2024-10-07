@@ -7,13 +7,13 @@
                     <h1 class="title text-center">Crear {{#if personaHumana}}persona humana{{else}}persona jurídica{{/if}}</h1>
                     <div class="pt-5 pb-4"></div> <!-- separador -->
                     <div class="row">
-                        <input type="text" name="usuario" required pattern="^(?![._-])[a-zA-Z0-9._-]{5,50}(?<![._-])$" minlength="5" placeholder="Usuario">
+                        <input type="text" name="usuario" required pattern="^(?![._-])[a-zA-Z0-9._-]{5,50}(?<![._-])$" minlength="5" placeholder="Usuario" value="{{dto.nombre}}">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" id="clave" name="clave" required minlength="8" maxlength="50" placeholder="Contraseña">
+                        <input type="password" id="clave" name="clave" required minlength="8" maxlength="50" placeholder="Contraseña" value="{{dto.clave}}">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" id="claveRepetida" name="claveRepetida" required minlength="8" maxlength="50" placeholder="Confirmar contraseña">
+                        <input type="password" id="claveRepetida" name="claveRepetida" required minlength="8" maxlength="50" placeholder="Confirmar contraseña" value="{{dto.claveRepetida}}">
                     </div>
                     <div id="visibilidadClave" class="row mt-2">
                         <div class="form-check d-flex align-items-center">
@@ -34,7 +34,7 @@
                 </form>
                 <div class="row mt-5 mb-5 text-center">
                     <hr>
-                    <label class="dark-grey-text fw-bold">¿Ya tienes una cuenta? <a href="login.html" class="light-blue">Inicia sesión</a></label>
+                    <label class="dark-grey-text fw-bold">¿Ya tienes una cuenta? <a href="/login" class="light-blue">Inicia sesión</a></label>
                 </div>
             </div>
         </div>
@@ -63,4 +63,4 @@
         claveRepetida.addEventListener('input', validarClave);
     </script>
 {{/partial}}
-{{> templates/base titulo="Registro" mostrarInicioSesion=true mostrarIrAtras=true paginaAtras="/eleccion" }}
+{{> templates/base titulo="Registro" mostrarInicioSesion=true mostrarIrAtras=true paginaAtras="/tipoCuenta" }}
