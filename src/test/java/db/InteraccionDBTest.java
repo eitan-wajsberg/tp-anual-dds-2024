@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
+import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

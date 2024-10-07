@@ -6,7 +6,7 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumanaBuilder;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
+import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
@@ -73,7 +73,7 @@ public class CargaMasivaColaboraciones {
         persona = builder.construirNombre(nombre)
             .construirApellido(apellido)
             .construirMail(mail, adapterMail)
-            .construirDocumento(nroDocumento, tipoDocumento)
+            .construirDocumento(tipoDocumento, nroDocumento)
             .construir();
         this.personaHumanaRepo.guardar(persona);
         notificarAltaPersona(persona);

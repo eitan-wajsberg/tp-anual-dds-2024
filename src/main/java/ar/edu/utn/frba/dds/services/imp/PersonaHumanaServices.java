@@ -39,7 +39,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     PersonaHumana nuevaPersona = new PersonaHumana();
     nuevaPersona.setNombre(personaInputDTO.getNombre());
     nuevaPersona.setApellido(personaInputDTO.getApellido());
-    nuevaPersona.setNroDocumento(personaInputDTO.getDocumentoId());
+    // nuevaPersona.setNroDocumento(personaInputDTO.getDocumentoId());
 
     // TODO: no creo que esta sea el momento de añadir un contacto realmente, o que sea la mejor manera
     // agregar mail
@@ -58,7 +58,7 @@ public class PersonaHumanaServices implements IPersonaHumanaServices {
     output.setId(nuevaPersona.getId());
     output.setNombre(nuevaPersona.getNombre());
     output.setApellido(nuevaPersona.getApellido());
-    output.setDocumentoId(nuevaPersona.getNroDocumento());
+    // output.setDocumentoId(nuevaPersona.getNroDocumento());
 
     return output;
   }
