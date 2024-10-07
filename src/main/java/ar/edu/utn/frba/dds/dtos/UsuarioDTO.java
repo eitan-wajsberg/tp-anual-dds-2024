@@ -9,14 +9,12 @@ public class UsuarioDTO implements DTO {
   private String clave;
   private String claveRepetida;
   private String rol;
-  private String rutaHbs;
 
   @Override
-  public void obtenerFormulario(Context context, String rutaHbs) {
+  public void obtenerFormulario(Context context) {
     this.setNombre(context.formParam("usuario"));
     this.setClave(context.formParam("clave"));
     this.setClaveRepetida(context.formParam("claveRepetida"));
     this.setRol(context.sessionAttribute("tipoCuenta"));
-    this.setRutaHbs(rutaHbs);
   }
 }

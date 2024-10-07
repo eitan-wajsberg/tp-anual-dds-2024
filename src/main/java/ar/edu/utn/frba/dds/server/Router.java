@@ -43,6 +43,7 @@ public class Router {
     // Persona vulnerable
     app.get("/colaboraciones/registroPersonaVulnerable", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create);
     app.post("/colaboraciones/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save);
+    app.get("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::index);
 
     //ofertas. Persona humana: ver ofertas, canjear oferta
     //         Persona jurídica: ver sus ofertas, agregar oferta.
