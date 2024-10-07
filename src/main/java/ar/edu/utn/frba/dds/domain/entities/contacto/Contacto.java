@@ -52,12 +52,10 @@ public class Contacto {
   }
 
   public void enviarMensaje(Mensaje mensaje) throws MessagingException, UnsupportedEncodingException {
-    List<MedioDeContacto> medios = new ArrayList<>();
-    medios.addAll(this.mediosDeContacto);
-    for(MedioDeContacto medio: medios){
+    List<MedioDeContacto> medios = new ArrayList<>(this.mediosDeContacto);
+    for (MedioDeContacto medio : medios) {
       medio.enviar(mensaje, this);
     }
-    // repositorioMensajes.guardar(mensaje); // guardamos todos los mensajes o solo los que eran por las notif de eventos?
   }
 
   public static Contacto fromDTO(ContactoDTO dto) {
@@ -78,12 +76,12 @@ public class Contacto {
     if ((dto.getWhatsapp() == null || dto.getWhatsapp().isEmpty())
         && (dto.getTelegram() == null || dto.getTelegram().isEmpty())
         && (dto.getCorreo() == null || dto.getCorreo().isEmpty())) {
-      throw new ValidacionFormularioException("Por favor, indique al menos un medio de contacto.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("Por favor, indique al menos un medio de contacto.");
     }
 
     if (dto.getCorreo() != null && !dto.getCorreo().isEmpty()
         && !dto.getCorreo().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-      throw new ValidacionFormularioException("El formato del correo electrónico es inválido.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("El formato del correo electrónico es inválido.");
     }
   }
 

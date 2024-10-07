@@ -62,9 +62,6 @@ public class Tecnico {
   @Column(name="distanciaMaximaEnKMParaSerAvisado")
   private double distanciaMaximaEnKmParaSerAvisado;
 
-  public Tecnico(Contacto contacto) {
-    this.contacto = contacto;
-  }
 
   public static Tecnico fromDTO(TecnicoDTO dto) {
     validarCamposObligatorios(dto);
@@ -89,7 +86,6 @@ public class Tecnico {
 
   private static void validarCamposObligatorios(TecnicoDTO dto) {
     CamposObligatoriosVacios.validarCampos(
-        dto.getRutaHbs(),
         Pair.of("nombre", dto.getNombre()),
         Pair.of("apellido", dto.getApellido()),
         Pair.of("CUIL", dto.getCuil()),
@@ -99,22 +95,22 @@ public class Tecnico {
 
   private static void validarLongitudNombreYApellido(TecnicoDTO dto) {
     if (dto.getNombre().length() < 2 || dto.getNombre().length() > 50) {
-      throw new ValidacionFormularioException("El nombre debe tener entre 2 y 50 caracteres.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("El nombre debe tener entre 2 y 50 caracteres.");
     }
     if (dto.getApellido().length() < 2 || dto.getApellido().length() > 50) {
-      throw new ValidacionFormularioException("El apellido debe tener entre 2 y 50 caracteres.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("El apellido debe tener entre 2 y 50 caracteres.");
     }
   }
 
   private static void validarFormatoCUIL(TecnicoDTO dto) {
     if (!dto.getCuil().matches("^\\d{2}-\\d{8}-\\d{1}$")) {
-      throw new ValidacionFormularioException("El formato del CUIL es incorrecto. Debe ser XX-XXXXXXXX-X.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("El formato del CUIL es incorrecto. Debe ser XX-XXXXXXXX-X.");
     }
   }
 
   private static void validarRadioMaximo(TecnicoDTO dto) {
     if (dto.getRadioMaximoParaSerAvisado() <= 0) {
-      throw new ValidacionFormularioException("El radio máximo debe ser un número positivo.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("El radio máximo debe ser un número positivo.");
     }
   }
 }

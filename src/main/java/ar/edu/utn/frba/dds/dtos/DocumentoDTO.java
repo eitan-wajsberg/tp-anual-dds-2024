@@ -7,12 +7,10 @@ import lombok.Data;
 public class DocumentoDTO implements DTO {
   private String tipoDocumento;
   private String nroDocumento;
-  private String rutaHbs;
 
   @Override
-  public void obtenerFormulario(Context context, String rutaHbs) {
+  public void obtenerFormulario(Context context) {
     this.setNroDocumento(context.formParam("nroDocumento"));
     this.setTipoDocumento(context.formParam("tipoDocumento"));
-    this.setRutaHbs(rutaHbs);
   }
 }

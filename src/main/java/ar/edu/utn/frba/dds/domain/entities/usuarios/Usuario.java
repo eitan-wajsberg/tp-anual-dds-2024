@@ -74,7 +74,6 @@ public class Usuario {
 
   private static void validarCamposObligatorios(UsuarioDTO dto) {
     CamposObligatoriosVacios.validarCampos(
-        dto.getRutaHbs(),
         Pair.of("nombre", dto.getNombre()),
         Pair.of("clave", dto.getClave()),
         Pair.of("clave repetida", dto.getClaveRepetida()),
@@ -87,13 +86,13 @@ public class Usuario {
       throw new ValidacionFormularioException(String.format(
           "La longitud del nombre de usuario debe estar entre 5 y 50 caracteres. Longitud actual: %d caracteres.",
           dto.getNombre().length()
-      ), dto.getRutaHbs());
+      ));
     }
   }
 
   private static void validarCoincidenciaClaves(UsuarioDTO dto) {
     if (!dto.getClave().equals(dto.getClaveRepetida())) {
-      throw new ValidacionFormularioException("La clave y la confirmación de clave no coinciden. Asegúrate de ingresar la misma clave en ambos campos.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("La clave y la confirmación de clave no coinciden. Asegúrate de ingresar la misma clave en ambos campos.");
     }
   }
 
@@ -105,7 +104,7 @@ public class Usuario {
         new AusenciaDeCredencialesPorDefecto(dto.getNombre())
     );
     if (!validador.validar(dto.getClave())) {
-      throw new ValidacionFormularioException(validador.getErroresFinales(), dto.getRutaHbs());
+      throw new ValidacionFormularioException(validador.getErroresFinales());
     }
   }
 }
