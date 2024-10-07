@@ -39,11 +39,11 @@ public class DireccionDTO implements DTO {
 
     try {
       GeoRefDirecciones body = GeoRefServicio.getInstancia().coordenadaDeDireccion(this);
-      GeoRefDirecciones.GeoRefUbicacion ubicacion = body.direcciones.get(0).ubicacion;
       if (body.cantidad < 1) {
         throw new ValidacionFormularioException("Dirección inexistente. Por favor, revise los datos.", rutaHbs);
       }
 
+      GeoRefDirecciones.GeoRefUbicacion ubicacion = body.direcciones.get(0).ubicacion;
       Coordenada coordenada = new Coordenada(ubicacion.lat, ubicacion.lon);
       Direccion direccion = new Direccion();
       direccion.setNomenclatura(body.direcciones.get(0).nomenclatura);
