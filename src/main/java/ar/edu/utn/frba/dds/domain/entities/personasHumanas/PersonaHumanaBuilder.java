@@ -6,6 +6,8 @@ import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
+import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
+import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 
 public class PersonaHumanaBuilder {
@@ -55,9 +57,11 @@ public class PersonaHumanaBuilder {
     this.persona.setUsuario(usuarioDePersona);
   }
 
-  public PersonaHumanaBuilder construirDocumento(String nroDocumento, TipoDocumento tipoDocumento) {
-    this.persona.setNroDocumento(nroDocumento);
-    this.persona.setTipoDocumento(tipoDocumento);
+  public PersonaHumanaBuilder construirDocumento(TipoDocumento tipo, String numero) {
+    Documento documento = new Documento();
+    documento.setTipo(tipo);
+    documento.setNumero(numero);
+    this.persona.setDocumento(documento);
     return this;
   }
 

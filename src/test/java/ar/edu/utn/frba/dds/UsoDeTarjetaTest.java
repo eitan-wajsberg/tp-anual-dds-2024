@@ -1,12 +1,11 @@
 package ar.edu.utn.frba.dds;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
+import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoMaximoDeTarjetasPorDiaExcedidoException;
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

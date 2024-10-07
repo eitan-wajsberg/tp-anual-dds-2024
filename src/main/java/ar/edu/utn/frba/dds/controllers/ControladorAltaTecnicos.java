@@ -44,7 +44,7 @@ public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePer
   public void save(Context context) {
     TecnicoDTO dto = new TecnicoDTO();
     dto.obtenerFormulario(context, rutaHbs);
-    Tecnico nuevoTecnico = (Tecnico) dto.convertirAEntidad();
+    Tecnico nuevoTecnico = Tecnico.fromDTO(dto);
 
     if (nuevoTecnico == null) {
       throw new ValidacionFormularioException("Los datos del técnico son inválidos.", rutaHbs);
