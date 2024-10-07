@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds;
+package ar.edu.utn.frba.dds.domain.main;
 
 import ar.edu.utn.frba.dds.domain.entities.reportes.AdapterPDFiText;
 import ar.edu.utn.frba.dds.domain.entities.reportes.CantidadFallasPorHeladera;

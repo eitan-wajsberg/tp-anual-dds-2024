@@ -67,6 +67,13 @@ input:focus {
     outline: none;
 }
 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset; /* Cambia 'white' al color de fondo deseado */
+    box-shadow: 0 0 0 1000px white inset; /* Cambia 'white' al color de fondo deseado */
+    -webkit-text-fill-color: black; /* Cambia 'black' al color del texto deseado */
+}
+
+
 [type="checkbox"] {
     vertical-align: middle;
     width: 25px;

@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@Setter
 @Embeddable
 public class Contacto {
   @Transient
@@ -26,7 +27,7 @@ public class Contacto {
 
   @Column(name = "whatsapp")
   private String whatsapp;
-  @Setter
+
   @Column(name = "mail")
   private String mail;
 
