@@ -27,23 +27,28 @@ public class Router {
     // TODO: Indicar las rutas faltantes
 
     // Registro
-    app.get("/eleccion", ServiceLocator.instanceOf(ControladorEleccionTipoCuenta.class)::create);
-    app.post("/eleccion", ServiceLocator.instanceOf(ControladorEleccionTipoCuenta.class)::save);
-    app.get("/registro", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::create);
+    app.get("/tipoCuenta", ServiceLocator.instanceOf(ControladorEleccionTipoCuenta.class)::create);
+    app.post("/tipoCuenta", ServiceLocator.instanceOf(ControladorEleccionTipoCuenta.class)::save);
+    app.get("/usuarios/nuevo", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::create);
     app.post("/usuarios", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::save);
 
     // Admin
-    app.get("/admin/altaTecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::create);
+    app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::create);
     app.post("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::save);
     app.get("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::index);
+    app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::edit);
+    app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::edit);
+
     app.get("/admin/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
     app.get("/admin/cargados", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);
     app.get("/admin/reportes", context -> context.render("admin/adminReportes.hbs"));
 
     // Persona vulnerable
-    app.get("/colaboraciones/registroPersonaVulnerable", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create);
-    app.post("/colaboraciones/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save);
+    app.get("/personasVulnerables/nuevo", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create);
+    app.post("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save);
     app.get("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::index);
+    app.get("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::edit);
+    app.post("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::update);
 
     //ofertas. Persona humana: ver ofertas, canjear oferta
     //         Persona jurídica: ver sus ofertas, agregar oferta.
