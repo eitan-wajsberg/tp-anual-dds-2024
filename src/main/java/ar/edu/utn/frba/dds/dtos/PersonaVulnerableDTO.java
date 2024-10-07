@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.dtos;
 import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import io.javalin.http.Context;
+import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +38,21 @@ public class PersonaVulnerableDTO implements DTO {
     this.documentoDTO.obtenerFormulario(context);
     this.direccionDTO = new DireccionDTO();
     this.direccionDTO.obtenerFormulario(context);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+
+    PersonaVulnerableDTO that = (PersonaVulnerableDTO) obj;
+
+    return Objects.equals(this.nombre, that.nombre) &&
+        Objects.equals(this.apellido, that.apellido) &&
+        Objects.equals(this.documentoDTO, that.documentoDTO) &&
+        Objects.equals(this.fechaDeNacimiento, that.fechaDeNacimiento) &&
+        Objects.equals(this.direccionDTO, that.direccionDTO) &&
+        Objects.equals(this.menoresAcargo, that.menoresAcargo);
   }
 }
 
