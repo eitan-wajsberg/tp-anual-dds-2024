@@ -5,10 +5,10 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class CamposObligatoriosVacios {
   @SafeVarargs
-  public static <T> void validarCampos(String rutaHbs, Pair<String, T>... campos) {
+  public static <T> void validarCampos(Pair<String, T>... campos) {
     for (Pair<String, T> campo : campos) {
       if (campo.getValue() == null || (campo.getValue() instanceof String && ((String) campo.getValue()).isEmpty())) {
-        throw new ValidacionFormularioException("El campo " + campo.getKey() + " es obligatorio.", rutaHbs);
+        throw new ValidacionFormularioException("El campo " + campo.getKey() + " es obligatorio.");
       }
     }
   }

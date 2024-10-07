@@ -73,7 +73,7 @@ public class Direccion {
     try {
       GeoRefDirecciones body = GeoRefServicio.getInstancia().coordenadaDeDireccion(dto);
       if (body.cantidad < 1) {
-        throw new ValidacionFormularioException("Dirección inexistente. Por favor, revise los datos.", dto.getRutaHbs());
+        throw new ValidacionFormularioException("Dirección inexistente. Por favor, revise los datos.");
       }
 
       GeoRefDirecciones.GeoRefUbicacion ubicacion = body.direcciones.get(0).ubicacion;
@@ -85,13 +85,12 @@ public class Direccion {
 
       return direccion;
     } catch (IOException e) {
-      throw new ValidacionFormularioException("Ocurrió un error en la búsqueda de la dirección, revise los datos.", dto.getRutaHbs());
+      throw new ValidacionFormularioException("Ocurrió un error en la búsqueda de la dirección, revise los datos.");
     }
   }
 
   private static void validarCamposObligatorios(DireccionDTO dto) throws ValidacionFormularioException {
     CamposObligatoriosVacios.validarCampos(
-        dto.getRutaHbs(),
         Pair.of("calle", dto.getCalle()),
         Pair.of("altura", dto.getAltura()),
         Pair.of("municipio", dto.getMunicipio()),
@@ -106,8 +105,7 @@ public class Direccion {
 
     if (hayCamposIncompletos(dto)) {
       throw new ValidacionFormularioException(
-          "La dirección no es obligatoria, pero si se indica una, todos los campos son necesarios.",
-          dto.getRutaHbs()
+          "La dirección no es obligatoria, pero si se indica una, todos los campos son necesarios."
       );
     }
 

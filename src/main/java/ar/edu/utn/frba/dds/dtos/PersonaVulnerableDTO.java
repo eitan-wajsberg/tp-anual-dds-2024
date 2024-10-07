@@ -9,21 +9,19 @@ public class PersonaVulnerableDTO implements DTO {
   private String apellido;
   private String fechaDeNacimiento;
   private String menoresAcargo;
-  private String rutaHbs;
   private DocumentoDTO documentoDTO;
   private DireccionDTO direccionDTO;
 
   @Override
-  public void obtenerFormulario(Context context, String rutaHbs) {
+  public void obtenerFormulario(Context context) {
     this.setNombre(context.formParam("nombre"));
     this.setApellido(context.formParam("apellido"));
     this.setFechaDeNacimiento(context.formParam("fecha"));
     this.setMenoresAcargo(context.formParam("cantidadMenores"));
-    this.setRutaHbs(rutaHbs);
     this.documentoDTO = new DocumentoDTO();
-    this.documentoDTO.obtenerFormulario(context, rutaHbs);
+    this.documentoDTO.obtenerFormulario(context);
     this.direccionDTO = new DireccionDTO();
-    this.direccionDTO.obtenerFormulario(context, rutaHbs);
+    this.direccionDTO.obtenerFormulario(context);
   }
 }
 

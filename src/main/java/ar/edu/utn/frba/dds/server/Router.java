@@ -42,6 +42,7 @@ public class Router {
     // Persona vulnerable
     app.get("/colaboraciones/registroPersonaVulnerable", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create);
     app.post("/colaboraciones/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save);
+    app.get("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::index);
 
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
