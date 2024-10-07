@@ -14,7 +14,8 @@ import java.util.Map;
 
 public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioTecnicos repositorioTecnicos;
-  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_alta_tecnicos");
+  private final String rutaAltaHbs = PrettyProperties.getInstance().propertyFromName("hbs_alta_tecnicos");
+  private final String rutaListadoHbs = PrettyProperties.getInstance().propertyFromName("hbs_listado_tecnicos");
 
   public ControladorAltaTecnicos(RepositorioTecnicos repositorioTecnico) {
     this.repositorioTecnicos = repositorioTecnico;
@@ -27,7 +28,7 @@ public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePer
     Map<String, Object> model = new HashMap<>();
     model.put("tecnicos", tecnicos);
 
-    context.render("admin/adminListadoTecnicos.hbs", model);
+    context.render(rutaListadoHbs, model);
   }
 
   @Override
@@ -37,23 +38,30 @@ public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePer
 
   @Override
   public void create(Context context) {
-    context.render(rutaHbs);
+    context.render(rutaAltaHbs);
   }
 
   @Override
   public void save(Context context) {
     TecnicoDTO dto = new TecnicoDTO();
-    dto.obtenerFormulario(context, rutaHbs);
-    Tecnico nuevoTecnico = Tecnico.fromDTO(dto);
+    dto.obtenerFormulario(context);
+    Tecnico nuevoTecnico;
 
-    if (nuevoTecnico == null) {
-      throw new ValidacionFormularioException("Los datos del técnico son inválidos.", rutaHbs);
+    try {
+      nuevoTecnico = Tecnico.fromDTO(dto);
+      if (nuevoTecnico == null) {
+        throw new ValidacionFormularioException("Los datos del técnico son inválidos.");
+      }
+
+      withTransaction(() -> repositorioTecnicos.guardar(nuevoTecnico));
+
+      context.redirect(rutaListadoHbs);
+    } catch (ValidacionFormularioException e) {
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", e.getMessage());
+      model.put("dto", dto);
+      context.render(rutaAltaHbs, model);
     }
-    
-    withTransaction(() -> repositorioTecnicos.guardar(nuevoTecnico));
-
-    context.result("<script>localStorage.clear();</script>");
-    context.redirect("/tecnicos");
   }
 
   @Override

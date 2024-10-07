@@ -9,14 +9,12 @@ public class DireccionDTO {
   private String altura;
   private String provincia;
   private String municipio;
-  private String rutaHbs;
   private boolean obligatoria;
 
-  public void obtenerFormulario(Context context, String rutaHbs) {
+  public void obtenerFormulario(Context context) {
     this.setCalle(context.formParam("calle"));
     this.setAltura(context.formParam("altura"));
     this.setProvincia(context.formParam("provincia"));
     this.setMunicipio(context.formParam("municipio"));
-    this.setRutaHbs(rutaHbs);
   }
 }

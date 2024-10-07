@@ -10,24 +10,22 @@ public class TecnicoDTO implements DTO {
   private String apellido;
   private String cuil;
   private Integer radioMaximoParaSerAvisado;
-  private String rutaHbs;
   private DireccionDTO direccionDTO;
   private ContactoDTO contactoDTO;
   private DocumentoDTO documentoDTO;
 
   @Override
-  public void obtenerFormulario(Context context, String rutaHbs) {
+  public void obtenerFormulario(Context context) {
     this.setNombre(context.formParam("nombre"));
     this.setApellido(context.formParam("apellido"));
     this.setCuil(context.formParam("cuil"));
     this.setRadioMaximoParaSerAvisado(Integer.parseInt(Objects.requireNonNull(context.formParam("radio"))));
-    this.setRutaHbs(rutaHbs);
     this.direccionDTO = new DireccionDTO();
-    this.direccionDTO.obtenerFormulario(context, rutaHbs);
+    this.direccionDTO.obtenerFormulario(context);
     this.contactoDTO = new ContactoDTO();
-    this.contactoDTO.obtenerFormulario(context, rutaHbs);
+    this.contactoDTO.obtenerFormulario(context);
     this.documentoDTO = new DocumentoDTO();
-    this.documentoDTO.obtenerFormulario(context, rutaHbs);
+    this.documentoDTO.obtenerFormulario(context);
   }
 }
 

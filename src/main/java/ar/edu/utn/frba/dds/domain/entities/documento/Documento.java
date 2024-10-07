@@ -33,13 +33,12 @@ public class Documento {
 
   private static void validarDocumento(DocumentoDTO dto) {
     CamposObligatoriosVacios.validarCampos(
-        dto.getRutaHbs(),
         Pair.of("numero de documento", dto.getNroDocumento()),
         Pair.of("tipo de documento", dto.getTipoDocumento())
     );
 
     if (!verificarDocumento(dto.getNroDocumento(), TipoDocumento.valueOf(dto.getTipoDocumento()))) {
-      throw new ValidacionFormularioException("Número de documento inválido", dto.getRutaHbs());
+      throw new ValidacionFormularioException("Número de documento inválido");
     }
   }
 

@@ -27,7 +27,7 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   public void create(Context context) {
     String tipoCuenta = context.sessionAttribute("tipoCuenta");
     if (tipoCuenta == null) {
-      throw new ValidacionFormularioException("No se ha indicado un tipo de cuenta.", rutaHbs);
+      throw new ValidacionFormularioException("No se ha indicado un tipo de cuenta.");
     }
 
     Map<String, Object> model = new HashMap<>();
@@ -40,22 +40,30 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
 
   public void save(Context context) {
     UsuarioDTO dto = new UsuarioDTO();
-    dto.obtenerFormulario(context, rutaHbs);
+    dto.obtenerFormulario(context);
 
-    if (repositorioUsuario.existeUsuarioPorNombre(dto.getNombre())) {
-      throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.", rutaHbs);
+    try {
+      if (repositorioUsuario.existeUsuarioPorNombre(dto.getNombre())) {
+        throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.");
+      }
+
+      Optional<Rol> rol = repositorioRol.buscarPorNombre(dto.getRol());
+      if (rol.isEmpty()) {
+        throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.");
+      }
+
+      Usuario usuario = Usuario.fromDTO(dto);
+      usuario.setRol(rol.get());
+
+      withTransaction(() -> repositorioUsuario.guardar(usuario));
+
+      context.redirect("/");
+    } catch (ValidacionFormularioException e) {
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", e.getMessage());
+      model.put("dto", dto);
+      context.render(rutaHbs, model);
     }
-
-    Optional<Rol> rol = repositorioRol.buscarPorNombre(dto.getRol());
-    if (rol.isEmpty()) {
-      throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.", rutaHbs);
-    }
-
-    Usuario usuario = Usuario.fromDTO(dto);
-    usuario.setRol(rol.get());
-    withTransaction(() -> repositorioUsuario.guardar(usuario));
-
-    // FIXME: Redireccionar al login si salió bien
-    context.redirect("/");
   }
+
 }

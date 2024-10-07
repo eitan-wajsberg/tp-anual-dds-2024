@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
+import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
@@ -11,12 +12,16 @@ import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private Repositorio repositorioPersonaVulnerable;
   private RepositorioPersonaHumana repositorioPersonaHumana;
-  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_registro_persona_vulnerable");
+  private final String rutaRegistroHbs = PrettyProperties.getInstance().propertyFromName("hbs_registro_persona_vulnerable");
+  private final String rutaListadoHbs = PrettyProperties.getInstance().propertyFromName("hbs_listado_personas_vulnerables");
 
   public ControladorPersonaVulnerable(Repositorio repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana) {
     this.repositorioPersonaVulnerable = repositorioPersonaVulnerable;
@@ -25,7 +30,12 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void index(Context context) {
-    // TODO
+    List<PersonaVulnerable> vulnerables = this.repositorioPersonaVulnerable.buscarTodos(PersonaVulnerable.class);
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("personasVulnerables", vulnerables);
+
+    context.render(rutaListadoHbs, model);
   }
 
   @Override
@@ -35,30 +45,39 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void create(Context context) {
-    context.render(rutaHbs);
+    context.render(rutaRegistroHbs);
   }
 
   @Override
   public void save(Context context) {
     PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
-    dto.obtenerFormulario(context, rutaHbs);
+    dto.obtenerFormulario(context);
 
-    // FIXME: obtener de alguna forma de la sesion el id del registrador
-    Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
-    if (registrador.isEmpty()) {
-      throw new ValidacionFormularioException("No se ha encontrado la persona que lo está registrando. Reintentar.", rutaHbs);
+    try {
+      Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
+      if (registrador.isEmpty()) {
+        throw new ValidacionFormularioException("No se ha encontrado la persona que lo está registrando. Reintentar.");
+      }
+
+      PersonaVulnerable nuevaPersona = PersonaVulnerable.fromDTO(dto);
+      if (nuevaPersona == null) {
+        throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la persona vulnerable.");
+      }
+
+      nuevaPersona.setPersonaQueLoRegistro(registrador.get());
+      nuevaPersona.setFechaDeRegistro(LocalDate.now());
+
+      withTransaction(() -> repositorioPersonaVulnerable.guardar(nuevaPersona));
+
+      context.redirect(rutaListadoHbs);
+    } catch (ValidacionFormularioException e) {
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", e.getMessage());
+      model.put("dto", dto);
+      context.render(rutaRegistroHbs, model);
     }
-
-    PersonaVulnerable nuevaPersona = PersonaVulnerable.fromDTO(dto);
-    if (nuevaPersona == null) {
-      throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la persona vulnerable", rutaHbs);
-    }
-    nuevaPersona.setPersonaQueLoRegistro(registrador.get());
-    nuevaPersona.setFechaDeRegistro(LocalDate.now());
-
-    withTransaction(() -> repositorioPersonaVulnerable.guardar(nuevaPersona));
-    context.redirect("/inicio");
   }
+
 
   @Override
   public void edit(Context context) {

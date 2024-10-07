@@ -131,21 +131,20 @@ public class PersonaVulnerable {
 
   private static void validarCamposObligatorios(PersonaVulnerableDTO dto) {
     CamposObligatoriosVacios.validarCampos(
-        dto.getRutaHbs(),
         Pair.of("nombre", dto.getNombre()),
         Pair.of("apellido", dto.getApellido()),
         Pair.of("fecha de nacimiento", dto.getFechaDeNacimiento())
     );
 
     if (dto.getNombre().isEmpty() || dto.getApellido().isEmpty() || dto.getFechaDeNacimiento() == null) {
-      throw new ValidacionFormularioException("Ciertos campos que son obligatorios se encuentran vacíos", dto.getRutaHbs());
+      throw new ValidacionFormularioException("Ciertos campos que son obligatorios se encuentran vacíos");
     }
   }
 
   private static void validarFechaDeNacimiento(PersonaVulnerableDTO dto) {
     LocalDate fechaNacimiento = LocalDate.parse(dto.getFechaDeNacimiento());
     if (fechaNacimiento.isAfter(LocalDate.now())) {
-      throw new ValidacionFormularioException("Fecha de nacimiento inválida", dto.getRutaHbs());
+      throw new ValidacionFormularioException("Fecha de nacimiento inválida");
     }
   }
 
@@ -158,11 +157,11 @@ public class PersonaVulnerable {
     try {
       menores = Integer.parseInt(dto.getMenoresAcargo());
     } catch (NumberFormatException e) {
-      throw new ValidacionFormularioException("El campo de menores a cargo debe ser un número", dto.getRutaHbs());
+      throw new ValidacionFormularioException("El campo de menores a cargo debe ser un número");
     }
 
     if (menores < 0) {
-      throw new ValidacionFormularioException("La cantidad de menores a cargo no puede ser negativa", dto.getRutaHbs());
+      throw new ValidacionFormularioException("La cantidad de menores a cargo no puede ser negativa");
     }
 
     return menores;
