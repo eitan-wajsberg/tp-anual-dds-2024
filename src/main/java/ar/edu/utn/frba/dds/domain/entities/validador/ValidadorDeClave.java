@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.dds.domain.entities.validador;
 
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
