@@ -1,10 +1,13 @@
 package ar.edu.utn.frba.dds.dtos;
 
+import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import io.javalin.http.Context;
 import java.util.Objects;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class TecnicoDTO implements DTO {
   private String nombre;
   private String apellido;
@@ -13,6 +16,16 @@ public class TecnicoDTO implements DTO {
   private DireccionDTO direccionDTO;
   private ContactoDTO contactoDTO;
   private DocumentoDTO documentoDTO;
+
+  public TecnicoDTO(Tecnico tecnico) {
+    this.nombre = tecnico.getNombre();
+    this.apellido = tecnico.getApellido();
+    this.cuil = tecnico.getCuil();
+    this.radioMaximoParaSerAvisado = (int) tecnico.getDistanciaMaximaEnKmParaSerAvisado();
+    this.direccionDTO = new DireccionDTO(tecnico.getDireccion());
+    this.documentoDTO = new DocumentoDTO(tecnico.getDocumento());
+    this.contactoDTO = new ContactoDTO(tecnico.getContacto());
+  }
 
   @Override
   public void obtenerFormulario(Context context) {
