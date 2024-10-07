@@ -5,7 +5,6 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
-import ar.edu.utn.frba.dds.utils.manejos.ManejoDocumentos;
 import io.javalin.http.Context;
 import java.util.Objects;
 import lombok.Data;
@@ -16,11 +15,10 @@ public class TecnicoDTO implements DTO {
   private String apellido;
   private String cuil;
   private Integer radioMaximoParaSerAvisado;
-  private String nroDocumento;
-  private String tipoDocumento;
   private String rutaHbs;
   private DireccionDTO direccionDTO;
   private ContactoDTO contactoDTO;
+  private DocumentoDTO documentoDTO;
 
   @Override
   public void obtenerFormulario(Context context, String rutaHbs) {
@@ -28,13 +26,13 @@ public class TecnicoDTO implements DTO {
     this.setApellido(context.formParam("apellido"));
     this.setCuil(context.formParam("cuil"));
     this.setRadioMaximoParaSerAvisado(Integer.parseInt(Objects.requireNonNull(context.formParam("radio"))));
-    this.setNroDocumento(context.formParam("nroDocumento"));
-    this.setTipoDocumento(context.formParam("tipoDocumento"));
     this.setRutaHbs(rutaHbs);
     this.direccionDTO = new DireccionDTO();
     this.direccionDTO.obtenerFormulario(context, rutaHbs);
     this.contactoDTO = new ContactoDTO();
     this.contactoDTO.obtenerFormulario(context, rutaHbs);
+    this.documentoDTO = new DocumentoDTO();
+    this.documentoDTO.obtenerFormulario(context, rutaHbs);
   }
 
   @Override
@@ -47,9 +45,6 @@ public class TecnicoDTO implements DTO {
     }
     if (this.cuil == null || this.cuil.isEmpty()) {
       throw new ValidacionFormularioException("El CUIL es obligatorio.", rutaHbs);
-    }
-    if (!ManejoDocumentos.validarDocumento(this.nroDocumento, TipoDocumento.valueOf(this.tipoDocumento))) {
-      throw new ValidacionFormularioException("Numero de documento inválido", rutaHbs);
     }
 
     if (this.nombre.length() < 2 || this.nombre.length() > 50) {
@@ -69,14 +64,15 @@ public class TecnicoDTO implements DTO {
 
     Direccion direccion = (Direccion) direccionDTO.convertirAEntidad();
     Contacto contacto = (Contacto) contactoDTO.convertirAEntidad();
+    DocumentoDTO documento = (DocumentoDTO) documentoDTO.convertirAEntidad();
 
-    // TODO: Otorgarle un usuario
+    // TODO: Otorgarle un usuario al tecnico
     return Tecnico.builder()
         .nombre(this.nombre)
         .apellido(this.apellido)
         .cuil(this.cuil)
-        .nroDocumento(nroDocumento)
-        .tipoDocumento(TipoDocumento.valueOf(tipoDocumento))
+        .nroDocumento(documento.getNroDocumento())
+        .tipoDocumento(TipoDocumento.valueOf(documento.getTipoDocumento()))
         .distanciaMaximaEnKmParaSerAvisado(this.radioMaximoParaSerAvisado)
         .direccion(direccion)
         .contacto(contacto)
