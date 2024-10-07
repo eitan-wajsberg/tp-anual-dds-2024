@@ -37,7 +37,7 @@ public class Router {
     app.post("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::save);
     app.get("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::index);
     app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::edit);
-    app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::edit);
+    app.post("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::update);
 
     app.get("/admin/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
     app.get("/admin/cargados", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);

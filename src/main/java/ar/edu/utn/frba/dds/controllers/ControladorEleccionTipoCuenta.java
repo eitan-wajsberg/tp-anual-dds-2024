@@ -19,7 +19,7 @@ public class ControladorEleccionTipoCuenta {
     try {
       validarTipoCuenta(tipoCuenta);
       context.sessionAttribute("tipoCuenta", tipoCuenta);
-      context.redirect("/registro");
+      context.redirect("/usuarios/nuevo");
     } catch (IllegalArgumentException e) {
       throw new AccesoDenegadoException("Se ha indicado un tipo de cuenta inválido.", 400);
     }

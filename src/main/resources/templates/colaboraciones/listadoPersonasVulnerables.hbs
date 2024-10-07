@@ -1,6 +1,6 @@
 {{#partial "contenido"}}
     <div class="mt-5 ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3 mb-5">
-        <a href="/colaboraciones/registroPersonaVulnerable" class="d-flex justify-content-end mb-3 align-items-center">
+        <a href="/personasVulnerables/nuevo" class="d-flex justify-content-end mb-3 align-items-center">
             <label class="d-flex align-items-center justify-content-center boton">
                 Registrar persona vulnerable
                 <span class="iconify ms-2" data-icon="material-symbols:add" data-width="24" data-height="24"></span>
@@ -9,7 +9,7 @@
         <div class="row g-3">
             {{#each personasVulnerables}}
                 <div class="col-md-4">
-                    <a href="/editarPersonaVulnerable/{{this.id}}" class="dark-text">
+                    <a href="/personasVulnerables/{{this.id}}/edicion" class="dark-text">
                         <div class="distribution-card">
                             <div class="row mb-2">
                                 <span class="d-flex fw-bold fs-5">{{this.nombre}} {{this.apellido}}</span>
@@ -38,4 +38,4 @@
     </div>
 {{/partial}}
 
-{{> templates/base titulo="Personas vulnerables" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/inicio"}}
+{{> templates/base titulo="Personas vulnerables" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/"}}
