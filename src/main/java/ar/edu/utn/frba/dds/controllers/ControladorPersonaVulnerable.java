@@ -99,29 +99,24 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void update(Context context) {
-    Map<String, Object> model = new HashMap<>();
     PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
     dto.obtenerFormulario(context);
 
-    try {
-      Optional<PersonaVulnerable> vulnerableOpt = repositorioPersonaVulnerable.buscarPorId(
-          Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
+    Optional<PersonaVulnerable> vulnerableExistente = repositorioPersonaVulnerable.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
 
-      if (vulnerableOpt.isEmpty()) {
-        throw new ValidacionFormularioException("La persona vulnerable no existe.");
+    if (vulnerableExistente.isPresent()) {
+      PersonaVulnerableDTO dtoActual = new PersonaVulnerableDTO(vulnerableExistente.get());
+
+      // FIXME: No detecta que los dtos sean iguales y por ende crea duplicados
+      if (dtoActual.equals(dto)) {
+        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
+      } else {
+        PersonaVulnerable persona = PersonaVulnerable.fromDTO(dtoActual);
+        withTransaction(() -> repositorioPersonaVulnerable.guardar(persona));
+        context.redirect("/personas-vulnerables");
       }
-
-      PersonaVulnerable vulnerableExistente = PersonaVulnerable.fromDTO(dto);
-      withTransaction(() -> repositorioPersonaVulnerable.actualizar(vulnerableExistente));
-
-      context.redirect("/inicio");
-    } catch (ValidacionFormularioException e) {
-      model.put("error", e.getMessage());
-      model.put("dto", dto);
-      context.render(rutaRegistroHbs, model);
-    } catch (Exception e) {
-      model.put("error", "Error al intentar actualizar la información de la persona vulnerable.");
-      context.render(rutaListadoHbs, model);
+    } else {
+      throw new ValidacionFormularioException("Persona vulnerable no encontrada.");
     }
   }
 
