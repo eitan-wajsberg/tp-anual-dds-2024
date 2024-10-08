@@ -112,8 +112,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
         throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
       } else {
         PersonaVulnerable persona = PersonaVulnerable.fromDTO(dtoActual);
-        withTransaction(() -> repositorioPersonaVulnerable.guardar(persona));
-        context.redirect("/personas-vulnerables");
+        withTransaction(() -> repositorioPersonaVulnerable.actualizar(persona));
+        context.redirect("/personasVulnerables");
       }
     } else {
       throw new ValidacionFormularioException("Persona vulnerable no encontrada.");
