@@ -49,6 +49,9 @@ public class Router {
     app.get("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::edit);
     app.post("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::update);
 
+    // Donacion dinero
+    app.get("/donacionDinero", context -> context.render("colaboraciones/donacionDinero.hbs"));
+
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
     app.get("", ServiceLocator.instanceOf(ControladorInicio.class)::create);
