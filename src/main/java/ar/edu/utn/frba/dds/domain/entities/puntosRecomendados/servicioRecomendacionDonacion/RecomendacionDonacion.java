@@ -5,8 +5,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.POST;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,10 +50,10 @@ public class RecomendacionDonacion {
         return response.body();
     }
 
-    public HeladerasGrabadas guardarHeladeras(Heladeras heladeras) throws IOException {
+    public List<HeladeraGrabada> guardarHeladeras(Heladeras heladeras) throws IOException {
         IRecomendacionDonacion georefService = this.retrofit.create(IRecomendacionDonacion.class);
-        Call<HeladerasGrabadas> request = georefService.grabarHeladeras(heladeras);
-        Response<HeladerasGrabadas> response = request.execute();
+        Call<List<HeladeraGrabada>> request = georefService.grabarHeladeras(heladeras);
+        Response<List<HeladeraGrabada>> response = request.execute();
         return response.body();
     }
 }

@@ -3,6 +3,8 @@ package db;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
@@ -21,8 +23,7 @@ public class InteraccionDBTest {
         .builder()
         .nombre("Juan Arnaldo")
         .apellido("Rainalo")
-        .tipoDocumento(TipoDocumento.DNI)
-        .nroDocumento("440384955")
+        .documento(new Documento(TipoDocumento.DNI, "440384955"))
         .build();
   }
 

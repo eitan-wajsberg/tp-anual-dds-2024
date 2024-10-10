@@ -12,8 +12,8 @@ public class IntegracionRecomendacionDonacionesTest {
     @DisplayName("Dar de alta heladeras")
     public void altaHeladeras() throws IOException {
         Heladeras heladeras = new Heladeras();
-        HeladerasGrabadas heladerasGrabadas = RecomendacionDonacion.getInstancia().guardarHeladeras(heladeras);
-        System.out.println(heladerasGrabadas);
+        List<HeladeraGrabada> heladerasGrabadas = RecomendacionDonacion.getInstancia().guardarHeladeras(heladeras);
+        System.out.println(heladerasGrabadas.toString());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class IntegracionRecomendacionDonacionesTest {
     @DisplayName("Obtener recomendaciones de heladeras")
     public void obtenerHeladeras() throws IOException {
         RecomendacionHeladeras recomendacionHeladeras = RecomendacionDonacion.getInstancia().recomendarHeladeras(3.14F, 44, "Urquiza", "400", "Santa Fe");
-        System.out.println(recomendacionHeladeras);
+        System.out.println(recomendacionHeladeras.toString());
     }
 
     @Test

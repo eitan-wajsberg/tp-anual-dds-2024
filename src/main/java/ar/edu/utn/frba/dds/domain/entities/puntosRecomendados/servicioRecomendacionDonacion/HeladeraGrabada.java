@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomendacionDonacion;
 
-public class HeladerasGrabadas {
-    public RecomendacionDireccion direccion;
-    public RecomendacionCoordenada coordenada;
+public class HeladeraGrabada {
+    public Ubicacion ubicacion;
     public int cantidad_viandas;
 }

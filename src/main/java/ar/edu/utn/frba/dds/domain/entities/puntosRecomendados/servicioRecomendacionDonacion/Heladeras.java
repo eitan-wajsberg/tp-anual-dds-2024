@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 
-public class Heladeras {
+public class Heladeras { //🤔
     public List<HeladeraGrabada> heladeras;
 
     @Data
