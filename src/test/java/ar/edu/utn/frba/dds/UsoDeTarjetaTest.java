@@ -68,7 +68,7 @@ public class UsoDeTarjetaTest {
         .menoresAcargo(menoresACargo)
         .documento(new Documento(TipoDocumento.DNI, "46644007"))
         .personaQueLoRegistro(mock(PersonaHumana.class))
-        .build(); 
+        .build();
   }
   private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
     return new Vianda(LocalDateTime.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
