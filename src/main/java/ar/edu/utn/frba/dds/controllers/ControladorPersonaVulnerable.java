@@ -40,7 +40,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void show(Context context) {
-    // TODO
+    // En este caso, no tiene sentido hacer este metodo
   }
 
   @Override
