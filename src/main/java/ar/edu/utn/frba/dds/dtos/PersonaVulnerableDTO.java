@@ -3,6 +3,8 @@ package ar.edu.utn.frba.dds.dtos;
 import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import io.javalin.http.Context;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,15 +19,19 @@ public class PersonaVulnerableDTO implements DTO {
   private DocumentoDTO documentoDTO;
   private DireccionDTO direccionDTO;
   private Long id;
+  private LocalDate fechaRegistro;
 
   public PersonaVulnerableDTO(PersonaVulnerable vulnerable) {
     this.setNombre(vulnerable.getNombre());
     this.setApellido(vulnerable.getApellido());
     this.setMenoresAcargo(vulnerable.getMenoresAcargo().toString());
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    this.setFechaDeNacimiento(vulnerable.getFechaDeNacimiento().format(formatter));
     this.setFechaDeNacimiento(vulnerable.getFechaDeNacimiento().toString());
     this.setDireccionDTO(new DireccionDTO(vulnerable.getDireccion()));
     this.setDocumentoDTO(new DocumentoDTO(vulnerable.getDocumento()));
     this.setId(vulnerable.getId());
+    this.setFechaRegistro(vulnerable.getFechaDeRegistro());
   }
 
   @Override
@@ -42,9 +48,6 @@ public class PersonaVulnerableDTO implements DTO {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
-
     PersonaVulnerableDTO that = (PersonaVulnerableDTO) obj;
 
     return Objects.equals(nombre, that.nombre)
