@@ -113,6 +113,21 @@ public class PersonaVulnerable {
     this.tarjetaEnUso = null;
   }
 
+  public void actualizarFromDto(PersonaVulnerableDTO dto) {
+    validarCamposObligatorios(dto);
+    validarFechaDeNacimiento(dto);
+
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+
+    this.setNombre(dto.getNombre());
+    this.setApellido(dto.getNombre());
+    this.setDireccion(direccion);
+    this.setDocumento(documento);
+    this.setFechaDeNacimiento(LocalDate.parse(dto.getFechaDeNacimiento()));
+    this.setMenoresAcargo(Integer.valueOf(dto.getMenoresAcargo()));
+  }
+
   public static PersonaVulnerable fromDTO(PersonaVulnerableDTO dto) {
     validarCamposObligatorios(dto);
     validarFechaDeNacimiento(dto);
