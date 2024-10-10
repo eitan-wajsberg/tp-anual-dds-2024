@@ -90,6 +90,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
       PersonaVulnerableDTO dto = new PersonaVulnerableDTO(vulnerable.get());
       model.put("dto", dto);
+      model.put("edicion", true);
+      model.put("id", context.pathParam("id"));
       context.render(rutaRegistroHbs, model);
     } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
@@ -100,28 +102,32 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   @Override
   public void update(Context context) {
     Map<String, Object> model = new HashMap<>();
-    PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
-    dto.obtenerFormulario(context);
+    PersonaVulnerableDTO dtoNuevo = new PersonaVulnerableDTO();
+    dtoNuevo.obtenerFormulario(context);
 
-    Optional<PersonaVulnerable> vulnerableExistente = repositorioPersonaVulnerable.buscarPorId(
-        Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
+    try {
+      Optional<PersonaVulnerable> vulnerableExistente = repositorioPersonaVulnerable.buscarPorId(
+          Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
 
-    if (vulnerableExistente.isPresent()) {
-      PersonaVulnerableDTO dtoActual = new PersonaVulnerableDTO(vulnerableExistente.get());
-
-      if (dtoActual.equals(dto)) {
-        model.put("error", "No se detectaron cambios en el formulario.");
-      } else {
-        PersonaVulnerable persona = PersonaVulnerable.fromDTO(dto);
-        withTransaction(() -> repositorioPersonaVulnerable.actualizar(persona));
-        context.redirect("/personasVulnerables");
-        return;
+      if (vulnerableExistente.isEmpty()) {
+        throw new ValidacionFormularioException("Persona vulnerable no encontrada.");
       }
-    } else {
-      model.put("error", "Persona vulnerable no encontrada.");
-    }
 
-    context.render(rutaRegistroHbs, model);
+      PersonaVulnerableDTO dtoExistente = new PersonaVulnerableDTO(vulnerableExistente.get());
+      if (dtoExistente.equals(dtoNuevo)) {
+        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
+      }
+
+      vulnerableExistente.get().actualizarFromDto(dtoNuevo);
+      withTransaction(() -> repositorioPersonaVulnerable.actualizar(vulnerableExistente.get()));
+      context.redirect("/personasVulnerables");
+    } catch (ValidacionFormularioException e) {
+      model.put("error", e.getMessage());
+      model.put("dto", dtoNuevo);
+      model.put("edicion", true);
+      model.put("id", context.pathParam("id"));
+      context.render(rutaRegistroHbs, model);
+    }
   }
 
   @Override

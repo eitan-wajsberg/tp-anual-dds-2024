@@ -1,7 +1,7 @@
 {{#partial "contenido"}}
     <div class="m-5">
         <div class="row justify-content-center">
-            <form method="POST" action="/personasVulnerables">
+            <form method="POST" {{#if edicion}}action="/personasVulnerables/{{id}}/edicion"{{else}}action="/personasVulnerables/"{{/if}}>
                 <h4 class="fw-bold fs-5">Información básica</h4>
                 <p class="mb-3">Ingresar los datos personales básicos de la persona en situación vulnerable.</p>
                 <div class="row mb-3">
@@ -26,7 +26,7 @@
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
                         <input name="cantidadMenores" type="number" class="w-100" placeholder="Cantidad de menores a cargo" value="{{dto.menoresAcargo}}">
                     </div>
-                    <div class="col-6">
+                    <div class="col-12 col-md-6">
                         <div class="input-group">
                             <select id="documentos" name="tipoDocumento" class="custom-select" required>
                                 <option value="DNI">DNI</option>
