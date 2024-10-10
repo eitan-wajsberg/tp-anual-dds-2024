@@ -3,14 +3,13 @@ package ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomenda
 import java.util.List;
 
 public class RecomendacionPersonasVulnerables {
-    List<RecomendacionPersonasVulnerable> recomendaciones;
+    List<RecomendacionPersonaVulnerable> recomendaciones;
 
-    public class RecomendacionPersonasVulnerable {
+    public class RecomendacionPersonaVulnerable {
         public String nombre;
         public String apellido;
         public RecomendacionDireccion direccion;
         public RecomendacionCoordenada coordenadas;
         public int cantidad_recomendada;
     }
-
 }

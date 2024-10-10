@@ -74,7 +74,7 @@ public class CargaMasivaColaboracionesTest {
         builder.construirNombre("Marco")
             .construirApellido("Bravo")
             .construirMail("nosequepasa@sielmailnoesvalido.com", new AdaptadaJavaXMail())
-            .construirDocumento("45544007", TipoDocumento.DNI)
+            .construirDocumento(TipoDocumento.DNI, "45544007")
             .construirContribucion(new Vianda(fecha("25/05/2024")))
             .construirContribucion(new DistribucionVianda(fecha("26/05/2024"), 5))
             .construirContribucion(new Vianda(fecha("30/05/2024")))

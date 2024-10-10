@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds;
 
+import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
@@ -61,8 +62,13 @@ public class UsoDeTarjetaTest {
   }
 
   private PersonaVulnerable crearPersonaVulnerable(int menoresACargo){
-    return new PersonaVulnerable("Eduardo", LocalDate.parse("1995-05-04"),
-        LocalDate.parse("2024-05-20"), null, menoresACargo, "46644007", TipoDocumento.DNI, mock(PersonaHumana.class));
+    return PersonaVulnerable.builder()
+        .nombre("Eduardo").apellido("Lopez").fechaDeNacimiento(LocalDate.parse("1995-05-04"))
+        .fechaDeRegistro(LocalDate.parse("2024-05-20"))
+        .menoresAcargo(menoresACargo)
+        .documento(new Documento(TipoDocumento.DNI, "46644007"))
+        .personaQueLoRegistro(mock(PersonaHumana.class))
+        .build(); 
   }
   private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
     return new Vianda(LocalDateTime.parse(fecha), true, nombre, calorias, peso, LocalDate.now());

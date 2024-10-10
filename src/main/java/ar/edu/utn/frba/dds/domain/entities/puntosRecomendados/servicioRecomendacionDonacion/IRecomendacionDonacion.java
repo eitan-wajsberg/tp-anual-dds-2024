@@ -19,5 +19,5 @@ public interface IRecomendacionDonacion {
     Call<List<PersonaGrabada>> grabarPersonas(@Body Personas personas);
 
     @POST("heladeras")
-    Call<HeladerasGrabadas> grabarHeladeras(@Body Heladeras heladeras);
+    Call<List<HeladeraGrabada>> grabarHeladeras(@Body Heladeras heladeras);
 }
