@@ -47,12 +47,17 @@ public class PersonaVulnerableDTO implements DTO {
 
     PersonaVulnerableDTO that = (PersonaVulnerableDTO) obj;
 
-    return Objects.equals(this.nombre, that.nombre) &&
-        Objects.equals(this.apellido, that.apellido) &&
-        Objects.equals(this.documentoDTO, that.documentoDTO) &&
-        Objects.equals(this.fechaDeNacimiento, that.fechaDeNacimiento) &&
-        Objects.equals(this.direccionDTO, that.direccionDTO) &&
-        Objects.equals(this.menoresAcargo, that.menoresAcargo);
+    return Objects.equals(nombre, that.nombre)
+        && Objects.equals(apellido, that.apellido)
+        && Objects.equals(fechaDeNacimiento, that.fechaDeNacimiento)
+        && Objects.equals(menoresAcargo, that.menoresAcargo)
+        && Objects.equals(documentoDTO, that.documentoDTO)
+        && Objects.equals(direccionDTO, that.direccionDTO);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(nombre, apellido, fechaDeNacimiento, menoresAcargo, documentoDTO, direccionDTO);
   }
 }
 

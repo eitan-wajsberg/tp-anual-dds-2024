@@ -40,6 +40,11 @@ a {
     min-height: 100%;
 }
 
+.delete {
+    padding: 5px; !important;
+    border-radius: 10px 10px 40px 40px;
+}
+
 .color-cc0808{
     color: #cc0808;
 }

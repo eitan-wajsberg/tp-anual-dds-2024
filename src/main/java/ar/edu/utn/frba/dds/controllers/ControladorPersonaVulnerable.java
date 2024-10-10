@@ -40,7 +40,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void show(Context context) {
-    // En este caso, no tiene sentido hacer este metodo
+    // En este caso, no tiene sentido hacer este metodo.
   }
 
   @Override
@@ -85,13 +85,13 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       Optional<PersonaVulnerable> vulnerable = this.repositorioPersonaVulnerable.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
 
       if (vulnerable.isEmpty()) {
-        throw new RuntimeException("");
+        throw new ValidacionFormularioException("No existe una persona vulnerable con este id.");
       }
 
       PersonaVulnerableDTO dto = new PersonaVulnerableDTO(vulnerable.get());
       model.put("dto", dto);
       context.render(rutaRegistroHbs, model);
-    } catch (Exception e) {
+    } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       context.render(rutaListadoHbs, model);
     }
@@ -99,29 +99,40 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void update(Context context) {
+    Map<String, Object> model = new HashMap<>();
     PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
     dto.obtenerFormulario(context);
 
-    Optional<PersonaVulnerable> vulnerableExistente = repositorioPersonaVulnerable.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
+    Optional<PersonaVulnerable> vulnerableExistente = repositorioPersonaVulnerable.buscarPorId(
+        Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
 
     if (vulnerableExistente.isPresent()) {
       PersonaVulnerableDTO dtoActual = new PersonaVulnerableDTO(vulnerableExistente.get());
 
-      // FIXME: No detecta que los dtos sean iguales y por ende crea duplicados
       if (dtoActual.equals(dto)) {
-        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
+        model.put("error", "No se detectaron cambios en el formulario.");
       } else {
-        PersonaVulnerable persona = PersonaVulnerable.fromDTO(dtoActual);
+        PersonaVulnerable persona = PersonaVulnerable.fromDTO(dto);
         withTransaction(() -> repositorioPersonaVulnerable.actualizar(persona));
         context.redirect("/personasVulnerables");
+        return;
       }
     } else {
-      throw new ValidacionFormularioException("Persona vulnerable no encontrada.");
+      model.put("error", "Persona vulnerable no encontrada.");
     }
+
+    context.render(rutaRegistroHbs, model);
   }
 
   @Override
   public void delete(Context context) {
-    // TODO
+    Long id = Long.valueOf(context.pathParam("id"));
+    Optional<PersonaVulnerable> persona = this.repositorioPersonaVulnerable.buscarPorId(id, PersonaVulnerable.class);
+    if (persona.isPresent()) {
+      withTransaction(() -> this.repositorioPersonaVulnerable.eliminarFisico(PersonaVulnerable.class, id));
+      context.redirect("/personasVulnerables");
+    } else {
+      context.status(400).result("No se puede eliminar, la persona no cumple con las condiciones para ser eliminada.");
+    }
   }
 }
