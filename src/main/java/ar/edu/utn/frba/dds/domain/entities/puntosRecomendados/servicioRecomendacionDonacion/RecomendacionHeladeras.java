@@ -2,5 +2,5 @@ package ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomenda
 
 public class RecomendacionHeladeras {
     public Ubicacion ubicacion;
-    public int cantidad_viandas;
+    public int cantidad_recomendada;
 }
