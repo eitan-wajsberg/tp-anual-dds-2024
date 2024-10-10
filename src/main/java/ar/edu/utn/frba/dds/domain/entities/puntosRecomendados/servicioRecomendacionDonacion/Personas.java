@@ -9,6 +9,6 @@ public class Personas {
         public String nombre;
         public String apellido;
         public RecomendacionDireccion direccion;
-        public List<Persona> hijos;
+        // public List<Persona> hijos;
     }
 }

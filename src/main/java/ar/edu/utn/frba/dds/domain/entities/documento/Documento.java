@@ -8,12 +8,14 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Getter
 @Setter
 @Embeddable
+@NoArgsConstructor
 public class Documento {
   @Column(name = "nroDocumento")
   private String numero;
@@ -22,6 +24,11 @@ public class Documento {
   @Column(name = "tipoDocumento")
   private TipoDocumento tipo;
 
+  public Documento(TipoDocumento tipo, String numero){
+    this.tipo = tipo;
+    this.numero = numero;
+  }
+  
   public static Documento fromDTO(DocumentoDTO dto) {
     validarDocumento(dto);
 

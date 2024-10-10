@@ -3,6 +3,5 @@ package ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomenda
 public class PersonaGrabada {
     public String nombre;
     public String apellido;
-    public RecomendacionDireccion direccion;
-    public RecomendacionCoordenada coordenadas;
+    public Ubicacion ubicacion;
 }
