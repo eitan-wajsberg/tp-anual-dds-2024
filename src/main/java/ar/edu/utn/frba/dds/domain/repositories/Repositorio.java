@@ -22,12 +22,11 @@ public class Repositorio implements WithSimplePersistenceUnit {
   }
 
   public <T> List<T> buscarTodos(Class<T> clase) {
-    return entityManager().createQuery("from " + clase.getName(), clase)
-        .getResultList();
+    return entityManager().createQuery("from " + clase.getName(), clase).getResultList();
   }
 
   public <T> void eliminarFisico(Class<T> clase, Long id) {
-    String hql = "DELETE FROM " + clase.getSimpleName() + " e WHERE e.id = :id";
+    String hql = "DELETE FROM " + clase.getName() + " e WHERE e.id = :id";
     entityManager().createQuery(hql)
         .setParameter("id", id)
         .executeUpdate();
