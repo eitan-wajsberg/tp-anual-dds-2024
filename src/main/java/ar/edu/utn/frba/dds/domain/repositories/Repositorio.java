@@ -40,7 +40,7 @@ public class Repositorio implements WithSimplePersistenceUnit {
 
   public <T> Optional<T> buscarPorId(Long id, Class<T> clase) {
     return entityManager()
-        .createQuery("from " + clase.getName() + " where id="+ id, clase)
+        .createQuery("from " + clase.getName() + " where id=" + id, clase)
         .getResultList().stream().findFirst();
   }
 }
