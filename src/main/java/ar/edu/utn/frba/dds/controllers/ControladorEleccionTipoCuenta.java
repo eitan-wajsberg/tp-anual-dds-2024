@@ -13,7 +13,6 @@ public class ControladorEleccionTipoCuenta {
   }
 
   public void save(Context context) {
-    // FIXME: Distingir el tipo de cuenta del rol
     String tipoCuenta = context.formParam("tipoCuenta");
 
     try {

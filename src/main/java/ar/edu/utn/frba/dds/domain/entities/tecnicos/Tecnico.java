@@ -113,4 +113,30 @@ public class Tecnico {
       throw new ValidacionFormularioException("El radio máximo debe ser un número positivo.");
     }
   }
+
+  public void actualizarFromDto(TecnicoDTO dto) {
+    validarCamposObligatorios(dto);
+    validarFormatoCUIL(dto);
+    validarRadioMaximo(dto);
+    validarLongitudNombreYApellido(dto);
+
+    this.nombre = dto.getNombre();
+    this.apellido = dto.getApellido();
+    this.cuil = dto.getCuil();
+    this.distanciaMaximaEnKmParaSerAvisado = dto.getRadioMaximoParaSerAvisado();
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+
+    if (!this.direccion.equals(direccion)) {
+      this.setDireccion(direccion);
+    }
+
+    if (!this.documento.equals(documento)) {
+      this.setDocumento(documento);
+    }
+
+    if (!this.contacto.equals(contacto)) {
+      this.setContacto(contacto);
+    }
+  }
 }

@@ -69,20 +69,7 @@
             </form>
         </div>
     </div>
-    <script>
-        // Obteniendo los valores guardados en el localStorage
-        const tipoDocumentoGuardado = localStorage.getItem('tipoDocumento') || 'DNI';
-
-        // Estableciendo el tipo de documento en el select
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelector('#documentos').value = tipoDocumentoGuardado;
-
-            // Guardar la selección en localStorage al cambiar
-            document.querySelector('#documentos').addEventListener('change', function() {
-                localStorage.setItem('tipoDocumento', this.value);
-            });
-        });
-    </script>
+    <script src="js/tipoDocumento.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Personas Vulnerables" mostrarSeccion=true seccion="Personas vulnerables" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/personasVulnerables" }}
