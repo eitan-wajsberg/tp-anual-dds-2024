@@ -113,21 +113,6 @@ public class PersonaVulnerable {
     this.tarjetaEnUso = null;
   }
 
-  public void actualizarFromDto(PersonaVulnerableDTO dto) {
-    validarCamposObligatorios(dto);
-    validarFechaDeNacimiento(dto);
-
-    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
-    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
-
-    this.setNombre(dto.getNombre());
-    this.setApellido(dto.getNombre());
-    this.setDireccion(direccion);
-    this.setDocumento(documento);
-    this.setFechaDeNacimiento(LocalDate.parse(dto.getFechaDeNacimiento()));
-    this.setMenoresAcargo(Integer.valueOf(dto.getMenoresAcargo()));
-  }
-
   public static PersonaVulnerable fromDTO(PersonaVulnerableDTO dto) {
     validarCamposObligatorios(dto);
     validarFechaDeNacimiento(dto);
@@ -181,5 +166,39 @@ public class PersonaVulnerable {
     }
 
     return menores;
+  }
+
+  public void actualizarFromDto(PersonaVulnerableDTO dto) {
+    validarCamposObligatorios(dto);
+    validarFechaDeNacimiento(dto);
+
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+
+    if (!this.nombre.equals(dto.getNombre())) {
+      this.setNombre(dto.getNombre());
+    }
+
+    if (!this.apellido.equals(dto.getApellido())) {
+      this.setApellido(dto.getApellido());
+    }
+
+    if (!this.direccion.equals(direccion)) {
+      this.setDireccion(direccion);
+    }
+
+    if (!this.documento.equals(documento)) {
+      this.setDocumento(documento);
+    }
+
+    LocalDate nuevaFechaDeNacimiento = LocalDate.parse(dto.getFechaDeNacimiento());
+    if (!this.fechaDeNacimiento.equals(nuevaFechaDeNacimiento)) {
+      this.setFechaDeNacimiento(nuevaFechaDeNacimiento);
+    }
+
+    int nuevosMenoresACargo = Integer.parseInt(dto.getMenoresAcargo());
+    if (this.menoresAcargo != nuevosMenoresACargo) {
+      this.setMenoresAcargo(nuevosMenoresACargo);
+    }
   }
 }
