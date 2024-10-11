@@ -37,7 +37,9 @@ public class Router {
     app.get("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::index);
     app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::edit);
     app.post("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::update);
+    app.post("/tecnicos/{id}/eliminacion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::delete);
 
+    // Carga masiva
     app.get("/admin/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
     app.get("/admin/cargados", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);
     app.get("/admin/reportes", context -> context.render("admin/adminReportes.hbs"));

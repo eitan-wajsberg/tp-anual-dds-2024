@@ -16,6 +16,7 @@ public class TecnicoDTO implements DTO {
   private DireccionDTO direccionDTO;
   private ContactoDTO contactoDTO;
   private DocumentoDTO documentoDTO;
+  private Long id;
 
   public TecnicoDTO(Tecnico tecnico) {
     this.nombre = tecnico.getNombre();
@@ -25,6 +26,7 @@ public class TecnicoDTO implements DTO {
     this.direccionDTO = new DireccionDTO(tecnico.getDireccion());
     this.documentoDTO = new DocumentoDTO(tecnico.getDocumento());
     this.contactoDTO = new ContactoDTO(tecnico.getContacto());
+    this.id = tecnico.getId();
   }
 
   @Override

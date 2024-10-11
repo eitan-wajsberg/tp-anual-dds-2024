@@ -5,12 +5,12 @@ import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
-import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioTecnicos repositorioTecnicos;
@@ -33,7 +33,7 @@ public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePer
 
   @Override
   public void show(Context context) {
-    // TODO
+    // En este caso, no tiene sentido hacer este metodo.
   }
 
   @Override
@@ -55,7 +55,7 @@ public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePer
 
       withTransaction(() -> repositorioTecnicos.guardar(nuevoTecnico));
 
-      context.redirect(rutaListadoHbs);
+      context.redirect("/tecnicos");
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
@@ -66,16 +66,66 @@ public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePer
 
   @Override
   public void edit(Context context) {
-    // TODO
+    Map<String, Object> model = new HashMap<>();
+    try {
+      Optional<Tecnico> tecnico = this.repositorioTecnicos.buscarPorId(Long.valueOf(context.pathParam("id")), Tecnico.class);
+
+      if (tecnico.isEmpty()) {
+        throw new ValidacionFormularioException("No existe un técnico con este id.");
+      }
+
+      TecnicoDTO dto = new TecnicoDTO(tecnico.get());
+      model.put("dto", dto);
+      model.put("edicion", true);
+      model.put("id", context.pathParam("id"));
+      context.render(rutaAltaHbs, model);
+    } catch (ValidacionFormularioException e) {
+      model.put("error", e.getMessage());
+      context.render(rutaListadoHbs, model);
+    }
   }
 
   @Override
   public void update(Context context) {
-    // TODO
+    Map<String, Object> model = new HashMap<>();
+    TecnicoDTO dtoNuevo = new TecnicoDTO();
+    dtoNuevo.obtenerFormulario(context);
+
+    try {
+      Optional<Tecnico> tecnicoExistente = repositorioTecnicos.buscarPorId(
+          Long.valueOf(context.pathParam("id")), Tecnico.class);
+
+      if (tecnicoExistente.isEmpty()) {
+        throw new ValidacionFormularioException("Tecnico no encontrada.");
+      }
+
+      TecnicoDTO dtoExistente = new TecnicoDTO(tecnicoExistente.get());
+      if (dtoExistente.equals(dtoNuevo)) {
+        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
+      }
+
+      tecnicoExistente.get().actualizarFromDto(dtoNuevo);
+      withTransaction(() -> repositorioTecnicos.actualizar(tecnicoExistente.get()));
+      context.redirect("/tecnicos");
+    } catch (ValidacionFormularioException e) {
+      model.put("error", e.getMessage());
+      model.put("dto", dtoNuevo);
+      model.put("edicion", true);
+      model.put("id", context.pathParam("id"));
+      context.render(rutaAltaHbs, model);
+    }
   }
 
   @Override
   public void delete(Context context) {
-    // TODO
+    Long id = Long.valueOf(context.pathParam("id"));
+    Optional<Tecnico> persona = this.repositorioTecnicos.buscarPorId(id, Tecnico.class);
+    System.out.println(context.pathParam("id"));
+    if (persona.isPresent()) {
+      withTransaction(() -> this.repositorioTecnicos.eliminarFisico(Tecnico.class, id));
+      context.redirect("/tecnicos");
+    } else {
+      context.status(400).result("No se puede eliminar, el técnico no cumple con las condiciones para ser eliminada.");
+    }
   }
 }

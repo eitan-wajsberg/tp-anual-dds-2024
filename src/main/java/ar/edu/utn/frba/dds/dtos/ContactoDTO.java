@@ -14,7 +14,7 @@ public class ContactoDTO implements DTO {
 
   public ContactoDTO(Contacto contacto) {
     this.whatsapp = contacto.getWhatsapp();
-    this.telegram = String.valueOf(contacto.getTelegramChatId());
+    this.telegram = contacto.getTelegramChatId() != null ? String.valueOf(contacto.getTelegramChatId()) : "";
     this.correo = contacto.getMail();
   }
 
