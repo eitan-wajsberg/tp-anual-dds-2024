@@ -45,8 +45,28 @@ a {
     border-radius: 10px 10px 40px 40px;
 }
 
+.modal-close {
+    background: none;
+    color: #222222;
+}
+
+.modal-close:hover {
+    background: none;
+    color: #222222;
+}
+
+.modal-button {
+    padding: 8px;
+    border-radius: 5px;
+}
+
 .color-cc0808{
     color: #cc0808;
+}
+
+.modal-backdrop {
+    backdrop-filter: blur(20px);
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
 .fw-600{
