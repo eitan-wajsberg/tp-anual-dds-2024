@@ -29,10 +29,10 @@
                     <div class="col-12 col-md-6">
                         <div class="input-group">
                             <select id="documentos" name="tipoDocumento" class="custom-select" required>
-                                <option value="DNI">DNI</option>
-                                <option value="LC">LIBRETA CÍVICA</option>
-                                <option value="LE">LIBRETA DE ENROLAMIENTO</option>
-                                <option value="PASAPORTE">PASAPORTE</option>
+                                <option {{#ifEqual dto.documentoDTO.tipoDocumento "DNI"}}selected{{/ifEqual}}>DNI</option>
+                                <option {{#ifEqual dto.documentoDTO.tipoDocumento "LC"}}selected{{/ifEqual}} value="LC">LIBRETA CÍVICA</option>
+                                <option {{#ifEqual dto.documentoDTO.tipoDocumento "LE"}}selected{{/ifEqual}} value="LE">LIBRETA DE ENROLAMIENTO</option>
+                                <option {{#ifEqual dto.documentoDTO.tipoDocumento "PASAPORTE"}}selected{{/ifEqual}} value="PASAPORTE">PASAPORTE</option>
                             </select>
                             <input name="nroDocumento" type="text" class="custom-input" placeholder="Número de documento" pattern="^[a-zA-Z0-9-]{5,50}$" value="{{dto.documentoDTO.nroDocumento}}">
                         </div>
@@ -69,7 +69,6 @@
             </form>
         </div>
     </div>
-    <script src="js/tipoDocumento.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Personas Vulnerables" mostrarSeccion=true seccion="Personas vulnerables" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/personasVulnerables" }}
