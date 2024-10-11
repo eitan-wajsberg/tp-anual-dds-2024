@@ -13,7 +13,7 @@ public interface IRecomendacionDonacion {
     Call<List<RecomendacionPersonasVulnerables>> recomendacionPersonasVulnerables(@Query("radio_max") float radio_max, @Query("calle") String calle, @Query("altura") String altura, @Query("provincia") String provincia);
 
     @GET("heladeras")
-    Call<RecomendacionHeladeras> recomendacionHeladeras(@Query("radio_max") float radio_max, @Query("stock_minimo") int stock_minimo, @Query("calle") String calle, @Query("altura") String altura, @Query("provincia") String provincia);
+    Call<List<RecomendacionHeladeras>> recomendacionHeladeras(@Query("radio_max") float radio_max, @Query("stock_minimo") int stock_minimo, @Query("calle") String calle, @Query("altura") String altura, @Query("provincia") String provincia);
 
     @POST("personas_vulnerables")
     Call<List<PersonaGrabada>> grabarPersonas(@Body Personas personas);
