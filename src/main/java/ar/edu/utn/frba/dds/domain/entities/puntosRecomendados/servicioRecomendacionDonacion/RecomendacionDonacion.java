@@ -12,7 +12,7 @@ import java.util.List;
 public class RecomendacionDonacion {
     @Setter
     private static RecomendacionDonacion instancia = null;
-    private static final String urlAPI = "https://servicio-apiv2-production.up.railway.app/api/";
+    private static final String urlAPI = "http://localhost:8808/api/";
     private Retrofit retrofit;
 
     private RecomendacionDonacion() {
@@ -29,18 +29,18 @@ public class RecomendacionDonacion {
         return instancia;
     }
 
-    public RecomendacionHeladeras recomendarHeladeras(float radio_max, int stock_minimo, String calle, String altura, String provincia) throws IOException {
+    public List<RecomendacionHeladeras> recomendarHeladeras(float radio_max, int stock_minimo, String calle, String altura, String provincia) throws IOException {
         IRecomendacionDonacion georefService = this.retrofit.create(IRecomendacionDonacion.class);
-        Call<RecomendacionHeladeras> request = georefService.recomendacionHeladeras(radio_max, stock_minimo, calle, altura, provincia);
-        Response<RecomendacionHeladeras> response = request.execute();
+        Call<List<RecomendacionHeladeras>> request = georefService.recomendacionHeladeras(radio_max, stock_minimo, calle, altura, provincia);
+        Response<List<RecomendacionHeladeras>> response = request.execute();
         return response.body();
     }
 
-    public RecomendacionPersonasVulnerables recomendarPersonasVulnerables(float radio_max, String calle, String altura, String provincia) throws IOException {
+    public List<RecomendacionPersonasVulnerables> recomendarPersonasVulnerables(float radio_max, String calle, String altura, String provincia) throws IOException {
         IRecomendacionDonacion georefService = this.retrofit.create(IRecomendacionDonacion.class);
-        Call<RecomendacionPersonasVulnerables> request = georefService.recomendacionPersonasVulnerables(radio_max, calle, altura, provincia);
-        Response<RecomendacionPersonasVulnerables> response = request.execute();
-        return response.body();
+        Call<List<RecomendacionPersonasVulnerables>> request = georefService.recomendacionPersonasVulnerables(radio_max, calle, altura, provincia);
+        Response<List<RecomendacionPersonasVulnerables>> response = request.execute();
+        return  response.body();
     }
 
     public List<PersonaGrabada> guardarPersonas(Personas personas) throws IOException {
