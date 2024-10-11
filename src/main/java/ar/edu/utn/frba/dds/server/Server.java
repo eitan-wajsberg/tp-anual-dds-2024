@@ -1,18 +1,21 @@
 package ar.edu.utn.frba.dds.server;
 
-import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.middlewares.AuthMiddleware;
 import ar.edu.utn.frba.dds.server.handlers.AppHandlers;
 import ar.edu.utn.frba.dds.utils.javalin.Initializer;
 import ar.edu.utn.frba.dds.utils.javalin.JavalinRenderer;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Template;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.HttpStatus;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class Server {
@@ -48,6 +51,8 @@ public class Server {
 
       config.fileRenderer(new JavalinRenderer().register("hbs", (path, model, context) -> {
         Handlebars handlebars = new Handlebars();
+        HandlebarHelpers.registerHelpers(handlebars);
+
         Template template = null;
         try {
           template = handlebars.compile(

@@ -13,17 +13,10 @@
         <property name="hibernate.archive.autodetection" value="class"/>
 
         <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
-        <!--<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/2024-tpa-mi-no-grupo-08" />-->
         <property name="hibernate.connection.username" value="root" />
         <property name="hibernate.connection.password" value="1234" />
-        <property name="hibernate.jdbc.time_zone" value="UTC"/>
-        <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/2024-tpa-mi-no-grupo-08?serverTimezone=America/Argentina/Buenos_Aires" />
-
-        <!-- <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
-        <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:app-db"/>
-        <property name="hibernate.connection.username" value="sa"/>
-        <property name="hibernate.connection.password" value=""/>
-        <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/> -->
+        <property name="hibernate.jdbc.time_zone" value="America/Buenos_Aires"/>
+        <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/2024-tpa-mi-no-grupo-08?serverTimezone=America/Buenos_Aires" />
 
         <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
         <property name="hibernate.show_sql" value="true"/>
