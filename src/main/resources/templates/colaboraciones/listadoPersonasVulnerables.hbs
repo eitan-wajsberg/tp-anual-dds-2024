@@ -9,7 +9,7 @@
         <div class="row g-3">
             {{#each personasVulnerables}}
                 <div class="col-md-4 position-relative">
-                    <button type="button" class="delete position-absolute top-0 end-0 me-2" onclick="openModal('{{this.id}}')">
+                    <button type="button" class="delete position-absolute top-0 end-0 me-2" onclick="openModal('{{this.id}}', 'eliminación', 'personaVulnerable')">
                         <span class="iconify" data-icon="mdi:remove" data-width="18" data-height="18"></span>
                     </button>
                     <a href="/personasVulnerables/{{this.id}}/edicion" class="dark-text">
@@ -41,35 +41,8 @@
                 </div>
             {{/each}}
         </div>
-        <form method="POST" class="modal fade" id="deleteConfirmationModal" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmación de Eliminación</h5>
-                        <button type="button" class="modal-close position-absolute top-0 end-0 me-2 close" data-dismiss="modal" aria-label="Close">
-                            <span class="iconify" data-icon="mdi:remove" data-width="18" data-height="18"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Estás seguro de que deseas eliminar esta persona?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="modal-button" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="confirmDelete" class="modal-button">Sí, eliminar</button>
-                    </div>
-                </div>
-            </div>
-        </form>
     </div>
-    <script>
-        let deleteId;
-
-        function openModal(id) {
-            deleteId = id;
-            document.querySelector('#deleteConfirmationModal').setAttribute('action', `/personasVulnerables/${deleteId}/eliminacion`);
-            $('#deleteConfirmationModal').modal('show');
-        }
-    </script>
+    <script src="js/confirmacion.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {{/partial}}
