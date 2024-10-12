@@ -11,7 +11,7 @@ import lombok.Setter;
 
 public class CantidadFallasPorHeladera implements Reporte {
   @Getter @Setter
-  RepositorioHeladera repositorioHeladera;
+  private RepositorioHeladera repositorioHeladera;
 
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
@@ -36,4 +36,6 @@ public class CantidadFallasPorHeladera implements Reporte {
   public String titulo() {
     return "Cantidad de fallas por heladera";
   }
+
+  public String nombreArchivo() { return "cantidad-fallas-heladera"; }
 }
