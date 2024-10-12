@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -22,9 +24,12 @@ import javax.persistence.ManyToMany;
 public class Rol implements RouteRole {
   @Id @GeneratedValue
   private Long id;
+
   @Setter
-  @Column(name="nombre", nullable = false)
-  private String nombre;
+  @Enumerated(EnumType.STRING)
+  @Column(name="tipoRol", nullable = false)
+  private TipoRol tipoRol;
+
   @ManyToMany
   @JoinTable(
       name = "rol_permiso",
@@ -34,7 +39,8 @@ public class Rol implements RouteRole {
   )
   private Set<Permiso> permisos;
 
-  public Rol(String personaHumana) {
+  public Rol(TipoRol tipo) {
+    this.tipoRol = tipo;
     this.permisos = new HashSet<>();
   }
 
