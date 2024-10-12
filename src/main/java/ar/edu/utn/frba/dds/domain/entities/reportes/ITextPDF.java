@@ -10,28 +10,55 @@ import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ITextPDF {
-  private String rutaRelativa = "";
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
 
-  public ITextPDF(String rutaRelativa){
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.List;
+
+public class ITextPDF {
+
+  private String rutaRelativa;
+
+  public ITextPDF(String rutaRelativa) {
     this.rutaRelativa = rutaRelativa;
   }
 
-  public void generarPDF(String titulo, List<String> parrafos) {
+  public void generarPDF(String titulo, String nombreArchivo, List<String> parrafos) {
     try {
+      // Obtener la fecha actual en formato de cadena
       String fechaActual = LocalDate.now().toString();
-      String ruta = rutaRelativa + titulo + " " + fechaActual + ".pdf";
+
+      // Crear la carpeta con el nombre de la fecha actual si no existe
+      Path rutaDirectorio = Paths.get(rutaRelativa, fechaActual);
+      if (!Files.exists(rutaDirectorio)) {
+        Files.createDirectories(rutaDirectorio);  // Crear las carpetas necesarias
+      }
+
+      // Definir la ruta completa para el archivo PDF
+      String rutaArchivo = rutaDirectorio.toString() + File.separator + nombreArchivo + ".pdf";
+
+      // Crear el documento y escribir el contenido
       Document documento = new Document();
-      PdfWriter.getInstance(documento, new FileOutputStream(ruta));
+      PdfWriter.getInstance(documento, new FileOutputStream(rutaArchivo));
       documento.open();
       documento.addTitle(titulo);
       documento.add(new Paragraph(titulo, new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.BOLDITALIC)));
       documento.add(new Paragraph(fechaActual, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.ITALIC)));
       documento.add(Chunk.NEWLINE);
+
+      // Agregar los párrafos
       for (String parrafo : parrafos) {
         documento.add(new Paragraph(parrafo, new Font(Font.FontFamily.TIMES_ROMAN, 12)));
       }
+
       documento.close();
+
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface Reporte {
-  public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin);
+  List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin);
 
-  public String titulo();
+  String titulo();
+
+  String nombreArchivo();
 }

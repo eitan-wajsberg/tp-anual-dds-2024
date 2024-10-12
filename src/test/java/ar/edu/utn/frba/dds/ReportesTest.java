@@ -66,7 +66,7 @@ public class ReportesTest {
 
     List<String> contenido = new ArrayList<>();
     contenido.add("Contenido del reporte");
-    verify(mockAdapterPDF, times(1)).exportarPDF(eq("Reporte de prueba"), eq(contenido));
+    verify(mockAdapterPDF, times(1)).exportarPDF(eq("Reporte de prueba"), eq("nombre-archivo"), eq(contenido));
     verify(mockReporte, times(1)).generarReporte(fechaInicioCaptor.capture(), fechaFinCaptor.capture());
 
     LocalDate fechaInicioEsperada = LocalDate.now().minusWeeks(1);

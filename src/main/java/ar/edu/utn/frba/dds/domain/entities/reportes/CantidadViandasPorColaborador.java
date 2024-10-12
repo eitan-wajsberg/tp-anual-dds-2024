@@ -38,4 +38,6 @@ public class CantidadViandasPorColaborador implements Reporte {
   public String titulo() {
     return "Cantidad de viandas por colaborador";
   }
+
+  public String nombreArchivo() { return "cantidad-viandas-colaborador"; }
 }

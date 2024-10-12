@@ -14,7 +14,7 @@ public class GeneradorReportesMain
 {
   public static void main(String[] args) {
     // configuro generador de reportes
-    String rutaReportes = "src/resources/reportes";
+    String rutaReportes = "src/main/resources/public/reportes/";
     AdapterPDFiText adaptador = new AdapterPDFiText(new ITextPDF(rutaReportes));
     GeneradorReportes.getInstance().setAdapterPDF(adaptador);
     GeneradorReportes.getInstance().setTemporalidad(Temporalidad.SEMANAL);
@@ -31,7 +31,6 @@ public class GeneradorReportesMain
 
     GeneradorReportes.getInstance().agregarReportes(fallasHeladeras, viandasPorColaborador, movimientosHeladera);
 
-    // genero reportes
     GeneradorReportes.getInstance().generarReportes();
   }
 }
