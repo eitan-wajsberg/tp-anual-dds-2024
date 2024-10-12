@@ -12,7 +12,7 @@ import lombok.Setter;
 
 public class MovimientoViandasPorHeladera implements Reporte {
   @Getter @Setter
-  RepositorioHeladera repositorioHeladera;
+  private RepositorioHeladera repositorioHeladera;
 
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
@@ -39,4 +39,6 @@ public class MovimientoViandasPorHeladera implements Reporte {
   public String titulo() {
     return "Movimientos de viandas por heladera";
   }
+
+  public String nombreArchivo() { return "cantidad-viandas-heladera"; }
 }

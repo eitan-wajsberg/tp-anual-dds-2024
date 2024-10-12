@@ -16,20 +16,17 @@ public class ControladorReportes {
   public void index(Context context) {
     List<Reporte> reportes = new ArrayList<>();
 
-    // Lee las carpetas en la ruta base de reportes
     File baseDir = new File(rutaBaseReportes);
     File[] carpetas = baseDir.listFiles(File::isDirectory);
 
     if (carpetas != null) {
       for (File carpeta : carpetas) {
-        // Asegúrate de que los nombres de los archivos sean correctos
         Reporte reporte = new Reporte();
-        reporte.setFecha(carpeta.getName()); // O usa un formato de fecha según sea necesario
+        reporte.setFecha(carpeta.getName());
 
-        // Asigna las rutas a cada archivo
-        reporte.setRutaFallas("/reportes/" + carpeta.getName() + "/fallas.pdf");
-        reporte.setRutaViandasRetiradas("/reportes/" + carpeta.getName() + "/viandasRetiradas.pdf");
-        reporte.setRutaViandasDonadas("/reportes/" + carpeta.getName() + "/viandasDonadas.pdf");
+        reporte.setRutaFallas("/reportes/" + carpeta.getName() + "/cantidad-fallas-heladera.pdf");
+        reporte.setRutaViandasRetiradas("/reportes/" + carpeta.getName() + "/cantidad-viandas-heladera.pdf");
+        reporte.setRutaViandasDonadas("/reportes/" + carpeta.getName() + "/cantidad-viandas-colaborador.pdf");
 
         reportes.add(reporte);
       }
@@ -38,7 +35,7 @@ public class ControladorReportes {
     Map<String, Object> model = new HashMap<>();
     model.put("reportes", reportes);
 
-    context.render(rutaReportes, model); // Asegúrate de pasar el modelo aquí
+    context.render(rutaReportes, model);
   }
 
   @Data
