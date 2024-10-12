@@ -18,7 +18,7 @@
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
                         <input name="cuil" type="text" class="w-100" required placeholder="CUIL" pattern="^\d{2}-\d{8}-\d{1}$" title="El CUIL debe seguir el formato XX-XXXXXXXX-X." value="{{dto.cuil}}">
                     </div>
-                    <div class="col-6">
+                    <div class="col-12 col-md-6">
                         <div class="input-group">
                             <select id="documentos" name="tipoDocumento" class="custom-select" required>
                                 <option {{#ifEqual dto.documentoDTO.tipoDocumento "DNI"}}selected{{/ifEqual}}>DNI</option>
