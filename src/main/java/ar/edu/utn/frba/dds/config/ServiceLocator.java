@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
+import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
 import ar.edu.utn.frba.dds.domain.entities.validador.AusenciaDeCredencialesPorDefecto;
 import ar.edu.utn.frba.dds.domain.entities.validador.ListaDePeoresClavesMemorizadas;
 import ar.edu.utn.frba.dds.domain.entities.validador.LongitudEstipulada;
@@ -45,7 +46,7 @@ public class ServiceLocator {
         ControladorAltaTecnicos instance = new ControladorAltaTecnicos(instanceOf(RepositorioTecnicos.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
-        ControladorCargaMasiva instance = new ControladorCargaMasiva();
+        ControladorCargaMasiva instance = new ControladorCargaMasiva(ServiceLocator.instanceOf(RepositorioPersonaHumana.class), ServiceLocator.instanceOf(AdaptadaJavaXMail.class), ServiceLocator.instanceOf(Repositorio.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorInicio.class.getName())) {
         ControladorInicio instance = new ControladorInicio();
@@ -64,6 +65,9 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(RepositorioRol.class.getName())) {
         RepositorioRol instance = new RepositorioRol();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(AdaptadaJavaXMail.class.getName())) {
+        AdaptadaJavaXMail instance = new AdaptadaJavaXMail();
         instances.put(componentName, instance);
       }
     }

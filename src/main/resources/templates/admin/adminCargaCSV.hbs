@@ -6,16 +6,39 @@
                 <h1 class="title text-center">Cargar CSV</h1>
                 <div class="pt-2 pb-5  text-center">Migración de los donantes que ya existen, pero de manera masiva. Importar un archivo CSV para que la carga de datos sea más sencilla.</div>
                 <div class="row mt-2">
-                    <input type="file" id="file-upload" class="file-input">
-                    <label for="file-upload" class="d-flex align-items-center justify-content-center boton">
-                        Seleccionar archivo CSV
-                        <span class="iconify ms-2" data-icon="material-symbols:upload" data-width="24" data-height="24"></span>
-                    </label>
+                    <form id="form" method="POST" action="/cargaMasiva" enctype="multipart/form-data">
+                        <input type="file" id="file-upload" name="files" class="file-input">
+                        <label for="file-upload" class="d-flex align-items-center justify-content-center boton">
+                            Seleccionar archivo CSV
+                            <span class="iconify ms-2" data-icon="material-symbols:upload" data-width="24" data-height="24"></span>
+                        </label>
+                    </form>
                 </div>
+                {{#if error}}
+                    <div class="row mt-2 justify-content-center">
+                        <p class="error text-center">{{error}}</p>
+                    </div>
+                {{/if}}
+                {{#if success}}
+                    <div class="alert alert-success" role="alert">
+                        {{success}}
+                    </div>
+                {{/if}}
             </div>
         </div>
     </div>
+    <script src="../js/confirmacion.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('file-upload').addEventListener('click', function() {
+            this.value = '';
+        });
+
+        document.getElementById('file-upload').addEventListener('change', function (event) {
+            openModal(null, 'carga masiva', 'cargaMasiva');
+        });
+    </script>
 {{/partial}}
 
 {{> templates/base titulo="Carga CSV" mostrarAdmin=true mostrarIrAtras=true paginaAtras="/admin" mostrarSeccion=true seccion="Carga masiva" }}
-

@@ -12,6 +12,9 @@ import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +44,13 @@ public class CargaMasivaColaboracionesTest {
 
     // Realizo carga
     carga = new CargaMasivaColaboraciones(repoPersonaHumana, mailSender);
-    carga.cargarColaboraciones(nuevoArchivo);
+    Reader reader;
+    try {
+      reader = new FileReader(nuevoArchivo);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    carga.cargarColaboraciones(reader);
   }
 
   @Test
