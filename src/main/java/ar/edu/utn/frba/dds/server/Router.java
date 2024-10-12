@@ -1,24 +1,14 @@
 package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
-import ar.edu.utn.frba.dds.controllers.ControladorAltaTecnicos;
+import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
-import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
-import com.itextpdf.text.ListLabel;
+import ar.edu.utn.frba.dds.controllers.ControladorReportes;
 import io.javalin.Javalin;
-import io.javalin.http.Context;
-import io.javalin.http.Handler;
-import io.javalin.security.RouteRole;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 public class Router {
 
@@ -32,19 +22,19 @@ public class Router {
     app.post("/usuarios", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::save);
 
     // Tecnico
-    app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::create);
-    app.post("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::save);
-    app.get("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::index);
-    app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::edit);
-    app.post("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::update);
-    app.post("/tecnicos/{id}/eliminacion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::delete);
+    app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorTecnicos.class)::create);
+    app.post("/tecnicos", ServiceLocator.instanceOf(ControladorTecnicos.class)::save);
+    app.get("/tecnicos", ServiceLocator.instanceOf(ControladorTecnicos.class)::index);
+    app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::edit);
+    app.post("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::update);
+    app.post("/tecnicos/{id}/eliminacion", ServiceLocator.instanceOf(ControladorTecnicos.class)::delete);
 
     // Carga masiva
     app.get("/cargaMasiva/nuevo", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
     app.post("/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);
 
     // Reportes
-    app.get("/admin/reportes", context -> context.render("admin/adminReportes.hbs"));
+    app.get("/reportes", ServiceLocator.instanceOf(ControladorReportes.class)::index);
 
     // Persona vulnerable
     app.get("/personasVulnerables/nuevo", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create);

@@ -1,15 +1,20 @@
 package ar.edu.utn.frba.dds.domain.entities.cargaMasiva;
 
+import static ar.edu.utn.frba.dds.utils.random.Random.generateRandomString;
+
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
+import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.FormasContribucionHumanas;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumanaBuilder;
 import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
@@ -22,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import javax.mail.MessagingException;
 import javax.persistence.Column;
@@ -69,13 +75,12 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
   }
 
   public void cargarColaboraciones(Reader reader) {
-    // Crear un parser CSV con el formato predeterminado
     CSVParser csvParser;
     try {
       csvParser = CSVFormat.DEFAULT.builder()
           .setDelimiter(';')
           .setHeader()
-          .setSkipHeaderRecord(true)  // skip header
+          .setSkipHeaderRecord(true)
           .build().parse(reader);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -84,25 +89,26 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
     for (CSVRecord record : csvParser) {
       System.out.println(record);
 
-      // Aseguro existencia del documento
       TipoDocumento tipoDocumento = TipoDocumento.valueOf(record.get(0));
       String nroDocumento = record.get(1);
 
       // Aseguro existencia de la persona humana
       Optional<PersonaHumana> posiblePersona = this.personaHumanaRepo.buscarPorDocumento(nroDocumento);
-      PersonaHumana persona;
 
+      PersonaHumana persona;
       if (posiblePersona.isEmpty()) {
-        PersonaHumanaBuilder builder = new PersonaHumanaBuilder();
-        String nombre = record.get(2);
-        String apellido = record.get(3);
-        String mail = record.get(4);
-        persona = builder.construirNombre(nombre)
-            .construirApellido(apellido)
-            .construirMail(mail, adapterMail)
-            .construirDocumento(tipoDocumento, nroDocumento)
-            .construir();
-        this.personaHumanaRepo.guardar(persona);
+        persona = new PersonaHumana();
+        persona.setNombre(record.get(2));
+        persona.setApellido(record.get(3));
+        Documento documento = new Documento(tipoDocumento, nroDocumento);
+        persona.setDocumento(documento);
+        Usuario usuario = new Usuario();
+        usuario.setNombre(record.get(2).toLowerCase() + "." + record.get(3).toLowerCase());
+        usuario.setClave(generateRandomString(12));
+        usuario.setRol(new Rol(TipoRol.PERSONA_HUMANA));
+        persona.setUsuario(usuario);
+        persona.agregarFormaDeContribucion(FormasContribucionHumanas.DONACION_VIANDA);
+        withTransaction(() -> personaHumanaRepo.guardar(persona));
         notificarAltaPersona(persona);
       } else {
         persona = posiblePersona.get();
@@ -117,7 +123,6 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
           DonacionDinero donacionDinero = new DonacionDinero();
           donacionDinero.setMonto(cantidad);
           donacionDinero.setFecha(fecha);
-
           contribuciones.add(donacionDinero);
           break;
 
@@ -125,7 +130,6 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
           Vianda viandaDonada;
           for (int i = 0; i < cantidad; i++) {
             viandaDonada = new Vianda(fecha);
-
             contribuciones.add(viandaDonada);
           }
 
@@ -133,7 +137,6 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
 
         case "REDISTRIBUCION_VIANDAS":
           DistribucionVianda distribucion = new DistribucionVianda(fecha, cantidad);
-
           contribuciones.add(distribucion);
           break;
 
@@ -142,7 +145,6 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
           for (int i = 0; i < cantidad; i++) {
             tarjetaRepartida = new Tarjeta();
             tarjetaRepartida.setFechaRecepcionPersonaVulnerable(fecha);
-
             contribuciones.add(tarjetaRepartida);
           }
 
@@ -153,7 +155,7 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
         persona.agregarContribucion(contribucion);
       }
 
-      this.personaHumanaRepo.actualizar(persona);
+      withTransaction(() -> personaHumanaRepo.actualizar(persona));
     }
   }
 
