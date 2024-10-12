@@ -32,3 +32,6 @@ target/**
 
 # Extra: live share
 !/.codetogether.ignore
+
+# tmp de carga masiva
+/tmp
