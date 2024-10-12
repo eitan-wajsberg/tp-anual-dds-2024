@@ -51,9 +51,7 @@ public class PersonaHumanaBuilder {
   private void crearUsuario(){
     Usuario usuarioDePersona = new Usuario(this.mail);
     String clave = generateRandomString(12);
-
     usuarioDePersona.cambiarClave(clave);
-
     this.persona.setUsuario(usuarioDePersona);
   }
 
