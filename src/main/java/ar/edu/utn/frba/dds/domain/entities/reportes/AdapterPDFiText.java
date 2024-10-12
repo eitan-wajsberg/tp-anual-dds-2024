@@ -10,7 +10,7 @@ public class AdapterPDFiText implements IAdapterPDF {
   }
 
   @Override
-  public void exportarPDF(String titulo, List<String> parrafos) {
-    iText.generarPDF(titulo, parrafos);
+  public void exportarPDF(String titulo, String nombreArchivo, List<String> parrafos) {
+    iText.generarPDF(titulo, nombreArchivo, parrafos);
   }
 }
