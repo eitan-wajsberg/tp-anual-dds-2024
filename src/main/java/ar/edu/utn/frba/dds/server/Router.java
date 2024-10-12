@@ -31,7 +31,7 @@ public class Router {
     app.get("/usuarios/nuevo", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::create);
     app.post("/usuarios", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::save);
 
-    // Admin
+    // Tecnico
     app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::create);
     app.post("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::save);
     app.get("/tecnicos", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::index);
@@ -40,8 +40,10 @@ public class Router {
     app.post("/tecnicos/{id}/eliminacion", ServiceLocator.instanceOf(ControladorAltaTecnicos.class)::delete);
 
     // Carga masiva
-    app.get("/admin/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
-    app.get("/admin/cargados", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);
+    app.get("/cargaMasiva/nuevo", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
+    app.post("/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);
+
+    // Reportes
     app.get("/admin/reportes", context -> context.render("admin/adminReportes.hbs"));
 
     // Persona vulnerable
