@@ -5,6 +5,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorOferta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
 import ar.edu.utn.frba.dds.controllers.ControladorReportes;
