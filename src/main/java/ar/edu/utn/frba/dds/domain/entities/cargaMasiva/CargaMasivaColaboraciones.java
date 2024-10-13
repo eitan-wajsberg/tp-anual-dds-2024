@@ -5,12 +5,14 @@ import static ar.edu.utn.frba.dds.utils.random.Random.generateRandomString;
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import ar.edu.utn.frba.dds.domain.entities.Contribucion;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
+import ar.edu.utn.frba.dds.domain.entities.contacto.MedioDeContacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.FormasContribucionHumanas;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumanaBuilder;
 import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
@@ -18,39 +20,31 @@ import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
-import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
+import io.javalin.http.UploadedFile;
+import io.javalin.util.FileUtil;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import javax.mail.MessagingException;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Setter @Getter
 @Entity
 @Table(name = "carga_masiva")
 @NoArgsConstructor
-public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
+public class CargaMasivaColaboraciones {
   @Id
   @GeneratedValue
   private Long id;
@@ -64,17 +58,28 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
   private Usuario responsable;
 
   @Transient
-  private RepositorioPersonaHumana personaHumanaRepo;
-
-  @Transient
   private AdapterMail adapterMail;
 
-  public CargaMasivaColaboraciones(RepositorioPersonaHumana personaHumanaRepo, AdapterMail adapterMail) {
-    this.personaHumanaRepo = personaHumanaRepo;
+  public CargaMasivaColaboraciones(AdapterMail adapterMail) {
     this.adapterMail = adapterMail;
   }
 
-  public void cargarColaboraciones(Reader reader) {
+  public String obtenerRutaDestino(UploadedFile archivo) {
+    if (archivo == null) {
+      throw new ValidacionFormularioException("No se ha encontrado el archivo.");
+    }
+
+    if (!archivo.filename().endsWith(".csv")) {
+      throw new ValidacionFormularioException("El archivo no tiene extensión .csv");
+    }
+
+    String rutaDestino = "tmp/" + archivo.filename();
+    FileUtil.streamToFile(archivo.content(), rutaDestino);
+
+    return rutaDestino;
+  }
+
+  public CSVParser crearParserDeCsv(Reader reader) {
     CSVParser csvParser;
     try {
       csvParser = CSVFormat.DEFAULT.builder()
@@ -86,80 +91,44 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
       throw new RuntimeException(e);
     }
 
-    for (CSVRecord record : csvParser) {
-      System.out.println(record);
-
-      TipoDocumento tipoDocumento = TipoDocumento.valueOf(record.get(0));
-      String nroDocumento = record.get(1);
-
-      // Aseguro existencia de la persona humana
-      Optional<PersonaHumana> posiblePersona = this.personaHumanaRepo.buscarPorDocumento(nroDocumento);
-
-      PersonaHumana persona;
-      if (posiblePersona.isEmpty()) {
-        persona = new PersonaHumana();
-        persona.setNombre(record.get(2));
-        persona.setApellido(record.get(3));
-        Documento documento = new Documento(tipoDocumento, nroDocumento);
-        persona.setDocumento(documento);
-        Usuario usuario = new Usuario();
-        usuario.setNombre(record.get(2).toLowerCase() + "." + record.get(3).toLowerCase());
-        usuario.setClave(generateRandomString(12));
-        usuario.setRol(new Rol(TipoRol.PERSONA_HUMANA));
-        persona.setUsuario(usuario);
-        persona.agregarFormaDeContribucion(FormasContribucionHumanas.DONACION_VIANDA);
-        withTransaction(() -> personaHumanaRepo.guardar(persona));
-        notificarAltaPersona(persona);
-      } else {
-        persona = posiblePersona.get();
-      }
-
-      // Le agrego la o las contribuciones a la persona
-      List<Contribucion> contribuciones = new ArrayList<>();
-      int cantidad = Integer.parseInt(record.get(7));
-      LocalDate fecha = LocalDate.parse(record.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-      switch (record.get(6)) {
-        case "DINERO":
-          DonacionDinero donacionDinero = new DonacionDinero();
-          donacionDinero.setMonto(cantidad);
-          donacionDinero.setFecha(fecha);
-          contribuciones.add(donacionDinero);
-          break;
-
-        case "DONACION_VIANDAS":
-          Vianda viandaDonada;
-          for (int i = 0; i < cantidad; i++) {
-            viandaDonada = new Vianda(fecha);
-            contribuciones.add(viandaDonada);
-          }
-
-          break;
-
-        case "REDISTRIBUCION_VIANDAS":
-          DistribucionVianda distribucion = new DistribucionVianda(fecha, cantidad);
-          contribuciones.add(distribucion);
-          break;
-
-        case "ENTREGA_TARJETAS":
-          Tarjeta tarjetaRepartida;
-          for (int i = 0; i < cantidad; i++) {
-            tarjetaRepartida = new Tarjeta();
-            tarjetaRepartida.setFechaRecepcionPersonaVulnerable(fecha);
-            contribuciones.add(tarjetaRepartida);
-          }
-
-          break;
-      }
-
-      for (Contribucion contribucion: contribuciones) {
-        persona.agregarContribucion(contribucion);
-      }
-
-      withTransaction(() -> personaHumanaRepo.actualizar(persona));
-    }
+    return csvParser;
   }
 
-  private void notificarAltaPersona(PersonaHumana persona) {
+  public PersonaHumana cargarPersonaHumana(CSVRecord record) {
+    String nombre = record.get(2);
+    String apellido = record.get(3);
+    String mail = record.get(4);
+    String nroDocumento = record.get(1);
+
+    CamposObligatoriosVacios.validarCampos(
+        Pair.of("nombre", nombre),
+        Pair.of("apellido", apellido),
+        Pair.of("correo", mail),
+        Pair.of("numero de documento", nroDocumento)
+    );
+
+    if (!mail.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+      throw new ValidacionFormularioException("El formato del correo electrónico es inválido.");
+    }
+
+    TipoDocumento tipoDocumento = TipoDocumento.valueOf(record.get(0));
+    PersonaHumana persona = new PersonaHumana();
+    persona.setNombre(nombre);
+    persona.setApellido(apellido);
+
+    Documento documento = new Documento(tipoDocumento, nroDocumento);
+    persona.setDocumento(documento);
+
+    Contacto contacto = new Contacto();
+    contacto.setMail(mail);
+    persona.setContacto(contacto);
+
+    persona.agregarFormaDeContribucion(FormasContribucionHumanas.valueOf(record.get(6)));
+
+    return persona;
+  }
+
+  public void notificarAltaPersona(PersonaHumana persona) {
     Mensaje mensaje = new Mensaje("Credenciales de acceso al sistema",
         "¡Gracias por colaborar en el Sistema para la Mejora del Acceso Alimentario!\n"
             + "Se le ha creado su cuenta de acceso. Sus credenciales son:\n"
@@ -168,7 +137,8 @@ public class CargaMasivaColaboraciones implements WithSimplePersistenceUnit {
         LocalDateTime.now());
 
     try {
-      persona.getContacto().enviarMensaje(mensaje);
+      Mail mail = new Mail(adapterMail);
+      mail.enviar(mensaje, persona.getContacto());
     } catch (MessagingException | UnsupportedEncodingException e) {
       throw new ValidacionFormularioException("No se ha podido notificar a " + persona.getNombre() + " " + persona.getApellido());
     }

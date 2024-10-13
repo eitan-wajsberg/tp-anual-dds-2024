@@ -2,9 +2,9 @@ package ar.edu.utn.frba.dds.domain.main;
 
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 
-public class MainExample implements WithSimplePersistenceUnit {
+public class PersistenciaMain implements WithSimplePersistenceUnit {
   public static void main(String[] arg) {
-    MainExample instance = new MainExample();
+    PersistenciaMain instance = new PersistenciaMain();
     instance.inicializar();
   }
 
