@@ -83,6 +83,11 @@ public class Contacto {
         && !dto.getCorreo().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
       throw new ValidacionFormularioException("El formato del correo electrónico es inválido.");
     }
+
+    if (dto.getWhatsapp() != null && !dto.getWhatsapp().isEmpty()
+        && !dto.getWhatsapp().matches("^[0-9]{10,15}$")) {
+      throw new ValidacionFormularioException("El formato del número de WhatsApp es inválido.");
+    }
   }
 
   @Override
