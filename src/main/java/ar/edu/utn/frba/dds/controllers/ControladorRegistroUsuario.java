@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoCuentaRegistro;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
@@ -47,7 +48,7 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
         throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.");
       }
 
-      Optional<Rol> rol = repositorioRol.buscarPorNombre(dto.getRol());
+      Optional<Rol> rol = repositorioRol.buscarPorTipo(TipoRol.valueOf(dto.getRol()));
       if (rol.isEmpty()) {
         throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.");
       }

@@ -25,10 +25,16 @@ public class ServiceLocator {
 
     if (!instances.containsKey(componentName)) {
       if (componentName.equals(ControladorPersonaVulnerable.class.getName())) {
-        ControladorPersonaVulnerable instance = new ControladorPersonaVulnerable(instanceOf(Repositorio.class), instanceOf(RepositorioPersonaHumana.class));
+        ControladorPersonaVulnerable instance = new ControladorPersonaVulnerable(
+            instanceOf(Repositorio.class),
+            instanceOf(RepositorioPersonaHumana.class)
+        );
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorRegistroUsuario.class.getName())) {
-        ControladorRegistroUsuario instance = new ControladorRegistroUsuario(instanceOf(RepositorioUsuario.class), instanceOf(RepositorioRol.class));
+        ControladorRegistroUsuario instance = new ControladorRegistroUsuario(
+            instanceOf(RepositorioUsuario.class),
+            instanceOf(RepositorioRol.class)
+        );
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorEleccionTipoCuenta.class.getName())) {
         ControladorEleccionTipoCuenta instance = new ControladorEleccionTipoCuenta();
@@ -37,7 +43,12 @@ public class ServiceLocator {
         ControladorTecnicos instance = new ControladorTecnicos(instanceOf(RepositorioTecnicos.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
-        ControladorCargaMasiva instance = new ControladorCargaMasiva(ServiceLocator.instanceOf(RepositorioPersonaHumana.class), ServiceLocator.instanceOf(AdaptadaJavaXMail.class), ServiceLocator.instanceOf(Repositorio.class));
+        ControladorCargaMasiva instance = new ControladorCargaMasiva(
+            ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
+            ServiceLocator.instanceOf(AdaptadaJavaXMail.class),
+            ServiceLocator.instanceOf(RepositorioUsuario.class),
+            ServiceLocator.instanceOf(RepositorioRol.class)
+        );
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorInicio.class.getName())) {
         ControladorInicio instance = new ControladorInicio();

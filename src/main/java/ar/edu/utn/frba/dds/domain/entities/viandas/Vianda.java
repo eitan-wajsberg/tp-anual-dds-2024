@@ -20,19 +20,19 @@ public class Vianda implements Contribucion {
   @GeneratedValue
   private Long id;
 
-  @Column(name="fechaCaducidad", columnDefinition = "DATE", nullable = false)
+  @Column(name="fechaCaducidad", columnDefinition = "DATE")
   private LocalDateTime fechaCaducidad;
 
-  @Column(name="entregada", columnDefinition = "BIT(1)", nullable = false)
+  @Column(name="entregada", columnDefinition = "BIT(1)")
   private boolean entregada;
 
   @Column(name="comida", nullable = false)
   private String comida;
 
-  @Column(name="caloriasEnKcal", columnDefinition = "DECIMAL(5,2)", nullable = false)
+  @Column(name="caloriasEnKcal", columnDefinition = "DECIMAL(5,2)")
   private float caloriasEnKcal;
 
-  @Column(name="pesoEnGramos", columnDefinition = "DECIMAL(5,2)", nullable = false)
+  @Column(name="pesoEnGramos", columnDefinition = "DECIMAL(5,2)")
   private float pesoEnGramos;
 
   @Column(name="fechaDonacion", columnDefinition = "DATE", nullable = false)
