@@ -39,6 +39,7 @@ function crearModal(nombreArchivo) {
     document.getElementById('confirm-submit').addEventListener('click', function () {
         document.getElementById('form').submit();
         modal.hide();
+        document.getElementById('loader').classList.add('show');
     });
 
     document.getElementById('customModal').addEventListener('hidden.bs.modal', function () {
