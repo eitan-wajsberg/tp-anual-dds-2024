@@ -19,5 +19,4 @@ public class Mail implements MedioDeContacto {
   public void enviar(Mensaje mensaje, Contacto contacto) throws MessagingException, UnsupportedEncodingException {
     adaptador.enviar(mensaje, contacto.getMail());
   }
-
 }
