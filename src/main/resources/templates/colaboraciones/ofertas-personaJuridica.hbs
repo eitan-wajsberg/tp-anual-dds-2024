@@ -1,0 +1,48 @@
+{{#partial "contenido"}}
+<!--     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+   -->
+
+<div class="d-flex align-items-center justify-content-between container mt-4">
+    <h1> <span class="fw-bold" style= "font-size: 35px;">Mis ofertas</span> </h1>
+    <a href="/colaboraciones/agregarOferta" class="btn btn-primary text-white" style="font-size: 18px;">Agregar oferta</a>
+</div>
+<div class="d-flex align-items-center justify-content-between container mt-3">
+    <p1> <span style="font-size: 18px;"> Vea sus ofertas activas, publique nuevos productos o servicios,
+            y modifique las ofertas existentes.</span> </p1>
+</div>
+
+<div class="container mt-4">
+    <div class="category-container">
+        <button class="category-box">Gastronomía</button>
+        <button class="category-box">Electrónica</button>
+        <button class="category-box">Artículos para el hogar</button>
+        <button class="category-box">Otro</button>
+        <div class="col-auto d-flex justify-content-center align-items-center">
+            <div class="input-group">
+                <input type="text" class="form-control form-control-sm" placeholder="Buscar por nombre">
+                <button class="btn btn-search">
+                    <span class="iconify" data-icon="iconoir:search" data-width="16" data-height="16"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="row g-3">
+            <div class="col-md-12">
+                {{#each ofertas}}
+                <div class="offer-card">
+                    <img src="../../public/img/ofertas-electronica.png" alt="Imagen Oferta 1">
+                    <div class="offer-details">
+                        <p><strong>Categoría:</strong> {{ofertas.rubro.nombre}}</p>
+                        <h4>{{ofertas.nombre}}</h4>
+                        <p><strong>Puntos Requeridos:</strong>{{ofertas.cantidadPuntosNecesarios}}</p>
+                        <p><strong>Cantidad Disponible:</strong> 50</p>
+                    </div>
+                </div>
+            {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{/partial}}

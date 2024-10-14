@@ -9,7 +9,6 @@ import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
 import ar.edu.utn.frba.dds.controllers.ControladorReportes;
 import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOferta;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
@@ -38,7 +37,7 @@ public class ServiceLocator {
         ControladorTecnicos instance = new ControladorTecnicos(instanceOf(RepositorioTecnicos.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
-        ControladorCargaMasiva instance = new ControladorCargaMasiva();
+        ControladorCargaMasiva instance = new ControladorCargaMasiva(ServiceLocator.instanceOf(RepositorioPersonaHumana.class), ServiceLocator.instanceOf(AdaptadaJavaXMail.class), ServiceLocator.instanceOf(Repositorio.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorInicio.class.getName())) {
         ControladorInicio instance = new ControladorInicio();
@@ -60,6 +59,15 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(RepositorioRol.class.getName())) {
         RepositorioRol instance = new RepositorioRol();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioOferta.class.getName())) {
+        RepositorioOferta instance = new RepositorioOferta();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioOfertaCanjeada.class.getName())) {
+        RepositorioOfertaCanjeada instance = new RepositorioOfertaCanjeada();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioRubro.class.getName())) {
+        RepositorioRubro instance = new RepositorioRubro();
         instances.put(componentName, instance);
       } else if (componentName.equals(RepositorioOferta.class.getName())) {
         RepositorioOferta instance = new RepositorioOferta();
