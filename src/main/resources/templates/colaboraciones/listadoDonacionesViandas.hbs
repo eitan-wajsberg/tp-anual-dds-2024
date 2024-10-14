@@ -1,0 +1,45 @@
+{{#partial "contenido"}}
+     <div class="mt-5 ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3 mb-5">
+            <a href="donacionVianda.html" class="d-flex justify-content-end mb-3 align-items-center">
+                <label class="d-flex align-items-center justify-content-center boton">
+                    Donar vianda
+                    <span class="iconify ms-2" data-icon="material-symbols:add" data-width="24" data-height="24"></span>
+                </label>
+            </a>
+     {{#each donacionDinero}}
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="distribution-card">
+                        <div class="row mb-2">
+                            <span class="flex-row-reverse d-flex color-777">{{this.fechaDonacion}}</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span><strong>Heladera:</strong> {{this.heladera}}</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span><strong>Comida:</strong> {{this.comida}}</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span><strong>Fecha de caducidad:</strong> {{this.fechaCaducidad}}</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span><strong>Calorías:</strong> {{this.caloriasEnKcal}}</span>
+                        </div>
+                        <div class="row mb-2">
+                            <span><strong>Peso en gramos:</strong> {{this.pesoEnGramos}}</span>
+                        </div>
+                        <div class="row">
+                            <p class="d-flex flex-row-reverse mb-1">
+                                <span class="ms-1">En curso</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+     {{/each}}
+     </div>
+
+{{/partial}}
+
+{{> templates/base titulo="Donacion de vianda" mostrarSeccion=true seccion="Donación de vianda" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/" }}

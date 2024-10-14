@@ -73,10 +73,15 @@ public class ServiceLocator {
         ControladorPersonaJuridica instance = new ControladorPersonaJuridica(instanceOf(RepositorioPersonaJuridica.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {
-        ControladorDonacionVianda instance = new ControladorDonacionVianda(instanceOf(RepositorioDonacionVianda.class));
+        ControladorDonacionVianda instance = new ControladorDonacionVianda(
+            instanceOf(RepositorioDonacionVianda.class),
+            instanceOf(RepositorioPersonaHumana.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorDonacionDinero.class.getName())) {
-        ControladorDonacionDinero instance = new ControladorDonacionDinero(instanceOf(RepositorioDonacionDinero.class));
+        ControladorDonacionDinero instance = new ControladorDonacionDinero(
+            instanceOf(RepositorioDonacionDinero.class),
+            instanceOf(RepositorioPersonaHumana.class),
+            instanceOf(RepositorioPersonaJuridica.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(Repositorio.class.getName())) {
         Repositorio instance = new Repositorio();
