@@ -26,7 +26,7 @@ public class Mensaje {
   @Column(name = "asunto", nullable = false)
   private String asunto;
 
-  @Column(name = "cuerpo", nullable = false)
+  @Column(name = "cuerpo", columnDefinition = "TEXT", nullable = false)
   private String cuerpo;
 
   @Convert(converter = LocalDateTimeAttributeConverter.class)
@@ -34,8 +34,12 @@ public class Mensaje {
   private LocalDateTime fechaEmision;
 
   @ManyToOne
-  @JoinColumn(name="usuario_id",referencedColumnName="id", nullable = false)
-  private Usuario usuario;
+  @JoinColumn(name="usuarioDestinatario_id", referencedColumnName="id", nullable = false)
+  private Usuario destinatario;
+
+  @ManyToOne
+  @JoinColumn(name="usuarioEmisor_id", referencedColumnName="id", nullable = false)
+  private Usuario emisor;
 
   public Mensaje(String asunto, String cuerpo, LocalDateTime fecha) {
     this.asunto = asunto;

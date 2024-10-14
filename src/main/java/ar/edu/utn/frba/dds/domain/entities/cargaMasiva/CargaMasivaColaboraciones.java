@@ -1,35 +1,21 @@
 package ar.edu.utn.frba.dds.domain.entities.cargaMasiva;
 
-import static ar.edu.utn.frba.dds.utils.random.Random.generateRandomString;
-
 import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
-import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
-import ar.edu.utn.frba.dds.domain.entities.contacto.MedioDeContacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
-import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.FormasContribucionHumanas;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
-import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
-import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
-import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import io.javalin.http.UploadedFile;
 import io.javalin.util.FileUtil;
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import javax.mail.MessagingException;
 import javax.persistence.*;
 import lombok.Getter;
@@ -128,13 +114,18 @@ public class CargaMasivaColaboraciones {
     return persona;
   }
 
-  public void notificarAltaPersona(PersonaHumana persona) {
-    Mensaje mensaje = new Mensaje("Credenciales de acceso al sistema",
-        "¡Gracias por colaborar en el Sistema para la Mejora del Acceso Alimentario!\n"
-            + "Se le ha creado su cuenta de acceso. Sus credenciales son:\n"
+  public Mensaje notificarAltaPersona(PersonaHumana persona) {
+    Mensaje mensaje = new Mensaje(
+        "Acceso al Sistema de Mejora del Acceso Alimentario",
+        "Estimado/a " + persona.getNombre() + " " + persona.getApellido() + ",\n\n"
+            + "Le agradecemos su colaboración en el Sistema para la Mejora del Acceso Alimentario.\n"
+            + "A continuación, le proporcionamos las credenciales de acceso a su cuenta:\n\n"
             + " - Usuario: " + persona.getUsuario().getNombre() + "\n"
-            + " - Clave: " + persona.getUsuario().getClave(),
-        LocalDateTime.now());
+            + " - Clave: " + persona.getUsuario().getClave() + "\n\n"
+            + "Para su comodidad, puede cambiar la contraseña en cualquier momento desde su perfil en el sistema.\n"
+            + "¡Gracias nuevamente por su compromiso y apoyo!",
+        LocalDateTime.now()
+    );
 
     try {
       Mail mail = new Mail(adapterMail);
@@ -142,5 +133,7 @@ public class CargaMasivaColaboraciones {
     } catch (MessagingException | UnsupportedEncodingException e) {
       throw new ValidacionFormularioException("No se ha podido notificar a " + persona.getNombre() + " " + persona.getApellido());
     }
+
+    return mensaje;
   }
 }

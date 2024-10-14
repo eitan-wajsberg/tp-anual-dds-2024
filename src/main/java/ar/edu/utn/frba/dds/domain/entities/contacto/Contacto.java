@@ -36,9 +36,6 @@ public class Contacto {
   @Column(name = "userTelegram")
   private Long telegramChatId;
 
-  @Column(name = "medioPreferido")
-  private String medioPreferido;
-
   public Contacto() {
     this.mediosDeContacto = new HashSet<>();
   }
@@ -91,16 +88,14 @@ public class Contacto {
   }
 
   @Override
-  public boolean equals(Object o){
+  public boolean equals(Object o) {
     if (o == this) {
       return true;
     }
 
-    if (!(o instanceof Contacto)) {
+    if (!(o instanceof Contacto contacto)) {
       return false;
     }
-
-    Contacto contacto = (Contacto) o;
 
     return this.whatsapp.equals(contacto.whatsapp)
         && this.mail.equals(contacto.mail)
