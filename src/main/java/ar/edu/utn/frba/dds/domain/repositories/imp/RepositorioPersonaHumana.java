@@ -12,5 +12,6 @@ public class RepositorioPersonaHumana extends Repositorio {
         .getResultList().stream().findFirst();
       //return entityManager().createQuery("from " + PersonaHumana.class.getName() + " where nroDocumento=" + documentoId, PersonaHumana.class)
       //  .getResultList().stream().findFirst();
+
   }
 }

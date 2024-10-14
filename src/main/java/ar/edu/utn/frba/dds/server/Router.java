@@ -1,6 +1,10 @@
 package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
+import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
+import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
+import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
+import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
 import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
@@ -44,8 +48,42 @@ public class Router {
     app.post("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::update);
     app.post("/personasVulnerables/{id}/eliminacion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::delete);
 
+    // Formulario de registro: personaHumana
+    //app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create);
+    //app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save);
+    // Tras post, mostraría mensaje: "Registro realizado correctamente" + redirección a página principal
+
+    // Edición de datos personales: personaHumana
+    //TODO: app.get("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit);
+    //TODO: app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update);
+    //Mostraría mensaje: "Cambios guardados correctamente"
+
+    // Formulario de registro: personaJurídica
+    //app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create);
+    //app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save);
+    // Tras post, mostraría mensaje: "Registro realizado correctamente" + redirección a página principal
+
+    // Edición de datos personales: personaJuridica
+    // TODO: app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit);
+    // TODO: app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update);
+    //Mostraría mensaje: "Cambios guardados correctamente"
+
+    //Eliminar cuenta?
+
+
     // Donacion dinero
-    app.get("/donacionDinero", context -> context.render("colaboraciones/donacionDinero.hbs"));
+    app.get("/donacionDinero/nuevo", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::create);
+    app.post("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::save);
+    app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
+    //Dar de baja/modificar donaciones de dinero.
+
+    // Donacion vianda
+    app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create);
+    app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save);
+    app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
+    //Cancelar/Modificar donación de vianda.
+
+
 
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));

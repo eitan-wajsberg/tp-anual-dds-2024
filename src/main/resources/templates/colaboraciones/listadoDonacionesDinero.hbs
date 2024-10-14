@@ -1,0 +1,30 @@
+{{#partial "contenido"}}
+     <div class="mt-5 ms-sm-5 me-sm-5 mt-3 pb-3 ms-3 me-3 mb-5">
+            <a href="donacionDinero.hbs" class="d-flex justify-content-end mb-3 align-items-center">
+                <label class="d-flex align-items-center justify-content-center boton">
+                    Donar dinero
+                    <span class="iconify ms-2" data-icon="material-symbols:add" data-width="24" data-height="24"></span>
+                </label>
+            </a>
+     {{#each donacionDinero}}
+        <div class="row g-3">
+        <div class="col-md-4">
+            <div class="distribution-card">
+                <div class="row mb-2">
+                    <span class="flex-row-reverse d-flex color-777">{{this.fecha}}</span>
+                </div>
+                <div class="row mb-2">
+                    <span><strong>Monto:</strong> {{this.monto}}</span>
+                </div>
+                <div class="row mb-2">
+                    <span><strong>Frecuencia:</strong> {{this.unidadFrecuencia}}</span>
+                </div>
+            </div>
+        </div>
+        </div>
+     {{/each}}
+
+    </div>
+{{/partial}}
+
+{{> templates/base titulo="Donacion de dinero" mostrarSeccion=true seccion="Donación de dinero" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/" }}
