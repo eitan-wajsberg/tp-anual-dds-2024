@@ -99,9 +99,9 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
       }
 
       this.persistirCargaMasiva(carga);
-      context.render(rutaCargaHbs, Map.of("success", "La carga masiva se realizó con éxito.", "cargando", false));
+      context.render(rutaCargaHbs, Map.of("success", "La carga masiva se realizó con éxito."));
     } catch (Exception e) {
-      context.render(rutaCargaHbs, Map.of("error", e.getMessage(), "cargando", false));
+      context.render(rutaCargaHbs, Map.of("error", e.getMessage()));
     }
   }
 
