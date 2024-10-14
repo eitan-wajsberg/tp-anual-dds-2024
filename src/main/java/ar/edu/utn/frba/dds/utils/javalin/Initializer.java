@@ -11,11 +11,9 @@ import java.time.LocalDate;
 public class Initializer {
 
   public static void init() {
-
-    inicializarDonacionesViandas();
-    inicializarDonacionesDinero();
-    
-
+    // FIXME: No se asigna persona humana responsable a las contribuciones y por ende falla la persistencia
+    // inicializarDonacionesViandas();
+    // inicializarDonacionesDinero();
   }
 
   private static void inicializarDonacionesViandas() {
