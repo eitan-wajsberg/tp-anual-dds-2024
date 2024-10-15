@@ -19,6 +19,7 @@ import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionDinero;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionVianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
@@ -36,7 +37,7 @@ public class ServiceLocator {
       Object instance = null;
       if (componentName.equals(ControladorPersonaVulnerable.class.getName())) {
         instance = new ControladorPersonaVulnerable(
-            instanceOf(Repositorio.class),
+            instanceOf(RepositorioPersonaVulnerable.class),
             instanceOf(RepositorioPersonaHumana.class)
         );
       } else if (componentName.equals(ControladorRegistroUsuario.class.getName())) {
@@ -47,7 +48,10 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorEleccionTipoCuenta.class.getName())) {
         instance = new ControladorEleccionTipoCuenta();
       } else if (componentName.equals(ControladorTecnicos.class.getName())) {
-        instance = new ControladorTecnicos(instanceOf(RepositorioTecnicos.class));
+        instance = new ControladorTecnicos(
+            instanceOf(RepositorioTecnicos.class),
+            instanceOf(RepositorioUsuario.class)
+        );
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
         instance = new ControladorCargaMasiva(
             ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
@@ -61,30 +65,19 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorReportes.class.getName())) {
         instance = new ControladorReportes();
       } else if (componentName.equals(ControladorPersonaHumana.class.getName())) {
-        instance = new ControladorPersonaHumana(
-            instanceOf(IPersonaHumanaServices.class),
-            instanceOf(RepositorioPersonaHumana.class));
+        instance = new ControladorPersonaHumana(instanceOf(Repositorio.class));
       } else if (componentName.equals(ControladorPersonaJuridica.class.getName())) {
         instance = new ControladorPersonaJuridica(instanceOf(RepositorioPersonaJuridica.class));
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {
-        instance = new ControladorDonacionVianda(
-            instanceOf(RepositorioDonacionVianda.class),
-            instanceOf(RepositorioPersonaHumana.class));
+        instance = new ControladorDonacionVianda(instanceOf(Repositorio.class));
       } else if (componentName.equals(ControladorDonacionDinero.class.getName())) {
-        instance = new ControladorDonacionDinero(
-            instanceOf(RepositorioDonacionDinero.class),
-            instanceOf(RepositorioPersonaHumana.class),
-            instanceOf(RepositorioPersonaJuridica.class));
+        instance = new ControladorDonacionDinero(instanceOf(Repositorio.class));
       } else if (componentName.equals(Repositorio.class.getName())) {
         instance = new Repositorio();
       } else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
         instance = new RepositorioPersonaHumana();
       } else if (componentName.equals(RepositorioPersonaJuridica.class.getName())) {
         instance = new RepositorioPersonaJuridica();
-      } else if (componentName.equals(RepositorioDonacionDinero.class.getName())) {
-        instance = new RepositorioDonacionDinero();
-      } else if (componentName.equals(RepositorioDonacionVianda.class.getName())) {
-        instance = new RepositorioDonacionVianda();
       } else if (componentName.equals(RepositorioTecnicos.class.getName())) {
         instance = new RepositorioTecnicos();
       } else if (componentName.equals(RepositorioUsuario.class.getName())) {
