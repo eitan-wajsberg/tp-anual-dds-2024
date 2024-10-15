@@ -1,17 +1,7 @@
 package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
-import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
-import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
-import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
-import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
-import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
-import ar.edu.utn.frba.dds.controllers.ControladorInicio;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
-import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
-import ar.edu.utn.frba.dds.controllers.ControladorReportes;
+import ar.edu.utn.frba.dds.controllers.*;
 import io.javalin.Javalin;
 
 public class Router {
@@ -88,5 +78,15 @@ public class Router {
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
     app.get("", ServiceLocator.instanceOf(ControladorInicio.class)::create);
+
+    //Mapa
+    app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index);
+    // Mapa de heladeras con redirección a la página particular de una heladera
+    app.get("/mapaHeladeras/{id}/HeladeraParticular", ctx -> {
+      String id = ctx.pathParam("id");
+      ControladorMapaHeladeras controladorMapaHeladeras = ServiceLocator.instanceOf(ControladorMapaHeladeras.class);
+      controladorMapaHeladeras.mostrarHeladeraParticular(ctx, id);
+    });
+
   }
 }
