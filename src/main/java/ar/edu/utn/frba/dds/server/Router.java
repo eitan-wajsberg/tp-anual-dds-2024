@@ -44,8 +44,8 @@ public class Router {
     // Tras post, mostraría mensaje: "Registro realizado correctamente" + redirección a página principal
 
     // Edición de datos personales: personaHumana
-    //TODO: app.get("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit);
-    //TODO: app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update);
+    // app.get("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit);
+    // app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update);
     //Mostraría mensaje: "Cambios guardados correctamente"
 
     // Formulario de registro: personaJurídica
@@ -54,24 +54,26 @@ public class Router {
     // Tras post, mostraría mensaje: "Registro realizado correctamente" + redirección a página principal
 
     // Edición de datos personales: personaJuridica
-    // TODO: app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit);
-    // TODO: app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update);
+    //  app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit);
+    //  app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update);
     //Mostraría mensaje: "Cambios guardados correctamente"
 
     // Donacion dinero
     app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
     app.get("/donacionDinero/nuevo", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::create);
     app.post("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::save);
-    app.get("/donacionDinero/{id}", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::update);
+    app.post("/donacionDinero/{id}", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::update);
     app.get("/donacionDinero/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::edit);
     app.post("/donacionDinero/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::delete);
 
 
     // Donacion vianda
     app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
-    app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create);
     app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save);
-    //Cancelar/Modificar donación de vianda.
+    app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create);
+    app.get("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::edit);
+    app.post("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::update);
+    app.post("/donacionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::delete);
 
     // Distribución viandas
     app.get("/distribucionVianda/nuevo", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::create);
