@@ -50,11 +50,11 @@ public class Router {
 
     //ofertas. Persona humana: ver ofertas, canjear oferta
     //         Persona jurídica: ver sus ofertas, agregar oferta.
-    app.get("/colaboraciones/ofertas", ServiceLocator.instanceOf(ControladorOferta.class)::index);
-    app.get("/colaboraciones/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::create);
+    app.get("/ofertas", ServiceLocator.instanceOf(ControladorOferta.class)::index);
+    app.get("/ofertas/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::create);
 
-    app.post("/colaboraciones", ServiceLocator.instanceOf(ControladorOferta.class)::save);
-
+    app.post("/ofertas/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::save);
+    app.post("/ofertas/canjearOferta", ServiceLocator.instanceOf(ControladorOferta.class):: save);
 
 
     // Inicio

@@ -13,6 +13,7 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOferta;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRubro;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
@@ -50,7 +51,7 @@ public class ServiceLocator {
         ControladorReportes instance = new ControladorReportes();
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorOferta.class.getName())) { //FIXME cambiar repositorio por RepositorioPersonaJuridica
-        ControladorOferta instance = new ControladorOferta(ServiceLocator.instanceOf(RepositorioOferta.class), ServiceLocator.instanceOf(RepositorioRubro.class), ServiceLocator.instanceOf(Repositorio.class));
+        ControladorOferta instance = new ControladorOferta(ServiceLocator.instanceOf(RepositorioOferta.class), ServiceLocator.instanceOf(RepositorioRubro.class), ServiceLocator.instanceOf(RepositorioPersonaJuridica.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(Repositorio.class.getName())) {
         Repositorio instance = new Repositorio();
@@ -75,6 +76,9 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(RepositorioRubro.class.getName())) {
         RepositorioRubro instance = new RepositorioRubro();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioPersonaJuridica.class.getName())) {
+        RepositorioPersonaJuridica instance = new RepositorioPersonaJuridica();
         instances.put(componentName, instance);
       } else if (componentName.equals(AdaptadaJavaXMail.class.getName())) {
         AdaptadaJavaXMail instance = new AdaptadaJavaXMail();

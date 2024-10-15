@@ -1,12 +1,16 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import static java.time.LocalTime.now;
+
 import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
+import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOferta;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRubro;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
@@ -21,19 +25,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.eclipse.jetty.http.HttpStatus;
 
 public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsHandler {
   private RepositorioOferta repositorioOferta;
   private RepositorioRubro repositorioRubro;
-  private Repositorio repositorioJuridica;
+  private RepositorioPersonaJuridica repositorioJuridica;
   private final String rutaForm = "colaboraciones/ofertas-agregarOferta.hbs";
   private static final Map<String, String> RUTAS = new HashMap<>();
 
-  public ControladorOferta(RepositorioOferta repositorioOferta, RepositorioRubro repositorioRubro, Repositorio repositorioJuridica) {
+  public ControladorOferta(RepositorioOferta repositorioOferta, RepositorioRubro repositorioRubro, RepositorioPersonaJuridica repositorioJuridica) {
     this.repositorioOferta = repositorioOferta;
     this.repositorioRubro = repositorioRubro;
     this.repositorioJuridica = repositorioJuridica;
@@ -56,8 +63,14 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     }
     else{
       Long idUsuario = context.sessionAttribute("idUsuario");
-      Long idJuridica = this.repositorioJuridica.buscarPorUsuario(idUsuario);
-      ofertas = this.repositorioOferta.buscarPorPersonaJuridica(idJuridica);
+      Optional<PersonaJuridica> idJuridica = this.repositorioJuridica.buscarPorUsuario(idUsuario);
+
+      if (idJuridica.isPresent()) {
+        ofertas = this.repositorioOferta.buscarPorPersonaJuridica(idJuridica.get().getId());
+      } else {
+        //TODO: manejar error
+        ofertas = Collections.emptyList();
+      }
     }
 
     Map<String, Object> model = new HashMap<>();
@@ -83,8 +96,22 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
   @Override
   public void save(Context context) {
-      String pathImagen = null;
+    String tipoCuenta = context.sessionAttribute("tipoCuenta");
+    String pathImagen = null;
+    if(TipoRol.PERSONA_HUMANA.name().equals(tipoCuenta)){
+      Optional<Oferta> ofertaOptional = repositorioOferta.buscarPorId(Long.valueOf(context.formParam("id")), Oferta.class);
 
+      if (ofertaOptional.isPresent()) {
+        Oferta oferta = ofertaOptional.get();
+        OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now());
+        
+      } else {
+        // Manejar el caso cuando no se encuentra la oferta
+        context.status(404).result("Oferta no encontrada");
+      }
+
+    }
+    else{
       UploadedFile uploadedFile = context.uploadedFile("imagen");
       if (uploadedFile != null) {
         String fileName = uploadedFile.filename();
@@ -109,7 +136,6 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
           return;
         }
       }
-
       // Crear la oferta y guardar en la base de datos
       Oferta oferta = Oferta
           .builder()
@@ -121,6 +147,9 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
           .build();
 
       withTransaction(()-> repositorioOferta.guardar(oferta));
+    }
+
+
 
 
     context.status(HttpStatus.CREATED_201).result("Oferta creada");

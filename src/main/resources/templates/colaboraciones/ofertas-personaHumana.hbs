@@ -62,16 +62,18 @@
     <div class="container mt-4">
         <div class="row g-3">
             <div class="col-md-12">
+                {{#each ofertas}}
                 <div class="offer-card">
                     <img src="../../public/img/ofertas-electronica.png" alt="Imagen Oferta 1">
                     <div class="offer-details">
-                        <p><strong>Categoría:</strong> Electrónica</p>
-                        <h4>Nombre Oferta 1</h4>
-                        <p><strong>Puntos Requeridos:</strong> 100</p>
-                        <button class="btn btn-dark text-white btn-canjear" data-bs-toggle="modal" data-bs-target="#confirmar_canje">Canjear</button>
+                        <p><strong>Categoría:</strong>{{this.rubro.nombre}}</p>
+                        <h4>{{this.nombre}}</h4>
+                        <p><strong>Puntos Requeridos:</strong>{{this.cantidadPuntosNecesarios}}</p>
+                        <button class="btn btn-dark text-white btn-canjear" onclick="canjearOferta{{this.id}}" data-bs-toggle="modal" data-bs-target="#confirmar_canje">Canjear</button>
                     </div>
                     <!-- <button class="btn btn-dark text-white btn-canjear align-self-center">Canjear</button> -->
                 </div>
+                {{/each}}
             </div>
         </div>
         <div class="modal fade" id="confirmar_canje" tabindex="-1" aria-labelledby="confirmarCanjeLabel" aria-hidden="true">
@@ -95,6 +97,7 @@
 
 </div>
 
+<script src="../../public/js/canjearOferta.js"></script>
 
 </body>
 </html>
