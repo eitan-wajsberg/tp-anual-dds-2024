@@ -13,7 +13,7 @@ public class Initializer {
 
   public static void init() {
     // TODO: agregar elementos de pacotilla
-    iniciarRubros();
+    //iniciarRubros();
     //iniciarOfertas();
 
   }

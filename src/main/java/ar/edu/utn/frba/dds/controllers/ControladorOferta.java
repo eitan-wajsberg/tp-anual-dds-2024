@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
+import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
@@ -92,9 +93,10 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       Oferta oferta = Oferta
           .builder()
           .nombre(context.formParam("nombre"))
-          .rubro(new Rubro(context.formParam("categoria")))
+          .rubro(repositorioRubro.buscarPorNombre(context.formParam("categoria")))
           .imagen(pathImagen)
           .cantidadPuntosNecesarios(Float.parseFloat(context.formParam("puntos")))
+          .organizacion(new PersonaJuridica()) //FIXME: implementar cuando se defina cómo se guarda la sesion
           .build();
 
       withTransaction(()-> repositorioOferta.guardar(oferta));

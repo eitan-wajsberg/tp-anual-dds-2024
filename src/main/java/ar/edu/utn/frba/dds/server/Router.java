@@ -53,6 +53,8 @@ public class Router {
     app.get("/colaboraciones/ofertas", ServiceLocator.instanceOf(ControladorOferta.class)::index);
     app.get("/colaboraciones/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::create);
 
+    app.post("/colaboraciones/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::save);
+
 
 
     // Inicio
