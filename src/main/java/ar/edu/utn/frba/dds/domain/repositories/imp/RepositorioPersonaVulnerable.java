@@ -13,5 +13,4 @@ public class RepositorioPersonaVulnerable extends Repositorio {
         .getResultList();
     return Optional.of(resultados);
   }
-
 }
