@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class ControladorAltaTecnicos implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioTecnicos repositorioTecnicos;
-  private final String rutaAltaHbs = PrettyProperties.getInstance().propertyFromName("hbs_alta_tecnicos");
-  private final String rutaListadoHbs = PrettyProperties.getInstance().propertyFromName("hbs_listado_tecnicos");
+  private final String rutaAltaHbs = "/admin/adminAltaTecnicos.hbs";
+  private final String rutaListadoHbs = "admin/adminListadoTecnicos.hbs";
 
   public ControladorAltaTecnicos(RepositorioTecnicos repositorioTecnico) {
     this.repositorioTecnicos = repositorioTecnico;

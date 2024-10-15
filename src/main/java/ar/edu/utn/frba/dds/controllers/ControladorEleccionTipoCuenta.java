@@ -6,7 +6,7 @@ import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.javalin.http.Context;
 
 public class ControladorEleccionTipoCuenta {
-  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_eleccion_tipo_cuenta");
+  private final String rutaHbs = "/cuenta/eleccionTipoDeCuenta.hbs";
 
   public void create(Context context) {
     context.render(rutaHbs);

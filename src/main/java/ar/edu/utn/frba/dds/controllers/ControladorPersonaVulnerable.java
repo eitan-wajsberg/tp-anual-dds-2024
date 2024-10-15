@@ -21,8 +21,8 @@ import java.util.TimeZone;
 public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private Repositorio repositorioPersonaVulnerable;
   private RepositorioPersonaHumana repositorioPersonaHumana;
-  private final String rutaRegistroHbs = PrettyProperties.getInstance().propertyFromName("hbs_registro_persona_vulnerable");
-  private final String rutaListadoHbs = PrettyProperties.getInstance().propertyFromName("hbs_listado_personas_vulnerables");
+  private final String rutaRegistroHbs = "/colaboraciones/registroPersonaVulnerable.hbs";
+  private final String rutaListadoHbs = "colaboraciones/listadoPersonasVulnerables.hbs";
 
   public ControladorPersonaVulnerable(Repositorio repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana) {
     this.repositorioPersonaVulnerable = repositorioPersonaVulnerable;

@@ -11,14 +11,14 @@ public class ControladorInicio {
   private static final Map<String, String> RUTAS = new HashMap<>();
 
   static {
-    RUTAS.put(TipoRol.PERSONA_HUMANA.name(), PrettyProperties.getInstance().propertyFromName("hbs_inicio_humano"));
-    RUTAS.put(TipoRol.PERSONA_JURIDICA.name(), PrettyProperties.getInstance().propertyFromName("hbs_inicio_juridico"));
-    RUTAS.put(TipoRol.ADMIN.name(), PrettyProperties.getInstance().propertyFromName("hbs_inicio_admin"));
+    RUTAS.put(TipoRol.PERSONA_HUMANA.name(), "pantallaInicioHumana.hbs");
+    RUTAS.put(TipoRol.PERSONA_JURIDICA.name(), "pantallaInicioJuridica.hbs");
+    RUTAS.put(TipoRol.ADMIN.name(), "admin/adminInicio.hbs");
   }
 
   public void create(Context context) {
     String tipoCuenta = context.sessionAttribute("tipoCuenta");
-    String rutaHbs = RUTAS.getOrDefault(tipoCuenta, PrettyProperties.getInstance().propertyFromName("hbs_inicio_default"));
+    String rutaHbs = RUTAS.getOrDefault(tipoCuenta, "pantallaInicio.hbs");
     context.render(rutaHbs);
   }
 }
