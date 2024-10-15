@@ -772,6 +772,10 @@ input[type="radio"]:focus {
     margin: 0 10px; /* Ajusta el margen entre los botones */
 }
 
+.rounded-button {
+    border-radius: 16px; /* Adjust the value as needed for roundness */
+}
+
 #loader {
     display: none;
     opacity: 0;
