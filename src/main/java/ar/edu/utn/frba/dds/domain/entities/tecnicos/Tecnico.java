@@ -44,7 +44,7 @@ public class Tecnico {
   private String apellido;
 
   @OneToOne
-  @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+  @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
   private Usuario usuario;
 
   @Embedded
@@ -61,7 +61,6 @@ public class Tecnico {
 
   @Column(name="distanciaMaximaEnKMParaSerAvisado")
   private double distanciaMaximaEnKmParaSerAvisado;
-
 
 
   public static Tecnico fromDTO(TecnicoDTO dto) {

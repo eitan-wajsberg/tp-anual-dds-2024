@@ -1,24 +1,44 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import static ar.edu.utn.frba.dds.utils.random.Random.generateRandomString;
+
+import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
+import ar.edu.utn.frba.dds.domain.entities.cargaMasiva.CargaMasivaColaboraciones;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
+import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.mail.MessagingException;
+import org.apache.commons.csv.CSVRecord;
 
 public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioTecnicos repositorioTecnicos;
+  private RepositorioUsuario repositorioUsuario;
+  private RepositorioRol repositorioRol;
   private final String rutaAltaHbs = "/admin/adminAltaTecnicos.hbs";
   private final String rutaListadoHbs = "admin/adminListadoTecnicos.hbs";
 
-  public ControladorTecnicos(RepositorioTecnicos repositorioTecnico) {
+  public ControladorTecnicos(RepositorioTecnicos repositorioTecnico, RepositorioUsuario repositorioUsuario, RepositorioRol repositorioRol) {
     this.repositorioTecnicos = repositorioTecnico;
+    this.repositorioUsuario = repositorioUsuario;
+    this.repositorioRol = repositorioRol;
   }
 
   @Override
@@ -53,7 +73,10 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
         throw new ValidacionFormularioException("Los datos del técnico son inválidos.");
       }
 
+      Usuario usuario = cargarUsuario(nuevoTecnico);
+      nuevoTecnico.setUsuario(usuario);
       withTransaction(() -> repositorioTecnicos.guardar(nuevoTecnico));
+      notificarAltaTecnico(nuevoTecnico);
 
       context.redirect("/tecnicos");
     } catch (ValidacionFormularioException e) {
@@ -126,5 +149,57 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
     } else {
       context.status(400).result("No se puede eliminar, el técnico no cumple con las condiciones para ser eliminada.");
     }
+  }
+
+  public void notificarAltaTecnico(Tecnico tecnico) {
+    Mensaje mensaje = new Mensaje(
+        "Acceso al Sistema de Mejora del Acceso Alimentario",
+        "Estimado/a Técnico " + tecnico.getNombre() + " " + tecnico.getApellido() + ",\n\n"
+            + "Le agradecemos su colaboración como técnico en el Sistema para la Mejora del Acceso Alimentario.\n"
+            + "A continuación, le proporcionamos las credenciales de acceso a su cuenta:\n\n"
+            + " - Usuario: " + tecnico.getUsuario().getNombre() + "\n"
+            + " - Clave: " + tecnico.getUsuario().getClave() + "\n\n"
+            + "Para su comodidad, puede cambiar la contraseña en cualquier momento desde su perfil en el sistema.\n"
+            + "¡Gracias nuevamente por su compromiso y apoyo!",
+        LocalDateTime.now()
+    );
+    try {
+      tecnico.getContacto().enviarMensaje(mensaje);
+    } catch (MessagingException | UnsupportedEncodingException e) {
+      throw new ValidacionFormularioException("No se ha podido notificar a " + tecnico.getNombre() + " " + tecnico.getApellido());
+    }
+
+    // Encripto la clave del usuario
+    tecnico.getUsuario().setClaveEncriptada(tecnico.getUsuario().getClave());
+    withTransaction(() -> repositorioUsuario.actualizar(tecnico.getUsuario()));
+    mensaje.setDestinatario(tecnico.getUsuario());
+
+    Optional<Usuario> emisor = repositorioUsuario.buscarPorId(1L, Usuario.class);
+    if (emisor.isEmpty()) {
+      throw new ValidacionFormularioException("No existe el usuario emisor de este mensaje.");
+    }
+    mensaje.setEmisor(emisor.get());
+  }
+
+  public Usuario cargarUsuario(Tecnico tecnico) {
+    String baseNombre = tecnico.getNombre().toLowerCase() + "." + tecnico.getApellido().toLowerCase();
+    String nombreUsuario = baseNombre;
+    int contador = 1;
+
+    while (repositorioUsuario.buscarPorNombre(nombreUsuario).isPresent()) {
+      nombreUsuario = baseNombre + contador++;
+    }
+
+    Usuario usuario = new Usuario();
+    usuario.setNombre(nombreUsuario);
+    usuario.setClave(generateRandomString(12));
+
+    Optional<Rol> rol = repositorioRol.buscarPorTipo(TipoRol.TECNICO);
+    if (rol.isEmpty()) {
+      throw new ValidacionFormularioException("No existe el rol indicado.");
+    }
+    usuario.setRol(rol.get());
+
+    return usuario;
   }
 }
