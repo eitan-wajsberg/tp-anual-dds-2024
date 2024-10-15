@@ -1,10 +1,9 @@
 package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
+import ar.edu.utn.frba.dds.controllers.ControladorDistribucionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
 import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
 import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
@@ -83,7 +82,13 @@ public class Router {
     app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
     //Cancelar/Modificar donación de vianda.
 
-
+    // Distribución viandas
+    app.get("/distribucionVianda/nuevo", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::create);
+    app.post("/distribucionVianda", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::save);
+    app.get("/distribucionVianda", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::index);
+    app.get("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit);
+    app.post("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::update);
+    app.post("/distribucionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit);
 
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
