@@ -207,7 +207,7 @@ entity donacion_dinero {
 }
 
 note right
-unidadFrecuencia: DIARIO, SEMANAL, MENSUAL, ANUAL
+unidadFrecuencia: NINGUNA, DIARIA, SEMANAL, MENSUAL, ANUAL
 end note
 
 entity persona_juridica {
