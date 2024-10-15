@@ -4,10 +4,12 @@ import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOferta;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRubro;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
@@ -27,23 +29,42 @@ import org.eclipse.jetty.http.HttpStatus;
 public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsHandler {
   private RepositorioOferta repositorioOferta;
   private RepositorioRubro repositorioRubro;
-  private final String rutaListadoOfertas = "colaboraciones/ofertas-personaJuridica.hbs";
+  private Repositorio repositorioJuridica;
   private final String rutaForm = "colaboraciones/ofertas-agregarOferta.hbs";
+  private static final Map<String, String> RUTAS = new HashMap<>();
 
-  public ControladorOferta(RepositorioOferta repositorioOferta, RepositorioRubro repositorioRubro) {
+  public ControladorOferta(RepositorioOferta repositorioOferta, RepositorioRubro repositorioRubro, Repositorio repositorioJuridica) {
     this.repositorioOferta = repositorioOferta;
     this.repositorioRubro = repositorioRubro;
+    this.repositorioJuridica = repositorioJuridica;
+  }
+
+  static {
+    RUTAS.put(TipoRol.PERSONA_HUMANA.name(), "colaboraciones/ofertas-personaHumana.hbs");
+    RUTAS.put(TipoRol.PERSONA_JURIDICA.name(), "colaboraciones/ofertas-personaJuridica.hbs");
   }
 
   @Override
-  public void index(Context context) { // juridica busca sus ofertas.
-    List<Oferta> ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
+  public void index(Context context) { // validar el usuario.
+    String tipoCuenta = context.sessionAttribute("tipoCuenta");
+    String rutahbs = RUTAS.get(tipoCuenta);
+
+    List<Oferta> ofertas;
+
+    if(tipoCuenta.equals(TipoRol.PERSONA_HUMANA.name())){
+      ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
+    }
+    else{
+      Long idUsuario = context.sessionAttribute("idUsuario");
+      Long idJuridica = this.repositorioJuridica.buscarPorUsuario(idUsuario);
+      ofertas = this.repositorioOferta.buscarPorPersonaJuridica(idJuridica);
+    }
 
     Map<String, Object> model = new HashMap<>();
     model.put("ofertas", ofertas);
     model.put("titulo", "Listado de ofertas");
 
-    context.render(rutaListadoOfertas);
+    context.render(rutahbs, model);
   }
 
   @Override

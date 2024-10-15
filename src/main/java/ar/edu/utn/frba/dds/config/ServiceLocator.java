@@ -49,8 +49,8 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorReportes.class.getName())) {
         ControladorReportes instance = new ControladorReportes();
         instances.put(componentName, instance);
-      } else if (componentName.equals(ControladorOferta.class.getName())) {
-        ControladorOferta instance = new ControladorOferta(ServiceLocator.instanceOf(RepositorioOferta.class), ServiceLocator.instanceOf(RepositorioRubro.class));
+      } else if (componentName.equals(ControladorOferta.class.getName())) { //FIXME cambiar repositorio por RepositorioPersonaJuridica
+        ControladorOferta instance = new ControladorOferta(ServiceLocator.instanceOf(RepositorioOferta.class), ServiceLocator.instanceOf(RepositorioRubro.class), ServiceLocator.instanceOf(Repositorio.class));
         instances.put(componentName, instance);
       } else if (componentName.equals(Repositorio.class.getName())) {
         Repositorio instance = new Repositorio();
