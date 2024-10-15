@@ -55,7 +55,8 @@ public class ServiceLocator {
             ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
             ServiceLocator.instanceOf(AdaptadaJavaXMail.class),
             ServiceLocator.instanceOf(RepositorioUsuario.class),
-            ServiceLocator.instanceOf(RepositorioRol.class)
+            ServiceLocator.instanceOf(RepositorioRol.class),
+            ServiceLocator.instanceOf(Repositorio.class)
         );
         instances.put(componentName, instance);
       } else if (componentName.equals(ControladorInicio.class.getName())) {
