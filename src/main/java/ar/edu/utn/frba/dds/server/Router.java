@@ -73,7 +73,13 @@ public class Router {
     app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save);
     //Cancelar/Modificar donación de vianda.
 
-
+    // Distribución viandas
+    app.get("/distribucionVianda/nuevo", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::create);
+    app.post("/distribucionVianda", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::save);
+    app.get("/distribucionVianda", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::index);
+    app.get("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit);
+    app.post("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::update);
+    app.post("/distribucionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit);
 
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
