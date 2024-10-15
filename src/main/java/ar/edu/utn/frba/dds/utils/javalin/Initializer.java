@@ -1,29 +1,43 @@
 package ar.edu.utn.frba.dds.utils.javalin;
 
 
+import static ar.edu.utn.frba.dds.domain.entities.personasHumanas.FormasContribucionHumanas.DONACION_DINERO;
+import static ar.edu.utn.frba.dds.domain.entities.personasHumanas.FormasContribucionHumanas.DONACION_VIANDAS;
+
 import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
+import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.UnidadFrecuencia;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomendacionDonacion.Personas;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionDinero;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionVianda;
+import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
+import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import java.time.LocalDate;
+import java.util.Set;
 
-public class Initializer {
+public class Initializer implements WithSimplePersistenceUnit {
 
   public static void init() {
-    // FIXME: No se asigna persona humana responsable a las contribuciones y por ende falla la persistencia
-    // inicializarDonacionesViandas();
-    // inicializarDonacionesDinero();
+    // FIXME: No se asigna persona humana responsable a las contribuciones y por ende falla la persistencia 😁
+    //inicializarPersonasHumanas();
+    inicializarDonacionesViandas();
+    inicializarDonacionesDinero();
   }
 
   private static void inicializarDonacionesViandas() {
-    RepositorioDonacionVianda repositorioDonacionVianda = ServiceLocator.instanceOf(RepositorioDonacionVianda.class);
+    Repositorio repositorioGenerico = ServiceLocator.instanceOf(Repositorio.class);
+    RepositorioPersonaHumana repositorioPersonaHumana = ServiceLocator.instanceOf(RepositorioPersonaHumana.class);
+
+    PersonaHumana personaHumana = buildPersonaHumana();
+    repositorioPersonaHumana.guardar(personaHumana);
 
     Vianda vianda1 = Vianda
         .builder()
         .comida("Noodles")
         .fechaDonacion(LocalDate.now())
         .entregada(true)
+        .personaHumana(personaHumana)
         .build();
 
     Vianda vianda2 = Vianda
@@ -31,31 +45,53 @@ public class Initializer {
         .comida("Pizza")
         .fechaDonacion(LocalDate.now())
         .entregada(false)
+        .personaHumana(personaHumana)
         .build();
 
-    repositorioDonacionVianda.guardar(vianda1);
-    repositorioDonacionVianda.guardar(vianda2);
+      repositorioGenerico.guardar(vianda1);
+      repositorioGenerico.guardar(vianda2);
+
+
   }
 
   private static void inicializarDonacionesDinero() {
 
-    RepositorioDonacionDinero repositorioDonacionDinero = ServiceLocator.instanceOf(RepositorioDonacionDinero.class);
+    Repositorio repositorioGenerico = ServiceLocator.instanceOf(Repositorio.class);
 
     DonacionDinero donacionDinero1 = DonacionDinero
         .builder()
         .monto(100F)
-        .unidadFrecuencia("Semanal")
+        .unidadFrecuencia(UnidadFrecuencia.SEMANAL)
         .fecha(LocalDate.now())
         .build();
 
     DonacionDinero donacionDinero2 = DonacionDinero
         .builder()
         .monto(50F)
-        .unidadFrecuencia("Mensual")
+        .unidadFrecuencia(UnidadFrecuencia.MENSUAL)
         .fecha(LocalDate.now())
         .build();
 
-    repositorioDonacionDinero.guardar(donacionDinero1);
-    repositorioDonacionDinero.guardar(donacionDinero2);
+    repositorioGenerico.guardar(donacionDinero1);
+    repositorioGenerico.guardar(donacionDinero2);
+  }
+
+  private static void inicializarPersonasHumanas() {
+    RepositorioPersonaHumana repositorioPersonaHumana = ServiceLocator.instanceOf(RepositorioPersonaHumana.class);
+
+    PersonaHumana personaHumana1 = buildPersonaHumana();
+
+    repositorioPersonaHumana.guardar(personaHumana1);
+  }
+
+  private static PersonaHumana buildPersonaHumana() {
+
+    return PersonaHumana
+        .builder()
+        .nombre("Juan")
+        .apellido("Perez")
+        .contribucionesElegidas(Set.of(DONACION_DINERO, DONACION_VIANDAS))
+        .build();
+
   }
 }

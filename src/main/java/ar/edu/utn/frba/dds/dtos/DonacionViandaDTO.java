@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.dtos;
 
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
+import ar.edu.utn.frba.dds.dtos.inputs.personasHumanas.PersonaHumanaInputDTO;
 import io.javalin.http.Context;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class DonacionViandaDTO implements DTO {
   private String fechaCaducidad;
   private boolean entregada;
   private String fechaDonacion;
-  private Long personaHumanaId;
+  private PersonaHumanaDTO personaHumanaDTO;
 
   public DonacionViandaDTO(Vianda vianda) {
     this.id = vianda.getId();
@@ -28,7 +29,7 @@ public class DonacionViandaDTO implements DTO {
     this.fechaCaducidad = vianda.getFechaCaducidad() != null ? vianda.getFechaCaducidad().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null;
     this.entregada = vianda.isEntregada();
     this.fechaDonacion = vianda.getFechaDonacion().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    this.personaHumanaId = vianda.getPersonaHumana() != null ? vianda.getPersonaHumana().getId() : null;
+    //this.personaHumanaId = vianda.getPersonaHumana() != null ? vianda.getPersonaHumana().getId() : null;
   }
 
   @Override
@@ -39,7 +40,7 @@ public class DonacionViandaDTO implements DTO {
     this.fechaCaducidad = context.formParam("fechaCaducidad");
     this.entregada = Boolean.parseBoolean(context.formParam("entregada"));
     this.fechaDonacion = context.formParam("fechaDonacion");
-    this.personaHumanaId = Long.parseLong(context.formParam("personaHumanaId"));
+    //this.personaHumanaId = Long.parseLong(context.formParam("personaHumanaId"));
   }
 
   @Override
@@ -52,12 +53,12 @@ public class DonacionViandaDTO implements DTO {
         entregada == that.entregada &&
         Objects.equals(comida, that.comida) &&
         Objects.equals(fechaCaducidad, that.fechaCaducidad) &&
-        Objects.equals(fechaDonacion, that.fechaDonacion) &&
-        Objects.equals(personaHumanaId, that.personaHumanaId);
+        Objects.equals(fechaDonacion, that.fechaDonacion); //&&
+        //Objects.equals(personaHumanaId, that.personaHumanaId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(comida, caloriasEnKcal, pesoEnGramos, fechaCaducidad, entregada, fechaDonacion, personaHumanaId);
+    return Objects.hash(comida, caloriasEnKcal, pesoEnGramos, fechaCaducidad, entregada, fechaDonacion/*, personaHumanaId*/);
   }
 }
