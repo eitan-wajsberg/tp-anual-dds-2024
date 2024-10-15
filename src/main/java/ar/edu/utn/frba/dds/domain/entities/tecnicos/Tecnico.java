@@ -63,6 +63,7 @@ public class Tecnico {
   private double distanciaMaximaEnKmParaSerAvisado;
 
 
+
   public static Tecnico fromDTO(TecnicoDTO dto) {
     validarCamposObligatorios(dto);
     validarLongitudNombreYApellido(dto);

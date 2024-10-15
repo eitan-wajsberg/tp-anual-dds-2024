@@ -8,6 +8,8 @@ import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -32,11 +34,9 @@ public class DonacionDinero implements Contribucion {
   @Column(name = "monto", nullable = false)
   private float monto;
 
-  @Column(name = "frecuencia", nullable = false)
-  private int frecuencia;
-
+  @Enumerated(EnumType.STRING)
   @Column(name = "unidadFrecuencia", nullable = false)
-  private String unidadFrecuencia;
+  private UnidadFrecuencia unidadFrecuencia;
 
   @Column(name = "fecha", columnDefinition = "DATE", nullable = false)
   private LocalDate fecha;
@@ -62,4 +62,6 @@ public class DonacionDinero implements Contribucion {
   public LocalDate obtenerFechaRegistro() {
     return this.fecha;
   }
+
+
 }

@@ -1,16 +1,7 @@
 package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
-import ar.edu.utn.frba.dds.controllers.ControladorDistribucionVianda;
-import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
-import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
-import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
-import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
-import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
-import ar.edu.utn.frba.dds.controllers.ControladorInicio;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
-import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
-import ar.edu.utn.frba.dds.controllers.ControladorReportes;
+import ar.edu.utn.frba.dds.controllers.*;
 import io.javalin.Javalin;
 
 public class Router {
@@ -67,19 +58,19 @@ public class Router {
     // TODO: app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update);
     //Mostraría mensaje: "Cambios guardados correctamente"
 
-    //Eliminar cuenta?
-
-
     // Donacion dinero
+    app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
     app.get("/donacionDinero/nuevo", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::create);
     app.post("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::save);
-    app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
-    //Dar de baja/modificar donaciones de dinero.
+    app.get("/donacionDinero/{id}", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::update);
+    app.get("/donacionDinero/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::edit);
+    app.post("/donacionDinero/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::delete);
+
 
     // Donacion vianda
+    app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
     app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create);
     app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save);
-    app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
     //Cancelar/Modificar donación de vianda.
 
     // Distribución viandas
@@ -93,5 +84,15 @@ public class Router {
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
     app.get("", ServiceLocator.instanceOf(ControladorInicio.class)::create);
+
+    //Mapa
+    app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index);
+    // Mapa de heladeras con redirección a la página particular de una heladera
+    app.get("/mapaHeladeras/{id}/HeladeraParticular", ctx -> {
+      String id = ctx.pathParam("id");
+      ControladorMapaHeladeras controladorMapaHeladeras = ServiceLocator.instanceOf(ControladorMapaHeladeras.class);
+      controladorMapaHeladeras.mostrarHeladeraParticular(ctx, id);
+    });
+
   }
 }

@@ -3,7 +3,6 @@ package ar.edu.utn.frba.dds.controllers;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionVianda;
 import ar.edu.utn.frba.dds.dtos.DonacionViandaDTO;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.javalin.http.Context;
@@ -17,19 +16,17 @@ import java.util.Optional;
 
 public class ControladorDonacionVianda implements ICrudViewsHandler {
 
-  private final String rutaRegistroHbs = "colaboraciones/donacionVianda.hbs";
+  private final String rutaDonacionHbs = "colaboraciones/donacionVianda.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesVianda.hbs";
-  private Repositorio repositorioVianda;
-  private Repositorio repositorioPersonaHumana;
+  private Repositorio repositorioGenerico;
 
-  public ControladorDonacionVianda(Repositorio repositorioVianda, Repositorio repositorioPersonaHumana) {
-    this.repositorioVianda = repositorioVianda;
-    this.repositorioPersonaHumana = repositorioPersonaHumana;
+  public ControladorDonacionVianda(Repositorio repositorioGenerico) {
+    this.repositorioGenerico = repositorioGenerico;
   }
 
   @Override
   public void index(Context context) {
-    List<Vianda> donaciones = repositorioVianda.buscarTodos(Vianda.class);
+    List<Vianda> donaciones = repositorioGenerico.buscarTodos(Vianda.class);
 
     Map<String, Object> model = new HashMap<>();
     model.put("donacionesVianda", donaciones);
@@ -44,7 +41,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
 
   @Override
   public void create(Context context) {
-    context.render(rutaRegistroHbs);
+    context.render(rutaDonacionHbs);
   }
 
   @Override
@@ -53,7 +50,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
     dto.obtenerFormulario(context);
 
     try {
-      Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorId(dto.getPersonaHumanaId(), PersonaHumana.class);
+      Optional<PersonaHumana> personaHumana = repositorioGenerico.buscarPorId(dto.getPersonaHumanaDTO().getId(), PersonaHumana.class);
 
       Vianda nuevaVianda = new Vianda();
       nuevaVianda.setComida(dto.getComida());
@@ -65,7 +62,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
 
       personaHumana.ifPresent(nuevaVianda::setPersonaHumana);
 
-      repositorioVianda.guardar(nuevaVianda);
+      repositorioGenerico.guardar(nuevaVianda);
 
       context.redirect(rutaListadoHbs);
 
@@ -73,7 +70,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
       Map<String, Object> model = new HashMap<>();
       model.put("error", "Error al procesar la donación de vianda.");
       model.put("dto", dto);
-      context.render(rutaRegistroHbs, model);
+      context.render(rutaDonacionHbs, model);
     }
   }
 
@@ -82,7 +79,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
     /*
     Map<String, Object> model = new HashMap<>();
     try {
-      Optional<Vianda> vianda = repositorioVianda.buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
+      Optional<Vianda> vianda = repositorioGenerico.buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
 
       if (vianda.isEmpty()) {
         throw new RuntimeException("No existe la donación de vianda.");
@@ -122,7 +119,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
       vianda.setFechaCaducidad(dtoNuevo.getFechaCaducidad() != null ? LocalDateTime.parse(dtoNuevo.getFechaCaducidad(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null);
       vianda.setEntregada(dtoNuevo.isEntregada());
 
-      repositorioVianda.actualizar(vianda);
+      repositorioGenerico.actualizar(vianda);
 
       context.redirect(rutaListadoHbs);
     } catch (Exception e) {
@@ -139,10 +136,10 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
   public void delete(Context context) {
     /*
     Long id = Long.valueOf(context.pathParam("id"));
-    Optional<Vianda> vianda = repositorioVianda.buscarPorId(id, Vianda.class);
+    Optional<Vianda> vianda = repositorioGenerico.buscarPorId(id, Vianda.class);
 
     if (vianda.isPresent()) {
-      repositorioVianda.eliminarFisico(Vianda.class, id);
+      repositorioGenerico.eliminarFisico(Vianda.class, id);
       context.redirect(rutaListadoHbs);
     } else {
       context.status(400).result("No se puede eliminar, la donación de vianda no fue encontrada.");
