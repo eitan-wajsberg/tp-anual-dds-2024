@@ -36,9 +36,6 @@ public class Contacto {
   @Column(name = "userTelegram")
   private Long telegramChatId;
 
-  @Column(name = "medioPreferido")
-  private String medioPreferido;
-
   public Contacto() {
     this.mediosDeContacto = new HashSet<>();
   }
