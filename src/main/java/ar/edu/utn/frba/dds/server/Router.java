@@ -58,19 +58,19 @@ public class Router {
     // TODO: app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update);
     //Mostraría mensaje: "Cambios guardados correctamente"
 
-    //Eliminar cuenta?
-
-
     // Donacion dinero
+    app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
     app.get("/donacionDinero/nuevo", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::create);
     app.post("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::save);
-    app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
-    //Dar de baja/modificar donaciones de dinero.
+    app.get("/donacionDinero/{id}", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::update);
+    app.get("/donacionDinero/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::edit);
+    app.post("/donacionDinero/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::delete);
+
 
     // Donacion vianda
+    app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
     app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create);
     app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save);
-    app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
     //Cancelar/Modificar donación de vianda.
 
 
