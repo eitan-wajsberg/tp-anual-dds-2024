@@ -5,7 +5,11 @@ import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
+import ar.edu.utn.frba.dds.dtos.DonacionDineroDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Data
 @Builder
@@ -63,5 +68,48 @@ public class DonacionDinero implements Contribucion {
     return this.fecha;
   }
 
+  public static DonacionDinero fromDTO(DonacionDineroDTO dto) {
+    validarCamposObligatorios(dto);
+    validarMonto(dto);
+    validarFecha(dto);
 
+    return DonacionDinero.builder()
+        .monto(dto.getMonto())
+        .unidadFrecuencia(UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia().toUpperCase()))
+        .fecha(LocalDate.parse(dto.getFecha()))
+        .build();
+  }
+
+  public void actualizarFromDto(DonacionDineroDTO dto) {
+    validarCamposObligatorios(dto);
+    validarMonto(dto);
+    validarFecha(dto);
+
+    this.monto = dto.getMonto();
+    this.unidadFrecuencia = UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia());
+    this.fecha = LocalDate.parse(dto.getFecha());
+
+  }
+
+  private static void validarCamposObligatorios(DonacionDineroDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        Pair.of("monto", String.valueOf(dto.getMonto())),
+        Pair.of("unidad de frecuencia", dto.getUnidadFrecuencia()),
+        Pair.of("fecha", dto.getFecha())
+    );
+  }
+
+  private static void validarMonto(DonacionDineroDTO dto) {
+    if (dto.getMonto() <= 0) {
+      throw new ValidacionFormularioException("El monto debe ser mayor que cero.");
+    }
+  }
+
+  private static void validarFecha(DonacionDineroDTO dto) {
+    try {
+      LocalDate.parse(dto.getFecha());
+    } catch (DateTimeParseException e) {
+      throw new ValidacionFormularioException("Formato de fecha incorrecto. Debe ser yyyy-MM-dd.");
+    }
+  }
 }

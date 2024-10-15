@@ -2,6 +2,8 @@ package ar.edu.utn.frba.dds.dtos;
 
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import io.javalin.http.Context;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import lombok.Data;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class DonacionDineroDTO implements DTO {
-  private Long id;//TODO F: Is it ok?
+  private Long id;
   private float monto;
   private String unidadFrecuencia;
   private String fecha;
@@ -19,7 +21,7 @@ public class DonacionDineroDTO implements DTO {
   private Long personaJuridicaId;
 
   public DonacionDineroDTO(DonacionDinero donacion) {
-    this.id = donacion.getId(); //TODO F: Is it necessary?
+    this.id = donacion.getId();
     this.monto = donacion.getMonto();
     this.unidadFrecuencia = donacion.getUnidadFrecuencia().toString();
     this.fecha = donacion.getFecha().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

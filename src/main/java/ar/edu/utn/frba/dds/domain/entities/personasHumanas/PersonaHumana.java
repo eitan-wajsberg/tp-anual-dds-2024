@@ -16,9 +16,13 @@ import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 
+import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +47,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.mail.MessagingException;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Entity
 @Table(name = "persona_humana")
@@ -230,4 +235,75 @@ public class PersonaHumana extends IObserverNotificacion {
         && this.fechaNacimiento.isEqual(persona.fechaNacimiento)
         && this.contacto.equals(persona.contacto);
   }
+
+  public static PersonaHumana fromDTO(PersonaHumanaDTO dto) {
+    validarCamposObligatorios(dto);
+    validarLongitudNombreYApellido(dto);
+    validarFechaNacimiento(dto);
+
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+
+    return PersonaHumana.builder()
+        .nombre(dto.getNombre())
+        .apellido(dto.getApellido())
+        .fechaNacimiento(LocalDate.parse(dto.getFechaNacimiento())) // Assuming this format is correct
+        .direccion(direccion)
+        .contacto(contacto)
+        .documento(documento)
+        .build();
+  }
+
+  private static void validarCamposObligatorios(PersonaHumanaDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        Pair.of("nombre", dto.getNombre()),
+        Pair.of("apellido", dto.getApellido()),
+        Pair.of("fecha de nacimiento", dto.getFechaNacimiento())
+    );
+  }
+
+  private static void validarLongitudNombreYApellido(PersonaHumanaDTO dto) {
+    if (dto.getNombre().length() < 2 || dto.getNombre().length() > 50) {
+      throw new ValidacionFormularioException("El nombre debe tener entre 2 y 50 caracteres.");
+    }
+    if (dto.getApellido().length() < 2 || dto.getApellido().length() > 50) {
+      throw new ValidacionFormularioException("El apellido debe tener entre 2 y 50 caracteres.");
+    }
+  }
+
+  private static void validarFechaNacimiento(PersonaHumanaDTO dto) {
+    try {
+      LocalDate.parse(dto.getFechaNacimiento());
+    } catch (DateTimeParseException e) {
+      throw new ValidacionFormularioException("Formato de fecha incorrecto. Debe ser yyyy-MM-dd.");
+    }
+  }
+
+  public void actualizarFromDto(PersonaHumanaDTO dto) {
+    validarCamposObligatorios(dto);
+    validarLongitudNombreYApellido(dto);
+    validarFechaNacimiento(dto);
+
+    this.nombre = dto.getNombre();
+    this.apellido = dto.getApellido();
+    this.fechaNacimiento = LocalDate.parse(dto.getFechaNacimiento());
+
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+    Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
+
+    if (!this.direccion.equals(direccion)) {
+      this.setDireccion(direccion);
+    }
+
+    if (!this.documento.equals(documento)) {
+      this.setDocumento(documento);
+    }
+
+    if (!this.contacto.equals(contacto)) {
+      this.setContacto(contacto);
+    }
+  }
+
 }
