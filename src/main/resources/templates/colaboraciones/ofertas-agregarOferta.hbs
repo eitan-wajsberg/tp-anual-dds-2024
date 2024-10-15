@@ -18,7 +18,7 @@
             <select class="offerForm-select" id="category" name = "categoria">
                 <option value="">Seleccione una categoría</option>
                 {{#each rubros}}
-                <option value="{{rubros.nombre}}">{{rubros.nombre}}</option>
+                <option value="{{this.nombre}}">{{this.nombre}}</option>
                 {{/each}}
             </select>
         </div>
