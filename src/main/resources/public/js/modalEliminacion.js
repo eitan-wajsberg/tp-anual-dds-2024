@@ -49,6 +49,11 @@ function openModal(idEntidad, tipoEntidad, nombreEntidad) {
             tipo: 'tecnico',
             mensaje: `¿Estás seguro de que deseas eliminar a ${nombreEntidad}?`,
             accion: `/tecnicos/${idEntidad}/eliminacion`
+        },
+        {
+            tipo: 'donacionDinero',
+            mensaje: `¿Estás seguro de que deseas cancelar la donación de dinero?`,
+            accion: `/donacionDinero/${idEntidad}/eliminacion`
         }
     ];
 

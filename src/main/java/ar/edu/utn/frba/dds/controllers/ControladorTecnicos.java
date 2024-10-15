@@ -103,7 +103,6 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
       if (dtoExistente.equals(dtoNuevo)) {
         throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
       }
-      System.out.println(dtoNuevo.getContactoDTO().getWhatsapp());
 
       tecnicoExistente.get().actualizarFromDto(dtoNuevo);
       withTransaction(() -> repositorioTecnicos.actualizar(tecnicoExistente.get()));
@@ -121,7 +120,6 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
   public void delete(Context context) {
     Long id = Long.valueOf(context.pathParam("id"));
     Optional<Tecnico> persona = this.repositorioTecnicos.buscarPorId(id, Tecnico.class);
-    System.out.println(context.pathParam("id"));
     if (persona.isPresent()) {
       withTransaction(() -> this.repositorioTecnicos.eliminarFisico(Tecnico.class, id));
       context.redirect("/tecnicos");

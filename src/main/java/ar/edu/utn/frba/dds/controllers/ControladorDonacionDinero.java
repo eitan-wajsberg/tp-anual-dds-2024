@@ -4,9 +4,12 @@ import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.UnidadFrecuencia;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
+import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.dtos.DonacionDineroDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
+import com.twilio.rest.api.v2010.account.incomingphonenumber.Local;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
@@ -18,10 +21,8 @@ import java.util.Optional;
 public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimplePersistenceUnit {
 
   private Repositorio repositorioGenerico;
-
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesDinero.hbs";
   private final String rutaDonacionHbs = "colaboraciones/donacionDinero.hbs";
-
   private final String rutaListadoDonaciones = "/donacionDinero";
 
   public ControladorDonacionDinero(Repositorio repositorioGenerico) {
@@ -53,24 +54,23 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
 
     try {
       Optional<PersonaHumana> personaHumana = repositorioGenerico
-          .buscarPorId(dto.getPersonaHumanaId(), PersonaHumana.class);
+          .buscarPorId(1L, PersonaHumana.class);
       Optional<PersonaJuridica> personaJuridica = repositorioGenerico
           .buscarPorId(dto.getPersonaJuridicaId(), PersonaJuridica.class);
 
       DonacionDinero nuevaDonacion = new DonacionDinero();
       nuevaDonacion.setMonto(dto.getMonto());
       nuevaDonacion.setUnidadFrecuencia(UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia().toUpperCase()));
-      nuevaDonacion.setFecha(LocalDate.parse(dto.getFecha()));
+      nuevaDonacion.setFecha(LocalDate.now());
 
       personaHumana.ifPresent(nuevaDonacion::setPersonaHumana);
       personaJuridica.ifPresent(nuevaDonacion::setPersonaJuridica);
 
       withTransaction(() -> repositorioGenerico.guardar(nuevaDonacion));
-
       context.redirect(rutaListadoDonaciones);
     } catch (Exception e) {
       Map<String, Object> model = new HashMap<>();
-      model.put("error", "Error al procesar la donación. Intente nuevamente");
+      model.put("error", e.getMessage());
       model.put("dto", dto);
       context.render(rutaDonacionHbs, model);
     }
@@ -133,17 +133,14 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
 
   @Override
   public void delete(Context context) {
-
     Long id = Long.valueOf(context.pathParam("id"));
     Optional<DonacionDinero> donacion = repositorioGenerico.buscarPorId(id, DonacionDinero.class);
 
     if (donacion.isPresent()) {
-      repositorioGenerico.eliminarFisico(DonacionDinero.class, id);
+      withTransaction(() -> repositorioGenerico.eliminarFisico(DonacionDinero.class, id));
       context.redirect("/donacionDinero");
     } else {
       context.status(400).result("No se puede eliminar, la donación no fue encontrada.");
     }
-
   }
-
 }
