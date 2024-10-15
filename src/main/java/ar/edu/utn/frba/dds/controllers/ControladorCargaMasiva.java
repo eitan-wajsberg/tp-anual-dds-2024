@@ -5,7 +5,7 @@ import io.javalin.http.Context;
 
 public class ControladorCargaMasiva {
 
-  private final String rutaHbs = PrettyProperties.getInstance().propertyFromName("hbs_carga_masiva");
+  private final String rutaHbs = "/admin/adminCargaMasiva.hbs";
 
   public void create(Context context) {
     context.render(rutaHbs);
