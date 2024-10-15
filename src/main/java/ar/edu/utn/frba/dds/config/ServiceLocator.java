@@ -1,18 +1,10 @@
 package ar.edu.utn.frba.dds.config;
 
-import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
-import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
-import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
-import ar.edu.utn.frba.dds.controllers.ControladorInicio;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
-import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
-import ar.edu.utn.frba.dds.controllers.ControladorReportes;
+import ar.edu.utn.frba.dds.controllers.*;
 import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
+import ar.edu.utn.frba.dds.domain.repositories.imp.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +54,12 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(AdaptadaJavaXMail.class.getName())) {
         AdaptadaJavaXMail instance = new AdaptadaJavaXMail();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(ControladorMapaHeladeras.class.getName())) {
+        ControladorMapaHeladeras instance = new ControladorMapaHeladeras(instanceOf(RepositorioHeladera.class), instanceOf(Repositorio.class));
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioHeladera.class.getName())) {
+        RepositorioHeladera instance = new RepositorioHeladera();
         instances.put(componentName, instance);
       }
     }
