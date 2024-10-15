@@ -1,6 +1,6 @@
 {{#partial "contenido"}}
     <div class="m-5">
-        <div class="row justify-content-center">
+        <div id="uploadForm" class="row justify-content-center">
             <form method="POST" {{#if edicion}}action="/tecnicos/{{id}}/edicion"{{else}}action="/tecnicos/"{{/if}}>
                 <h4 class="fw-bold fs-5">Información básica</h4>
                 <p class="mb-3">Ingresar los datos personales básicos del técnico.</p>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col-12">
-                        <button class="w-100" type="submit">Dar de alta</button>
+                        <button id="submitButton" class="w-100" type="submit">Dar de alta</button>
                     </div>
                 </div>
                 {{#if error}}
@@ -82,6 +82,7 @@
             </form>
         </div>
     </div>
+    <script src="../../js/manejadorFormulario.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Alta de técnicos" mostrarAdmin=true mostrarIrAtras=true paginaAtras="/tecnicos" mostrarSeccion=true seccion="Tecnicos" }}
