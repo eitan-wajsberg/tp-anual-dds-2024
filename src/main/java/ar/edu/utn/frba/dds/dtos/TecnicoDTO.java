@@ -4,7 +4,7 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
-import ar.edu.utn.frba.dds.utils.manejoDocumentos.ManejoDocumentos;
+import ar.edu.utn.frba.dds.utils.manejos.ManejoDocumentos;
 import io.javalin.http.Context;
 import java.util.Objects;
 import lombok.Data;
