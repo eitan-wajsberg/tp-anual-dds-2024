@@ -12,6 +12,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -19,43 +20,39 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import lombok.Getter;
-import lombok.Setter;
-import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Entity @Table(name="persona_juridica")
+@Data
+@Builder
+@AllArgsConstructor
+@Entity
+@Table(name = "persona_juridica")
 public class PersonaJuridica {
 
   @Id @GeneratedValue
   private Long id;
 
-  @Setter
   @OneToOne
   @JoinColumn(name = "usuario_id", referencedColumnName = "id")
   private Usuario usuario;
 
-  @Setter
   @Embedded
-
   private Contacto contacto;
 
-  @Setter
   @Embedded
   private Direccion direccion;
 
-  @Setter
   @Column(name = "razonSocial", nullable = false)
   private String razonSocial;
 
-  @Setter
   @Enumerated(EnumType.STRING)
-  @Column(name="tipo", nullable = false)
+  @Column(name = "tipo", nullable = false)
   private TipoPersonaJuridica tipo;
 
-  @Setter
   @OneToOne
   @JoinColumn(name = "rubro_id", referencedColumnName = "id")
   private Rubro rubro;
@@ -78,7 +75,7 @@ public class PersonaJuridica {
   @Transient
   private Set<Oferta> ofertas;
 
-  public PersonaJuridica(){
+  public PersonaJuridica() {
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
     this.heladerasAcargo = new HashSet<>();

@@ -5,6 +5,7 @@ import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,14 +13,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
-@Getter @Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name="donacion_dinero")
+@Table(name = "donacion_dinero")
 public class DonacionDinero implements Contribucion {
 
   @Id  @GeneratedValue
@@ -45,8 +49,9 @@ public class DonacionDinero implements Contribucion {
   @JoinColumn(name = "id_personaJuridica", referencedColumnName = "id")
   private PersonaJuridica personaJuridica;
 
-  public float calcularPuntaje(){
-    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficientePesosDonados");
+  public float calcularPuntaje() {
+    float coeficiente = ReconocimientoTrabajoRealizado
+        .obtenerCoeficientes("coeficientePesosDonados");
     return monto * coeficiente;
   }
 

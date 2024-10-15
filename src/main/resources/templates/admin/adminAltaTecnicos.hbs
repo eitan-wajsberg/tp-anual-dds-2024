@@ -1,6 +1,6 @@
 {{#partial "contenido"}}
     <div class="m-5">
-        <div class="row justify-content-center">
+        <div id="uploadForm" class="row justify-content-center">
             <form method="POST" {{#if edicion}}action="/tecnicos/{{id}}/edicion"{{else}}action="/tecnicos/"{{/if}}>
                 <h4 class="fw-bold fs-5">Información básica</h4>
                 <p class="mb-3">Ingresar los datos personales básicos del técnico.</p>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-12 col-md-12 mb-2 mb-md-0">
-                        <input name="radio" type="number" class="w-100" placeholder="Radio máximo en kilómetros para ser avisado" required min="1" title="El radio debe ser un número mayor a 0." value="{{dto.radioMaximoParaSerAvisado}}">
+                        <input name="radio" type="number" class="w-100" placeholder="Radio máximo en kilómetros para ser avisado" required min="1" step="0.01" title="El radio debe ser un número mayor a 0, con hasta dos decimales." value="{{dto.radioMaximoParaSerAvisado}}">
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@
 
                 <div class="row mb-3">
                     <div class="col-12 col-md-4 mb-2 mb-md-0">
-                        <input name="whatsapp" type="text" class="w-100" placeholder="WhatsApp" pattern="^\\+?[0-9]{10,15}$" title="Formato: +549XXXXXXXXX" value="{{dto.contactoDTO.whatsapp}}">
+                        <input name="whatsapp" type="number" class="w-100" placeholder="WhatsApp" pattern="^[0-9]{10,15}$" title="Formato: +549XXXXXXXXX" value="{{dto.contactoDTO.whatsapp}}">
                     </div>
                     <div class="col-12 col-md-4 mb-2 mb-md-0">
                         <input name="telegram" type="text" class="w-100" placeholder="Telegram" pattern="^[a-zA-Z0-9_]{5,32}$" title="Formato: @usuario o usuario" value="{{dto.contactoDTO.telegram}}">
@@ -71,7 +71,7 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col-12">
-                        <button class="w-100" type="submit">Dar de alta</button>
+                        <button id="submitButton" class="w-100" type="submit">Dar de alta</button>
                     </div>
                 </div>
                 {{#if error}}
@@ -82,6 +82,7 @@
             </form>
         </div>
     </div>
+    <script src="../../js/manejadorFormulario.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Alta de técnicos" mostrarAdmin=true mostrarIrAtras=true paginaAtras="/tecnicos" mostrarSeccion=true seccion="Tecnicos" }}

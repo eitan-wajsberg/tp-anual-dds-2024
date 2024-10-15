@@ -103,6 +103,7 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
       if (dtoExistente.equals(dtoNuevo)) {
         throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
       }
+      System.out.println(dtoNuevo.getContactoDTO().getWhatsapp());
 
       tecnicoExistente.get().actualizarFromDto(dtoNuevo);
       withTransaction(() -> repositorioTecnicos.actualizar(tecnicoExistente.get()));
