@@ -94,8 +94,7 @@ public class DonacionDinero implements Contribucion {
   private static void validarCamposObligatorios(DonacionDineroDTO dto) {
     CamposObligatoriosVacios.validarCampos(
         Pair.of("monto", String.valueOf(dto.getMonto())),
-        Pair.of("unidad de frecuencia", dto.getUnidadFrecuencia()),
-        Pair.of("fecha", dto.getFecha())
+        Pair.of("unidad de frecuencia", dto.getUnidadFrecuencia())
     );
   }
 
