@@ -9,4 +9,7 @@ public class RepositorioOferta extends Repositorio {
   public List<Oferta> buscarPorFecha(LocalDateTime fecha) {
     return entityManager().createQuery("from" + Oferta.class.getName() + "fechaCanje = " + fecha).getResultList();
   }
+  public List<Oferta> buscarPorPersonaJuridica(Long idJuridica){
+    return entityManager().createQuery("from" + Oferta.class.getName() + "persona_juridica_id = " + idJuridica).getResultList();
+  }
 }
