@@ -17,6 +17,7 @@ import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionDinero;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionVianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
@@ -34,7 +35,7 @@ public class ServiceLocator {
     if (!instances.containsKey(componentName)) {
       if (componentName.equals(ControladorPersonaVulnerable.class.getName())) {
         ControladorPersonaVulnerable instance = new ControladorPersonaVulnerable(
-            instanceOf(Repositorio.class),
+            instanceOf(RepositorioPersonaVulnerable.class),
             instanceOf(RepositorioPersonaHumana.class)
         );
         instances.put(componentName, instance);
@@ -107,6 +108,9 @@ public class ServiceLocator {
         instances.put(componentName, instance);
       } else if (componentName.equals(RepositorioRol.class.getName())) {
         RepositorioRol instance = new RepositorioRol();
+        instances.put(componentName, instance);
+      } else if (componentName.equals(RepositorioPersonaVulnerable.class.getName())) {
+        RepositorioPersonaVulnerable instance = new RepositorioPersonaVulnerable();
         instances.put(componentName, instance);
       } else if (componentName.equals(AdaptadaJavaXMail.class.getName())) {
         AdaptadaJavaXMail instance = new AdaptadaJavaXMail();

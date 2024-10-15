@@ -5,6 +5,7 @@ import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
@@ -19,22 +20,23 @@ import java.util.Optional;
 import java.util.TimeZone;
 
 public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimplePersistenceUnit {
-  private Repositorio repositorioPersonaVulnerable;
+  private RepositorioPersonaVulnerable repositorioPersonaVulnerable;
   private RepositorioPersonaHumana repositorioPersonaHumana;
   private final String rutaRegistroHbs = "/colaboraciones/registroPersonaVulnerable.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoPersonasVulnerables.hbs";
 
-  public ControladorPersonaVulnerable(Repositorio repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana) {
+  public ControladorPersonaVulnerable(RepositorioPersonaVulnerable repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana) {
     this.repositorioPersonaVulnerable = repositorioPersonaVulnerable;
     this.repositorioPersonaHumana = repositorioPersonaHumana;
   }
 
   @Override
   public void index(Context context) {
-    List<PersonaVulnerable> vulnerables = this.repositorioPersonaVulnerable.buscarTodos(PersonaVulnerable.class);
+    // FIXME: Quitar la persona hardcodeada y obtener el id de la sesion
+    Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(1L);
 
     Map<String, Object> model = new HashMap<>();
-    model.put("personasVulnerables", vulnerables);
+    vulnerables.ifPresent(personaVulnerables -> model.put("personasVulnerables", personaVulnerables));
 
     context.render(rutaListadoHbs, model);
   }
@@ -55,6 +57,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
     dto.obtenerFormulario(context);
 
     try {
+      // FIXME: Quitar la persona hardcodeada y obtener el id de la sesion
       Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
       if (registrador.isEmpty()) {
         throw new ValidacionFormularioException("No se ha encontrado la persona que lo está registrando. Reintentar.");
