@@ -29,9 +29,8 @@ public class DonacionDineroDTO implements DTO {
 
   @Override
   public void obtenerFormulario(Context context) {
-    this.monto = Float.parseFloat(context.formParam("monto"));
+    this.monto = Float.parseFloat(Objects.requireNonNull(context.formParam("monto")));
     this.unidadFrecuencia = context.formParam("unidadFrecuencia");
-    this.fecha = context.formParam("fecha");
     this.personaHumanaId = context.formParam("personaHumanaId") != null ? Long.parseLong(context.formParam("personaHumanaId")) : null;
     this.personaJuridicaId = context.formParam("personaJuridicaId") != null ? Long.parseLong(context.formParam("personaJuridicaId")) : null;
   }
@@ -41,7 +40,6 @@ public class DonacionDineroDTO implements DTO {
     DonacionDineroDTO that = (DonacionDineroDTO) obj;
     return Objects.equals(monto, that.monto) &&
         Objects.equals(unidadFrecuencia, that.unidadFrecuencia) &&
-        Objects.equals(fecha, that.fecha) &&
         Objects.equals(personaHumanaId, that.personaHumanaId) &&
         Objects.equals(personaJuridicaId, that.personaJuridicaId);
   }
