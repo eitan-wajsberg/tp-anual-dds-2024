@@ -12,7 +12,7 @@ public class TecnicoDTO implements DTO {
   private String nombre;
   private String apellido;
   private String cuil;
-  private Integer radioMaximoParaSerAvisado;
+  private Double radioMaximoParaSerAvisado;
   private DireccionDTO direccionDTO;
   private ContactoDTO contactoDTO;
   private DocumentoDTO documentoDTO;
@@ -22,7 +22,7 @@ public class TecnicoDTO implements DTO {
     this.nombre = tecnico.getNombre();
     this.apellido = tecnico.getApellido();
     this.cuil = tecnico.getCuil();
-    this.radioMaximoParaSerAvisado = (int) tecnico.getDistanciaMaximaEnKmParaSerAvisado();
+    this.radioMaximoParaSerAvisado = tecnico.getDistanciaMaximaEnKmParaSerAvisado();
     this.direccionDTO = new DireccionDTO(tecnico.getDireccion());
     this.documentoDTO = new DocumentoDTO(tecnico.getDocumento());
     this.contactoDTO = new ContactoDTO(tecnico.getContacto());
@@ -34,7 +34,7 @@ public class TecnicoDTO implements DTO {
     this.setNombre(context.formParam("nombre"));
     this.setApellido(context.formParam("apellido"));
     this.setCuil(context.formParam("cuil"));
-    this.setRadioMaximoParaSerAvisado(Integer.parseInt(Objects.requireNonNull(context.formParam("radio"))));
+    this.setRadioMaximoParaSerAvisado(Double.parseDouble(Objects.requireNonNull(context.formParam("radio"))));
     this.direccionDTO = new DireccionDTO();
     this.direccionDTO.obtenerFormulario(context);
     this.contactoDTO = new ContactoDTO();

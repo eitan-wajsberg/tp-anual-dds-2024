@@ -1,7 +1,7 @@
 {{#partial "contenido"}}
     <div class="m-5">
         <div class="row justify-content-center">
-            <form method="POST" {{#if edicion}}action="/personasVulnerables/{{id}}/edicion"{{else}}action="/personasVulnerables/"{{/if}}>
+            <form id="uploadForm" method="POST" {{#if edicion}}action="/personasVulnerables/{{id}}/edicion"{{else}}action="/personasVulnerables/"{{/if}}>
                 <h4 class="fw-bold fs-5">Información básica</h4>
                 <p class="mb-3">Ingresar los datos personales básicos de la persona en situación vulnerable.</p>
                 <div class="row mb-3">
@@ -58,7 +58,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="w-100">Dar de alta</button>
+                        <button id="submitButton" type="submit" class="w-100">Dar de alta</button>
                     </div>
                 </div>
                 {{#if error}}
@@ -69,6 +69,7 @@
             </form>
         </div>
     </div>
+    <script src="../js/manejadorFormulario.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Personas Vulnerables" mostrarSeccion=true seccion="Personas vulnerables" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/personasVulnerables" }}

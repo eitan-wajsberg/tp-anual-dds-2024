@@ -63,6 +63,7 @@ public class Tecnico {
   private double distanciaMaximaEnKmParaSerAvisado;
 
 
+
   public static Tecnico fromDTO(TecnicoDTO dto) {
     validarCamposObligatorios(dto);
     validarLongitudNombreYApellido(dto);
@@ -126,6 +127,7 @@ public class Tecnico {
     this.distanciaMaximaEnKmParaSerAvisado = dto.getRadioMaximoParaSerAvisado();
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
     Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+    Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
 
     if (!this.direccion.equals(direccion)) {
       this.setDireccion(direccion);
