@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
 import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorMapaHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
@@ -15,15 +16,13 @@ import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDistribucionVianda;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionDinero;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionVianda;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
-import ar.edu.utn.frba.dds.services.IPersonaHumanaServices;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +49,8 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorTecnicos.class.getName())) {
         instance = new ControladorTecnicos(
             instanceOf(RepositorioTecnicos.class),
-            instanceOf(RepositorioUsuario.class)
+            instanceOf(RepositorioUsuario.class),
+            instanceOf(RepositorioRol.class)
         );
       } else if (componentName.equals(ControladorCargaMasiva.class.getName())) {
         instance = new ControladorCargaMasiva(
