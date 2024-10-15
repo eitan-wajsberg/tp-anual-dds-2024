@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes;
 
 import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
+import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -51,7 +52,7 @@ public class SolicitudApertura {
   private int cantidadViandas;
 
   @Transient
-  private final int horasParaEjecutarAccion = HorasParaEjecutarAccion.getInstance().getHorasParaEjecutarAccion();
+  private final int horasParaEjecutarAccion = Integer.parseInt(PrettyProperties.getInstance().propertyFromName("horas_para_ejecutar_accion"));
 
   public boolean esIngresadaVirtualmente() {
     return !this.isAperturaConcretada()  && this.getAccion() == AccionApertura.INGRESAR_VIANDA

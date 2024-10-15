@@ -3,7 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.reportes;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
-import ar.edu.utn.frba.dds.utils.manejoFechas.ManejoFechas;
+import ar.edu.utn.frba.dds.utils.manejos.ManejoFechas;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

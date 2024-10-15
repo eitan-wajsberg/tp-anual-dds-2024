@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.utils.manejoDocumentos;
+package ar.edu.utn.frba.dds.utils.manejos;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.TipoDocumento;
 

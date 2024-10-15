@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dds.utils.manejoDistancias;
+package ar.edu.utn.frba.dds.utils.manejos;
 
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
 

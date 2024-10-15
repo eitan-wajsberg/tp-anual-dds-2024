@@ -1,13 +1,10 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefServicio;
-import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
-import ar.edu.utn.frba.dds.utils.manejoDistancias.ManejoDistancias;
-import java.io.IOException;
+import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
+import ar.edu.utn.frba.dds.utils.manejos.ManejoDistancias;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +19,7 @@ public class Direccion {
   private Coordenada coordenada;
 
   public boolean estaCercaDe(Direccion direccion) {
-    int umbralKm = UmbralDistanciaEnKm.getInstance().getUmbralDistanciaEnKm();
+    int umbralKm = Integer.parseInt(PrettyProperties.getInstance().propertyFromName("umbral_de_cercania_en_km"));
     return ManejoDistancias.distanciaHaversineConCoordenadasEnKm(direccion.getCoordenada(), this.coordenada) <= umbralKm;
   }
 
