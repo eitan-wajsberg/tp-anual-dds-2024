@@ -182,6 +182,7 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
       throw new ValidacionFormularioException("No existe el usuario emisor de este mensaje.");
     }
     mensaje.setEmisor(emisor.get());
+    withTransaction(() -> repositorioUsuario.guardar(mensaje));
   }
 
   public Usuario cargarUsuario(Tecnico tecnico) {
