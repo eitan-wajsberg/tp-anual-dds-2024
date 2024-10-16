@@ -6,5 +6,6 @@ public enum TipoRol implements RouteRole {
   ADMIN,
   PERSONA_HUMANA,
   PERSONA_JURIDICA,
-  TECNICO
+  TECNICO,
+  AUTENTICACION
 }

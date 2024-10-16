@@ -53,6 +53,8 @@ public class Oferta{
         this.rubro = rubro;
         this.organizacion = org;
     }
+    public boolean puedeCanjear(PersonaHumana persona) {
+        return persona.getPuntajeActual() >= this.cantidadPuntosNecesarios;}
     public void canjear(PersonaHumana persona) {
         if(persona.calcularPuntajeNeto() >= cantidadPuntosNecesarios){
             LocalDateTime ahora = LocalDateTime.now();

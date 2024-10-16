@@ -8,6 +8,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorInicioSesion;
 import ar.edu.utn.frba.dds.controllers.ControladorMapaHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorOferta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
@@ -41,42 +42,47 @@ public class Router {
     app.get("/usuarios/nuevo", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::create);
     app.post("/usuarios", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::save);
 
+    // LogIn
+    app.get("/login", ServiceLocator.instanceOf(ControladorInicioSesion.class)::create);
+    app.post("/login", ServiceLocator.instanceOf(ControladorInicioSesion.class)::logIn);
+
     // Tecnico
-    app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorTecnicos.class)::create);
-    app.post("/tecnicos", ServiceLocator.instanceOf(ControladorTecnicos.class)::save);
-    app.get("/tecnicos", ServiceLocator.instanceOf(ControladorTecnicos.class)::index);
-    app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::edit);
-    app.post("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::update);
-    app.post("/tecnicos/{id}/eliminacion", ServiceLocator.instanceOf(ControladorTecnicos.class)::delete);
+    app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorTecnicos.class)::create, TipoRol.ADMIN, TipoRol.AUTENTICACION);
+    app.post("/tecnicos", ServiceLocator.instanceOf(ControladorTecnicos.class)::save, TipoRol.ADMIN, TipoRol.AUTENTICACION);
+    app.get("/tecnicos", ServiceLocator.instanceOf(ControladorTecnicos.class)::index, TipoRol.ADMIN, TipoRol.AUTENTICACION);
+    app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::edit, TipoRol.ADMIN, TipoRol.AUTENTICACION);
+    app.post("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::update, TipoRol.ADMIN, TipoRol.AUTENTICACION);
+    app.post("/tecnicos/{id}/eliminacion", ServiceLocator.instanceOf(ControladorTecnicos.class)::delete, TipoRol.ADMIN, TipoRol.AUTENTICACION);
 
     // Carga masiva
-    app.get("/cargaMasiva/nuevo", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create);
-    app.post("/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save);
+    app.get("/cargaMasiva/nuevo", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create, TipoRol.ADMIN, TipoRol.AUTENTICACION);
+    app.post("/cargaMasiva", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::save, TipoRol.ADMIN, TipoRol.AUTENTICACION);
 
     // Reportes
-    app.get("/reportes", ServiceLocator.instanceOf(ControladorReportes.class)::index);
+    app.get("/reportes", ServiceLocator.instanceOf(ControladorReportes.class)::index, TipoRol.ADMIN, TipoRol.AUTENTICACION);
 
     // Persona vulnerable
-    app.get("/personasVulnerables/nuevo", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create);
-    app.post("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save);
-    app.get("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::index);
-    app.get("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::edit);
-    app.post("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::update);
-    app.post("/personasVulnerables/{id}/eliminacion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::delete);
+    app.get("/personasVulnerables/nuevo", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
+    app.post("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::save, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
+    app.get("/personasVulnerables", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
+    app.get("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::edit, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
+    app.post("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::update, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
+    app.post("/personasVulnerables/{id}/eliminacion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::delete, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
+    app.get("/personasVulnerables/solicitudTarjetas", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class):: solicitudTarjetas, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
+    app.post("/personasVulnerables/solicitudTarjetas", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::solicitarTarjetas, TipoRol.PERSONA_HUMANA, TipoRol.AUTENTICACION);
 
     // PersonaHumana
-    app.get("/personaHumana/nuevo", context -> context.render("cuenta/formularioPersonaHumana.hbs"));
-    //app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create);
-    app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save); // Redirección a página principal
+    app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create);
+    app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save);
     app.get("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit);
-    app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update); // Mostraría mensaje: "Cambios guardados correctamente"
+    app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update);
 
     // PersonaJurídica
     app.get("/personaJuridica/nuevo", context -> context.render("cuenta/formularioPersonaJuridica.hbs"));
     //app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create);
-    app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save); // Redirección a página principal
+    app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save);
     app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit);
-    app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update); //Mostraría mensaje: "Cambios guardados correctamente"
+    app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update);
 
     // Donacion dinero 👌
     app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
@@ -86,12 +92,10 @@ public class Router {
     app.get("/donacionDinero/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::edit);
     app.post("/donacionDinero/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::delete);
 
-    // Donacion vianda
-    //app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
-    app.get("/donacionVianda", context -> context.render("colaboraciones/listadoDonacionesViandas.hbs"));
+    // Donacion vianda 👌
+    app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
     app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save);
-    //app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create);
-    app.get("/donacionVianda/nuevo", context -> context.render("colaboraciones/donacionVianda.hbs"));
+    app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create);
     app.get("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::edit);
     app.post("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::update);
     app.post("/donacionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::delete);
