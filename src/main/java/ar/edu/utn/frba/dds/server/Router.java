@@ -57,7 +57,7 @@ public class Router {
     app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
     app.get("/donacionDinero/nuevo", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::create);
     app.post("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::save);
-    app.post("/donacionDinero/{id}", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::update);
+    app.post("/donacionDinero/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::update);
     app.get("/donacionDinero/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::edit);
     app.post("/donacionDinero/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::delete);
 

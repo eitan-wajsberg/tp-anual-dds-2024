@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimplePersistenceUnit {
-
   private Repositorio repositorioGenerico;
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesDinero.hbs";
   private final String rutaDonacionHbs = "colaboraciones/donacionDinero.hbs";
@@ -102,12 +101,10 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       model.put("error", e.getMessage());
       context.render(rutaListadoHbs, model);
     }
-
   }
 
   @Override
   public void update(Context context) {
-
     Map<String, Object> model = new HashMap<>();
     DonacionDineroDTO dtoNuevo = new DonacionDineroDTO();
     dtoNuevo.obtenerFormulario(context);
@@ -120,11 +117,6 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
         throw new ValidacionFormularioException("Donación no encontrada.");
       }
 
-      DonacionDinero donacion = donacionExistente.get();
-      donacion.setMonto(Float.parseFloat(dtoNuevo.getMonto()));
-      donacion.setUnidadFrecuencia(UnidadFrecuencia.valueOf(dtoNuevo.getUnidadFrecuencia().toUpperCase()));
-      donacion.setFecha(dtoNuevo.getFecha());
-
       DonacionDineroDTO dtoExistente = new DonacionDineroDTO(donacionExistente.get());
       if (dtoExistente.equals(dtoNuevo)) {
         throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
@@ -133,15 +125,14 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       donacionExistente.get().actualizarFromDto(dtoNuevo);
       withTransaction(() -> repositorioGenerico.actualizar(donacionExistente.get()));
       context.redirect("/donacionDinero");
-
     } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       model.put("dto", dtoNuevo);
+      model.put("title", "Editar donacion de dinero");
       model.put("edicion", true);
       model.put("id", context.pathParam("id"));
       context.render(rutaDonacionHbs, model);
     }
-
   }
 
   @Override
