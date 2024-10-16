@@ -28,7 +28,11 @@
             <div class="col-md-12">
                 {{#each ofertas}}
                     <div class="offer-card" data-rubro="{{this.rubro.nombre}}">
-                        <img src="../../public/img/ofertas-electronica.png" alt="Imagen Oferta 1">
+                        {{#if this.imagen}}
+                            <img src="/{{this.imagen}}" alt="Imagen Oferta 1">
+                        {{else}}
+                            <p>No hay imagen disponible</p>
+                        {{/if}}
                         <div class="offer-details">
                             <p><strong>Categoría:</strong>{{this.rubro.nombre}}</p>
                             <h4>{{this.nombre}}</h4>
@@ -95,17 +99,20 @@
             })
                     .then(response => {
                         if (!response.ok) throw new Error('Error en el canje');
-                        return response.json();
+                        return response.text();
                     })
                     .then(data => {
-                        alert('Canje exitoso');
+                        alert(data.message);  // Mensaje de éxito desde el servidor
+                        // Redirigir a la página de colaboraciones o la que corresponda
+                        window.location.href = '/colaboraciones/ofertas';
                     })
                     .catch(error => {
-                        alert(error.message);
+                        alert(error.message);  // Manejo de errores
                     });
         }
+
     </script>
 
 {{/partial}}
 
-{{> templates/base titulo="ofertas" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="pantallaInicioHumana" mostrarSeccion=true seccion="ofertas"}}
+{{> templates/base titulo="ofertas" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="pantallaInicioHumana" mostrarSeccion=true seccion="ofertas" pantallaOfertas = true}}
