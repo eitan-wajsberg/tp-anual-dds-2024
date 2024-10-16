@@ -4,5 +4,5 @@ import java.io.UnsupportedEncodingException;
 import javax.mail.MessagingException;
 
 public interface MedioDeContacto {
-  public void enviar(Mensaje mensaje, Contacto contacto) throws MessagingException, UnsupportedEncodingException;
+  void enviar(Mensaje mensaje, Contacto contacto) throws MessagingException, UnsupportedEncodingException;
 }
