@@ -6,7 +6,6 @@ import ar.edu.utn.frba.dds.domain.entities.contacto.Contacto;
 import ar.edu.utn.frba.dds.domain.entities.contacto.IObserverNotificacion;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.documento.Documento;
-import ar.edu.utn.frba.dds.domain.entities.documento.TipoDocumento;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.formulario.Respuesta;
@@ -15,7 +14,6 @@ import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
-
 import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
@@ -127,7 +125,7 @@ public class PersonaHumana extends IObserverNotificacion {
   @Getter
   @Setter
   @Column(name="puntajeActual")
-  private float puntajeActual;
+  private Float puntajeActual;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
@@ -311,8 +309,14 @@ public class PersonaHumana extends IObserverNotificacion {
     }
   }
 
-  public void sumarPuntaje(float x){
-    this.puntajeActual+=x;
+  public void sumarPuntaje(Float puntaje) {
+    if (this.puntajeActual == null) {
+      this.puntajeActual = 0f;
+    }
+    this.puntajeActual += puntaje;
   }
 
+  public void agregarTarjetaEntregada(Tarjeta tarjeta) {
+    this.tarjetasColaboracion.add(tarjeta);
+  }
 }
