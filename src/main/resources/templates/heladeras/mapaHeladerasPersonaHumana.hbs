@@ -6,14 +6,14 @@
         <nav class="col-md-4 pt-4 sidebar">
             <!-- Barra de Búsqueda-->
             <div class="input-group mb-4 pt-1">
-                <input type="text" class="form-control search" placeholder="Buscar...">
+                <input type="text" id="search-input" class="form-control search" placeholder="Buscar heladeras...">
                 <span class="input-group-text border-start-0 clic-card">
-                <span class="iconify" data-icon="mdi:magnify" data-width="20" data-height="20"></span>
-            </span>
+                    <span class="iconify" data-icon="mdi:magnify" data-width="20" data-height="20"></span>
+                </span>
             </div>
 
             <!-- Resultados de Búsqueda -->
-            <div class="scrollable-results">
+            <div id="heladeras-list" class="scrollable-results">
                 {{#each heladeras}}
                     <a href="/mapaHeladeras/{{this.id}}/HeladeraParticular" class="card rounded-3 transition-card mb-2 clic-card" data-id="{{this.id}}">
                         <div class="card-result-body">
@@ -38,10 +38,49 @@
         document.addEventListener('DOMContentLoaded', function() {
             var heladeras = {{{jsonHeladeras}}};  // Triple mustache para evitar escaping y pasar datos correctamente
             console.log(heladeras);  // Verifica los datos en la consola
-            addMarkers(heladeras, function(){window.location.href = `/mapaHeladeras/${this.heladera.id}/HeladeraParticular`;});   // Llama a la función para agregar marcadores
+
+            // Inicializar los marcadores del mapa
+            addMarkers(heladeras, function() {
+                window.location.href = `/mapaHeladeras/${this.heladera.id}/HeladeraParticular`;
+            });
+
+            // Capturar el input de búsqueda
+            var searchInput = document.getElementById('search-input');
+
+            // Filtrar y actualizar los resultados en el sidebar y el mapa
+            searchInput.addEventListener('input', function() {
+                var searchTerm = searchInput.value.toLowerCase();
+                var filteredHeladeras = heladeras.filter(function(heladera) {
+                    return heladera.nombre.toLowerCase().includes(searchTerm) ||
+                            heladera.direccion.nomenclatura.toLowerCase().includes(searchTerm);
+                });
+
+                // Actualizar la lista de heladeras en el sidebar
+                var heladerasList = document.getElementById('heladeras-list');
+                heladerasList.innerHTML = '';  // Limpiar resultados anteriores
+
+                filteredHeladeras.forEach(function(heladera) {
+                    var heladeraCard = `
+                        <a href="/mapaHeladeras/${heladera.id}/HeladeraParticular" class="card rounded-3 transition-card mb-2 clic-card" data-id="${heladera.id}">
+                            <div class="card-result-body">
+                                <h5 class="card-result-title">${heladera.nombre}</h5>
+                                <p class="card-result-text">${heladera.direccion.nomenclatura}</p>
+                                <p class="card-result-text">Tiene ${heladera.cantidadViandas} viandas</p>
+                                <p class="card-result-text">Capacidad de ${heladera.capacidadMaximaViandas} viandas</p>
+                            </div>
+                        </a>
+                    `;
+                    heladerasList.insertAdjacentHTML('beforeend', heladeraCard);
+                });
+
+                // Eliminar los marcadores anteriores del mapa y agregar los nuevos
+                clearMarkers();  // Llamar a la función para limpiar los marcadores existentes
+                addMarkers(filteredHeladeras, function() {
+                    window.location.href = `/mapaHeladeras/${this.heladera.id}/HeladeraParticular`;
+                });
+            });
         });
     </script>
-
 
 {{/partial}}
 {{> templates/base titulo="Mapa De Heladeras" mostrarMapa= true mostrarSeccion=true seccion="Mapa De Heladeras" mostrarPersonaHumana=true }}
