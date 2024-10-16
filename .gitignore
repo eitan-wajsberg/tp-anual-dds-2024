@@ -37,4 +37,7 @@ target/**
 /tmp
 
 # variables de entorno
-.env!/src/main/resources/META-INF/persistence.xml
+.env
+
+# persitence para no pisar nuestras credenciales
+/src/main/resources/META-INF/persistence.xml

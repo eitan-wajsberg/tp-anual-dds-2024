@@ -127,7 +127,7 @@ public class PersonaHumana extends IObserverNotificacion {
   @Getter
   @Setter
   @Column(name="puntajeActual")
-  private float puntajeActual;
+  private Float puntajeActual;
 
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
@@ -311,8 +311,14 @@ public class PersonaHumana extends IObserverNotificacion {
     }
   }
 
-  public void sumarPuntaje(float x){
-    this.puntajeActual+=x;
+  public void sumarPuntaje(Float puntaje) {
+    if (this.puntajeActual == null) {
+      this.puntajeActual = 0f;
+    }
+    this.puntajeActual += puntaje;
   }
 
+  public void agregarTarjetaEntregada(Tarjeta tarjeta) {
+    this.tarjetasColaboracion.add(tarjeta);
+  }
 }
