@@ -8,7 +8,6 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.dtos.DonacionDineroDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
-import com.twilio.rest.api.v2010.account.incomingphonenumber.Local;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
@@ -43,7 +42,9 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
   }
 
   public void create(Context context) {
-    context.render(rutaDonacionHbs);
+    Map<String, Object> model = new HashMap<>();
+    model.put("title", "Donar dinero");
+    context.render(rutaDonacionHbs, model);
   }
 
   @Override
@@ -57,9 +58,11 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       Optional<PersonaJuridica> personaJuridica = repositorioGenerico
           .buscarPorId(dto.getPersonaJuridicaId(), PersonaJuridica.class);
 
-//      if (personaHumana.isEmpty() || personaJuridica.isEmpty()) {
-//        throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
-//      }
+      /*
+      if (personaHumana.isEmpty() || personaJuridica.isEmpty()) {
+        throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
+      }
+      */
 
       DonacionDinero nuevaDonacion = DonacionDinero.fromDTO(dto);
       if (nuevaDonacion == null) {
@@ -71,9 +74,9 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
 
       withTransaction(() -> repositorioGenerico.guardar(nuevaDonacion));
       context.redirect(rutaListadoDonaciones);
-    } catch (Exception e) {
+    } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
-            model.put(ERROR, e.getMessage());
+      model.put(ERROR, e.getMessage());
       model.put("dto", dto);
       context.render(rutaDonacionHbs, model);
     }
@@ -93,8 +96,9 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       model.put("dto", dto);
       model.put("edicion", true);
       model.put("id", context.pathParam("id"));
+      model.put("title", "Editar donacion de dinero");
       context.render(rutaDonacionHbs, model);
-    } catch (Exception e) {
+    } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       context.render(rutaListadoHbs, model);
     }
@@ -117,9 +121,9 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       }
 
       DonacionDinero donacion = donacionExistente.get();
-      donacion.setMonto(dtoNuevo.getMonto());
+      donacion.setMonto(Float.parseFloat(dtoNuevo.getMonto()));
       donacion.setUnidadFrecuencia(UnidadFrecuencia.valueOf(dtoNuevo.getUnidadFrecuencia().toUpperCase()));
-      donacion.setFecha(LocalDate.parse(dtoNuevo.getFecha()));
+      donacion.setFecha(dtoNuevo.getFecha());
 
       DonacionDineroDTO dtoExistente = new DonacionDineroDTO(donacionExistente.get());
       if (dtoExistente.equals(dtoNuevo)) {
@@ -130,7 +134,7 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       withTransaction(() -> repositorioGenerico.actualizar(donacionExistente.get()));
       context.redirect("/donacionDinero");
 
-    } catch (Exception e) {
+    } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       model.put("dto", dtoNuevo);
       model.put("edicion", true);

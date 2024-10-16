@@ -54,6 +54,11 @@ function openModal(idEntidad, tipoEntidad, nombreEntidad) {
             tipo: 'donacionDinero',
             mensaje: `¿Estás seguro de que deseas cancelar la donación de dinero?`,
             accion: `/donacionDinero/${idEntidad}/eliminacion`
+        },
+        {
+            tipo: 'donacionVianda',
+            mensaje: `¿Estás seguro de que deseas cancelar la donación de vianda?`,
+            accion: `/donacionVianda/${idEntidad}/eliminacion`
         }
     ];
 

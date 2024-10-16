@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -71,44 +72,34 @@ public class DonacionDinero implements Contribucion {
   public static DonacionDinero fromDTO(DonacionDineroDTO dto) {
     validarCamposObligatorios(dto);
     validarMonto(dto);
-    validarFecha(dto);
 
     return DonacionDinero.builder()
-        .monto(dto.getMonto())
-        .unidadFrecuencia(UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia().toUpperCase()))
-        .fecha(LocalDate.parse(dto.getFecha()))
+        .monto(Float.parseFloat(dto.getMonto()))
+        .unidadFrecuencia(UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia()))
+        .fecha(dto.getFecha())
         .build();
   }
 
   public void actualizarFromDto(DonacionDineroDTO dto) {
     validarCamposObligatorios(dto);
     validarMonto(dto);
-    validarFecha(dto);
 
-    this.monto = dto.getMonto();
+    this.monto = Float.parseFloat(dto.getMonto());
     this.unidadFrecuencia = UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia());
-    this.fecha = LocalDate.parse(dto.getFecha());
+    this.fecha = dto.getFecha();
 
   }
 
   private static void validarCamposObligatorios(DonacionDineroDTO dto) {
     CamposObligatoriosVacios.validarCampos(
-        Pair.of("monto", String.valueOf(dto.getMonto())),
+        Pair.of("monto", dto.getMonto()),
         Pair.of("unidad de frecuencia", dto.getUnidadFrecuencia())
     );
   }
 
   private static void validarMonto(DonacionDineroDTO dto) {
-    if (dto.getMonto() <= 0) {
+    if (Float.parseFloat(dto.getMonto()) <= 0) {
       throw new ValidacionFormularioException("El monto debe ser mayor que cero.");
-    }
-  }
-
-  private static void validarFecha(DonacionDineroDTO dto) {
-    try {
-      LocalDate.parse(dto.getFecha());
-    } catch (DateTimeParseException e) {
-      throw new ValidacionFormularioException("Formato de fecha incorrecto. Debe ser yyyy-MM-dd.");
     }
   }
 }
