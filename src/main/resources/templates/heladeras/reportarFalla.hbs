@@ -1,0 +1,33 @@
+{{#partial "contenido"}}
+    <div class="m-5">
+        <div class="row justify-content-center">
+            <form id="fallaForm" method="POST" action="/mapa/heladeras/{{heladeraId}}/falla">
+                <h4 class="fw-bold fs-5">Información desperfecto</h4>
+                <p class="mb-3">Ingresar los datos del desperfecto de la heladera.</p>
+
+                <div class="col-12">
+                    <div class="input-group">
+                        <div class="input-group-text selection">Seleccionar tipo</div>
+                        <select id="tiposFalla" name="tipoFalla" class="custom-select">
+                            <option value="FALLA_TECNICA">Falla técnica</option>
+                            <option value="FALLO_TEMPERATURA">Fallo en la temperatura</option>
+                            <option value="POSIBLE_FRAUDE">Posible fraude</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h4 class="fw-bold fs-5 mt-5">Descripción</h4>
+                <textarea class="form-control mb-10 textarea" id="descripcionFalla" name="descripcionFalla" rows="8" required></textarea>
+
+                <div class="row mb-4 mt-4">
+                    <div class="col-12">
+                        <button type="submit" class="w-100">Reportar falla</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{{/partial}}
+
+{{> templates/base titulo="Reportar Falla Heladera" mostrarSeccion=true seccion="Reportar Falla" mostrarIrAtras=true paginaAtras="/mapa/heladeras" }}
