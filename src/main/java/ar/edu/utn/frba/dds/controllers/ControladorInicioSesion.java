@@ -47,6 +47,8 @@ public class ControladorInicioSesion {
 
       // Si es válido, crear la sesión del usuario
       context.sessionAttribute("id", usuario.getId());
+      context.sessionAttribute("nombre", nombreUsuario);
+      context.sessionAttribute("rol", usuario.getRol().getTipoRol().name());
       context.redirect("/");
 
     } catch (ValidacionFormularioException e) {
