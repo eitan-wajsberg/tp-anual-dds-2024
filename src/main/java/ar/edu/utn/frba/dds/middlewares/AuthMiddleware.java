@@ -6,7 +6,6 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 public class AuthMiddleware {
-
   public static void apply(Javalin app) {
     app.beforeMatched(ctx -> {
       var userRole = getUserRoleType(ctx);
