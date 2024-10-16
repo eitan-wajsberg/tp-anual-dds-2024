@@ -16,8 +16,8 @@ public class ControladorInicio {
   }
 
   public void create(Context context) {
-    String tipoCuenta = context.sessionAttribute("tipoCuenta");
-    String rutaHbs = RUTAS.getOrDefault(tipoCuenta, "pantallaInicio.hbs");
+    String rol = context.sessionAttribute("rol");
+    String rutaHbs = RUTAS.getOrDefault(rol, "pantallaInicio.hbs");
     context.render(rutaHbs);
   }
 }

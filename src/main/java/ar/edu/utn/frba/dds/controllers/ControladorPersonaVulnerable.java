@@ -52,7 +52,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void create(Context context) {
-    context.render(rutaRegistroHbs);
+    context.render(rutaRegistroHbs, Map.of("nombreUsuario", context.attribute("nombreUsuario")));
   }
 
   @Override
