@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
+import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
@@ -36,10 +37,17 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void index(Context context) {
-    // FIXME: Quitar la persona hardcodeada y obtener el id de la sesion
-    Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(1L);
+    String nombre = context.sessionAttribute("nombre");
+    String id = context.sessionAttribute("id");
+    if (id == null) {
+      throw new AccesoDenegadoException("No se ha encontrado una sesion", 401);
+    }
+
+    Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(Long.valueOf(id));
 
     Map<String, Object> model = new HashMap<>();
+    model.put("nombre", nombre);
+    model.put("id", id);
     vulnerables.ifPresent(personaVulnerables -> model.put("personasVulnerables", personaVulnerables));
 
     context.render(rutaListadoHbs, model);
@@ -52,7 +60,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void create(Context context) {
-    context.render(rutaRegistroHbs, Map.of("nombreUsuario", context.attribute("nombreUsuario")));
+    String nombre = context.sessionAttribute("nombre");
+    context.render(rutaRegistroHbs, Map.of("nombreUsuario", nombre == null ? "" : nombre));
   }
 
   @Override
