@@ -10,7 +10,7 @@
                         <input type="text" name="usuario" required pattern="^(?![._-])[a-zA-Z0-9._-]{5,50}(?<![._-])$" minlength="5" placeholder="Usuario" value="{{nombre}}">
                     </div>
                     <div class="row mt-2">
-                        <input type="password" id="clave" name="clave" required minlength="8" maxlength="50" placeholder="Contraseña" value="{{clave}}">
+                        <input type="password" id="clave" name="clave" required minlength="5" maxlength="50" placeholder="Contraseña" value="{{clave}}">
                     </div>
                     <div id="visibilidadClave" class="row mt-2">
                         <div class="form-check d-flex align-items-center">
@@ -41,23 +41,11 @@
         $(document).ready(function() {
             $('#flexCheckDefault').on('change', function() {
                 let passwordFieldType = $('#clave').attr('type') === 'password' ? 'text' : 'password';
-                $('#clave, #claveRepetida').attr('type', passwordFieldType);
+                $('#clave').attr('type', passwordFieldType);
             });
         });
-
         const clave = document.getElementById('clave');
-        const claveRepetida = document.getElementById('claveRepetida');
-
-        function validarClave() {
-            if (clave.value !== claveRepetida.value) {
-                claveRepetida.setCustomValidity("Las claves no coinciden");
-            } else {
-                claveRepetida.setCustomValidity("");
-            }
-        }
-
         clave.addEventListener('input', validarClave);
-        claveRepetida.addEventListener('input', validarClave);
     </script>
 {{/partial}}
 
