@@ -38,7 +38,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             var heladeras = {{{jsonHeladeras}}};  // Triple mustache para evitar escaping y pasar datos correctamente
             console.log(heladeras);  // Verifica los datos en la consola
-            addMarkers(heladeras);   // Llama a la función para agregar marcadores
+            addMarkers(heladeras, function(){window.location.href = `/mapaHeladeras/${this.heladera.id}/HeladeraParticular`;});   // Llama a la función para agregar marcadores
         });
     </script>
 
