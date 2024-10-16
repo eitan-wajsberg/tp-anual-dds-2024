@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
 import ar.edu.utn.frba.dds.dtos.PersonaJuridicaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
@@ -102,27 +103,33 @@ public class PersonaJuridica {
   public static PersonaJuridica fromDTO(PersonaJuridicaDTO dto) {
     validarCamposObligatorios(dto);
     validarLongitudRazonSocial(dto);
+    validarFormasContribucion(dto);
 
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Rubro rubro = Rubro.fromDTO(dto.getRubroDTO());
 
     return PersonaJuridica.builder()
         .razonSocial(dto.getRazonSocial())
         .tipo(TipoPersonaJuridica.valueOf(dto.getTipo()))
         .contacto(contacto)
         .direccion(direccion)
+        .contribucionesElegidas(dto.getFormasContribucionHumanasSet())
+        .rubro(rubro)
         .build();
   }
 
   public void actualizarFromDto(PersonaJuridicaDTO dto) {
     validarCamposObligatorios(dto);
     validarLongitudRazonSocial(dto);
+    validarFormasContribucion(dto);
 
     this.razonSocial = dto.getRazonSocial();
     this.tipo = TipoPersonaJuridica.valueOf(dto.getTipo());
 
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+    Rubro rubro = Rubro.fromDTO(dto.getRubroDTO());
 
     if (!this.contacto.equals(contacto)) {
       this.setContacto(contacto);
@@ -130,6 +137,10 @@ public class PersonaJuridica {
 
     if (!this.direccion.equals(direccion)) {
       this.setDireccion(direccion);
+    }
+
+    if (!this.contacto.equals(rubro)) {
+      this.setRubro(rubro);
     }
   }
 
@@ -143,6 +154,11 @@ public class PersonaJuridica {
   private static void validarLongitudRazonSocial(PersonaJuridicaDTO dto) {
     if (dto.getRazonSocial().length() < 2 || dto.getRazonSocial().length() > 100) {
       throw new ValidacionFormularioException("La razón social debe tener entre 2 y 100 caracteres.");
+    }
+  }
+  private static void validarFormasContribucion(PersonaHumanaDTO dto) {
+    if (dto.getFormasContribucionHumanasSet() == null || dto.getFormasContribucionHumanasSet().isEmpty()) {
+      throw new ValidacionFormularioException("Al menos una forma de contribución debe ser seleccionada.");
     }
   }
 

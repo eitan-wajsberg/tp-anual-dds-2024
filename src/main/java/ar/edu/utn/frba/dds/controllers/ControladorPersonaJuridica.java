@@ -2,9 +2,10 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
+import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 
-public class ControladorPersonaJuridica implements ICrudViewsHandler {
+public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimplePersistenceUnit {
 
   private RepositorioPersonaJuridica repositorioPersonaJuridica;
 
