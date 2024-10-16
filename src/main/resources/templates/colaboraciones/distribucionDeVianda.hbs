@@ -1,0 +1,70 @@
+{{#partial "contenido"}}
+<section class="row flex-grow-1  ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
+    <!-- Sidebar -->
+    <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4 my-4">
+        <a href="listadoDistribucionViandas.html" class="d-inline-block dark-text me-2">
+            <span class="iconify align-middle" data-icon="ep:back" data-width="24" data-height="24"></span>
+        </a>
+        <div class="pt-5 pb-2"></div> <!-- separador -->
+        <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
+        <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/edicion{{/if}}" {{/unless}}>
+            <div class="col-12 mb-2">
+                <input class="w-100" required type="text" id="heladeraOrigen" name="heladeraOrigen" data-id="heladeraOrigenId" placeholder="Seleccionar heladera de origen">
+                <input type="hidden" name="heladeraOrigenId" id="heladeraOrigenId">
+            </div>
+            <div class="col-12 mb-2">
+                <input class="w-100" required type="text" id="heladeraDestino" name="heladeraDestino" data-id="heladeraDestinoId" placeholder="Seleccionar heladera de destino">
+                <input type="hidden" name="heladeraDestinoId" id="heladeraDestinoId">
+            </div>
+            <div class="col-12 mb-2">
+                <input class="w-100" required type="number" name="cantidadViandas" placeholder="Cantidad de viandas a mover">
+            </div>
+            <div class="col-12 mb-3">
+                <div class="input-group">
+                    <div class="input-group-text selection">Motivo</div>
+                    <select id="tiposFalla" name="tipoFalla" class="custom-select">
+                        <option value="1">Desperfecto de heladera</option>
+                        <option value="2">Falta de viandas en destino</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <button class="w-100" type="submit">Comenzar ahora</button>
+            </div>
+            <div class="row">
+                <p class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para retirar las viandas del origen.</p>
+            </div>
+        </form>
+    </nav>
+
+    <!-- Mapa -->
+    <main class="col-md-8 p-4 d-flex flex-column">
+        <div id="map"></div>
+    </main>
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Script para manejar el mapa y los datos de heladeras -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var heladeras = {{{this.jsonHeladeras}}};  // Triple mustache para evitar escaping y pasar datos correctamente
+        console.log(heladeras);  // Verifica los datos en la consola
+        addMarkers(heladeras, function(){
+            // llena nombre e id en el campo de la heladera que tenga focus
+            var lv_input = $(":focus[id^='heladera']");
+            if(lv_input != undefined){
+                lv_input.val(this.heladera.nombre);
+                $("#"+lv_input.data("id")).val(this.heladera.id);
+            }
+        });
+
+        $("#heladeraOrigen, #heladeraDestino").on("change", function(){
+            if($(this).val() == ""){
+                $("#"+$(this).data("id")).val("");
+            }
+        });
+    });
+</script>
+{{/partial}}
+
+{{> templates/base titulo="Distribución de viandas" mostrarMapa= true mostrarSeccion=true seccion="Distribuir viandas" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/distribucionVianda" }}

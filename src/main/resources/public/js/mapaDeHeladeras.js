@@ -15,12 +15,12 @@ var customMarkerImage = '/img/refrigerator.png';
 
 
 // Función para agregar marcadores en el mapa
-function addMarkers(heladeras) {
-    heladeras.forEach(function (heladera) { addMarker(heladera) });
+function addMarkers(heladeras, onMarkerClick) {
+    heladeras.forEach(function (heladera) { addMarker(heladera, onMarkerClick) });
 }
 
 // Función para agregar marcadores en el mapa
-function addMarker(heladera) {
+function addMarker(heladera, onMarkerClick) {
 
         var lat = parseFloat(heladera.direccion.coordenada.latitud);
         var lng = parseFloat(heladera.direccion.coordenada.longitud);
@@ -35,17 +35,17 @@ function addMarker(heladera) {
                 .addTo(map);
 
             // Añadir evento 'click' al marcador para redirigir a la página de la heladera
-            marker.getElement().addEventListener('click', function () {
-                window.location.href = `/mapaHeladeras/${heladera.id}/HeladeraParticular`;
-            });
+            marker.getElement().addEventListener('click', onMarkerClick.bind({"heladera":heladera}));
 
             // Opción de centrar el mapa en el marcador cuando se haga click en el lateral (opcional)
-            document.querySelector(`[data-id="${heladera.id}"]`).addEventListener('click', function () {
-                map.flyTo({
-                    center: [lng, lat],
-                    zoom: 15
+            if(document.querySelector(`[data-id="${heladera.id}"]`) != undefined){
+                document.querySelector(`[data-id="${heladera.id}"]`).addEventListener('click', function () {
+                    map.flyTo({
+                        center: [lng, lat],
+                        zoom: 15
+                    });
                 });
-            });
+            }
         } else {
             console.log(`Coordenadas inválidas para heladera con id: ${heladera.id}`);
         }
