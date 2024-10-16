@@ -117,6 +117,8 @@ public class ServiceLocator {
         );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
+      } else if (componentName.equals(ControladorInicioSesion.class.getName())) {
+        instance = new ControladorInicioSesion(ServiceLocator.instanceOf(RepositorioUsuario.class));
       } else if (componentName.equals(RepositorioOferta.class.getName())) {
         instance = new RepositorioOferta();
       } else if (componentName.equals(RepositorioOfertaCanjeada.class.getName())) {

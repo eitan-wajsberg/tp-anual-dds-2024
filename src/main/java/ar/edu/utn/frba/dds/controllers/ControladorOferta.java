@@ -75,7 +75,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
   @Override
   public void index(Context context) { // validar el usuario.
     context.sessionAttribute("tipoCuenta", "PERSONA_HUMANA");
-    context.sessionAttribute("idUsuario","1");
+    //context.sessionAttribute("id");
     String tipoCuenta = "PERSONA_HUMANA";//context.sessionAttribute("tipoCuenta");
 
     String rutahbs = RUTAS.get(tipoCuenta);
@@ -89,7 +89,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       model.put("puntos", puntaje);
 
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
-
+      ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
 
     }
     else{
@@ -145,7 +145,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
           repositorioOfertaCanjeada.guardar(ofertaCanjeada);
           repositorioPersonaHumana.actualizar(canjeador.get());});
 
-        context.status(200).result("canje exitoso");
+        context.status(200).result("Canje exitoso");
       } else {
         // Manejar el caso cuando no se encuentra la oferta
         context.status(404).result("Oferta no encontrada");
