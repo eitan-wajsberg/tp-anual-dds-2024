@@ -38,3 +38,6 @@ target/**
 
 # variables de entorno
 .env
+
+# persitence para no pisar nuestras credenciales
+src/main/resources/META-INF/persistence.xml

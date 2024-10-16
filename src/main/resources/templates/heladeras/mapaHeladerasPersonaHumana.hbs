@@ -36,7 +36,8 @@
     <!-- Script para manejar el mapa y los datos de heladeras -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var heladeras = {{{jsonHeladeras}}};  // Triple mustache para evitar escaping y pasar datos correctamente
+            window.heladeras = {{{jsonHeladeras}}};  // Define heladeras globalmente
+
             console.log(heladeras);  // Verifica los datos en la consola
 
             // Inicializar los marcadores del mapa
@@ -83,4 +84,4 @@
     </script>
 
 {{/partial}}
-{{> templates/base titulo="Mapa De Heladeras" mostrarMapa= true mostrarSeccion=true seccion="Mapa De Heladeras" mostrarPersonaHumana=true }}
+{{> templates/base titulo="Mapa De Heladeras" mostrarMapa= true Buscadormapa=true mostrarSeccion=true seccion="Mapa De Heladeras" mostrarPersonaHumana=true }}
