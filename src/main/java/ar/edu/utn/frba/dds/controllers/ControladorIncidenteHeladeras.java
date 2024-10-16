@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.dds.controllers;
 
-import ar.edu.utn.frba.dds.domain.GsonFactory;
+
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
@@ -8,7 +8,6 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.dtos.IncidenteDTO;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
-import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 
@@ -23,7 +22,6 @@ public class ControladorIncidenteHeladeras implements ICrudViewsHandler, WithSim
     private Repositorio repositorioIncidente;
 
     private final String rutaReporteIncidente = "heladeras/reportarFalla.hbs";
-    private final Gson gson = GsonFactory.createGson();
 
     public ControladorIncidenteHeladeras(RepositorioHeladera repositorioHeladera, Repositorio repositorioPersonaHumana, Repositorio repositorioIncidente) {
         this.repositorioHeladera = repositorioHeladera;
@@ -45,7 +43,7 @@ public class ControladorIncidenteHeladeras implements ICrudViewsHandler, WithSim
     public void create(Context context) {
         // Renderiza el formulario para reportar un incidente
         try {
-            Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("id")), Heladera.class);
+            Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("heladeraId")), Heladera.class);
             if (heladera.isPresent()) {
                 Map<String, Object> model = new HashMap<>();
                 model.put("heladeraId", heladera.get().getId());

@@ -1,7 +1,7 @@
 {{#partial "contenido"}}
     <div class="m-5">
         <div class="row justify-content-center">
-            <form id="fallaForm" method="POST" action="/mapa/heladeras/{{heladeraId}}/falla">
+            <form id="fallaForm" method="POST" action="persona/{{personaId}}">
                 <h4 class="fw-bold fs-5">Información desperfecto</h4>
                 <p class="mb-3">Ingresar los datos del desperfecto de la heladera.</p>
 
@@ -30,4 +30,4 @@
     </div>
 {{/partial}}
 
-{{> templates/base titulo="Reportar Falla Heladera" mostrarSeccion=true seccion="Reportar Falla" mostrarIrAtras=true paginaAtras="/mapa/heladeras" }}
+{{> templates/base titulo="Reportar Falla Heladera" mostrarSeccion=true seccion="Reportar Falla" mostrarIrAtras=true paginaAtras="`/mapaHeladeras/{heladeraId}/HeladeraParticular`" }}
