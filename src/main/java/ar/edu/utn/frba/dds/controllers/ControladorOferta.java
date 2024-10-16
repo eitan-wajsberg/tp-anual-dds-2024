@@ -1,21 +1,31 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import static java.time.LocalTime.now;
+import static javax.ws.rs.client.Entity.json;
 
+import ar.edu.utn.frba.dds.config.ServiceLocator;
+import ar.edu.utn.frba.dds.domain.entities.Contribucion;
+import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
 import ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomendacionDonacion.Personas;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
+import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOferta;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOfertaCanjeada;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRubro;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
+import ar.edu.utn.frba.dds.dtos.OfertaDTO;
 import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
@@ -35,19 +45,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.eclipse.jetty.http.HttpStatus;
+import com.google.gson.Gson;
 
 public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsHandler {
   private RepositorioOferta repositorioOferta;
   private RepositorioRubro repositorioRubro;
   private RepositorioPersonaJuridica repositorioJuridica;
+  private RepositorioPersonaHumana repositorioPersonaHumana;
   private RepositorioOfertaCanjeada repositorioOfertaCanjeada;
   private final String rutaForm = "colaboraciones/ofertas-agregarOferta.hbs";
   private static final Map<String, String> RUTAS = new HashMap<>();
 
-  public ControladorOferta(RepositorioOferta repositorioOferta, RepositorioRubro repositorioRubro, RepositorioPersonaJuridica repositorioJuridica) {
+  public ControladorOferta(RepositorioOferta repositorioOferta, RepositorioRubro repositorioRubro
+                           ,RepositorioPersonaJuridica repositorioJuridica,
+                           RepositorioPersonaHumana repositorioPersonaHumana,
+                           RepositorioOfertaCanjeada repositorioOfertaCanjeada) {
     this.repositorioOferta = repositorioOferta;
     this.repositorioRubro = repositorioRubro;
     this.repositorioJuridica = repositorioJuridica;
+    this.repositorioPersonaHumana = repositorioPersonaHumana;
+    this.repositorioOfertaCanjeada = repositorioOfertaCanjeada;
   }
 
   static {
@@ -57,14 +74,37 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
   @Override
   public void index(Context context) { // validar el usuario.
-    context.sessionAttribute("idUsuario","20");
-    String tipoCuenta = "PERSONA_JURIDICA";//context.sessionAttribute("tipoCuenta");
+    context.sessionAttribute("tipoCuenta", "PERSONA_HUMANA");
+    context.sessionAttribute("idUsuario","5");
+    String tipoCuenta = "PERSONA_HUMANA";//context.sessionAttribute("tipoCuenta");
     String rutahbs = RUTAS.get(tipoCuenta);
-
+    Map<String, Object> model = new HashMap<>();
     List<Oferta> ofertas = new ArrayList<>();
-
+    float puntaje=0;
+    Long id_usuario = Long.parseLong(context.sessionAttribute("idUsuario"));
     if(tipoCuenta.equals(TipoRol.PERSONA_HUMANA.name())){
+      Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
+      /*
+      List<Contribucion> contribuciones = new ArrayList<>();
+      List<DonacionDinero> donacionesDinero = ServiceLocator.instanceOf(RepositorioDonacionDinero.class).buscarPorIdColaborador(personaHumana.id);
+      List<Vianda> donacionesViandas = ServiceLocator.instanceOf(RepositorioViandas.class).buscarPorIdColaborador(personaHumana.id);
+      List<DistribucionVianda> distribucionVianda = ServiceLocator.instanceOf(RepositorioDistribucionVianda.class).buscarPorIdColaborador(personaHumana.id);
+      List<Tarjeta> tarjetasEntregadas = ServiceLocator.instanceOf(RepositorioTarjeta.class).buscarPorIdColaborador(personaHumana.id);
+
+// Agregar las contribuciones a la lista común
+     /* contribuciones.addAll(donacionesDinero);
+      contribuciones.addAll(donacionesViandas);
+      contribuciones.addAll(distribucionVianda);
+      contribuciones.addAll(tarjetasEntregadas);
+       */
+
+      //SETEAR LISTA COLABORACIONES DE PERSONA HUMANA
+      //puntaje = personaHumana.get().calcularPuntajeNeto();
+      model.put("puntos", puntaje);
+
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
+
+
     }
     else{
       Long idUsuario = Long.parseLong(context.sessionAttribute("idUsuario"));
@@ -77,7 +117,6 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       }
     }
 
-    Map<String, Object> model = new HashMap<>();
     List<Rubro> rubros = repositorioRubro.buscarTodos(Rubro.class);
 
     model.put("ofertas", ofertas);
@@ -106,13 +145,16 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     String tipoCuenta = context.sessionAttribute("tipoCuenta");
     String pathImagen = null;
     if(TipoRol.PERSONA_HUMANA.name().equals(tipoCuenta)){
-      Optional<Oferta> ofertaOptional = repositorioOferta.buscarPorId(Long.valueOf(context.formParam("id")), Oferta.class);
+      OfertaDTO ofertaDTO = context.bodyAsClass(OfertaDTO.class);
+      Long idOferta = ofertaDTO.getIdOferta();
+
+      Optional<Oferta> ofertaOptional = repositorioOferta.buscarPorId(idOferta, Oferta.class);
 
       if (ofertaOptional.isPresent()) {
         Oferta oferta = ofertaOptional.get();
         OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now());
         withTransaction(()->{repositorioOfertaCanjeada.guardar(ofertaCanjeada);});
-        context.redirect("/colaboraciones/ofertas");
+        context.status(200).result("canje exitoso");
       } else {
         // Manejar el caso cuando no se encuentra la oferta
         context.status(404).result("Oferta no encontrada");
