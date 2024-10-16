@@ -8,7 +8,8 @@ import java.util.Optional;
 public class RepositorioPersonaJuridica extends Repositorio {
   public Optional<PersonaJuridica> buscarPorUsuario(Long idUsuario){
     return entityManager()
-          .createQuery("from" + PersonaJuridica.class.getName() + "usuario_id = " + idUsuario)
+          .createQuery("from " + PersonaJuridica.class.getName() + " WHERE usuario_id = :dato")
+          .setParameter("dato", idUsuario)
           .getResultList()
           .stream()
           .findFirst();
