@@ -47,15 +47,15 @@
                 {{/if}}
                 {{#if mostrarPersonaJuridica}}
                     <span class="fw-bold fs-6">{{razonSocial}}</span>
-                    <button class="btn btn-dark p-2" onclick="window.location.href='cuenta/formularioPersonaJuridica.html'">
+                    <button class="btn btn-dark p-2" onclick="window.location.href='/personaJuridica/{{id}}/edicion'">
                         <span class="iconify" data-icon="mingcute:building-2-line" data-width="24" data-height="24"></span>
-                    </button>
+                    </button> <!-- TODO: INDICAR EL ID DEL USUARIO EN CUESTION -->
                 {{/if}}
                 {{#if mostrarPersonaHumana}}
                     <span class="fw-bold fs-6">{{nombre}}</span>
-                    <button onclick="window.location.href='/formulario/persona-humana'">
+                    <button onclick="window.location.href='/personaHumana/{{id}}/edicion'">
                         <span class="iconify" data-icon="iconoir:user" data-width="24" data-height="24"></span>
-                    </button>
+                    </button> <!-- TODO: INDICAR EL ID DEL USUARIO EN CUESTION -->
                 {{/if}}
             </div>
         </div>
