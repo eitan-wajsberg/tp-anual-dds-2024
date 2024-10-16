@@ -40,7 +40,7 @@ public class Router {
     app.post("/personasVulnerables/{id}/eliminacion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::delete);
 
     // PersonaHumana
-    app.get("/personaJuridica/nuevo", context -> context.render("cuenta/formularioPersonaHumana.hbs"));
+    app.get("/personaHumana/nuevo", context -> context.render("cuenta/formularioPersonaHumana.hbs"));
     //app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create);
     app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save); // Redirección a página principal
     app.get("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit);
@@ -92,6 +92,5 @@ public class Router {
     //Reporte de Falla
     app.get("/mapaHeladeras/{heladeraId}/reportarFalla/persona/{personaHumanaId}/nueva", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::create);
     app.post("/mapaHeladeras/{heladeraId}/reportarFalla/persona/{personaHumanaId}", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::save);
-
   }
 }
