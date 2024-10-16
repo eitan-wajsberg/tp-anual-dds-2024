@@ -78,6 +78,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       System.out.println(e);
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
       model.put("dto", DTOfromContext(context));
       context.render(rutaAltaHbs, model);
       return;
@@ -150,6 +151,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       model.put("dto", DTOfromContext(context));
       model.put("readonly", false);
       model.put("id", context.pathParam("id"));
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
       context.render(rutaAltaHbs, model);
       return;
     }
@@ -174,9 +176,9 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
   private DistribucionViandaDTO DTOfromContext(Context context){
     return DistribucionViandaDTO.builder()
-        .heladeraOrigenId(Long.parseLong(context.formParam("heladeraOrigenId")))
+        .heladeraOrigenId(Long.parseLong(context.formParam("heladeraOrigenId")==""?"0":context.formParam("heladeraOrigenId")))
         .heladeraOrigenNombre(context.formParam("heladeraOrigen"))
-        .heladeraDestinoId(Long.parseLong(context.formParam("heladeraDestinoId")))
+        .heladeraDestinoId(Long.parseLong(context.formParam("heladeraDestinoId")==""?"0":context.formParam("heladeraDestinoId")))
         .heladeraDestinoNombre(context.formParam("heladeraDestino"))
         .motivo(context.formParam("motivo"))
         .cantidadViandas(Integer.parseInt(context.formParam("cantidadViandas")))
@@ -192,8 +194,9 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     }
 
     Long colaboradorId = 8L; //context.sessionAttribute("id"))
-    Long helOrigenId = Long.parseLong(context.formParam("heladeraOrigenId"));
-    Long helDestinoId = Long.parseLong(context.formParam("heladeraOrigenId"));
+
+    Long helOrigenId = Long.parseLong(context.formParam("heladeraOrigenId") == "" ? "0" : context.formParam("heladeraOrigenId"));
+    Long helDestinoId = Long.parseLong(context.formParam("heladeraDestinoId") == "" ? "0" : context.formParam("heladeraDestinoId"));
 
     CamposObligatoriosVacios.validarCampos(
         Pair.of("Cantidad de viandas", cantidadViandas),
@@ -217,21 +220,36 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       throw new ValidacionFormularioException("Heladera origen inválida.");
     }
 
-    Optional<Heladera> optHelDestino = this.repositorioHeladera.buscarPorId(helOrigenId);
+    Optional<Heladera> optHelDestino = this.repositorioHeladera.buscarPorId(helDestinoId);
     if (optHelDestino.isEmpty()) {
       throw new ValidacionFormularioException("Heladera destino inválida.");
+    }
+
+    if(helDestinoId.equals(helOrigenId)){
+      throw new ValidacionFormularioException("El origen y destino deben ser distintos.");
+    }
+
+    Heladera destino = optHelDestino.get();
+    if(cantidadViandas > destino.getCapacidadMaximaViandas()){
+      throw new ValidacionFormularioException("La heladera '"+destino.getNombre()
+          +"' tiene una capacidad máxima de "+destino.getCapacidadMaximaViandas()+"."
+          +" Reduzca la cantidad.");
     }
 
     DistribucionVianda distribucionVianda = DistribucionVianda.builder()
         .colaborador(optPHumana.get())
         .heladeraOrigen(optHelOrigen.get())
-        .heladeraDestino(optHelDestino.get())
+        .heladeraDestino(destino)
         .fecha(LocalDate.now())
         .cantidadViandas(cantidadViandas)
         .motivo(context.formParam("motivo")).build();
 
     optPHumana.get().sumarPuntaje(distribucionVianda.calcularPuntaje());
-    withTransaction(() -> repositorioPHumana.actualizar(optPHumana));
+
+    System.out.println(optPHumana.get().getPuntajeActual());
+    System.out.println(distribucionVianda.calcularPuntaje());
+    System.out.println(optPHumana.get().getPuntajeActual());
+    withTransaction(() -> repositorioPHumana.actualizar(optPHumana.get()));
 
     return distribucionVianda;
   }
