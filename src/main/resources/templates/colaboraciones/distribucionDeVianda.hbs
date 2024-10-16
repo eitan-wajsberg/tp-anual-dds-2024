@@ -6,12 +6,12 @@
         <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
         <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/edicion{{/if}}" {{/unless}}>
             <div class="col-12 mb-2">
-                <input class="w-100" required type="text" id="heladeraOrigen" name="heladeraOrigen" data-id="heladeraOrigenId" placeholder="Seleccionar heladera de origen">
-                <input type="hidden" name="heladeraOrigenId" id="heladeraOrigenId">
+                <input class="w-100" required type="text" id="heladeraOrigen" name="heladeraOrigen" data-id="heladeraOrigenId" placeholder="Seleccionar heladera de origen" value="{{dto.heladeraOrigenNombre}}">
+                <input type="hidden" name="heladeraOrigenId" id="heladeraOrigenId" value="{{dto.heladeraOrigenId}}">
             </div>
             <div class="col-12 mb-2">
-                <input class="w-100" required type="text" id="heladeraDestino" name="heladeraDestino" data-id="heladeraDestinoId" placeholder="Seleccionar heladera de destino">
-                <input type="hidden" name="heladeraDestinoId" id="heladeraDestinoId">
+                <input class="w-100" required type="text" id="heladeraDestino" name="heladeraDestino" data-id="heladeraDestinoId" placeholder="Seleccionar heladera de destino" value="{{dto.heladeraDestinoNombre}}">
+                <input type="hidden" name="heladeraDestinoId" id="heladeraDestinoId"  value="{{dto.heladeraDestinoId}}">
             </div>
             <div class="col-12 mb-2">
                 <input class="w-100" required type="number" name="cantidadViandas" placeholder="Cantidad de viandas a mover">
@@ -19,7 +19,7 @@
             <div class="col-12 mb-3">
                 <div class="input-group">
                     <div class="input-group-text selection">Motivo</div>
-                    <select id="tiposFalla" name="tipoFalla" class="custom-select">
+                    <select id="motivo" name="motivo" class="custom-select">
                         <option value="1">Desperfecto de heladera</option>
                         <option value="2">Falta de viandas en destino</option>
                     </select>
@@ -60,6 +60,8 @@
                 $("#"+$(this).data("id")).val("");
             }
         });
+
+        $("#motivo option[value='{{dto.motivo}}']").attr("selected", "selected");
     });
 </script>
 {{/partial}}

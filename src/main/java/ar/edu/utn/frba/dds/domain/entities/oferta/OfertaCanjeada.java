@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.oferta;
 
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,8 +28,13 @@ public class OfertaCanjeada {
 
     @Column(name="fechaCanje", nullable = false)
     private LocalDateTime fechaCanje;
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name="canjeador_id", referencedColumnName = "id", nullable = false)
+    private PersonaHumana canjeador;
 
-    public OfertaCanjeada(Oferta oferta, LocalDateTime fechaCanje) {
+    public OfertaCanjeada(Oferta oferta, LocalDateTime fechaCanje, PersonaHumana canjeador) {
         this.oferta = oferta;
         this.fechaCanje = fechaCanje;
     }
