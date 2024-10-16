@@ -44,6 +44,11 @@ public class Server {
         staticFiles.directory = "/public";
       });
 
+      config.staticFiles.add(staticFiles -> {
+        staticFiles.hostedPath = "/reportes";
+        staticFiles.directory = "/reportes";
+      });
+
       config.fileRenderer(new JavalinRenderer().register("hbs", (path, model, context) -> {
         Handlebars handlebars = new Handlebars();
         HandlebarHelpers.registerHelpers(handlebars);
