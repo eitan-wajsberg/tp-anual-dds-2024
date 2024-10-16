@@ -110,17 +110,15 @@
                 {{/if}}
             </form>
 
-                {{#if edicion}}
-                    <div class="col-12 mt-4">
-                        <button type="button" class="btn btn-danger w-100 rounded-button" id="deleteButton">Eliminar cuentta</button>
-                    </div>
-                    <form id="deleteForm" method="POST" action="/personaHumana/{{id}}/eliminacion" style="display: none;"></form>
-                {{/if}}
-
+            {{#if edicion}}
+                <div class="col-12 mt-4">
+                    <button type="button" class="btn btn-danger w-100 rounded-button" id="deleteButton">Eliminar cuentta</button>
+                </div>
+                <form id="deleteForm" method="POST" action="/personaHumana/{{id}}/eliminacion" style="display: none;"></form>
+            {{/if}}
         </div>
     </div>
-    <script src="../../js/manejadorFormulario.js"></script>
-    <script src="../../js/deleteButton.js"></script>
+    <script src="/js/manejadorFormulario.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Mis datos personales" mostrarPersonaHumana=true mostrarSeccion=true seccion="Mis datos personales"}}
