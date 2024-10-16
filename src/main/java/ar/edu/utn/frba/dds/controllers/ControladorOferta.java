@@ -145,7 +145,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
           repositorioOfertaCanjeada.guardar(ofertaCanjeada);
           repositorioPersonaHumana.actualizar(canjeador.get());});
 
-        context.status(200).result("canje exitoso");
+        context.status(200).result("Canje exitoso");
       } else {
         // Manejar el caso cuando no se encuentra la oferta
         context.status(404).result("Oferta no encontrada");
