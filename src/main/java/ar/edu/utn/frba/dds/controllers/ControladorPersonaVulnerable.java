@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
+import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
@@ -71,9 +72,12 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       nuevaPersona.setPersonaQueLoRegistro(registrador.get());
       nuevaPersona.setFechaDeRegistro(LocalDate.now());
 
-      // TODO: crear y asignar tarjeta
+      // asigno tarjeta sin entregar del registrador a la persona vulnerable
+      Tarjeta tarjeta = asignarTarjeta(registrador.get());
+      registrador.get().agregarTarjetaEntregada(tarjeta);
+      nuevaPersona.setTarjetaEnUso(tarjeta);
 
-      registrador.get().sumarPuntaje(nuevaPersona.getTarjetaEnUso().calcularPuntaje());
+      registrador.get().sumarPuntaje(tarjeta.calcularPuntaje());
       withTransaction(() -> {
         repositorioPersonaVulnerable.guardar(nuevaPersona);
         repositorioPersonaHumana.actualizar(registrador);
@@ -86,6 +90,15 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       model.put("dto", dto);
       context.render(rutaRegistroHbs, model);
     }
+  }
+
+  private Tarjeta asignarTarjeta(PersonaHumana registrador) throws ValidacionFormularioException {
+    if (registrador.getTarjetasSinEntregar().isEmpty()) {
+      throw new ValidacionFormularioException("No puede registrar personas vulnerables ya que no tiene tarjetas para entregar.");
+    }
+    Tarjeta tarjeta = registrador.getTarjetasSinEntregar().remove(0);
+    tarjeta.setFechaRecepcionPersonaVulnerable(LocalDate.now());
+    return tarjeta;
   }
 
   @Override
@@ -152,4 +165,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       context.status(400).result("No se puede eliminar, la persona no cumple con las condiciones para ser eliminada.");
     }
   }
+
+
+
 }
