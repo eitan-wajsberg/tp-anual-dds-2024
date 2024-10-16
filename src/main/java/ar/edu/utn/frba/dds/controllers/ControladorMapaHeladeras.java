@@ -65,13 +65,12 @@ public class ControladorMapaHeladeras implements ICrudViewsHandler, WithSimplePe
     @Override
     public void show(Context context) {
         try {
-            Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("heladeraId")), Heladera.class);
+            Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("id")), Heladera.class);
             if (heladera.isPresent()) {
                 String jsonHeladera = gson.toJson(heladera.get());
                 Map<String, Object> model = new HashMap<>();
                 model.put("heladera", heladera.get());
                 model.put("jsonHeladera", jsonHeladera);
-                model.put("buscadorMapa",true);
                 context.render("/heladeras/heladeraParticularPersonaHumana.hbs", model);
             } else {
                 context.status(404).result("Heladera no encontrada");

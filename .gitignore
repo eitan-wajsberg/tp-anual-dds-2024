@@ -37,4 +37,4 @@ target/**
 /tmp
 
 # variables de entorno
-.env!/src/main/resources/META-INF/persistence.xml
+.env
