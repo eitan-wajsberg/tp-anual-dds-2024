@@ -59,7 +59,7 @@ public class Tarjeta implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteTarjetasRepartidas");
+    float coeficiente = ReconocimientoTrabajoRealizado.getInstance().obtenerCoeficientes("coeficienteTarjetasRepartidas");
     return coeficiente;
   }
 
