@@ -53,6 +53,11 @@
                 {{/if}}
                 {{#if mostrarPersonaHumana}}
                     <span class="fw-bold fs-6">{{nombre}}</span>
+                    {{#if pantallaOfertas}}
+                        <span class="fw-bold fs-6 pe-2">
+                        <strong>{{puntos}}</strong> <span style="color: #888;">puntos</span>
+                    </span>
+                    {{/if}}
                     <button onclick="window.location.href='/personaHumana/{{id}}/edicion'">
                         <span class="iconify" data-icon="iconoir:user" data-width="24" data-height="24"></span>
                     </button> <!-- TODO: INDICAR EL ID DEL USUARIO EN CUESTION -->

@@ -145,7 +145,7 @@ public class Heladera implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteCantidadHeladerasActivas");
+    float coeficiente = ReconocimientoTrabajoRealizado.getInstance().obtenerCoeficientes("coeficienteCantidadHeladerasActivas");
     return coeficiente * this.calcularMesesActiva();
   }
 

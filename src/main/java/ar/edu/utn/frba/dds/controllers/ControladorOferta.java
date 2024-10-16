@@ -85,22 +85,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     Long id_usuario = Long.parseLong(context.sessionAttribute("idUsuario"));
     if(tipoCuenta.equals(TipoRol.PERSONA_HUMANA.name())){
       Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
-      /*
-      List<Contribucion> contribuciones = new ArrayList<>();
-      List<DonacionDinero> donacionesDinero = ServiceLocator.instanceOf(RepositorioDonacionDinero.class).buscarPorIdColaborador(personaHumana.id);
-      List<Vianda> donacionesViandas = ServiceLocator.instanceOf(RepositorioViandas.class).buscarPorIdColaborador(personaHumana.id);
-      List<DistribucionVianda> distribucionVianda = ServiceLocator.instanceOf(RepositorioDistribucionVianda.class).buscarPorIdColaborador(personaHumana.id);
-      List<Tarjeta> tarjetasEntregadas = ServiceLocator.instanceOf(RepositorioTarjeta.class).buscarPorIdColaborador(personaHumana.id);
-
-// Agregar las contribuciones a la lista común
-     /* contribuciones.addAll(donacionesDinero);
-      contribuciones.addAll(donacionesViandas);
-      contribuciones.addAll(distribucionVianda);
-      contribuciones.addAll(tarjetasEntregadas);
-       */
-
-      //SETEAR LISTA COLABORACIONES DE PERSONA HUMANA
-      //puntaje = personaHumana.get().calcularPuntajeNeto();
+      puntaje = personaHumana.get().getPuntajeActual();
       model.put("puntos", puntaje);
 
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
@@ -148,13 +133,18 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     if(TipoRol.PERSONA_HUMANA.name().equals(tipoCuenta)){
       OfertaDTO ofertaDTO = context.bodyAsClass(OfertaDTO.class);
       Long idOferta = ofertaDTO.getIdOferta();
-
       Optional<Oferta> ofertaOptional = repositorioOferta.buscarPorId(idOferta, Oferta.class);
 
       if (ofertaOptional.isPresent()) {
+        Long id_usuario = Long.parseLong(context.sessionAttribute("idUsuario"));
+        Optional<PersonaHumana> canjeador = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
         Oferta oferta = ofertaOptional.get();
-        OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now());
-        withTransaction(()->{repositorioOfertaCanjeada.guardar(ofertaCanjeada);});
+        OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now(),canjeador.get());
+        canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
+        withTransaction(()->{
+          repositorioOfertaCanjeada.guardar(ofertaCanjeada);
+          repositorioPersonaHumana.actualizar(canjeador.get());});
+
         context.status(200).result("canje exitoso");
       } else {
         // Manejar el caso cuando no se encuentra la oferta
