@@ -75,6 +75,20 @@ public class ServiceLocator {
                 ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
                 ServiceLocator.instanceOf(Repositorio.class)
         );
+      } else if (componentName.equals(ControladorOferta.class.getName())) {
+        instance = new ControladorOferta(
+            ServiceLocator.instanceOf(RepositorioOferta.class),
+            ServiceLocator.instanceOf(RepositorioRubro.class),
+            ServiceLocator.instanceOf(RepositorioPersonaJuridica.class),
+            ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
+            ServiceLocator.instanceOf(RepositorioOfertaCanjeada.class)
+        );
+      } else if (componentName.equals(ControladorIncidenteHeladeras.class.getName())) {
+        instance = new ControladorIncidenteHeladeras(
+            ServiceLocator.instanceOf(RepositorioHeladera.class),
+            ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
+            ServiceLocator.instanceOf(Repositorio.class)
+        );
       }else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
         instance = new RepositorioPersonaHumana();
       } else if (componentName.equals(RepositorioPersonaJuridica.class.getName())) {
@@ -103,6 +117,12 @@ public class ServiceLocator {
         );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
+      } else if (componentName.equals(RepositorioOferta.class.getName())) {
+        instance = new RepositorioOferta();
+      } else if (componentName.equals(RepositorioOfertaCanjeada.class.getName())) {
+        instance = new RepositorioOfertaCanjeada();
+      } else if (componentName.equals(RepositorioRubro.class.getName())) {
+        instance = new RepositorioRubro();
       }
 
       instances.put(componentName, instance);

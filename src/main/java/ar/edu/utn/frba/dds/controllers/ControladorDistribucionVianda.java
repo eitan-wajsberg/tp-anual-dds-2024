@@ -83,6 +83,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     }
 
     DistribucionVianda nuevaDist = dist;
+
     withTransaction(() -> this.repositorioDistribucion.guardar(nuevaDist));
 
     context.redirect("/distribucionVianda");
@@ -219,13 +220,18 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       throw new ValidacionFormularioException("Heladera destino inválida.");
     }
 
-    return DistribucionVianda.builder()
+    DistribucionVianda distribucionVianda = DistribucionVianda.builder()
         .colaborador(optPHumana.get())
         .heladeraOrigen(optHelOrigen.get())
         .heladeraDestino(optHelDestino.get())
         .fecha(LocalDate.now())
         .cantidadViandas(cantidadViandas)
         .motivo(context.formParam("motivo")).build();
+
+    optPHumana.get().sumarPuntaje(distribucionVianda.calcularPuntaje());
+    withTransaction(() -> repositorioPHumana.actualizar(optPHumana));
+
+    return distribucionVianda;
   }
 
   public static DistribucionViandaDTO fromEntity(DistribucionVianda entity){

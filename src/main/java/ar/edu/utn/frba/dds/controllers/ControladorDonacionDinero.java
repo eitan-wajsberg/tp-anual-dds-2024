@@ -71,7 +71,14 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       personaHumana.ifPresent(nuevaDonacion::setPersonaHumana);
       personaJuridica.ifPresent(nuevaDonacion::setPersonaJuridica);
 
-      withTransaction(() -> repositorioGenerico.guardar(nuevaDonacion));
+      if (personaHumana.isPresent()) {
+        personaHumana.get().sumarPuntaje(nuevaDonacion.calcularPuntaje());
+      }
+
+      withTransaction(() -> {
+        repositorioGenerico.guardar(nuevaDonacion);
+        repositorioGenerico.actualizar(personaHumana);
+      });
       context.redirect(rutaListadoDonaciones);
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
