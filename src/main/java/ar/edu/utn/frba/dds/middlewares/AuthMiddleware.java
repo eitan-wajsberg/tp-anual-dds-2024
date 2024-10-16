@@ -13,9 +13,6 @@ public class AuthMiddleware {
       if (!ctx.routeRoles().isEmpty() && !ctx.routeRoles().contains(userRole)) {
         throw new AccesoDenegadoException("No estas autorizado para acceder a este contenido.", 401);
       }
-      if (ctx.sessionAttribute("id") == null || ctx.sessionAttribute("nombre") == null) {
-        throw new AccesoDenegadoException("No se encontraron los datos basicos de la sesión.", 401);
-      }
     });
   }
 
