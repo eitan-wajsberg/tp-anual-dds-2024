@@ -13,24 +13,23 @@
 
 <div class="container mt-4">
     <div class="category-container">
-        <button class="category-box">Gastronomía</button>
-        <button class="category-box">Electrónica</button>
-        <button class="category-box">Artículos para el hogar</button>
-        <button class="category-box">Otro</button>
-        <div class="col-auto d-flex justify-content-center align-items-center">
-            <div class="input-group">
-                <input type="text" class="form-control form-control-sm" placeholder="Buscar por nombre">
-                <button class="btn btn-search">
-                    <span class="iconify" data-icon="iconoir:search" data-width="16" data-height="16"></span>
-                </button>
-            </div>
+        <button class="category-box" onclick="filtrarOfertas('Gastronomía')">Gastronomía</button>
+        <button class="category-box" onclick="filtrarOfertas('Electrónica')">Electrónica</button>
+        <button class="category-box" onclick="filtrarOfertas('Artículos para el hogar')">Artículos para el hogar</button>
+        <button class="category-box" id="otro-rubro-btn" onclick="mostrarRubros()">Otro</button>
+
+        <!-- Sección de rubros adicionales -->
+        <div id="otros-rubros" style="display:none;">
+            {{#each rubros}}
+                <button class="category-box" onclick="filtrarOfertas('{{this.nombre}}')">{{this.nombre}}</button>
+            {{/each}}
         </div>
     </div>
     <div class="container mt-4">
         <div class="row g-3">
             <div class="col-md-12">
                 {{#each ofertas}}
-                <div class="offer-card">
+                <div class="offer-card" data-rubro="{{this.rubro.nombre}}">
                     <img src="../../public/img/ofertas-electronica.png" alt="Imagen Oferta 1">
                     <div class="offer-details">
                         <p><strong>Categoría:</strong> {{this.rubro.nombre}}</p>
@@ -44,5 +43,7 @@
         </div>
     </div>
 </div>
+
+<script src="../../public/js/filtrarOfertas.js"></script>
 
 {{/partial}}

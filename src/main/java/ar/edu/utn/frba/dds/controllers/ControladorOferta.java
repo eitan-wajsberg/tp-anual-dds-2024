@@ -6,10 +6,12 @@ import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
 import ar.edu.utn.frba.dds.domain.entities.oferta.OfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
+import ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomendacionDonacion.Personas;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOferta;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioOfertaCanjeada;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRubro;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
@@ -26,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +40,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
   private RepositorioOferta repositorioOferta;
   private RepositorioRubro repositorioRubro;
   private RepositorioPersonaJuridica repositorioJuridica;
+  private RepositorioOfertaCanjeada repositorioOfertaCanjeada;
   private final String rutaForm = "colaboraciones/ofertas-agregarOferta.hbs";
   private static final Map<String, String> RUTAS = new HashMap<>();
 
@@ -53,28 +57,30 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
   @Override
   public void index(Context context) { // validar el usuario.
-    String tipoCuenta = context.sessionAttribute("tipoCuenta");
+    String tipoCuenta = "PERSONA_HUMANA";//context.sessionAttribute("tipoCuenta");
     String rutahbs = RUTAS.get(tipoCuenta);
 
-    List<Oferta> ofertas;
+    List<Oferta> ofertas = new ArrayList<>();
 
     if(tipoCuenta.equals(TipoRol.PERSONA_HUMANA.name())){
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
     }
     else{
-      Long idUsuario = context.sessionAttribute("idUsuario");
+      Long idUsuario = Long.parseLong(context.sessionAttribute("idUsuario"));
       Optional<PersonaJuridica> idJuridica = this.repositorioJuridica.buscarPorUsuario(idUsuario);
 
       if (idJuridica.isPresent()) {
         ofertas = this.repositorioOferta.buscarPorPersonaJuridica(idJuridica.get().getId());
       } else {
-        //TODO: manejar error
-        ofertas = Collections.emptyList();
+        context.status(404).result("Error al ver las ofertas.");
       }
     }
 
     Map<String, Object> model = new HashMap<>();
+    List<Rubro> rubros = repositorioRubro.buscarTodos(Rubro.class);
+
     model.put("ofertas", ofertas);
+    model.put("rubros", rubros);
     model.put("titulo", "Listado de ofertas");
 
     context.render(rutahbs, model);
@@ -104,7 +110,8 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       if (ofertaOptional.isPresent()) {
         Oferta oferta = ofertaOptional.get();
         OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now());
-        
+        withTransaction(()->{repositorioOfertaCanjeada.guardar(ofertaCanjeada);});
+        context.redirect("/colaboraciones/ofertas");
       } else {
         // Manejar el caso cuando no se encuentra la oferta
         context.status(404).result("Oferta no encontrada");
@@ -115,7 +122,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       UploadedFile uploadedFile = context.uploadedFile("imagen");
       if (uploadedFile != null) {
         String fileName = uploadedFile.filename();
-        pathImagen = "uploads/" + fileName; // Ruta donde se guardará la imagen
+        pathImagen = "uploads/img/" + fileName; // Ruta donde se guardará la imagen
 
         // Crear la carpeta si no existe
         File uploadsDir = new File("uploads");
@@ -137,20 +144,23 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
         }
       }
       // Crear la oferta y guardar en la base de datos
+      Optional<PersonaJuridica> personaJuridica = repositorioJuridica.buscarPorUsuario(context.sessionAttribute("idUsuario"));
+
+      if(personaJuridica.isEmpty()){
+        context.status(404).result("Oferta no encontrada");
+        return;
+      }
       Oferta oferta = Oferta
           .builder()
           .nombre(context.formParam("nombre"))
           .rubro(repositorioRubro.buscarPorNombre(context.formParam("categoria")))
           .imagen(pathImagen)
           .cantidadPuntosNecesarios(Float.parseFloat(context.formParam("puntos")))
-          .organizacion(new PersonaJuridica()) //FIXME: implementar cuando se defina cómo se guarda la sesion
+          .organizacion(personaJuridica.get())
           .build();
 
       withTransaction(()-> repositorioOferta.guardar(oferta));
     }
-
-
-
 
     context.status(HttpStatus.CREATED_201).result("Oferta creada");
     context.redirect("/colaboraciones/ofertas");
