@@ -74,16 +74,15 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
   @Override
   public void index(Context context) { // validar el usuario.
-    context.sessionAttribute("tipoCuenta", "PERSONA_HUMANA");
     //context.sessionAttribute("id");
-    String tipoCuenta = "PERSONA_HUMANA";//context.sessionAttribute("tipoCuenta");
+    String rol = context.sessionAttribute("rol");
 
-    String rutahbs = RUTAS.get(tipoCuenta);
+    String rutahbs = RUTAS.get(rol);
     Map<String, Object> model = new HashMap<>();
     List<Oferta> ofertas = new ArrayList<>();
     float puntaje=0;
-    Long id_usuario = Long.parseLong(context.sessionAttribute("idUsuario"));
-    if(tipoCuenta.equals(TipoRol.PERSONA_HUMANA.name())){
+    Long id_usuario = context.sessionAttribute("id");
+    if(rol.equals(TipoRol.PERSONA_HUMANA.name())){
       Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
       puntaje = personaHumana.get().getPuntajeActual();
       model.put("puntos", puntaje);
@@ -93,8 +92,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
     }
     else{
-      Long idUsuario = Long.parseLong(context.sessionAttribute("idUsuario"));
-      Optional<PersonaJuridica> idJuridica = this.repositorioJuridica.buscarPorUsuario(idUsuario);
+      Optional<PersonaJuridica> idJuridica = this.repositorioJuridica.buscarPorUsuario(id_usuario);
 
       if (idJuridica.isPresent()) {
         ofertas = this.repositorioOferta.buscarPorPersonaJuridica(idJuridica.get().getId());
@@ -128,15 +126,15 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
   @Override
   public void save(Context context) {
-    String tipoCuenta = context.sessionAttribute("tipoCuenta");
+    String rol = context.sessionAttribute("rol");
     String pathImagen = null;
-    if(TipoRol.PERSONA_HUMANA.name().equals(tipoCuenta)){
+    if(TipoRol.PERSONA_HUMANA.name().equals(rol)){
       OfertaDTO ofertaDTO = context.bodyAsClass(OfertaDTO.class);
       Long idOferta = ofertaDTO.getIdOferta();
       Optional<Oferta> ofertaOptional = repositorioOferta.buscarPorId(idOferta, Oferta.class);
 
       if (ofertaOptional.isPresent()) {
-        Long id_usuario = Long.parseLong(context.sessionAttribute("idUsuario"));
+        Long id_usuario = context.sessionAttribute("id");
         Optional<PersonaHumana> canjeador = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
         Oferta oferta = ofertaOptional.get();
         OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now(),canjeador.get());
@@ -180,7 +178,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
         }
       }
       // Crear la oferta y guardar en la base de datos
-      Optional<PersonaJuridica> personaJuridica = repositorioJuridica.buscarPorUsuario(Long.parseLong(context.sessionAttribute("idUsuario")));
+      Optional<PersonaJuridica> personaJuridica = repositorioJuridica.buscarPorUsuario(context.sessionAttribute("id"));
 
       if(personaJuridica.isEmpty()){
         context.status(404).result("Oferta no encontrada");
