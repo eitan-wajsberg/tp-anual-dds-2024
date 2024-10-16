@@ -70,7 +70,7 @@ public class DistribucionVianda implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDistribuidas");
+    float coeficiente = ReconocimientoTrabajoRealizado.getInstance().obtenerCoeficientes("coeficienteViandasDistribuidas");
     return cantidadViandas * coeficiente;
   }
 

@@ -61,7 +61,7 @@ public class Vianda implements Contribucion {
   }
 
   public float calcularPuntaje() {
-    return ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficienteViandasDonadas");
+    return ReconocimientoTrabajoRealizado.getInstance().obtenerCoeficientes("coeficienteViandasDonadas");
   }
 
   public TipoContribucion obtenerTipoContribucion() {

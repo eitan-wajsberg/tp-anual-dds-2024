@@ -53,7 +53,7 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
 
     try {
       Optional<PersonaHumana> personaHumana = repositorioGenerico
-          .buscarPorId(dto.getPersonaHumanaId(), PersonaHumana.class);
+          .buscarPorId(1L, PersonaHumana.class);
       Optional<PersonaJuridica> personaJuridica = repositorioGenerico
           .buscarPorId(dto.getPersonaJuridicaId(), PersonaJuridica.class);
 
@@ -77,7 +77,7 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
 
       withTransaction(() -> {
         repositorioGenerico.guardar(nuevaDonacion);
-        repositorioGenerico.actualizar(personaHumana);
+        repositorioGenerico.actualizar(personaHumana.get());
       });
       context.redirect(rutaListadoDonaciones);
     } catch (ValidacionFormularioException e) {
