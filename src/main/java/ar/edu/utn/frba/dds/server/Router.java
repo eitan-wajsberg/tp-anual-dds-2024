@@ -121,9 +121,13 @@ public class Router {
     // Mapa
     app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index);  // Lista de heladeras en el mapa
     app.get("/mapaHeladeras/{heladeraId}/HeladeraParticular", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::show);  // Detalle de una heladera
+    app.get("/mapaHeladeras/PersonaJuridica", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::indexFiltro);
+    app.get("/mapaHeladeras/PersonaJuridica/{heladeraId}/HeladeraParticular", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::showSelect);
+
     // Suscripcion
-    app.get("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaHumanaId}/nueva", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create);
-    app.post("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaHumanaId}", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save);
+    app.get("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaId}/formulario", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create);
+    app.post("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaId}/suscribir", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save);
+
     //Reporte de Falla
     app.get("/reportarFalla/{heladeraId}/reportar", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::create);
     app.post("/reportarFalla/{heladeraId}/persona/{personaId}", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::save);
