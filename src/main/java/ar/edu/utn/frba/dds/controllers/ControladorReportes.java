@@ -10,8 +10,7 @@ import java.util.ArrayList;
 
 public class ControladorReportes {
   private final String rutaReportes = "admin/adminReportes.hbs";
-  private final String rutaBaseReportes = "src/main/resources/public/reportes";
-
+  private final String rutaBaseReportes = "src/main/resources/reportes";
 
   public void index(Context context) {
     List<Reporte> reportes = new ArrayList<>();
@@ -37,6 +36,8 @@ public class ControladorReportes {
 
     context.render(rutaReportes, model);
   }
+
+
 
   @Data
   public static class Reporte {
