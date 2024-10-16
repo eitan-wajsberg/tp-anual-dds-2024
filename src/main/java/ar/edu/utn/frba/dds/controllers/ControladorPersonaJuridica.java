@@ -7,7 +7,7 @@ import io.javalin.http.Context;
 
 public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimplePersistenceUnit {
 
-  private RepositorioPersonaJuridica repositorioPersonaJuridica;
+  private RepositorioGenerico repositorio;
 
   public ControladorPersonaJuridica(RepositorioPersonaJuridica repositorioPersonaJuridica) {
     this.repositorioPersonaJuridica = repositorioPersonaJuridica;
