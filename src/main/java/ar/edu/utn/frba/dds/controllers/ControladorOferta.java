@@ -225,6 +225,21 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
   @Override
   public void delete(Context context) {
-    // TODO
+    // TODO eliminar oferta
+
   }
+
+  public void verOfertasCanjeadas(Context context) {
+    Long idUsuario = Long.parseLong(context.sessionAttribute("idUsuario"));
+    Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(idUsuario);
+    List<OfertaCanjeada> ofertasCanjeadas = repositorioOfertaCanjeada.buscarPorPersonaHumana(personaHumana.get().getId());
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("titulo", "Mis ofertas canjeadas");
+    model.put("ofertas canjeadas", ofertasCanjeadas);
+
+    // Asumiendo que tienes un método para renderizar la vista de ofertas canjeadas
+    context.render("colaboraciones/ofertasCanjeadas.hbs", model);
+  }
+
 }

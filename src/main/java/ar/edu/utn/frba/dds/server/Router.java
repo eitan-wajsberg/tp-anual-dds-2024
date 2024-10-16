@@ -52,10 +52,11 @@ public class Router {
     //         Persona jurídica: ver sus ofertas, agregar oferta.
     app.get("/ofertas", ServiceLocator.instanceOf(ControladorOferta.class)::index);
     app.get("/ofertas/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::create);
+    app.get("/ofertas/canjeadas", ServiceLocator.instanceOf(ControladorOferta.class)::verOfertasCanjeadas);
 
     app.post("/ofertas/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::save);
     app.post("/ofertas/canjearOferta", ServiceLocator.instanceOf(ControladorOferta.class):: save);
-
+    app.post("ofertas/{id}/eliminacion", ServiceLocator.instanceOf(ControladorOferta.class)::delete);
 
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
