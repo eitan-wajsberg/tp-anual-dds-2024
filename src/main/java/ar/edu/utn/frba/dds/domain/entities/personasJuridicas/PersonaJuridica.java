@@ -107,14 +107,15 @@ public class PersonaJuridica {
 
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
-    Rubro rubro = Rubro.fromDTO(dto.getRubroDTO());
+    Rubro rubro = new Rubro(dto.getRubro()); //TODO: FIXME
 
     return PersonaJuridica.builder()
         .razonSocial(dto.getRazonSocial())
         .tipo(TipoPersonaJuridica.valueOf(dto.getTipo()))
         .contacto(contacto)
         .direccion(direccion)
-        .contribucionesElegidas(dto.getFormasContribucionHumanasSet())
+        .rubro(rubro)
+        .contribucionesElegidas(dto.getContribucionesElegidas())
         .rubro(rubro)
         .build();
   }
@@ -129,7 +130,7 @@ public class PersonaJuridica {
 
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
-    Rubro rubro = Rubro.fromDTO(dto.getRubroDTO());
+    Rubro rubro = new Rubro(dto.getRubro()); //TODO: FIXME
 
     if (!this.contacto.equals(contacto)) {
       this.setContacto(contacto);
@@ -139,7 +140,7 @@ public class PersonaJuridica {
       this.setDireccion(direccion);
     }
 
-    if (!this.contacto.equals(rubro)) {
+    if (!this.rubro.equals(rubro)) {
       this.setRubro(rubro);
     }
   }
@@ -156,8 +157,8 @@ public class PersonaJuridica {
       throw new ValidacionFormularioException("La razón social debe tener entre 2 y 100 caracteres.");
     }
   }
-  private static void validarFormasContribucion(PersonaHumanaDTO dto) {
-    if (dto.getFormasContribucionHumanasSet() == null || dto.getFormasContribucionHumanasSet().isEmpty()) {
+  private static void validarFormasContribucion(PersonaJuridicaDTO dto) {
+    if (dto.getContribucionesElegidas() == null || dto.getContribucionesElegidas().isEmpty()) {
       throw new ValidacionFormularioException("Al menos una forma de contribución debe ser seleccionada.");
     }
   }
