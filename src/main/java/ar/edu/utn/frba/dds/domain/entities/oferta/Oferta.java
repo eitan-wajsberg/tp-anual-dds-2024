@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,9 @@ import java.time.LocalDateTime;
 
 @Getter @Setter
 @Entity @Table(name="oferta")
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Oferta{
     @Id @GeneratedValue
     private Long id;

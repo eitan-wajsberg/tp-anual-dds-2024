@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.domain.repositories.imp;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import java.util.Optional;
 
@@ -17,5 +18,13 @@ public class RepositorioPersonaHumana extends Repositorio {
 
   public Optional<PersonaHumana> buscarPorId(Long id){
     return buscarPorId(id, PersonaHumana.class);
+  }
+  public Optional<PersonaHumana> buscarPorUsuario(Long idUsuario){
+    return entityManager()
+        .createQuery("from " + PersonaHumana.class.getName() + " WHERE usuario_id = :dato")
+        .setParameter("dato", idUsuario)
+        .getResultList()
+        .stream()
+        .findFirst();
   }
 }
