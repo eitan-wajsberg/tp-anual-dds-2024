@@ -1,9 +1,34 @@
 package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
-import ar.edu.utn.frba.dds.controllers.*;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
+import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
+import ar.edu.utn.frba.dds.controllers.ControladorDistribucionVianda;
+import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
+import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
+import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
+import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladeras;
+import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorMapaHeladeras;
+import ar.edu.utn.frba.dds.controllers.ControladorOferta;
+import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
+import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
+import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
+import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
+import ar.edu.utn.frba.dds.controllers.ControladorReportes;
+import ar.edu.utn.frba.dds.controllers.ControladorSuscripcion;
+import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
+import com.itextpdf.text.ListLabel;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.Handler;
+import io.javalin.security.RouteRole;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class Router {
 
@@ -78,6 +103,16 @@ public class Router {
     app.get("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit);
     app.post("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::update);
     app.post("/distribucionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit);
+
+    //ofertas. Persona humana: ver ofertas, canjear oferta
+    //         Persona jurídica: ver sus ofertas, agregar oferta.
+    app.get("/ofertas", ServiceLocator.instanceOf(ControladorOferta.class)::index);
+    app.get("/ofertas/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::create);
+    app.get("/ofertas/canjeadas", ServiceLocator.instanceOf(ControladorOferta.class)::verOfertasCanjeadas);
+
+    app.post("/ofertas/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::save);
+    app.post("/ofertas/canjearOferta", ServiceLocator.instanceOf(ControladorOferta.class):: save);
+    app.post("ofertas/{id}/eliminacion", ServiceLocator.instanceOf(ControladorOferta.class)::delete);
 
     // Inicio
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
