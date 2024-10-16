@@ -8,6 +8,8 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +18,8 @@ import lombok.Setter;
 @Entity
 @Table(name="distribucion_vianda")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class DistribucionVianda implements Contribucion {
   @Id
   @GeneratedValue
