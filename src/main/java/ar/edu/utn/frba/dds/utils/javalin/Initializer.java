@@ -8,7 +8,6 @@ import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.UnidadFrecuencia;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.puntosRecomendados.servicioRecomendacionDonacion.Personas;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
@@ -20,9 +19,9 @@ public class Initializer implements WithSimplePersistenceUnit {
 
   public static void init() {
     // FIXME: No se asigna persona humana responsable a las contribuciones y por ende falla la persistencia 😁
-    //inicializarPersonasHumanas();
-    inicializarDonacionesViandas();
-    inicializarDonacionesDinero();
+    // inicializarPersonasHumanas();
+    // inicializarDonacionesViandas();
+    // inicializarDonacionesDinero();
   }
 
   private static void inicializarDonacionesViandas() {
