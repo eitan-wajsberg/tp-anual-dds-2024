@@ -53,6 +53,7 @@ public class ControladorMapaHeladeras implements ICrudViewsHandler, WithSimplePe
             Map<String, Object> model = new HashMap<>();
             model.put("heladeras", heladeras);
             model.put("jsonHeladeras", jsonHeladeras);
+            model.put("buscadorMapa",true);
 
             context.render(rutaListadoHbs, model);
         } catch (Exception e) {

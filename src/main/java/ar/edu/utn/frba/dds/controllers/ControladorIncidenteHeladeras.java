@@ -45,7 +45,7 @@ public class ControladorIncidenteHeladeras implements ICrudViewsHandler, WithSim
     public void create(Context context) {
         // Renderiza el formulario para reportar un incidente
         try {
-            Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("id")), Heladera.class);
+            Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("heladeraId")), Heladera.class);
             if (heladera.isPresent()) {
                 Map<String, Object> model = new HashMap<>();
                 model.put("heladeraId", heladera.get().getId());
