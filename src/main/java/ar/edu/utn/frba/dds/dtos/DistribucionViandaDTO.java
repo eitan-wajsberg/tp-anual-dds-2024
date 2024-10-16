@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DistribucionViandaOutputDTO {
+public class DistribucionViandaDTO {
     private Long id;
     private Long heladeraOrigenId;
     private String heladeraOrigenNombre;
