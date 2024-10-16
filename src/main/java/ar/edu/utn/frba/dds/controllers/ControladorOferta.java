@@ -57,7 +57,8 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
   @Override
   public void index(Context context) { // validar el usuario.
-    String tipoCuenta = "PERSONA_HUMANA";//context.sessionAttribute("tipoCuenta");
+    context.sessionAttribute("idUsuario","20");
+    String tipoCuenta = "PERSONA_JURIDICA";//context.sessionAttribute("tipoCuenta");
     String rutahbs = RUTAS.get(tipoCuenta);
 
     List<Oferta> ofertas = new ArrayList<>();
@@ -120,15 +121,17 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     }
     else{
       UploadedFile uploadedFile = context.uploadedFile("imagen");
-      if (uploadedFile != null) {
+      System.out.println("Uploaded file: " + uploadedFile);
+      System.out.println("TAMAÑO DEL ARCHIVO SUBIDO " + uploadedFile.size());
+      if (uploadedFile != null && uploadedFile.size()>0) {
         String fileName = uploadedFile.filename();
-        pathImagen = "uploads/img/" + fileName; // Ruta donde se guardará la imagen
+        pathImagen = "img/" + fileName; // Ruta donde se guardará la imagen
 
         // Crear la carpeta si no existe
-        File uploadsDir = new File("uploads");
-        if (!uploadsDir.exists()) {
+        File uploadsDir = new File("src/main/resources/public/img");
+        /*if (!uploadsDir.exists()) {
           uploadsDir.mkdirs();
-        }
+        }*/
 
         // Guardar el archivo
         try (InputStream inputStream = uploadedFile.content();
@@ -144,7 +147,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
         }
       }
       // Crear la oferta y guardar en la base de datos
-      Optional<PersonaJuridica> personaJuridica = repositorioJuridica.buscarPorUsuario(context.sessionAttribute("idUsuario"));
+      Optional<PersonaJuridica> personaJuridica = repositorioJuridica.buscarPorUsuario(Long.parseLong(context.sessionAttribute("idUsuario")));
 
       if(personaJuridica.isEmpty()){
         context.status(404).result("Oferta no encontrada");
@@ -153,7 +156,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       Oferta oferta = Oferta
           .builder()
           .nombre(context.formParam("nombre"))
-          .rubro(repositorioRubro.buscarPorNombre(context.formParam("categoria")))
+          .rubro(repositorioRubro.buscarPorNombre(context.formParam("categoria")).get())
           .imagen(pathImagen)
           .cantidadPuntosNecesarios(Float.parseFloat(context.formParam("puntos")))
           .organizacion(personaJuridica.get())
@@ -163,7 +166,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     }
 
     context.status(HttpStatus.CREATED_201).result("Oferta creada");
-    context.redirect("/colaboraciones/ofertas");
+    context.redirect("/ofertas");
 
   }
 

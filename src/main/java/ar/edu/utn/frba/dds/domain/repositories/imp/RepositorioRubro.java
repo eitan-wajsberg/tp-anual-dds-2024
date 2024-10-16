@@ -7,11 +7,13 @@ import java.util.Optional;
 import javax.persistence.NoResultException;
 
 public class RepositorioRubro extends Repositorio {
-  public Rubro buscarPorNombre(String nombre) {
-    Rubro rubro = (Rubro) entityManager()
-        .createQuery("SELECT r FROM " + Rubro.class.getName() + " r WHERE r.nombre = :nombre")
+  public Optional<Rubro> buscarPorNombre(String nombre) {
+    return entityManager()
+        .createQuery("from " + Rubro.class.getName() + " WHERE nombre = :nombre")
         .setParameter("nombre", nombre)
-        .getSingleResult();
-    return rubro;
+        .getResultList()
+        .stream()
+        .findFirst();
+
   }
 }
