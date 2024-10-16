@@ -8,6 +8,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorInicioSesion;
 import ar.edu.utn.frba.dds.controllers.ControladorMapaHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorOferta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
@@ -40,6 +41,10 @@ public class Router {
     app.post("/tipoCuenta", ServiceLocator.instanceOf(ControladorEleccionTipoCuenta.class)::save);
     app.get("/usuarios/nuevo", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::create);
     app.post("/usuarios", ServiceLocator.instanceOf(ControladorRegistroUsuario.class)::save);
+
+    // LogIn
+    app.get("/login", ServiceLocator.instanceOf(ControladorInicioSesion.class)::create);
+    app.post("/login", ServiceLocator.instanceOf(ControladorInicioSesion.class)::logIn);
 
     // Tecnico
     app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorTecnicos.class)::create);
