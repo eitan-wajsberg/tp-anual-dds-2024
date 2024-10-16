@@ -242,6 +242,7 @@ public class PersonaHumana extends IObserverNotificacion {
     validarCamposObligatorios(dto);
     validarLongitudNombreYApellido(dto);
     validarFechaNacimiento(dto);
+    validarFormasContribucion(dto);
 
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
@@ -250,10 +251,11 @@ public class PersonaHumana extends IObserverNotificacion {
     return PersonaHumana.builder()
         .nombre(dto.getNombre())
         .apellido(dto.getApellido())
-        .fechaNacimiento(LocalDate.parse(dto.getFechaNacimiento())) // Assuming this format is correct
+        .fechaNacimiento(LocalDate.parse(dto.getFechaNacimiento()))
         .direccion(direccion)
         .contacto(contacto)
         .documento(documento)
+        .contribucionesElegidas(dto.getFormasContribucionHumanasSet())
         .build();
   }
 
@@ -282,10 +284,17 @@ public class PersonaHumana extends IObserverNotificacion {
     }
   }
 
+  private static void validarFormasContribucion(PersonaHumanaDTO dto) {
+    if (dto.getFormasContribucionHumanasSet() == null || dto.getFormasContribucionHumanasSet().isEmpty()) {
+      throw new ValidacionFormularioException("Al menos una forma de contribución debe ser seleccionada.");
+    }
+  }
+
   public void actualizarFromDto(PersonaHumanaDTO dto) {
     validarCamposObligatorios(dto);
     validarLongitudNombreYApellido(dto);
     validarFechaNacimiento(dto);
+    validarFormasContribucion(dto);
 
     this.nombre = dto.getNombre();
     this.apellido = dto.getApellido();
@@ -305,6 +314,10 @@ public class PersonaHumana extends IObserverNotificacion {
 
     if (!this.contacto.equals(contacto)) {
       this.setContacto(contacto);
+    }
+
+    if (!this.contribucionesElegidas.equals(dto.getFormasContribucionHumanasSet())) {
+      contribucionesElegidas.addAll(dto.getFormasContribucionHumanasSet());
     }
   }
 

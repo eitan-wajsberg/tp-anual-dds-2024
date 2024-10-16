@@ -1,22 +1,27 @@
 package ar.edu.utn.frba.dds.dtos;
 
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.FormasContribucionHumanas;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import io.javalin.http.Context;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 public class PersonaHumanaDTO implements DTO {
-  private Long id; //TODO F: (?)
+  private Long id;
   private String nombre;
   private String apellido;
   private String fechaNacimiento;
   private ContactoDTO contactoDTO;
   private DocumentoDTO documentoDTO;
   private DireccionDTO direccionDTO;
+  private Set<FormasContribucionHumanas> formasContribucionHumanasSet = new HashSet<>();
+
 
   public PersonaHumanaDTO(PersonaHumana personaHumana) {
     this.id = personaHumana.getId();
@@ -39,6 +44,10 @@ public class PersonaHumanaDTO implements DTO {
     this.contactoDTO.obtenerFormulario(context);
     this.documentoDTO = new DocumentoDTO();
     this.documentoDTO.obtenerFormulario(context);
+    String[] contribucionesSeleccionadas = context.formParams("formaColaboracion").toArray(new String[0]);
+    for (String contribucion : contribucionesSeleccionadas) {
+      formasContribucionHumanasSet.add(FormasContribucionHumanas.valueOf(contribucion));
+    }
   }
 
   @Override
