@@ -40,4 +40,4 @@ target/**
 .env
 
 # persitence para no pisar nuestras credenciales
-/src/main/resources/META-INF/persistence.xml
+src/main/resources/META-INF/persistence.xml
