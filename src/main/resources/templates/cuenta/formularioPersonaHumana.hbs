@@ -109,16 +109,17 @@
                     </div>
                 {{/if}}
             </form>
-
             {{#if edicion}}
                 <div class="col-12 mt-4">
-                    <button type="button" class="btn btn-danger w-100 rounded-button" id="deleteButton">Eliminar cuentta</button>
+                    <button type="button" class="btn btn-danger w-100 rounded-button" id="deleteButton" onclick="openModal('{{dto.id}}', 'personaHumana', '{{dto.nombre}} {{dto.apellido}}')">Eliminar cuenta</button>
                 </div>
-                <form id="deleteForm" method="POST" action="/personaHumana/{{id}}/eliminacion" style="display: none;"></form>
             {{/if}}
         </div>
     </div>
     <script src="/js/manejadorFormulario.js"></script>
+    <script src="/js/modalEliminacion.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Mis datos personales" mostrarPersonaHumana=true mostrarSeccion=true seccion="Mis datos personales"}}
