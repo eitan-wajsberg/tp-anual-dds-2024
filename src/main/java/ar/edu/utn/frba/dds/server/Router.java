@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.controllers.*;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
 import io.javalin.Javalin;
 
 public class Router {
@@ -82,16 +83,15 @@ public class Router {
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
     app.get("", ServiceLocator.instanceOf(ControladorInicio.class)::create);
 
-    //Mapa
-    app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index);
-    app.get("/mapaHeladeras/{id}/HeladeraParticular", ctx -> {
-      String id = ctx.pathParam("id");
-      ControladorMapaHeladeras controladorMapaHeladeras = ServiceLocator.instanceOf(ControladorMapaHeladeras.class);
-      controladorMapaHeladeras.mostrarHeladeraParticular(ctx, id);
-    });
+    // Mapa
+    app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index);  // Lista de heladeras en el mapa
+    app.get("/mapaHeladeras/{heladeraId}", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::show);  // Detalle de una heladera
     // Suscripcion
-    app.get("/mapaHeladeras/{id}/HeladeraParticular/{id-usuario}/Suscribir", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create);
-
+    app.get("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaHumanaId}/nueva", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create);
+    app.post("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaHumanaId}", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save);
+    //Reporte de Falla
+    app.get("/mapaHeladeras/{heladeraId}/reportarFalla/persona/{personaHumanaId}/nueva", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::create);
+    app.post("/mapaHeladeras/{heladeraId}/reportarFalla/persona/{personaHumanaId}", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::save);
 
   }
 }
