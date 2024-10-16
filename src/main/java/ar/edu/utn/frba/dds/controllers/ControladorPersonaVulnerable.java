@@ -39,9 +39,6 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   public void index(Context context) {
     String nombre = context.sessionAttribute("nombre");
     String id = context.sessionAttribute("id");
-    if (id == null) {
-      throw new AccesoDenegadoException("No se ha encontrado una sesion", 401);
-    }
 
     Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(Long.valueOf(id));
 
