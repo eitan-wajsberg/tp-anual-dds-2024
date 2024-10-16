@@ -177,6 +177,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   public void solicitarTarjetas(Context context) {
     try {
+      // TODO: Sacar lo hardcodeado
       // Obtiene el registrador, o lanza una excepción si no se encuentra
       PersonaHumana registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class)
           .orElseThrow(() -> new ValidacionFormularioException("No se ha encontrado al solicitante. Reintentar."));
@@ -227,5 +228,4 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       context.render(rutaSolicitudHbs, Map.of("error", "Ocurrió un error inesperado. Por favor, intente nuevamente."));
     }
   }
-
 }
