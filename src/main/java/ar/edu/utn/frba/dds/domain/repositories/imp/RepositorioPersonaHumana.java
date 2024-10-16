@@ -14,4 +14,8 @@ public class RepositorioPersonaHumana extends Repositorio {
       //  .getResultList().stream().findFirst();
 
   }
+
+  public Optional<PersonaHumana> buscarPorId(Long id){
+    return buscarPorId(id, PersonaHumana.class);
+  }
 }

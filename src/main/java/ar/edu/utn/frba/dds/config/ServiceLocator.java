@@ -94,7 +94,9 @@ public class ServiceLocator {
       } else if (componentName.equals(RepositorioHeladera.class.getName())) {
         instance = new RepositorioHeladera();
       } else if (componentName.equals(ControladorDistribucionVianda.class.getName())) {
-        instance = new ControladorDistribucionVianda(instanceOf(RepositorioDistribucionVianda.class));
+        instance = new ControladorDistribucionVianda(instanceOf(RepositorioDistribucionVianda.class)
+            , instanceOf(RepositorioPersonaHumana.class)
+            , instanceOf(RepositorioHeladera.class));
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
       }
