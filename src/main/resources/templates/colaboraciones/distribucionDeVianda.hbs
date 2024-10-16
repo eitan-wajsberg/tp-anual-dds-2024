@@ -2,9 +2,6 @@
 <section class="row flex-grow-1  ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
     <!-- Sidebar -->
     <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4 my-4">
-        <a href="listadoDistribucionViandas.html" class="d-inline-block dark-text me-2">
-            <span class="iconify align-middle" data-icon="ep:back" data-width="24" data-height="24"></span>
-        </a>
         <div class="pt-5 pb-2"></div> <!-- separador -->
         <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
         <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/edicion{{/if}}" {{/unless}}>
