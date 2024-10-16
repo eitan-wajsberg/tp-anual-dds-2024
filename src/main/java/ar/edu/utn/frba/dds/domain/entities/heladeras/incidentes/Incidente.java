@@ -10,6 +10,7 @@ import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
 
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
+import ar.edu.utn.frba.dds.dtos.IncidenteDTO;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import ar.edu.utn.frba.dds.utils.manejos.ManejoDistancias;
 import java.io.UnsupportedEncodingException;
@@ -70,16 +71,19 @@ public class Incidente {
     @Transient
     private RepositorioTecnicos repositorioTecnicos;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name="id_personaHumana", referencedColumnName = "id")
     private PersonaHumana colaborador;
 
+    @Setter @Getter
     @Column(name="descripcion_del_colaborador")
     private String descripcionDelColaborador;
 
     @Column(name="ruta_foto")
     private String foto;
 
+    @Setter
     @Convert(converter= TipoAlertaConverter.class)
     @Column(name="tipo_alerta")
     private TipoAlerta tipoAlerta;
@@ -124,5 +128,30 @@ public class Incidente {
                 + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica",
             LocalDateTime.now()
         ));
+    }
+    public static Incidente fromDTO(IncidenteDTO dto, Heladera heladera, PersonaHumana colaborador) {
+        Incidente incidente = new Incidente();
+
+        incidente.heladera = heladera;
+        incidente.colaborador = colaborador;
+
+        // Determinar el tipo de incidente en base al DTO
+        switch (dto.getTipoIncidente()) {
+            case "FALLA_TECNICA":
+                incidente.tipoIncidente = new FallaTecnica();
+                incidente.tipoAlerta = null;
+                break;
+            case "FRAUDE","FALLA_CONEXION","FALLA_TEMPERATURA","OTRO":
+                incidente.tipoIncidente = new Alerta();
+                incidente.tipoAlerta = TipoAlerta.valueOf(dto.getTipoAlerta());
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de incidente no reconocido: " + dto.getTipoIncidente());
+        }
+
+        // Asignar la descripción
+        incidente.descripcionDelColaborador = dto.getDescripcionDelColaborador();
+
+        return incidente;
     }
 }

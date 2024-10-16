@@ -25,8 +25,6 @@ public class PersonaVulnerableDTO implements DTO {
     this.setNombre(vulnerable.getNombre());
     this.setApellido(vulnerable.getApellido());
     this.setMenoresAcargo(vulnerable.getMenoresAcargo().toString());
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    this.setFechaDeNacimiento(vulnerable.getFechaDeNacimiento().format(formatter));
     this.setFechaDeNacimiento(vulnerable.getFechaDeNacimiento().toString());
     this.setDireccionDTO(new DireccionDTO(vulnerable.getDireccion()));
     this.setDocumentoDTO(new DocumentoDTO(vulnerable.getDocumento()));

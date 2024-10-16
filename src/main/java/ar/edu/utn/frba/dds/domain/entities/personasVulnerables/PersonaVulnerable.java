@@ -145,19 +145,25 @@ public class PersonaVulnerable {
   }
 
   private static int obtenerMenoresACargo(PersonaVulnerableDTO dto) {
-    if (dto.getMenoresAcargo().isEmpty()) {
-      return 0;
+    if (dto.getMenoresAcargo() == null || dto.getMenoresAcargo().isEmpty()) {
+      return 0; // Si no hay valor, se asume que no hay menores a cargo
     }
 
     int menores;
     try {
       menores = Integer.parseInt(dto.getMenoresAcargo());
     } catch (NumberFormatException e) {
-      throw new ValidacionFormularioException("El campo de menores a cargo debe ser un número");
+      throw new ValidacionFormularioException("El campo de menores a cargo debe ser un número válido");
     }
 
     if (menores < 0) {
       throw new ValidacionFormularioException("La cantidad de menores a cargo no puede ser negativa");
+    }
+
+    // Aquí puedes establecer un límite máximo, por ejemplo, 10.
+    final int MAX_MENORES_ACARGO = 10;
+    if (menores > MAX_MENORES_ACARGO) {
+      throw new ValidacionFormularioException("La cantidad de menores a cargo no puede exceder " + MAX_MENORES_ACARGO);
     }
 
     return menores;

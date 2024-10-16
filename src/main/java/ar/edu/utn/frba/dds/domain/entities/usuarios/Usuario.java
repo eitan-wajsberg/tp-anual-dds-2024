@@ -54,6 +54,10 @@ public class Usuario {
     this.clave = clave;
   }
 
+  public void setClaveEncriptada(String clave) {
+    this.clave = BCrypt.hashpw(clave, BCrypt.gensalt());
+  }
+
   public boolean verificarClave(String claveIngresada) {
     return BCrypt.checkpw(claveIngresada, this.clave);
   }
@@ -66,8 +70,7 @@ public class Usuario {
 
     Usuario usuario = new Usuario();
     usuario.setNombre(dto.getNombre());
-    String claveEncriptada = BCrypt.hashpw(dto.getClave(), BCrypt.gensalt());
-    usuario.setClave(claveEncriptada);
+    usuario.setClaveEncriptada(dto.getClave());
 
     return usuario;
   }

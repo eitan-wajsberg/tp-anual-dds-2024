@@ -36,5 +36,5 @@ target/**
 # tmp de carga masiva
 /tmp
 
-#
-/resources/META-INF/persistence.xml
+# variables de entorno
+.env

@@ -9,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 
 public class AdaptadaJavaXMail implements AdapterMail {
 
+  // TODO: Pasar a sacar las variables de entorno del .env
   private static final String username = System.getenv("USER_DDS_TPA");
   private static final String password = System.getenv("PASSWORD_DDS_TPA");
 
@@ -35,20 +36,5 @@ public class AdaptadaJavaXMail implements AdapterMail {
 
     Transport.send(message);
   }
-
-  //  public static void main(String[] args) {
-  //
-  //    MailSender mailSender = new MailSender();
-  //    Mensaje mensaje = new Mensaje("Importantisimo", "Lavar los platos", LocalDateTime.now());
-  //
-  //    try {
-  //      mailSender.enviar(mensaje, "fgaunasoma@frba.utn.edu.ar");
-  //      System.out.println("Email sent successfully.");
-  //    } catch (MessagingException e) {
-  //      System.out.println("Failed to send email: " + e.getMessage());
-  //    } catch (UnsupportedEncodingException e) {
-  //      throw new RuntimeException(e);
-  //    }
-  //  }
 }
 

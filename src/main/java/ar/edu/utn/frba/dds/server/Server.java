@@ -9,9 +9,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
-import io.javalin.config.MultipartConfig;
 import io.javalin.http.HttpStatus;
-import jakarta.servlet.MultipartConfigElement;
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -44,6 +42,11 @@ public class Server {
       config.staticFiles.add(staticFiles -> {
         staticFiles.hostedPath = "/";
         staticFiles.directory = "/public";
+      });
+
+      config.staticFiles.add(staticFiles -> {
+        staticFiles.hostedPath = "/reportes";
+        staticFiles.directory = "/reportes";
       });
 
       config.fileRenderer(new JavalinRenderer().register("hbs", (path, model, context) -> {

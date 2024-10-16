@@ -5,21 +5,33 @@ import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
+import ar.edu.utn.frba.dds.dtos.DonacionDineroDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import javax.validation.constraints.Null;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.time.LocalDate;
-
-@Getter @Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name="donacion_dinero")
+@Table(name = "donacion_dinero")
 public class DonacionDinero implements Contribucion {
 
   @Id  @GeneratedValue
@@ -28,11 +40,9 @@ public class DonacionDinero implements Contribucion {
   @Column(name = "monto", nullable = false)
   private float monto;
 
-  @Column(name = "frecuencia", nullable = false)
-  private int frecuencia;
-
+  @Enumerated(EnumType.STRING)
   @Column(name = "unidadFrecuencia", nullable = false)
-  private String unidadFrecuencia;
+  private UnidadFrecuencia unidadFrecuencia;
 
   @Column(name = "fecha", columnDefinition = "DATE", nullable = false)
   private LocalDate fecha;
@@ -45,8 +55,9 @@ public class DonacionDinero implements Contribucion {
   @JoinColumn(name = "id_personaJuridica", referencedColumnName = "id")
   private PersonaJuridica personaJuridica;
 
-  public float calcularPuntaje(){
-    float coeficiente = ReconocimientoTrabajoRealizado.obtenerCoeficientes("coeficientePesosDonados");
+  public float calcularPuntaje() {
+    float coeficiente = ReconocimientoTrabajoRealizado
+        .obtenerCoeficientes("coeficientePesosDonados");
     return monto * coeficiente;
   }
 
@@ -56,5 +67,39 @@ public class DonacionDinero implements Contribucion {
 
   public LocalDate obtenerFechaRegistro() {
     return this.fecha;
+  }
+
+  public static DonacionDinero fromDTO(DonacionDineroDTO dto) {
+    validarCamposObligatorios(dto);
+    validarMonto(dto);
+
+    return DonacionDinero.builder()
+        .monto(Float.parseFloat(dto.getMonto()))
+        .unidadFrecuencia(UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia()))
+        .fecha(dto.getFecha())
+        .build();
+  }
+
+  public void actualizarFromDto(DonacionDineroDTO dto) {
+    validarCamposObligatorios(dto);
+    validarMonto(dto);
+
+    this.monto = Float.parseFloat(dto.getMonto());
+    this.unidadFrecuencia = UnidadFrecuencia.valueOf(dto.getUnidadFrecuencia());
+    this.fecha = dto.getFecha();
+
+  }
+
+  private static void validarCamposObligatorios(DonacionDineroDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        Pair.of("monto", dto.getMonto()),
+        Pair.of("unidad de frecuencia", dto.getUnidadFrecuencia())
+    );
+  }
+
+  private static void validarMonto(DonacionDineroDTO dto) {
+    if (Float.parseFloat(dto.getMonto()) <= 0) {
+      throw new ValidacionFormularioException("El monto debe ser mayor que cero.");
+    }
   }
 }
