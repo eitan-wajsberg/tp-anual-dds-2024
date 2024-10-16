@@ -1,64 +1,80 @@
 package ar.edu.utn.frba.dds.controllers;
 
-
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Desperfecto;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.FaltanNViandas;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.QuedanNViandas;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Desperfecto;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioSuscripcion;
 import ar.edu.utn.frba.dds.dtos.SuscripcionDTO;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class ControladorSuscripcion implements ICrudViewsHandler, WithSimplePersistenceUnit {
+public class ControladorSuscripcion implements ICrudViewsHandler, WithSimplePersistenceUnit{
 
+    private final String rutaSuscripcion = "heladeras/SuscripcionAHeladera.hbs";
+
+    private RepositorioHeladera repositorioHeladera;
     private RepositorioSuscripcion repositorioSuscripcion;
 
-    public ControladorSuscripcion(RepositorioSuscripcion repositorioSuscripcion) {
+    public ControladorSuscripcion(RepositorioHeladera repositorioHeladera, RepositorioSuscripcion repositorioSuscripcion) {
+        this.repositorioHeladera = repositorioHeladera;
         this.repositorioSuscripcion = repositorioSuscripcion;
     }
 
+
     @Override
     public void index(Context context) {
+
     }
 
     @Override
     public void show(Context context) {
-        // En este caso, no tiene sentido hacer este metodo.
+
     }
 
-    @Override
-    public void create(Context ctx) {
-        // Obtener el DTO desde el contexto del formulario
+    public void create(Context context) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("heladeraId", context.pathParam("id")); // Pasar el ID de la heladera al modelo
+        model.put("idPersonaHumana", context.pathParam("idPersonaHumana")); // Pasar el ID del usuario
+        context.render(rutaSuscripcion, model);
+    }
+
+    public void save(Context ctx) {
         SuscripcionDTO dto = new SuscripcionDTO();
         dto.obtenerFormulario(ctx);
 
-        // Obtener el tipo de suscripción desde el formulario
         String tipoSuscripcion = ctx.formParam("tipoSuscripcion");
-
         Suscripcion suscripcion;
 
-        // Condicionar según el tipo de suscripción
-        if ("FALTAN_N_VIANDAS".equals(tipoSuscripcion)) {
-            suscripcion = FaltanNViandas.fromDTO(dto);
-        } else if ("QUEDAN_N_VIANDAS".equals(tipoSuscripcion)) {
-            suscripcion = QuedanNViandas.fromDTO(dto);
-        } else if ("DESPERFECTO".equals(tipoSuscripcion)) {
-            suscripcion = Desperfecto.fromDTO(dto);
-        } else {
-            throw new IllegalArgumentException("Tipo de suscripción no reconocido.");
+        try {
+            if ("FALTAN_N_VIANDAS".equals(tipoSuscripcion)) {
+                suscripcion = FaltanNViandas.fromDTO(dto);
+            } else if ("QUEDAN_N_VIANDAS".equals(tipoSuscripcion)) {
+                suscripcion = QuedanNViandas.fromDTO(dto);
+            } else if ("DESPERFECTO".equals(tipoSuscripcion)) {
+                suscripcion = Desperfecto.fromDTO(dto);
+            } else {
+                throw new IllegalArgumentException("Tipo de suscripción no reconocido.");
+            }
+
+            // Guardar la suscripción
+            repositorioSuscripcion.guardar(suscripcion);
+
+            // Redirigir de nuevo a la heladera particular
+            ctx.redirect("/mapaHeladeras/" + dto.getIdHeladera() + "/HeladeraParticular");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", "Error al procesar la suscripción.");
+            model.put("dto", dto);
+            ctx.render(rutaSuscripcion, model);
         }
-
-        repositorioSuscripcion.guardar(suscripcion);
-
-        // Redireccionar o responder con éxito
-        ctx.status(201).json(suscripcion);
-    }
-    @Override
-    public void save(Context context) {
-
     }
 
     @Override
@@ -75,4 +91,5 @@ public class ControladorSuscripcion implements ICrudViewsHandler, WithSimplePers
     public void delete(Context context) {
 
     }
+
 }
