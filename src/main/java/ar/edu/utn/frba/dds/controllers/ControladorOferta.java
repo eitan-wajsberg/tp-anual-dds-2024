@@ -80,7 +80,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     String rutahbs = RUTAS.get(rol);
     Map<String, Object> model = new HashMap<>();
     List<Oferta> ofertas = new ArrayList<>();
-    float puntaje=0;
+    Float puntaje=0F;
     Long id_usuario = context.sessionAttribute("id");
     if(rol.equals(TipoRol.PERSONA_HUMANA.name())){
       Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
@@ -106,7 +106,6 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     model.put("ofertas", ofertas);
     model.put("rubros", rubros);
     model.put("titulo", "Listado de ofertas");
-
     context.render(rutahbs, model);
   }
 
@@ -219,13 +218,14 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
   }
 
   public void verOfertasCanjeadas(Context context) {
-    Long idUsuario = Long.parseLong(context.sessionAttribute("idUsuario"));
+    Long idUsuario = context.sessionAttribute("id");
     Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(idUsuario);
     List<OfertaCanjeada> ofertasCanjeadas = repositorioOfertaCanjeada.buscarPorPersonaHumana(personaHumana.get().getId());
 
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Mis ofertas canjeadas");
     model.put("ofertas canjeadas", ofertasCanjeadas);
+    model.put("puntos", personaHumana.get().getPuntajeActual());
 
     // Asumiendo que tienes un método para renderizar la vista de ofertas canjeadas
     context.render("colaboraciones/ofertasCanjeadas.hbs", model);

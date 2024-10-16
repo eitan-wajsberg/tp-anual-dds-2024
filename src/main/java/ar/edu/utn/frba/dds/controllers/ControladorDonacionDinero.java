@@ -80,6 +80,7 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
         repositorioGenerico.actualizar(personaHumana.get());
       });
       context.redirect(rutaListadoDonaciones);
+
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put(ERROR, e.getMessage());
@@ -92,10 +93,11 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
   public void edit(Context context) {
     Map<String, Object> model = new HashMap<>();
     try {
-      Optional<DonacionDinero> donacion = repositorioGenerico.buscarPorId(Long.valueOf(context.pathParam("id")), DonacionDinero.class);
+      Optional<DonacionDinero> donacion = repositorioGenerico
+          .buscarPorId(Long.valueOf(context.pathParam("id")), DonacionDinero.class);
 
       if (donacion.isEmpty()) {
-        throw new ValidacionFormularioException("No existe la donación.");
+        throw new ValidacionFormularioException("No existe la donación de dinero.");
       }
 
       DonacionDineroDTO dto = new DonacionDineroDTO(donacion.get());
@@ -131,7 +133,7 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
 
       donacionExistente.get().actualizarFromDto(dtoNuevo);
       withTransaction(() -> repositorioGenerico.actualizar(donacionExistente.get()));
-      context.redirect("/donacionDinero");
+      context.redirect(rutaListadoDonaciones);
     } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       model.put("dto", dtoNuevo);
@@ -140,6 +142,7 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       model.put("id", context.pathParam("id"));
       context.render(rutaDonacionHbs, model);
     }
+
   }
 
   @Override
@@ -148,8 +151,8 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
     Optional<DonacionDinero> donacion = repositorioGenerico.buscarPorId(id, DonacionDinero.class);
 
     if (donacion.isPresent()) {
-      withTransaction(() -> repositorioGenerico.eliminarFisico(DonacionDinero.class, id));
-      context.redirect("/donacionDinero");
+      withTransaction(() -> this.repositorioGenerico.eliminarFisico(DonacionDinero.class, id));
+      context.redirect(rutaListadoDonaciones);
     } else {
       context.status(400).result("No se pudo cancelar correctamente la donación.");
     }

@@ -133,7 +133,6 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void update(Context context) {
-
     Map<String, Object> model = new HashMap<>();
     PersonaVulnerableDTO dtoNuevo = new PersonaVulnerableDTO();
     dtoNuevo.obtenerFormulario(context);
