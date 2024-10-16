@@ -120,7 +120,7 @@ public class Router {
 
     // Mapa
     app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index);  // Lista de heladeras en el mapa
-    app.get("/mapaHeladeras/{heladeraId}", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::show);  // Detalle de una heladera
+    app.get("/mapaHeladeras/{heladeraId}/HeladeraParticular", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::show);  // Detalle de una heladera
     // Suscripcion
     app.get("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaHumanaId}/nueva", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create);
     app.post("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaHumanaId}", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save);
