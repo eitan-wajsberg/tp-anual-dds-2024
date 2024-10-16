@@ -38,34 +38,26 @@ public class Router {
     app.post("/personasVulnerables/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::update);
     app.post("/personasVulnerables/{id}/eliminacion", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::delete);
 
-    // Formulario de registro: personaHumana
-    //app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create);
-    //app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save);
-    // Tras post, mostraría mensaje: "Registro realizado correctamente" + redirección a página principal
+    // PersonaHumana
+    app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create);
+    app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save); // Redirección a página principal
+    app.get("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit);
+    app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update); // Mostraría mensaje: "Cambios guardados correctamente"
 
-    // Edición de datos personales: personaHumana
-    // app.get("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit);
-    // app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update);
-    //Mostraría mensaje: "Cambios guardados correctamente"
+    // PersonaJurídica
+    //app.get("/personaJuridica/nuevo", context -> context.render("cuenta/formularioPersonaJuridica.hbs"));
+    app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create);
+    app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save); // Redirección a página principal
+    app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit);
+    app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update); //Mostraría mensaje: "Cambios guardados correctamente"
 
-    // Formulario de registro: personaJurídica
-    //app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create);
-    //app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save);
-    // Tras post, mostraría mensaje: "Registro realizado correctamente" + redirección a página principal
-
-    // Edición de datos personales: personaJuridica
-    //  app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit);
-    //  app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update);
-    //Mostraría mensaje: "Cambios guardados correctamente"
-
-    // Donacion dinero
+    // Donacion dinero 👌
     app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index);
     app.get("/donacionDinero/nuevo", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::create);
     app.post("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::save);
     app.post("/donacionDinero/{id}", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::update);
     app.get("/donacionDinero/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::edit);
     app.post("/donacionDinero/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::delete);
-
 
     // Donacion vianda
     app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index);
