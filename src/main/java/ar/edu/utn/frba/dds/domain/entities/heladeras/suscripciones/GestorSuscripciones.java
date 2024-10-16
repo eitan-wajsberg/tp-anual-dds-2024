@@ -39,4 +39,6 @@ public class GestorSuscripciones {
     return suscriptor.getDireccion().getMunicipio().equals(heladera.getDireccion().getMunicipio())
             && suscriptor.getDireccion().getProvincia().equals(heladera.getDireccion().getProvincia());
   }
+
+
 }

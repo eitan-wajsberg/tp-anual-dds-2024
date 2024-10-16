@@ -89,12 +89,14 @@ public class Router {
 
     //Mapa
     app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index);
-    // Mapa de heladeras con redirección a la página particular de una heladera
     app.get("/mapaHeladeras/{id}/HeladeraParticular", ctx -> {
       String id = ctx.pathParam("id");
       ControladorMapaHeladeras controladorMapaHeladeras = ServiceLocator.instanceOf(ControladorMapaHeladeras.class);
       controladorMapaHeladeras.mostrarHeladeraParticular(ctx, id);
     });
+    // Suscripcion
+    app.get("/mapaHeladeras/{id}/HeladeraParticular/{id-usuario}/Suscribir", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create);
+
 
   }
 }

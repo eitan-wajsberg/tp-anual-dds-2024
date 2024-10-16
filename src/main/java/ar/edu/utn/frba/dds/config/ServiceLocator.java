@@ -1,30 +1,12 @@
 package ar.edu.utn.frba.dds.config;
 
-import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
-import ar.edu.utn.frba.dds.controllers.ControladorDistribucionVianda;
-import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
-import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
-import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
-import ar.edu.utn.frba.dds.controllers.ControladorInicio;
-import ar.edu.utn.frba.dds.controllers.ControladorMapaHeladeras;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
-import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
-import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
-import ar.edu.utn.frba.dds.controllers.ControladorReportes;
-import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
+import ar.edu.utn.frba.dds.controllers.*;
 import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
 import ar.edu.utn.frba.dds.domain.adapters.AdaptadaTelegramBot;
 import ar.edu.utn.frba.dds.domain.adapters.AdaptadaWhatsAppTwillio;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDistribucionVianda;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
+import ar.edu.utn.frba.dds.domain.repositories.imp.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,7 +63,11 @@ public class ServiceLocator {
             ServiceLocator.instanceOf(RepositorioHeladera.class),
             ServiceLocator.instanceOf(Repositorio.class)
         );
-      } else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
+      } else if (componentName.equals(ControladorSuscripcion.class.getName())) {
+        instance = new ControladorSuscripcion(
+                ServiceLocator.instanceOf(RepositorioSuscripcion.class)
+        );
+      }else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
         instance = new RepositorioPersonaHumana();
       } else if (componentName.equals(RepositorioPersonaJuridica.class.getName())) {
         instance = new RepositorioPersonaJuridica();
@@ -103,6 +89,8 @@ public class ServiceLocator {
         instance = new ControladorDistribucionVianda(instanceOf(RepositorioDistribucionVianda.class));
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
+      }else if (componentName.equals(RepositorioSuscripcion.class.getName())) {
+        instance = new RepositorioSuscripcion();
       }
 
       instances.put(componentName, instance);
