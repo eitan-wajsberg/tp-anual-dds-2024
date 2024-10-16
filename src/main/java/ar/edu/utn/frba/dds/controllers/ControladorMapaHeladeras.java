@@ -1,18 +1,13 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.GsonFactory;
-import ar.edu.utn.frba.dds.domain.adapters.LocalDateTimeAdapter;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
-import org.jetbrains.annotations.NotNull;
-
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,97 +74,22 @@ public class ControladorMapaHeladeras implements ICrudViewsHandler, WithSimplePe
 
     @Override
     public void save(Context context) {
-       /* PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
-        dto.obtenerFormulario(context);
 
-        try {
-            Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
-            if (registrador.isEmpty()) {
-                throw new ValidacionFormularioException("No se ha encontrado la persona que lo está registrando. Reintentar.");
-            }
-
-            PersonaVulnerable nuevaPersona = PersonaVulnerable.fromDTO(dto);
-            if (nuevaPersona == null) {
-                throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la persona vulnerable.");
-            }
-
-            nuevaPersona.setPersonaQueLoRegistro(registrador.get());
-            nuevaPersona.setFechaDeRegistro(LocalDate.now());
-
-            withTransaction(() -> repositorioPersonaVulnerable.guardar(nuevaPersona));
-
-            context.redirect("/personasVulnerables");
-        } catch (ValidacionFormularioException e) {
-            Map<String, Object> model = new HashMap<>();
-            model.put("error", e.getMessage());
-            model.put("dto", dto);
-            context.render(rutaRegistroHbs, model);
-        }
-        */
     }
 
     @Override
     public void edit(Context context) {
-       /* Map<String, Object> model = new HashMap<>();
-        try {
-            Optional<PersonaVulnerable> vulnerable = this.repositorioPersonaVulnerable.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
 
-            if (vulnerable.isEmpty()) {
-                throw new ValidacionFormularioException("No existe una persona vulnerable con este id.");
-            }
-
-            PersonaVulnerableDTO dto = new PersonaVulnerableDTO(vulnerable.get());
-            model.put("dto", dto);
-            model.put("edicion", true);
-            model.put("id", context.pathParam("id"));
-            context.render(rutaRegistroHbs, model);
-        } catch (ValidacionFormularioException e) {
-            model.put("error", e.getMessage());
-            context.render(rutaListadoHbs, model);
-        }*/
     }
 
     @Override
     public void update(Context context) {
-       /* Map<String, Object> model = new HashMap<>();
-        PersonaVulnerableDTO dtoNuevo = new PersonaVulnerableDTO();
-        dtoNuevo.obtenerFormulario(context);
 
-        try {
-            Optional<PersonaVulnerable> vulnerableExistente = repositorioPersonaVulnerable.buscarPorId(
-                    Long.valueOf(context.pathParam("id")), PersonaVulnerable.class);
-
-            if (vulnerableExistente.isEmpty()) {
-                throw new ValidacionFormularioException("Persona vulnerable no encontrada.");
-            }
-
-            PersonaVulnerableDTO dtoExistente = new PersonaVulnerableDTO(vulnerableExistente.get());
-            if (dtoExistente.equals(dtoNuevo)) {
-                throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
-            }
-
-            vulnerableExistente.get().actualizarFromDto(dtoNuevo);
-            withTransaction(() -> repositorioPersonaVulnerable.actualizar(vulnerableExistente.get()));
-            context.redirect("/personasVulnerables");
-        } catch (ValidacionFormularioException e) {
-            model.put("error", e.getMessage());
-            model.put("dto", dtoNuevo);
-            model.put("edicion", true);
-            model.put("id", context.pathParam("id"));
-            context.render(rutaRegistroHbs, model);
-        }*/
     }
 
     @Override
     public void delete(Context context) {
-       /* Long id = Long.valueOf(context.pathParam("id"));
-        Optional<PersonaVulnerable> persona = this.repositorioPersonaVulnerable.buscarPorId(id, PersonaVulnerable.class);
-        if (persona.isPresent()) {
-            withTransaction(() -> this.repositorioPersonaVulnerable.eliminarFisico(PersonaVulnerable.class, id));
-            context.redirect("/personasVulnerables");
-        } else {
-            context.status(400).result("No se puede eliminar, la persona no cumple con las condiciones para ser eliminada.");
-        }*/
+
     }
 
 }
