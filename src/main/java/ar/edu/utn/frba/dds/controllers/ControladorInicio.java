@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ControladorInicio {
-
   private static final Map<String, String> RUTAS = new HashMap<>();
 
   static {

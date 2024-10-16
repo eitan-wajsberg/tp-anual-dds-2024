@@ -75,7 +75,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
   @Override
   public void index(Context context) { // validar el usuario.
     context.sessionAttribute("tipoCuenta", "PERSONA_HUMANA");
-    context.sessionAttribute("idUsuario","1");
+    //context.sessionAttribute("id");
     String tipoCuenta = "PERSONA_HUMANA";//context.sessionAttribute("tipoCuenta");
 
     String rutahbs = RUTAS.get(tipoCuenta);
