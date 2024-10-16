@@ -124,6 +124,11 @@ public class PersonaHumana extends IObserverNotificacion {
   @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
   private Tarjeta tarjetaEnUso;
 
+  @Getter
+  @Setter
+  @Column(name="puntajeActual")
+  private float puntajeActual;
+
   public PersonaHumana() {
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
@@ -304,6 +309,10 @@ public class PersonaHumana extends IObserverNotificacion {
     if (!this.contacto.equals(contacto)) {
       this.setContacto(contacto);
     }
+  }
+
+  public void sumarPuntaje(float x){
+    this.puntajeActual+=x;
   }
 
 }

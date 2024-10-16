@@ -1,13 +1,22 @@
 package ar.edu.utn.frba.dds.server;
 
 import ar.edu.utn.frba.dds.config.ServiceLocator;
-import ar.edu.utn.frba.dds.controllers.ControladorAltaTecnicos;
 import ar.edu.utn.frba.dds.controllers.ControladorCargaMasiva;
+import ar.edu.utn.frba.dds.controllers.ControladorDistribucionVianda;
+import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
+import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
+import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
+import ar.edu.utn.frba.dds.controllers.ControladorMapaHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorOferta;
+import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
+import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaVulnerable;
 import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
+import ar.edu.utn.frba.dds.controllers.ControladorReportes;
+import ar.edu.utn.frba.dds.controllers.ControladorSuscripcion;
+import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;

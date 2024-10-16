@@ -5,6 +5,7 @@ import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.dtos.DonacionViandaDTO;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
+import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ControladorDonacionVianda implements ICrudViewsHandler {
+public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimplePersistenceUnit {
 
   private final String rutaDonacionHbs = "colaboraciones/donacionVianda.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesVianda.hbs";
@@ -62,7 +63,12 @@ public class ControladorDonacionVianda implements ICrudViewsHandler {
 
       personaHumana.ifPresent(nuevaVianda::setPersonaHumana);
 
-      repositorioGenerico.guardar(nuevaVianda);
+      personaHumana.get().sumarPuntaje(nuevaVianda.calcularPuntaje());
+
+      withTransaction(() -> {
+        repositorioGenerico.guardar(nuevaVianda);
+        repositorioGenerico.actualizar(personaHumana);
+      });
 
       context.redirect(rutaListadoHbs);
 

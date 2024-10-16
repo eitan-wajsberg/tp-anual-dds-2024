@@ -71,7 +71,13 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       nuevaPersona.setPersonaQueLoRegistro(registrador.get());
       nuevaPersona.setFechaDeRegistro(LocalDate.now());
 
-      withTransaction(() -> repositorioPersonaVulnerable.guardar(nuevaPersona));
+      // TODO: crear y asignar tarjeta
+
+      registrador.get().sumarPuntaje(nuevaPersona.getTarjetaEnUso().calcularPuntaje());
+      withTransaction(() -> {
+        repositorioPersonaVulnerable.guardar(nuevaPersona);
+        repositorioPersonaHumana.actualizar(registrador);
+      });
 
       context.redirect("/personasVulnerables");
     } catch (ValidacionFormularioException e) {
