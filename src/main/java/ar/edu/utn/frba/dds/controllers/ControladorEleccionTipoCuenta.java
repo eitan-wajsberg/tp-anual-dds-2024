@@ -14,7 +14,6 @@ public class ControladorEleccionTipoCuenta {
 
   public void save(Context context) {
     String tipoCuenta = context.formParam("tipoCuenta");
-
     try {
       validarTipoCuenta(tipoCuenta);
       context.sessionAttribute("tipoCuenta", tipoCuenta);

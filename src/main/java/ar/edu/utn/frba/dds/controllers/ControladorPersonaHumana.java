@@ -1,22 +1,25 @@
 package ar.edu.utn.frba.dds.controllers;
 
-import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
+import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
+import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ControladorPersonaHumana implements ICrudViewsHandler {
+public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePersistenceUnit {
 
   private Repositorio repositorioGenerico;
-
   private final String rutaPersonaHbs = "cuenta/formularioPersonaHumana.hbs";
+  private final String rutaPersonaHumana = "/personaHumana";
+  private final String rutaPantallaPrincipal = "/personasVulnerables"; //TODO: Poner ruta posta
+  private final String ERROR = "error";
 
   public ControladorPersonaHumana(Repositorio repositorioGenerico) {
     this.repositorioGenerico = repositorioGenerico;
@@ -41,21 +44,17 @@ public class ControladorPersonaHumana implements ICrudViewsHandler {
     PersonaHumanaDTO dto = new PersonaHumanaDTO();
     dto.obtenerFormulario(context);
 
-    try { //PersonaHumana nuevaPersona = PersonaHumana.fromDTO(dto);
-      PersonaHumana nuevaPersona = new PersonaHumana();
-      nuevaPersona.setNombre(dto.getNombre());
-      nuevaPersona.setApellido(dto.getApellido());
-      nuevaPersona.setFechaNacimiento(LocalDate.parse(dto.getFechaNacimiento()));
-//      nuevaPersona.setDocumento(dto.getDocumento());
-//      nuevaPersona.setContacto(dto.getContacto());
-//      nuevaPersona.setDireccion(dto.getDireccion());
+    try {
+      PersonaHumana nuevaPersona = PersonaHumana.fromDTO(dto);
+      if (nuevaPersona == null) {
+        throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
+      }
+      withTransaction(() -> repositorioGenerico.guardar(nuevaPersona));
+      context.redirect(rutaPantallaPrincipal);
 
-      repositorioGenerico.guardar(nuevaPersona);
-
-      context.redirect(rutaPersonaHbs);
-    } catch (Exception e) {
+    } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
-      model.put("error", "Error al procesar la persona. Intente nuevamente");
+      model.put(ERROR, e.getMessage());
       model.put("dto", dto);
       context.render(rutaPersonaHbs, model);
     }
@@ -68,16 +67,17 @@ public class ControladorPersonaHumana implements ICrudViewsHandler {
       Optional<PersonaHumana> persona = repositorioGenerico.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaHumana.class);
 
       if (persona.isEmpty()) {
-        throw new RuntimeException("No existe la persona.");
+        throw new ValidacionFormularioException("No existe la persona.");
       }
 
       PersonaHumanaDTO dto = new PersonaHumanaDTO(persona.get());
       model.put("dto", dto);
       model.put("edicion", true);
+      model.put("editado", false);
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaHbs, model);
-    } catch (Exception e) {
-      model.put("error", e.getMessage());
+    } catch (ValidacionFormularioException e) {
+      model.put(ERROR, e.getMessage());
       context.render(rutaPersonaHbs, model);
     }
   }
@@ -89,46 +89,49 @@ public class ControladorPersonaHumana implements ICrudViewsHandler {
     dtoNuevo.obtenerFormulario(context);
 
     try {
-      Optional<PersonaHumana> personaExistente = repositorioGenerico.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaHumana.class);
+      Optional<PersonaHumana> personaExistente = repositorioGenerico
+          .buscarPorId(Long.valueOf(context.pathParam("id")), PersonaHumana.class);
 
       if (personaExistente.isEmpty()) {
-        throw new RuntimeException("Persona no encontrada.");
+        throw new ValidacionFormularioException("Persona no encontrada.");
       }
 
+      PersonaHumanaDTO dtoExistente = new PersonaHumanaDTO(personaExistente.get());
+      if (dtoExistente.equals(dtoNuevo)) {
+        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
+      }
+
+      personaExistente.get().actualizarFromDto(dtoNuevo);
+      withTransaction(() -> repositorioGenerico.actualizar(personaExistente.get()));
+      context.redirect(rutaPantallaPrincipal);
       PersonaHumana persona = personaExistente.get();
       persona.setNombre(dtoNuevo.getNombre());
       persona.setApellido(dtoNuevo.getApellido());
       persona.setFechaNacimiento(LocalDate.parse(dtoNuevo.getFechaNacimiento()));
-//      persona.setDocumento(dtoNuevo.getDocumento());
-//      persona.setContacto(dtoNuevo.getContacto());
-//      persona.setDireccion(dtoNuevo.getDireccion());
-
       repositorioGenerico.actualizar(persona);
 
-      context.redirect("/personaHumana");
-    } catch (Exception e) {
-      model.put("error", e.getMessage());
+      context.redirect(rutaPersonaHumana);
+    } catch (ValidacionFormularioException e) {
+      model.put(ERROR, e.getMessage());
       model.put("dto", dtoNuevo);
       model.put("edicion", true);
+      model.put("editado", true);
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaHbs, model);
     }
   }
 
-  //TODO: Boton de eliminar cuenta?
   @Override
   public void delete(Context context) {
-    /*
     Long id = Long.valueOf(context.pathParam("id"));
     Optional<PersonaHumana> persona = repositorioGenerico.buscarPorId(id, PersonaHumana.class);
 
     if (persona.isPresent()) {
-      repositorioGenerico.eliminarFisico(PersonaHumana.class, id);
-      context.redirect("/personaHumana");
+      withTransaction(() -> repositorioGenerico.eliminarFisico(PersonaHumana.class, id));
+      context.redirect(rutaPersonaHumana);
     } else {
-      context.status(400).result("No se puede eliminar, la persona no fue encontrada.");
-    }*/
+      context.status(400).result("No se pudo eliminar la cuenta, reintente más tarde.");
+    }
   }
-
 }
 

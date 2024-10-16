@@ -4,10 +4,12 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
+import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
+import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
@@ -25,6 +27,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   private RepositorioPersonaHumana repositorioPersonaHumana;
   private final String rutaRegistroHbs = "/colaboraciones/registroPersonaVulnerable.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoPersonasVulnerables.hbs";
+  private final String rutaSolicitudHbs = "/colaboraciones/solicitudTarjetas.hbs";
+  private final Integer CANTIDAD_TARJETAS_SIN_ENTREGAR_MAXIMAS = 20;
 
   public ControladorPersonaVulnerable(RepositorioPersonaVulnerable repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana) {
     this.repositorioPersonaVulnerable = repositorioPersonaVulnerable;
@@ -33,10 +37,14 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void index(Context context) {
-    // FIXME: Quitar la persona hardcodeada y obtener el id de la sesion
-    Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(1L);
+    String nombre = context.sessionAttribute("nombre");
+    String id = context.sessionAttribute("id");
+
+    Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(Long.valueOf(id));
 
     Map<String, Object> model = new HashMap<>();
+    model.put("nombre", nombre);
+    model.put("id", id);
     vulnerables.ifPresent(personaVulnerables -> model.put("personasVulnerables", personaVulnerables));
 
     context.render(rutaListadoHbs, model);
@@ -49,7 +57,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void create(Context context) {
-    context.render(rutaRegistroHbs);
+    String nombre = context.sessionAttribute("nombre");
+    context.render(rutaRegistroHbs, Map.of("nombreUsuario", nombre == null ? "" : nombre));
   }
 
   @Override
@@ -124,7 +133,6 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void update(Context context) {
-
     Map<String, Object> model = new HashMap<>();
     PersonaVulnerableDTO dtoNuevo = new PersonaVulnerableDTO();
     dtoNuevo.obtenerFormulario(context);
@@ -166,6 +174,63 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
     }
   }
 
+  public void solicitudTarjetas(Context context) {
+    // TODO: Sacar lo hardcodeado
+    Long id = context.sessionAttribute("id");
+    context.render(rutaSolicitudHbs, Map.of("id", 1));
+  }
 
+  public void solicitarTarjetas(Context context) {
+    try {
+      // TODO: Sacar lo hardcodeado
+      // Obtiene el registrador, o lanza una excepción si no se encuentra
+      PersonaHumana registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class)
+          .orElseThrow(() -> new ValidacionFormularioException("No se ha encontrado al solicitante. Reintentar."));
 
+      // Verifica si tiene demasiadas tarjetas sin entregar
+      if (registrador.getTarjetasSinEntregar().size() > CANTIDAD_TARJETAS_SIN_ENTREGAR_MAXIMAS) {
+        throw new ValidacionFormularioException("No puede tener más de 20 tarjetas en simultáneo sin entregar.");
+      }
+
+      // Verifica si tiene una dirección asignada válida
+      Direccion direccion = registrador.getDireccion();
+      if (direccion == null || direccion.getNomenclatura() == null || direccion.getNomenclatura().isEmpty() || direccion.getCoordenada() == null) {
+        throw new ValidacionFormularioException("No puede solicitar tarjetas, ya que no tiene asignada una dirección. Por favor, complete el formulario con la dirección y luego regrese.");
+      }
+
+      // Verifica el campo "cantidad" del formulario
+      String cantidad = context.formParam("cantidad");
+      if (cantidad == null || cantidad.isEmpty()) {
+        throw new ValidacionFormularioException("Campo cantidad vacío, por favor complételo.");
+      }
+
+      // Convierte el valor de cantidad a entero
+      int cantidadTarjetas;
+      try {
+        cantidadTarjetas = Integer.parseInt(cantidad);
+        if (cantidadTarjetas <= 0) {
+          throw new ValidacionFormularioException("Debe solicitar al menos una tarjeta.");
+        }
+      } catch (NumberFormatException e) {
+        throw new ValidacionFormularioException("El valor ingresado en cantidad no es válido.");
+      }
+
+      // Solicita las tarjetas y las guarda en la base de datos
+      for (int i = 0; i < cantidadTarjetas; i++) {
+        Tarjeta tarjeta = new Tarjeta();
+        tarjeta.setFechaRecepcionColaborador(LocalDate.now());
+        withTransaction(() -> repositorioPersonaHumana.guardar(tarjeta));
+      }
+
+      // Renderiza el mensaje de éxito
+      context.render(rutaSolicitudHbs, Map.of("success", "La solicitud fue aceptada. Se le asignaron " + cantidadTarjetas + " tarjetas. Ahora el correo argentino se encargará de enviarlas a la dirección: " + direccion.getNomenclatura()));
+
+    } catch (ValidacionFormularioException e) {
+      // Renderiza el mensaje de error relacionado con la validación del formulario
+      context.render(rutaSolicitudHbs, Map.of("error", e.getMessage()));
+    } catch (Exception e) {
+      // Manejo de cualquier otra excepción no prevista
+      context.render(rutaSolicitudHbs, Map.of("error", "Ocurrió un error inesperado. Por favor, intente nuevamente."));
+    }
+  }
 }

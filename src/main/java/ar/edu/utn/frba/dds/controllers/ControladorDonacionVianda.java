@@ -3,13 +3,11 @@ package ar.edu.utn.frba.dds.controllers;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
-import ar.edu.utn.frba.dds.dtos.DonacionViandaDTO;
+import ar.edu.utn.frba.dds.dtos.ViandaDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +15,12 @@ import java.util.Optional;
 
 public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimplePersistenceUnit {
 
-  private final String rutaDonacionHbs = "colaboraciones/donacionVianda.hbs";
-  private final String rutaListadoHbs = "colaboraciones/listadoDonacionesVianda.hbs";
   private Repositorio repositorioGenerico;
+  private final String rutaDonacionHbs = "colaboraciones/donacionVianda.hbs";
+  private final String rutaListadoHbs = "colaboraciones/listadoDonacionesViandas.hbs";
+  private final String rutaListadoDonaciones = "/donacionVianda";
+  private final String ERROR = "error";
+
 
   public ControladorDonacionVianda(Repositorio repositorioGenerico) {
     this.repositorioGenerico = repositorioGenerico;
@@ -27,11 +28,9 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
 
   @Override
   public void index(Context context) {
-    List<Vianda> donaciones = repositorioGenerico.buscarTodos(Vianda.class);
-
+    List<Vianda> donaciones = this.repositorioGenerico.buscarTodos(Vianda.class);
     Map<String, Object> model = new HashMap<>();
     model.put("donacionesVianda", donaciones);
-
     context.render(rutaListadoHbs, model);
   }
 
@@ -42,39 +41,42 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
 
   @Override
   public void create(Context context) {
-    context.render(rutaDonacionHbs);
+    Map<String, Object> model = new HashMap<>();
+    model.put("title", "Donar vianda");
+    context.render(rutaDonacionHbs, model);
   }
 
   @Override
   public void save(Context context) {
-    DonacionViandaDTO dto = new DonacionViandaDTO();
+    ViandaDTO dto = new ViandaDTO();
     dto.obtenerFormulario(context);
 
     try {
-      Optional<PersonaHumana> personaHumana = repositorioGenerico.buscarPorId(dto.getPersonaHumanaDTO().getId(), PersonaHumana.class);
+      //TODO: Obtener id de sesion
+      Optional<PersonaHumana> personaHumana = repositorioGenerico
+          .buscarPorId(1L, PersonaHumana.class);
 
-      Vianda nuevaVianda = new Vianda();
-      nuevaVianda.setComida(dto.getComida());
-      nuevaVianda.setCaloriasEnKcal(dto.getCaloriasEnKcal());
-      nuevaVianda.setPesoEnGramos(dto.getPesoEnGramos());
-      nuevaVianda.setFechaDonacion(LocalDate.parse(dto.getFechaDonacion(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-      nuevaVianda.setFechaCaducidad(dto.getFechaCaducidad() != null ? LocalDateTime.parse(dto.getFechaCaducidad(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null);
-      nuevaVianda.setEntregada(dto.isEntregada());
+      /*if (personaHumana.isEmpty() || personaJuridica.isEmpty()) {
+          throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
+      } */
 
-      personaHumana.ifPresent(nuevaVianda::setPersonaHumana);
+      Vianda nuevaDonacion = Vianda.fromDTO(dto);
+      if (nuevaDonacion == null) {
+        throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la donación.");
+      }
 
-      personaHumana.get().sumarPuntaje(nuevaVianda.calcularPuntaje());
+      personaHumana.get().sumarPuntaje(nuevaDonacion.calcularPuntaje());
 
       withTransaction(() -> {
-        repositorioGenerico.guardar(nuevaVianda);
+        repositorioGenerico.guardar(nuevaDonacion);
         repositorioGenerico.actualizar(personaHumana);
       });
 
-      context.redirect(rutaListadoHbs);
+      context.redirect(rutaListadoDonaciones);
 
-    } catch (Exception e) {
+    } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
-      model.put("error", "Error al procesar la donación de vianda.");
+      model.put(ERROR, e.getMessage());
       model.put("dto", dto);
       context.render(rutaDonacionHbs, model);
     }
@@ -82,75 +84,72 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
 
   @Override
   public void edit(Context context) {
-    /*
     Map<String, Object> model = new HashMap<>();
     try {
-      Optional<Vianda> vianda = repositorioGenerico.buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
+      Optional<Vianda> vianda = repositorioGenerico
+          .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
 
       if (vianda.isEmpty()) {
-        throw new RuntimeException("No existe la donación de vianda.");
+        throw new ValidacionFormularioException("No existe la donación de vianda.");
       }
 
-      DonacionViandaDTO dto = new DonacionViandaDTO(vianda.get());
+      ViandaDTO dto = new ViandaDTO(vianda.get());
       model.put("dto", dto);
       model.put("edicion", true);
       model.put("id", context.pathParam("id"));
-      context.render(rutaRegistroHbs, model);
-    } catch (Exception e) {
+      model.put("title", "Editar donacion");
+      context.render(rutaDonacionHbs, model);
+    } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       context.render(rutaListadoHbs, model);
     }
-    */
+
   }
 
   @Override
   public void update(Context context) {
-    /*
+
     Map<String, Object> model = new HashMap<>();
-    DonacionViandaDTO dtoNuevo = new DonacionViandaDTO();
+    ViandaDTO dtoNuevo = new ViandaDTO();
     dtoNuevo.obtenerFormulario(context);
 
     try {
-      Optional<Vianda> viandaExistente = repositorioVianda.buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
+      Optional<Vianda> viandaExistente = repositorioGenerico
+          .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
 
       if (viandaExistente.isEmpty()) {
-        throw new RuntimeException("Donación de vianda no encontrada.");
+        throw new ValidacionFormularioException("Donación de vianda no encontrada.");
       }
 
-      Vianda vianda = viandaExistente.get();
-      vianda.setComida(dtoNuevo.getComida());
-      vianda.setCaloriasEnKcal(dtoNuevo.getCaloriasEnKcal());
-      vianda.setPesoEnGramos(dtoNuevo.getPesoEnGramos());
-      vianda.setFechaDonacion(LocalDate.parse(dtoNuevo.getFechaDonacion(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-      vianda.setFechaCaducidad(dtoNuevo.getFechaCaducidad() != null ? LocalDateTime.parse(dtoNuevo.getFechaCaducidad(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null);
-      vianda.setEntregada(dtoNuevo.isEntregada());
+      ViandaDTO dtoExistente = new ViandaDTO(viandaExistente.get());
+      if (dtoExistente.equals(dtoNuevo)) {
+        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
+      }
 
-      repositorioGenerico.actualizar(vianda);
+      viandaExistente.get().actualizarFromDto(dtoNuevo);
+      withTransaction(() -> repositorioGenerico.actualizar(viandaExistente.get()));
+      context.redirect(rutaListadoDonaciones);
 
-      context.redirect(rutaListadoHbs);
     } catch (Exception e) {
       model.put("error", e.getMessage());
       model.put("dto", dtoNuevo);
       model.put("edicion", true);
       model.put("id", context.pathParam("id"));
-      context.render(rutaRegistroHbs, model);
+      context.render(rutaDonacionHbs, model);
     }
-    */
   }
 
   @Override
   public void delete(Context context) {
-    /*
     Long id = Long.valueOf(context.pathParam("id"));
     Optional<Vianda> vianda = repositorioGenerico.buscarPorId(id, Vianda.class);
 
     if (vianda.isPresent()) {
-      repositorioGenerico.eliminarFisico(Vianda.class, id);
-      context.redirect(rutaListadoHbs);
+      withTransaction(() -> this.repositorioGenerico.eliminarFisico(Vianda.class, id));
+      context.redirect(rutaListadoDonaciones);
     } else {
-      context.status(400).result("No se puede eliminar, la donación de vianda no fue encontrada.");
+      context.status(400).result("No se puede cancelar la donación de vianda, pues no fue encontrada.");
     }
-    */
   }
 
 }

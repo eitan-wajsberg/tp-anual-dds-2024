@@ -14,7 +14,7 @@
                 <input type="hidden" name="heladeraDestinoId" id="heladeraDestinoId"  value="{{dto.heladeraDestinoId}}">
             </div>
             <div class="col-12 mb-2">
-                <input class="w-100" required type="number" name="cantidadViandas" placeholder="Cantidad de viandas a mover">
+                <input class="w-100" required type="number" name="cantidadViandas" placeholder="Cantidad de viandas a mover" value={{dto.cantidadViandas}}>
             </div>
             <div class="col-12 mb-3">
                 <div class="input-group">
@@ -31,6 +31,11 @@
             <div class="row">
                 <p class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para retirar las viandas del origen.</p>
             </div>
+            {{#if error}}
+                <div class="row mt-2 justify-content-center">
+                    <p id="error" class="error text-center">{{error}}</p>
+                </div>
+            {{/if}}
         </form>
     </nav>
 
