@@ -2,9 +2,8 @@
     <section class="row flex-grow-1 ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
         <!-- Sidebar -->
         <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4 my-4">
-            <h1 class="title text-center">{{title}}</h1>
             <div class="pt-4 pb-2"></div> <!-- separador -->
-            <h1 class="fs-4 text-center mb-5">Donar una vianda</h1>
+            <h1 class="title text-center">{{title}}</h1>
             <form class="p-3" id="uploadForm" method="POST" action="{{#if edicion}}/donacionVianda/{{id}}{{else}}/donacionVianda{{/if}}">
                 <div class="row mb-2">
                     <input type="text" name="comida" placeholder="Descripción de la comida" value="{{dto.descripcion}}">
@@ -22,28 +21,27 @@
                     <input type="number" name="peso" placeholder="Peso en gramos (opcional)" value="{{dto.pesoEnGramos}}">
                 </div>
                 <div class="row mb-2">
-                    <button id="submitButton" type="submit" class="w-100">{{#if edicion}}Modificar donación{{else}}Donar vianda{{/if}}</button>
+                    <button id="submitButton" type="submit" class="w-100">{{#if edicion}}Guardar cambios{{else}}Donar vianda{{/if}}</button>
                 </div>
+                <!--
                 <div class="row">
                     <p class="text-center fs-09 color-cc0808 fw-600 mt-2">Tenés 3 horas para ingresar la vianda en la heladera</p>
                 </div>
+                -->
+                {{#if edicion}}
+                    <div class="row mb-2">
+                        <button type="button" class="btn btn-danger w-100 rounded-button" id="deleteButton">Cancelar donación</button>
+                    </div>
+                    <form id="deleteForm" method="POST" action="/donacionDinero/{{id}}/eliminacion" style="display: none;"></form>
+                {{/if}}
             </form>
-
-            {{!-- Delete button, only shown in edit mode --}}
-            {{#if edicion}}
-                <div class="col-12 mt-4">
-                    <button type="button" class="btn btn-danger w-100 rounded-button" id="deleteButton">Cancelar donación</button>
-                </div>
-
-                <form id="deleteForm" method="POST" action="/donacionDinero/{{id}}/eliminacion" style="display: none;"></form>
-            {{/if}}
-
         </nav>
 
         <!-- Mapa -->
         <main class="col-md-8 p-4 d-flex flex-column">
             <div id="map"></div>
         </main>
+    </section>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/manejadorFormulario.js"></script>
@@ -70,6 +68,7 @@
             });
         });
     </script>
+
 {{/partial}}
 
 {{> templates/base titulo="Donación de viandas" mostrarMapa= true mostrarSeccion=true seccion="Donación de viandas" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/donacionVianda" }}
