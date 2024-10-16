@@ -75,6 +75,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     try {
       dist = entityfromContext(context);
     } catch (ValidacionFormularioException e) {
+      System.out.println(e);
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", DTOfromContext(context));
@@ -174,8 +175,9 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
   private DistribucionViandaDTO DTOfromContext(Context context){
     return DistribucionViandaDTO.builder()
         .heladeraOrigenId(Long.parseLong(context.formParam("heladeraOrigenId")))
-        .heladeraOrigenNombre(context.formParam("heladeraOrigenNombre"))
+        .heladeraOrigenNombre(context.formParam("heladeraOrigen"))
         .heladeraDestinoId(Long.parseLong(context.formParam("heladeraDestinoId")))
+        .heladeraDestinoNombre(context.formParam("heladeraDestino"))
         .motivo(context.formParam("motivo"))
         .cantidadViandas(Integer.parseInt(context.formParam("cantidadViandas")))
         .build();
