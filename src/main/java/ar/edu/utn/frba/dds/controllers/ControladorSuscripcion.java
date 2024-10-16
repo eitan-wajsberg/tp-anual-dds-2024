@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Desperfecto;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.FaltanNViandas;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.QuedanNViandas;
@@ -39,8 +40,8 @@ public class ControladorSuscripcion implements ICrudViewsHandler, WithSimplePers
 
     public void create(Context context) {
         Map<String, Object> model = new HashMap<>();
-        model.put("heladeraId", context.pathParam("id")); // Pasar el ID de la heladera al modelo
-        model.put("idPersonaHumana", context.pathParam("idPersonaHumana")); // Pasar el ID del usuario
+        model.put("heladeraId", context.pathParam("heladeraId")); // Pasar el ID de la heladera al modelo
+        model.put("personaId", 1); // Pasar el ID del usuario
         context.render(rutaSuscripcion, model);
     }
 
@@ -63,7 +64,7 @@ public class ControladorSuscripcion implements ICrudViewsHandler, WithSimplePers
             }
 
             // Guardar la suscripción
-            repositorioSuscripcion.guardar(suscripcion);
+            withTransaction( () -> repositorioSuscripcion.guardar(suscripcion));
 
             // Redirigir de nuevo a la heladera particular
             ctx.redirect("/mapaHeladeras/" + dto.getIdHeladera() + "/HeladeraParticular");

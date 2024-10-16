@@ -56,7 +56,7 @@ public class Oferta{
     public void canjear(PersonaHumana persona) {
         if(persona.calcularPuntajeNeto() >= cantidadPuntosNecesarios){
             LocalDateTime ahora = LocalDateTime.now();
-            OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(this,ahora);
+            OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(this,ahora,persona);
             persona.agregarOfertaCanjeada(ofertaCanjeada);
         }
     }

@@ -123,6 +123,8 @@ public class ServiceLocator {
         instance = new RepositorioOfertaCanjeada();
       } else if (componentName.equals(RepositorioRubro.class.getName())) {
         instance = new RepositorioRubro();
+      }else if (componentName.equals(RepositorioSuscripcion.class.getName())) {
+        instance = new RepositorioSuscripcion();
       }
 
       instances.put(componentName, instance);

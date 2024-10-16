@@ -33,10 +33,8 @@ public class SuscripcionDTO implements DTO {
     @Override
     public void obtenerFormulario(Context context) {
         this.tipoSuscripcion = context.formParam("tipoSuscripcion");
-        this.cantidadViandasFaltantes = Integer.parseInt(Objects.requireNonNull(context.formParam("cantidadViandasFaltantes")));
-        this.cantidadViandasQueQuedan = Integer.parseInt(Objects.requireNonNull(context.formParam("cantidadViandasQueQuedan")));
-        this.idHeladera = Long.parseLong(Objects.requireNonNull(context.formParam("idHeladera")));
-        this.idPersonaHumana = Long.parseLong(Objects.requireNonNull(context.formParam("idPersonaHumana")));
+        this.idHeladera = Long.parseLong(Objects.requireNonNull(context.formParam("heladeraId")));
+        this.idPersonaHumana = Long.parseLong(Objects.requireNonNull(context.formParam("personaId")));
     }
 
     @Override

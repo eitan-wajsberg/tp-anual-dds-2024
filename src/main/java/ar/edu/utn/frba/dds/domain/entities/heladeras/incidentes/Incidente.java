@@ -47,7 +47,7 @@ public class Incidente {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name="id_tecnico", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="id_tecnico", referencedColumnName = "id")
     private Tecnico tecnicoSeleccionado;
 
     @OneToMany
@@ -137,13 +137,13 @@ public class Incidente {
 
         // Determinar el tipo de incidente en base al DTO
         switch (dto.getTipoIncidente()) {
-            case "FALLA_TECNICA":
+            case "FALLA_TECNICA","OTRO":
                 incidente.tipoIncidente = new FallaTecnica();
-                incidente.tipoAlerta = null;
+                incidente.tipoAlerta = TipoAlerta.valueOf("FRAUDE");//TODO cambiar Converter
                 break;
-            case "FRAUDE","FALLA_CONEXION","FALLA_TEMPERATURA","OTRO":
+            case "FRAUDE","FALLA_CONEXION","FALLA_TEMPERATURA":
                 incidente.tipoIncidente = new Alerta();
-                incidente.tipoAlerta = TipoAlerta.valueOf(dto.getTipoAlerta());
+                incidente.tipoAlerta = TipoAlerta.valueOf(dto.getTipoIncidente());
                 break;
             default:
                 throw new IllegalArgumentException("Tipo de incidente no reconocido: " + dto.getTipoIncidente());
