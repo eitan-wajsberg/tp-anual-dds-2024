@@ -132,8 +132,7 @@ public class CargaMasivaColaboraciones {
   public void notificarAltaPersona(PersonaHumana persona) {
     Mensaje mensaje = armarMensajeCargaMasiva(persona);
     try {
-      Mail mail = new Mail(adapterMail);
-      mail.enviar(mensaje, persona.getContacto());
+      persona.getContacto().enviarMensaje(mensaje);
     } catch (MessagingException | UnsupportedEncodingException e) {
       throw new ValidacionFormularioException("No se ha podido notificar a " + persona.getNombre() + " " + persona.getApellido());
     }

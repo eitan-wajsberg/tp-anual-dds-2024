@@ -14,6 +14,8 @@ import ar.edu.utn.frba.dds.controllers.ControladorRegistroUsuario;
 import ar.edu.utn.frba.dds.controllers.ControladorReportes;
 import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
+import ar.edu.utn.frba.dds.domain.adapters.AdaptadaTelegramBot;
+import ar.edu.utn.frba.dds.domain.adapters.AdaptadaWhatsAppTwillio;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDistribucionVianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
@@ -91,6 +93,10 @@ public class ServiceLocator {
         instance = new RepositorioRol();
       } else if (componentName.equals(AdaptadaJavaXMail.class.getName())) {
         instance = new AdaptadaJavaXMail();
+      } else if (componentName.equals(AdaptadaTelegramBot.class.getName())) {
+        instance = new AdaptadaTelegramBot();
+      } else if (componentName.equals(AdaptadaWhatsAppTwillio.class.getName())) {
+        instance = new AdaptadaWhatsAppTwillio();
       } else if (componentName.equals(RepositorioHeladera.class.getName())) {
         instance = new RepositorioHeladera();
       } else if (componentName.equals(ControladorDistribucionVianda.class.getName())) {

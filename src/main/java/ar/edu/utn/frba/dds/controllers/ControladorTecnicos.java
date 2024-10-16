@@ -75,7 +75,10 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
 
       Usuario usuario = cargarUsuario(nuevoTecnico);
       nuevoTecnico.setUsuario(usuario);
-      withTransaction(() -> repositorioTecnicos.guardar(nuevoTecnico));
+      withTransaction(() -> {
+        repositorioUsuario.guardar(usuario);
+        repositorioTecnicos.guardar(nuevoTecnico);
+      });
       notificarAltaTecnico(nuevoTecnico);
 
       context.redirect("/tecnicos");
