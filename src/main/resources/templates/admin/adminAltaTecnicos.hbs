@@ -20,7 +20,7 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="input-group">
-                            <select id="documentos" name="tipoDocumento" class="custom-select" required>
+                            <select id="documentos" name="tipoDocumento" class="custom-select" >
                                 <option {{#ifEqual dto.documentoDTO.tipoDocumento "DNI"}}selected{{/ifEqual}}>DNI</option>
                                 <option {{#ifEqual dto.documentoDTO.tipoDocumento "LC"}}selected{{/ifEqual}} value="LC">LIBRETA CÍVICA</option>
                                 <option {{#ifEqual dto.documentoDTO.tipoDocumento "LE"}}selected{{/ifEqual}} value="LE">LIBRETA DE ENROLAMIENTO</option>
