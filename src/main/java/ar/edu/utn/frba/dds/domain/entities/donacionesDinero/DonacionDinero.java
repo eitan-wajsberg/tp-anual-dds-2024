@@ -56,7 +56,7 @@ public class DonacionDinero implements Contribucion {
   private PersonaJuridica personaJuridica;
 
   public float calcularPuntaje() {
-    float coeficiente = ReconocimientoTrabajoRealizado
+    float coeficiente = ReconocimientoTrabajoRealizado.getInstance()
         .obtenerCoeficientes("coeficientePesosDonados");
     return monto * coeficiente;
   }
