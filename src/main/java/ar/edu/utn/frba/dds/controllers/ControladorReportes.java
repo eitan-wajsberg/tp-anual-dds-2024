@@ -37,8 +37,6 @@ public class ControladorReportes {
     context.render(rutaReportes, model);
   }
 
-
-
   @Data
   public static class Reporte {
     private String fecha;
