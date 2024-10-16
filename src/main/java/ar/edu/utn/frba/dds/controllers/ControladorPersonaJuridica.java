@@ -1,13 +1,23 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
+import ar.edu.utn.frba.dds.dtos.PersonaJuridicaDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimplePersistenceUnit {
 
   private RepositorioPersonaJuridica repositorioPersonaJuridica;
+  private final String rutaPersonaJuridicaHbs = "cuenta/formularioPersonaJuridica.hbs";
+  private final String rutaPersonaJuridica = "/personaJuridica";
+  private final String rutaPantallaPrincipal = "/personasVulnerables"; //TODO: Poner ruta posta
+  private final String ERROR = "error";
 
   public ControladorPersonaJuridica(RepositorioPersonaJuridica repositorioPersonaJuridica) {
     this.repositorioPersonaJuridica = repositorioPersonaJuridica;
@@ -15,36 +25,102 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
 
   @Override
   public void index(Context context) {
-
+    // There's nothing here
   }
 
   @Override
   public void show(Context context) {
-
+    // There's nothing here, as well
   }
 
   @Override
   public void create(Context context) {
-
+    context.render(rutaPersonaJuridicaHbs);
   }
 
   @Override
   public void save(Context context) {
+    PersonaJuridicaDTO dto = new PersonaJuridicaDTO();
+    dto.obtenerFormulario(context);
 
+    try {
+      PersonaJuridica nuevaPersona = PersonaJuridica.fromDTO(dto);
+      if (nuevaPersona == null) {
+        throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
+      }
+      withTransaction(() -> repositorioPersonaJuridica.guardar(nuevaPersona));
+      context.redirect(rutaPantallaPrincipal);
+    } catch (ValidacionFormularioException e) {
+      Map<String, Object> model = new HashMap<>();
+      model.put(ERROR, e.getMessage());
+      model.put("dto", dto);
+      context.render(rutaPersonaJuridicaHbs, model);
+    }
   }
 
   @Override
   public void edit(Context context) {
+    Map<String, Object> model = new HashMap<>();
+    try {
+      Optional<PersonaJuridica> persona = repositorioPersonaJuridica.buscarPorUsuario(Long.valueOf(context.pathParam("id")));
 
+      if (persona.isEmpty()) {
+        throw new ValidacionFormularioException("No existe la persona jurídica.");
+      }
+
+      PersonaJuridicaDTO dto = new PersonaJuridicaDTO(persona.get());
+      model.put("dto", dto);
+      model.put("edicion", true);
+      model.put("editado", false);
+      model.put("id", context.pathParam("id"));
+      context.render(rutaPersonaJuridicaHbs, model);
+    } catch (ValidacionFormularioException e) {
+      model.put(ERROR, e.getMessage());
+      context.render(rutaPersonaJuridicaHbs, model);
+    }
   }
 
   @Override
   public void update(Context context) {
+    Map<String, Object> model = new HashMap<>();
+    PersonaJuridicaDTO dtoNuevo = new PersonaJuridicaDTO();
+    dtoNuevo.obtenerFormulario(context);
 
+    try {
+      Optional<PersonaJuridica> personaExistente = repositorioPersonaJuridica.buscarPorUsuario(Long.valueOf(context.pathParam("id")));
+
+      if (personaExistente.isEmpty()) {
+        throw new ValidacionFormularioException("Persona jurídica no encontrada.");
+      }
+
+      PersonaJuridicaDTO dtoExistente = new PersonaJuridicaDTO(personaExistente.get());
+      if (dtoExistente.equals(dtoNuevo)) {
+        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
+      }
+
+      personaExistente.get().actualizarFromDto(dtoNuevo);
+      withTransaction(() -> repositorioPersonaJuridica.actualizar(personaExistente.get()));
+      context.redirect(rutaPantallaPrincipal);
+    } catch (ValidacionFormularioException e) {
+      model.put(ERROR, e.getMessage());
+      model.put("dto", dtoNuevo);
+      model.put("edicion", true);
+      model.put("editado", true);
+      model.put("id", context.pathParam("id"));
+      context.render(rutaPersonaJuridicaHbs, model);
+    }
   }
 
   @Override
   public void delete(Context context) {
+    Long id = Long.valueOf(context.pathParam("id"));
+    Optional<PersonaJuridica> persona = repositorioPersonaJuridica.buscarPorUsuario(id);
 
+    if (persona.isPresent()) {
+      withTransaction(() -> repositorioPersonaJuridica.eliminarFisico(PersonaJuridica.class, id));
+      context.redirect(rutaPersonaJuridica);
+    } else {
+      context.status(400).result("No se pudo eliminar la cuenta, reintente más tarde.");
+    }
   }
 }
