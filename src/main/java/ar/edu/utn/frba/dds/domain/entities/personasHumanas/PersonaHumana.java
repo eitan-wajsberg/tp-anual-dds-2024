@@ -122,7 +122,6 @@ public class PersonaHumana extends IObserverNotificacion {
   @JoinColumn(name = "tarjeta_id", referencedColumnName = "id")
   private Tarjeta tarjetaEnUso;
 
-  @Getter
   @Setter
   @Column(name="puntajeActual")
   private Float puntajeActual;
@@ -314,6 +313,12 @@ public class PersonaHumana extends IObserverNotificacion {
       this.puntajeActual = 0f;
     }
     this.puntajeActual += puntaje;
+  }
+  public Float getPuntajeActual(){
+    if(this.puntajeActual == null){
+      return 0F;
+    }
+    return this.puntajeActual;
   }
 
   public void agregarTarjetaEntregada(Tarjeta tarjeta) {
