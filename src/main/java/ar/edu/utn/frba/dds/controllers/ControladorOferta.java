@@ -89,7 +89,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       model.put("puntos", puntaje);
 
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
-
+      ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
 
     }
     else{
