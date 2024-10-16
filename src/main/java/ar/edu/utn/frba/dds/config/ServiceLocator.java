@@ -63,13 +63,11 @@ public class ServiceLocator {
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
                 ServiceLocator.instanceOf(RepositorioPersonaJuridica.class),
                 ServiceLocator.instanceOf(RepositorioSuscripcion.class)
-
         );
       } else if (componentName.equals(ControladorSuscripcion.class.getName())) {
         instance = new ControladorSuscripcion(
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
                 ServiceLocator.instanceOf(RepositorioSuscripcion.class)
-
         );
       } else if (componentName.equals(ControladorIncidenteHeladeras.class.getName())) {
         instance = new ControladorIncidenteHeladeras(
@@ -95,10 +93,14 @@ public class ServiceLocator {
         instance = new AdaptadaWhatsAppTwillio();
       } else if (componentName.equals(RepositorioHeladera.class.getName())) {
         instance = new RepositorioHeladera();
+      } else if (componentName.equals(RepositorioPersonaVulnerable.class.getName())) {
+        instance = new RepositorioPersonaVulnerable();
       } else if (componentName.equals(ControladorDistribucionVianda.class.getName())) {
-        instance = new ControladorDistribucionVianda(instanceOf(RepositorioDistribucionVianda.class)
-                , instanceOf(RepositorioPersonaHumana.class)
-                , instanceOf(RepositorioHeladera.class));
+        instance = new ControladorDistribucionVianda(
+            instanceOf(RepositorioDistribucionVianda.class),
+            instanceOf(RepositorioPersonaHumana.class),
+            instanceOf(RepositorioHeladera.class)
+        );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
       }
