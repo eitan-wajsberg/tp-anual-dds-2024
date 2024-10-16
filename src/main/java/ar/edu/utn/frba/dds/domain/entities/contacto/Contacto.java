@@ -1,10 +1,16 @@
 package ar.edu.utn.frba.dds.domain.entities.contacto;
 
+import ar.edu.utn.frba.dds.config.ServiceLocator;
+import ar.edu.utn.frba.dds.domain.adapters.AdaptadaJavaXMail;
+import ar.edu.utn.frba.dds.domain.adapters.AdaptadaTelegramBot;
+import ar.edu.utn.frba.dds.domain.adapters.AdaptadaWhatsAppTwillio;
 import ar.edu.utn.frba.dds.dtos.ContactoDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import javax.mail.MessagingException;
@@ -36,9 +42,6 @@ public class Contacto {
   @Column(name = "userTelegram")
   private Long telegramChatId;
 
-  @Column(name = "medioPreferido")
-  private String medioPreferido;
-
   public Contacto() {
     this.mediosDeContacto = new HashSet<>();
   }
@@ -52,8 +55,24 @@ public class Contacto {
   }
 
   public void enviarMensaje(Mensaje mensaje) throws MessagingException, UnsupportedEncodingException {
-    List<MedioDeContacto> medios = new ArrayList<>(this.mediosDeContacto);
-    for (MedioDeContacto medio : medios) {
+    // FIXME: Solución temporal
+    // En el futuro, se utilizará el listado de medios de contacto, lo que requerirá
+    // modificaciones en la persistencia de los contactos y el uso de ContactoDTO
+    // en los controladores actualmente en desarrollo.
+
+    Map<String, MedioDeContacto> mediosDeContacto = new HashMap<>();
+
+    if (this.mail != null && !this.mail.isEmpty()) {
+      mediosDeContacto.put("mail", new Mail(ServiceLocator.instanceOf(AdaptadaJavaXMail.class)));
+    }
+    if (this.whatsapp != null && !this.whatsapp.isEmpty()) {
+      mediosDeContacto.put("whatsapp", new WhatsApp(ServiceLocator.instanceOf(AdaptadaWhatsAppTwillio.class)));
+    }
+    if (this.telegramChatId != null) {
+      mediosDeContacto.put("telegram", new Telegram(ServiceLocator.instanceOf(AdaptadaTelegramBot.class)));
+    }
+
+    for (MedioDeContacto medio : mediosDeContacto.values()) {
       medio.enviar(mensaje, this);
     }
   }
@@ -82,6 +101,11 @@ public class Contacto {
     if (dto.getCorreo() != null && !dto.getCorreo().isEmpty()
         && !dto.getCorreo().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
       throw new ValidacionFormularioException("El formato del correo electrónico es inválido.");
+    }
+
+    if (dto.getWhatsapp() != null && !dto.getWhatsapp().isEmpty()
+        && !dto.getWhatsapp().matches("^[0-9]{10,15}$")) {
+      throw new ValidacionFormularioException("El formato del número de WhatsApp es inválido.");
     }
   }
 

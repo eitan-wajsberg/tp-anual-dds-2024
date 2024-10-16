@@ -6,12 +6,16 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.oferta.Oferta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.dtos.PersonaJuridicaDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -19,43 +23,40 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import lombok.Getter;
-import lombok.Setter;
-import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import org.apache.commons.lang3.tuple.Pair;
 
-@Getter
-@Entity @Table(name="persona_juridica")
+@Data
+@Builder
+@AllArgsConstructor
+@Entity
+@Table(name = "persona_juridica")
 public class PersonaJuridica {
 
   @Id @GeneratedValue
   private Long id;
 
-  @Setter
   @OneToOne
   @JoinColumn(name = "usuario_id", referencedColumnName = "id")
   private Usuario usuario;
 
-  @Setter
   @Embedded
-
   private Contacto contacto;
 
-  @Setter
   @Embedded
   private Direccion direccion;
 
-  @Setter
   @Column(name = "razonSocial", nullable = false)
   private String razonSocial;
 
-  @Setter
   @Enumerated(EnumType.STRING)
-  @Column(name="tipo", nullable = false)
+  @Column(name = "tipo", nullable = false)
   private TipoPersonaJuridica tipo;
 
-  @Setter
   @OneToOne
   @JoinColumn(name = "rubro_id", referencedColumnName = "id")
   private Rubro rubro;
@@ -78,7 +79,7 @@ public class PersonaJuridica {
   @Transient
   private Set<Oferta> ofertas;
 
-  public PersonaJuridica(){
+  public PersonaJuridica() {
     this.contribucionesElegidas = new HashSet<>();
     this.contribuciones = new HashSet<>();
     this.heladerasAcargo = new HashSet<>();
@@ -97,4 +98,52 @@ public class PersonaJuridica {
   public void agregarContribucion(Contribucion contribucion) {
     contribuciones.add(contribucion);
   }
+
+  public static PersonaJuridica fromDTO(PersonaJuridicaDTO dto) {
+    validarCamposObligatorios(dto);
+    validarLongitudRazonSocial(dto);
+
+    Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+
+    return PersonaJuridica.builder()
+        .razonSocial(dto.getRazonSocial())
+        .tipo(TipoPersonaJuridica.valueOf(dto.getTipo()))
+        .contacto(contacto)
+        .direccion(direccion)
+        .build();
+  }
+
+  public void actualizarFromDto(PersonaJuridicaDTO dto) {
+    validarCamposObligatorios(dto);
+    validarLongitudRazonSocial(dto);
+
+    this.razonSocial = dto.getRazonSocial();
+    this.tipo = TipoPersonaJuridica.valueOf(dto.getTipo());
+
+    Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
+    Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
+
+    if (!this.contacto.equals(contacto)) {
+      this.setContacto(contacto);
+    }
+
+    if (!this.direccion.equals(direccion)) {
+      this.setDireccion(direccion);
+    }
+  }
+
+  private static void validarCamposObligatorios(PersonaJuridicaDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        Pair.of("razón social", dto.getRazonSocial()),
+        Pair.of("tipo", dto.getTipo())
+    );
+  }
+
+  private static void validarLongitudRazonSocial(PersonaJuridicaDTO dto) {
+    if (dto.getRazonSocial().length() < 2 || dto.getRazonSocial().length() > 100) {
+      throw new ValidacionFormularioException("La razón social debe tener entre 2 y 100 caracteres.");
+    }
+  }
+
 }

@@ -44,7 +44,7 @@ public class Tecnico {
   private String apellido;
 
   @OneToOne
-  @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+  @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
   private Usuario usuario;
 
   @Embedded
@@ -126,6 +126,7 @@ public class Tecnico {
     this.distanciaMaximaEnKmParaSerAvisado = dto.getRadioMaximoParaSerAvisado();
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
     Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+    Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
 
     if (!this.direccion.equals(direccion)) {
       this.setDireccion(direccion);

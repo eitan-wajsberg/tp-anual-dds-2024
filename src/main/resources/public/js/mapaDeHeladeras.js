@@ -8,42 +8,70 @@ var map = new mapboxgl.Map({
     zoom: 11
 });
 map.addControl(new mapboxgl.NavigationControl());
+console.log('Mapbox loaded');
 
 // Custom marker image URL
-var customMarkerImage = './refrigerator.png';
+var customMarkerImage = '/img/refrigerator.png';
 
-function addMarker() {
-    var lat = parseFloat(document.getElementById('latInput').value);
-    var lng = parseFloat(document.getElementById('lngInput').value);
 
-    if (isNaN(lat) || isNaN(lng)) {
-        alert('Por favor, ingresar una latitud válida.');
-        return;
-    }
-
-    new mapboxgl.Marker({
-        // Set the custom marker image
-        element: createCustomMarker(customMarkerImage),
-        draggable: true
-    })
-        .setLngLat([lng, lat])
-        .addTo(map);
-
-    map.flyTo({
-        center: [lng, lat],
-        zoom: 15
-    });
+// Función para agregar marcadores en el mapa
+function addMarkers(heladeras, onMarkerClick) {
+    heladeras.forEach(function (heladera) { addMarker(heladera, onMarkerClick) });
 }
 
-// Function to create a custom marker element with the specified image
+// Función para agregar marcadores en el mapa
+function addMarker(heladera, onMarkerClick) {
+
+        var lat = parseFloat(heladera.direccion.coordenada.latitud);
+        var lng = parseFloat(heladera.direccion.coordenada.longitud);
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            // Crear el marcador
+            var marker = new mapboxgl.Marker({
+                element: createCustomMarker(customMarkerImage),
+                draggable: false
+            })
+                .setLngLat([lng, lat])
+                .addTo(map);
+
+            // Añadir evento 'click' al marcador para redirigir a la página de la heladera
+            marker.getElement().addEventListener('click', onMarkerClick.bind({"heladera":heladera}));
+
+            // Opción de centrar el mapa en el marcador cuando se haga click en el lateral (opcional)
+            if(document.querySelector(`[data-id="${heladera.id}"]`) != undefined){
+                document.querySelector(`[data-id="${heladera.id}"]`).addEventListener('click', function () {
+                    map.flyTo({
+                        center: [lng, lat],
+                        zoom: 15
+                    });
+                });
+            }
+        } else {
+            console.log(`Coordenadas inválidas para heladera con id: ${heladera.id}`);
+        }
+    currentMarkers.push(marker);  // Guardar el marcador
+}
+
+
+// Función para crear un marcador personalizado
 function createCustomMarker(markerImage) {
     var img = document.createElement('img');
     img.src = markerImage;
-    img.style.width = '34px'; // Adjust the size of the marker image as needed
-    img.style.height = '34px'; // Adjust the size of the marker image as needed
+    img.style.width = '34px'; // Tamaño del marcador
+    img.style.height = '34px';
 
     var customMarker = document.createElement('div');
     customMarker.appendChild(img);
 
     return customMarker;
 }
+
+var currentMarkers = [];
+
+function clearMarkers() {
+    currentMarkers.forEach(marker => marker.remove());
+    currentMarkers = [];
+}
+
+
+

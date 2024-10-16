@@ -8,6 +8,8 @@ import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,17 +18,19 @@ import lombok.Setter;
 @Entity
 @Table(name="distribucion_vianda")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class DistribucionVianda implements Contribucion {
   @Id
   @GeneratedValue
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "id_heladeraOrigen", referencedColumnName = "id", nullable = false)
+  @JoinColumn(name = "id_heladeraOrigen", referencedColumnName = "id")
   private Heladera heladeraOrigen;
 
   @ManyToOne
-  @JoinColumn(name = "id_heladeraDestino", referencedColumnName = "id", nullable = false)
+  @JoinColumn(name = "id_heladeraDestino", referencedColumnName = "id")
   private Heladera heladeraDestino;
 
   @ManyToOne
@@ -53,14 +57,6 @@ public class DistribucionVianda implements Contribucion {
       inverseJoinColumns = @JoinColumn(name = "id_vianda", referencedColumnName = "id")
   )
   private List<Vianda> viandasAMover;
-
-  public DistribucionVianda(Heladera heladeraOrigen, Heladera heladeraDestino, int cantidadViandas, String motivo, LocalDate fecha) {
-    this.heladeraOrigen = heladeraOrigen;
-    this.heladeraDestino = heladeraDestino;
-    this.cantidadViandas = cantidadViandas;
-    this.motivo = motivo;
-    this.fecha = fecha;
-  }
 
   public DistribucionVianda(LocalDate fecha, int cantidadViandas){
     this.fecha = fecha;

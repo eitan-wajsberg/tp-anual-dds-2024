@@ -20,25 +20,24 @@
                     </div>
                 {{/if}}
                 {{#if success}}
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert mt-4 alert-success" role="alert">
                         {{success}}
                     </div>
                 {{/if}}
+                <div class="d-flex mt-4 justify-content-center align-items-center">
+                    <div id="loader" class="spinner-border" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <script src="../js/confirmacion.js"></script>
+    <script src="../js/modalCSV.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        document.getElementById('file-upload').addEventListener('click', function() {
-            this.value = '';
-        });
 
-        document.getElementById('file-upload').addEventListener('change', function (event) {
-            openModal('carga masiva', 'cargaMasiva');
-        });
     </script>
 {{/partial}}
 
-{{> templates/base titulo="Carga CSV" mostrarAdmin=true mostrarIrAtras=true paginaAtras="/admin" mostrarSeccion=true seccion="Carga masiva" }}
+{{> templates/base titulo="Carga CSV" mostrarAdmin=true mostrarIrAtras=true paginaAtras="/" mostrarSeccion=true seccion="Carga masiva" }}
