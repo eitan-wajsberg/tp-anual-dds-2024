@@ -13,11 +13,14 @@ public class AuthMiddleware {
       if (!ctx.routeRoles().isEmpty() && !ctx.routeRoles().contains(userRole)) {
         throw new AccesoDenegadoException("No estas autorizado para acceder a este contenido.", 401);
       }
+      if (ctx.sessionAttribute("id") == null || ctx.sessionAttribute("nombre") == null) {
+        throw new AccesoDenegadoException("No se encontraron los datos basicos de la sesión.", 401);
+      }
     });
   }
 
   private static TipoRol getUserRoleType(Context context) {
-    return context.sessionAttribute("tipo_rol") != null?
-        TipoRol.valueOf(context.sessionAttribute("tipo_rol")) : null;
+    return context.sessionAttribute("rol") != null?
+        TipoRol.valueOf(context.sessionAttribute("rol")) : null;
   }
 }
