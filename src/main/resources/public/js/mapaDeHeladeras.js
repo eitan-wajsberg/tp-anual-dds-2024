@@ -49,6 +49,7 @@ function addMarker(heladera, onMarkerClick) {
         } else {
             console.log(`Coordenadas inválidas para heladera con id: ${heladera.id}`);
         }
+    currentMarkers.push(marker);  // Guardar el marcador
 }
 
 
@@ -64,5 +65,13 @@ function createCustomMarker(markerImage) {
 
     return customMarker;
 }
+
+var currentMarkers = [];
+
+function clearMarkers() {
+    currentMarkers.forEach(marker => marker.remove());
+    currentMarkers = [];
+}
+
 
 
