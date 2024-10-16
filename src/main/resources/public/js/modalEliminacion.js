@@ -57,8 +57,18 @@ function openModal(idEntidad, tipoEntidad, nombreEntidad) {
         },
         {
             tipo: 'donacionVianda',
-            mensaje: `¿Estás seguro de que deseas cancelar la donación de vianda?`,
+            mensaje: `¿Estás seguro de que deseas eliminar la donación de vianda?`,
             accion: `/donacionVianda/${idEntidad}/eliminacion`
+        },
+        {
+            tipo: 'personaHumana',
+            mensaje: `${nombreEntidad}, ¿Estás seguro de que deseas dar de baja tu cuenta?`,
+            accion: `/personaHumana/${idEntidad}/eliminacion`
+        },
+        {
+            tipo: 'personaJuridica',
+            mensaje: `${nombreEntidad}, ¿Estás seguro de que deseas dar de baja tu cuenta?`,
+            accion: `/personaJuridica/${idEntidad}/eliminacion`
         }
     ];
 
