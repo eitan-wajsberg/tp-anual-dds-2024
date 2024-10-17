@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class ControladorIncidenteHeladeras implements ICrudViewsHandler, WithSim
             if (heladera.isPresent()) {
                 Map<String, Object> model = new HashMap<>();
                 model.put("heladeraId", heladera.get().getId());
+                model.put("personaId", 1);
                 context.render(rutaReporteIncidente, model);
             } else {
                 context.status(404).result("Heladera no encontrada");
@@ -71,10 +73,9 @@ public class ControladorIncidenteHeladeras implements ICrudViewsHandler, WithSim
 
             if (heladera.isPresent() && colaborador.isPresent()) {
                 Incidente incidente = Incidente.fromDTO(dto,heladera.get(),colaborador.get());
-
+                incidente.setFecha(LocalDateTime.now());
                 // Guardar el incidente
-                repositorioIncidente.guardar(incidente);
-
+                withTransaction( () -> repositorioIncidente.guardar(incidente));
                 // Redirigir a la página de detalles de la heladera
                 ctx.redirect("/mapaHeladeras/" + dto.getHeladeraId() + "/HeladeraParticular");
             } else {
