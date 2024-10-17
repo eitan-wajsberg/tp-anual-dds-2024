@@ -19,10 +19,11 @@ public class RepositorioPersonaHumana extends Repositorio {
   public Optional<PersonaHumana> buscarPorId(Long id){
     return buscarPorId(id, PersonaHumana.class);
   }
+
   public Optional<PersonaHumana> buscarPorUsuario(Long idUsuario){
     return entityManager()
-        .createQuery("from " + PersonaHumana.class.getName() + " WHERE usuario_id = :dato")
-        .setParameter("dato", idUsuario)
+        .createQuery("from " + PersonaHumana.class.getName() + " WHERE usuario_id = :id")
+        .setParameter("id", idUsuario)
         .getResultList()
         .stream()
         .findFirst();

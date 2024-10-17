@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class RepositorioPersonaVulnerable extends Repositorio {
-  public Optional<List<PersonaVulnerable>> buscarPersonasDe(Long idResponsable) {
+  public Optional<List<PersonaVulnerable>> buscarPersonasDe(Long idUsuario) {
     List<PersonaVulnerable> resultados = entityManager().createQuery(
-            "FROM " + PersonaVulnerable.class.getName() + " t WHERE t.personaQueLoRegistro.id = :idResponsable", PersonaVulnerable.class)
-        .setParameter("idResponsable", idResponsable)
+            "SELECT pv FROM PersonaVulnerable pv "
+                + "JOIN pv.personaQueLoRegistro ph "
+                + "JOIN ph.usuario u "
+                + "WHERE u.id = :idUsuario", PersonaVulnerable.class)
+        .setParameter("idUsuario", idUsuario)
         .getResultList();
     return Optional.of(resultados);
   }

@@ -14,6 +14,7 @@ import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -201,5 +202,13 @@ public class PersonaVulnerable {
     if (this.menoresAcargo != nuevosMenoresACargo) {
       this.setMenoresAcargo(nuevosMenoresACargo);
     }
+  }
+
+  public void agregarTarjeta(Tarjeta tarjeta) {
+    if (this.tarjetas == null) {
+      this.tarjetas = new ArrayList<>();
+    }
+    this.tarjetas.add(tarjeta);
+    this.setTarjetaEnUso(tarjeta);
   }
 }

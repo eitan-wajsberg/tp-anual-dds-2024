@@ -8,6 +8,7 @@ import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTarjetas;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
 import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
@@ -16,6 +17,7 @@ import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +27,16 @@ import java.util.TimeZone;
 public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioPersonaVulnerable repositorioPersonaVulnerable;
   private RepositorioPersonaHumana repositorioPersonaHumana;
+  private RepositorioTarjetas repositorioTarjetas;
   private final String rutaRegistroHbs = "/colaboraciones/registroPersonaVulnerable.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoPersonasVulnerables.hbs";
   private final String rutaSolicitudHbs = "/colaboraciones/solicitudTarjetas.hbs";
   private final Integer CANTIDAD_TARJETAS_SIN_ENTREGAR_MAXIMAS = 20;
 
-  public ControladorPersonaVulnerable(RepositorioPersonaVulnerable repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana) {
+  public ControladorPersonaVulnerable(RepositorioPersonaVulnerable repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana, RepositorioTarjetas repositorioTarjetas) {
     this.repositorioPersonaVulnerable = repositorioPersonaVulnerable;
     this.repositorioPersonaHumana = repositorioPersonaHumana;
+    this.repositorioTarjetas = repositorioTarjetas;
   }
 
   @Override
@@ -43,7 +47,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
     Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(id);
 
     Map<String, Object> model = new HashMap<>();
-    model.put("nombre", nombre);
+    model.put("usuario", nombre);
     model.put("id", id);
     vulnerables.ifPresent(personaVulnerables -> model.put("personasVulnerables", personaVulnerables));
 
@@ -58,7 +62,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   @Override
   public void create(Context context) {
     String nombre = context.sessionAttribute("nombre");
-    context.render(rutaRegistroHbs, Map.of("nombreUsuario", nombre == null ? "" : nombre));
+    context.render(rutaRegistroHbs, Map.of("usuario", nombre == null ? "" : nombre));
   }
 
   @Override
@@ -85,12 +89,13 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       // asigno tarjeta sin entregar del registrador a la persona vulnerable
       Tarjeta tarjeta = asignarTarjeta(registrador.get());
       registrador.get().agregarTarjetaEntregada(tarjeta);
-      nuevaPersona.setTarjetaEnUso(tarjeta);
+      nuevaPersona.agregarTarjeta(tarjeta);
 
       registrador.get().sumarPuntaje(tarjeta.calcularPuntaje());
       withTransaction(() -> {
         repositorioPersonaVulnerable.guardar(nuevaPersona);
-        repositorioPersonaHumana.actualizar(registrador);
+        repositorioPersonaVulnerable.actualizar(tarjeta);
+        repositorioPersonaHumana.actualizar(registrador.get());
       });
 
       context.redirect("/personasVulnerables");
@@ -98,14 +103,15 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", dto);
-      model.put("nombre", nombre);
+      model.put("usuario", nombre);
       model.put("id", id);
       context.render(rutaRegistroHbs, model);
     }
   }
 
   private Tarjeta asignarTarjeta(PersonaHumana registrador) throws ValidacionFormularioException {
-    if (registrador.getTarjetasSinEntregar().isEmpty()) {
+    List<Tarjeta> tarjetas = repositorioTarjetas.buscarTarjetasDe(registrador.getId());
+    if (tarjetas.isEmpty()) {
       throw new ValidacionFormularioException("No puede registrar personas vulnerables ya que no tiene tarjetas para entregar.");
     }
     Tarjeta tarjeta = registrador.getTarjetasSinEntregar().remove(0);
@@ -183,54 +189,69 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   }
 
   public void solicitarTarjetas(Context context) {
+    int cantidadTarjetas = 0;
+    String cantidad = context.formParam("cantidad");
+
     try {
-      Long id = Long.valueOf(context.pathParam("id"));
-      // Obtiene el registrador, o lanza una excepción si no se encuentra
-      PersonaHumana registrador = repositorioPersonaHumana.buscarPorUsuario(id)
-          .orElseThrow(() -> new ValidacionFormularioException("No se ha encontrado al solicitante. Reintentar."));
-
-      // Verifica si tiene demasiadas tarjetas sin entregar
-      if (registrador.getTarjetasSinEntregar().size() > CANTIDAD_TARJETAS_SIN_ENTREGAR_MAXIMAS) {
-        throw new ValidacionFormularioException("No puede tener más de 20 tarjetas en simultáneo sin entregar.");
-      }
-
-      // Verifica si tiene una dirección asignada válida
-      Direccion direccion = registrador.getDireccion();
-      if (direccion == null || direccion.getNomenclatura() == null || direccion.getNomenclatura().isEmpty() || direccion.getCoordenada() == null) {
-        throw new ValidacionFormularioException("No puede solicitar tarjetas, ya que no tiene asignada una dirección. Por favor, complete el formulario con la dirección y luego regrese.");
-      }
-
-      // Verifica el campo "cantidad" del formulario
-      String cantidad = context.formParam("cantidad");
+      // Validación de campo "cantidad"
       if (cantidad == null || cantidad.isEmpty()) {
-        throw new ValidacionFormularioException("Campo cantidad vacío, por favor complételo.");
+        throw new ValidacionFormularioException("El campo 'cantidad' está vacío. Por favor, complételo.");
       }
 
-      // Convierte el valor de cantidad a entero
-      int cantidadTarjetas;
-      try {
-        cantidadTarjetas = Integer.parseInt(cantidad);
-        if (cantidadTarjetas <= 0) {
-          throw new ValidacionFormularioException("Debe solicitar al menos una tarjeta.");
-        }
-      } catch (NumberFormatException e) {
-        throw new ValidacionFormularioException("El valor ingresado en cantidad no es válido.");
+      Long id = context.sessionAttribute("id");
+      Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorUsuario(id);
+      if (registrador.isEmpty()) {
+        throw new ValidacionFormularioException("No se ha encontrado al solicitante. Reintente.");
       }
+
+      // Validación de tarjetas sin entregar
+      if (registrador.get().getTarjetasSinEntregar().size() > CANTIDAD_TARJETAS_SIN_ENTREGAR_MAXIMAS) {
+        throw new ValidacionFormularioException("No puede tener más de " + CANTIDAD_TARJETAS_SIN_ENTREGAR_MAXIMAS + " tarjetas sin entregar.");
+      }
+
+      // Validación de dirección
+      validarDireccion(registrador.get());
+
+      // Validación de cantidad de tarjetas
+      cantidadTarjetas = validarCantidad(cantidad);
 
       // Solicita las tarjetas y las guarda en la base de datos
+      List<Tarjeta> tarjetas = new ArrayList<>();
       for (int i = 0; i < cantidadTarjetas; i++) {
         Tarjeta tarjeta = new Tarjeta();
         tarjeta.setFechaRecepcionColaborador(LocalDate.now());
-        withTransaction(() -> repositorioPersonaHumana.guardar(tarjeta));
+        registrador.get().agregarTarjetaSinEntregar(tarjeta);
+        withTransaction(() -> repositorioTarjetas.guardar(tarjeta));
       }
+      withTransaction(() -> repositorioPersonaHumana.actualizar(registrador.get()));
 
       // Renderiza el mensaje de éxito
-      context.render(rutaSolicitudHbs, Map.of("success", "La solicitud fue aceptada. Se le asignaron " + cantidadTarjetas + " tarjetas. Ahora el correo argentino se encargará de enviarlas a la dirección: " + direccion.getNomenclatura()));
+      context.render(rutaSolicitudHbs, Map.of(
+          "success", "La solicitud fue aceptada. Se le asignaron " + cantidadTarjetas + " tarjetas. El correo argentino las enviará a la dirección: " + registrador.get().getDireccion().getNomenclatura()
+      ));
 
     } catch (ValidacionFormularioException e) {
-      context.render(rutaSolicitudHbs, Map.of("error", e.getMessage()));
-    } catch (Exception e) {
-      context.render(rutaSolicitudHbs, Map.of("error", "Ocurrió un error inesperado. Por favor, intente nuevamente."));
+      // Renderiza el mensaje de error
+      context.render(rutaSolicitudHbs, Map.of("error", e.getMessage(), "cantidad", cantidad));
+    }
+  }
+
+  private void validarDireccion(PersonaHumana registrador) throws ValidacionFormularioException {
+    Direccion direccion = registrador.getDireccion();
+    if (direccion == null || direccion.getNomenclatura() == null || direccion.getNomenclatura().isEmpty() || direccion.getCoordenada() == null) {
+      throw new ValidacionFormularioException("No puede solicitar tarjetas porque no tiene asignada una dirección válida. Por favor, complete su dirección y luego regrese.");
+    }
+  }
+
+  private int validarCantidad(String cantidad) throws ValidacionFormularioException {
+    try {
+      int cantidadTarjetas = Integer.parseInt(cantidad);
+      if (cantidadTarjetas <= 0) {
+        throw new ValidacionFormularioException("Debe solicitar al menos una tarjeta.");
+      }
+      return cantidadTarjetas;
+    } catch (NumberFormatException e) {
+      throw new ValidacionFormularioException("El valor ingresado en 'cantidad' no es válido. Debe ser un número.");
     }
   }
 }

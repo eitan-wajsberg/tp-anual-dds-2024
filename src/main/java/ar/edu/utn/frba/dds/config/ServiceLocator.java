@@ -21,7 +21,8 @@ public class ServiceLocator {
       if (componentName.equals(ControladorPersonaVulnerable.class.getName())) {
         instance = new ControladorPersonaVulnerable(
                 instanceOf(RepositorioPersonaVulnerable.class),
-                instanceOf(RepositorioPersonaHumana.class)
+                instanceOf(RepositorioPersonaHumana.class),
+                instanceOf(RepositorioTarjetas.class)
         );
       } else if (componentName.equals(ControladorRegistroUsuario.class.getName())) {
         instance = new ControladorRegistroUsuario(
@@ -126,8 +127,10 @@ public class ServiceLocator {
         instance = new RepositorioOfertaCanjeada();
       } else if (componentName.equals(RepositorioRubro.class.getName())) {
         instance = new RepositorioRubro();
-      }else if (componentName.equals(RepositorioSuscripcion.class.getName())) {
+      } else if (componentName.equals(RepositorioSuscripcion.class.getName())) {
         instance = new RepositorioSuscripcion();
+      } else if (componentName.equals(RepositorioTarjetas.class.getName())) {
+        instance = new RepositorioTarjetas();
       }
 
       instances.put(componentName, instance);
