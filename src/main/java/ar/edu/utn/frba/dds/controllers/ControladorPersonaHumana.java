@@ -17,7 +17,7 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
 
   private Repositorio repositorioGenerico;
   private final String rutaPersonaHbs = "cuenta/formularioPersonaHumana.hbs";
-  private final String rutaPersonaHumana = "/personaHumana";
+  private final String rutaPersonaHumana = "/"; // es la ruta del inicio
   private final String rutaPantallaPrincipal = "/personasVulnerables"; //TODO: Poner ruta posta
   private final String ERROR = "error";
 
@@ -129,6 +129,7 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
     if (persona.isPresent()) {
       withTransaction(() -> repositorioGenerico.eliminarFisico(PersonaHumana.class, id));
       context.redirect(rutaPersonaHumana);
+      // TODO: eliminar el usuario perteneciente a la persona
     } else {
       context.status(400).result("No se pudo eliminar la cuenta, reintente más tarde.");
     }

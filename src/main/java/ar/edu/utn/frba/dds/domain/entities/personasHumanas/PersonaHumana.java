@@ -304,19 +304,19 @@ public class PersonaHumana extends IObserverNotificacion {
     Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
 
-    if (!this.direccion.equals(direccion)) {
+    if (this.direccion == null || !this.direccion.equals(direccion)) {
       this.setDireccion(direccion);
     }
 
-    if (!this.documento.equals(documento)) {
+    if (this.documento == null || !this.documento.equals(documento)) {
       this.setDocumento(documento);
     }
 
-    if (!this.contacto.equals(contacto)) {
+    if (this.contacto == null || !this.contacto.equals(contacto)) {
       this.setContacto(contacto);
     }
 
-    if (!this.contribucionesElegidas.equals(dto.getFormasContribucionHumanasSet())) {
+    if (this.contribucionesElegidas == null || !this.contribucionesElegidas.equals(dto.getFormasContribucionHumanasSet())) {
       contribucionesElegidas.addAll(dto.getFormasContribucionHumanasSet());
     }
   }
