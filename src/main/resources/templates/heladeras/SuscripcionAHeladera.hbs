@@ -1,13 +1,12 @@
 {{#partial "contenido"}}
-    {{#partial "contenido"}}
         <div class="m-5">
             <div class="row justify-content-center">
-                <form id="subscriptionForm" method="POST" action="/mapaHeladeras/{{id}}/HeladeraParticular/{{id-PersonaHumana}}/Suscribir">
+                <form id="subscriptionForm" method="POST" action="/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaId}/suscribir">
                     <h4 class="fw-bold fs-5">Suscribirse a las alertas de la heladera</h4>
                     <p class="mb-3">Selecciona el tipo de alerta que deseas recibir.</p>
 
                     <!-- Campo oculto para el ID del usuario -->
-                    <input type="hidden" name="usuarioId" value="{{id-PersonaHumana}}">
+                    <input type="hidden" name="personaId" value="{{personaId}}">
 
                     <!-- Campo oculto para el ID de la heladera -->
                     <input type="hidden" name="heladeraId" value="{{heladeraId}}">
@@ -40,11 +39,7 @@
                 </form>
             </div>
         </div>
-    {{/partial}}
-
-    <!-- Cargar la plantilla base y mostrar el contenido -->
-    {{> templates/base titulo="Suscripción a Heladera" mostrarSeccion=true seccion="Suscripciones" mostrarIrAtras=true paginaAtras="/heladeras" }}
 
 {{/partial}}
 
-{{> templates/base titulo="Heladera" mostrarMapa= true mostrarSeccion=true seccion="Detalle Heladera" mostrarPersonaHumana=true }}
+{{> templates/base titulo="Suscripción a Heladera" mostrarSeccion=true seccion="Suscripciones" mostrarIrAtras=true paginaAtras="/mapaHeladeras" }}

@@ -118,12 +118,16 @@ public class ServiceLocator {
         );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
+      } else if (componentName.equals(ControladorInicioSesion.class.getName())) {
+        instance = new ControladorInicioSesion(ServiceLocator.instanceOf(RepositorioUsuario.class));
       } else if (componentName.equals(RepositorioOferta.class.getName())) {
         instance = new RepositorioOferta();
       } else if (componentName.equals(RepositorioOfertaCanjeada.class.getName())) {
         instance = new RepositorioOfertaCanjeada();
       } else if (componentName.equals(RepositorioRubro.class.getName())) {
         instance = new RepositorioRubro();
+      }else if (componentName.equals(RepositorioSuscripcion.class.getName())) {
+        instance = new RepositorioSuscripcion();
       }
 
       instances.put(componentName, instance);

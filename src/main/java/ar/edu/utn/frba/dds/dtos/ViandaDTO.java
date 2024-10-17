@@ -2,43 +2,60 @@ package ar.edu.utn.frba.dds.dtos;
 
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import io.javalin.http.Context;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 public class ViandaDTO implements DTO {
   private Long id;
-  private String fechaCaducidad;
-  private boolean entregada;
   private String comida;
-  private float caloriasEnKcal;
-  private float pesoEnGramos;
-  private String fechaDonacion;
+  private String caloriasEnKcal;
+  private String pesoEnGramos;
+  private LocalDate fechaCaducidad;
+  private LocalDate fechaDonacion;
+  private boolean entregada;
   private Long personaHumanaId;
 
   public ViandaDTO(Vianda vianda) {
     this.id = vianda.getId();
-    this.fechaCaducidad = vianda.getFechaCaducidad().toString();
-    this.entregada = vianda.isEntregada();
     this.comida = vianda.getComida();
-    this.caloriasEnKcal = vianda.getCaloriasEnKcal();
-    this.pesoEnGramos = vianda.getPesoEnGramos();
-    this.fechaDonacion = vianda.getFechaDonacion().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    this.caloriasEnKcal = String.valueOf(vianda.getCaloriasEnKcal());
+    this.pesoEnGramos = String.valueOf(vianda.getPesoEnGramos());
+    this.fechaCaducidad = vianda.getFechaCaducidad() != null ? vianda.getFechaCaducidad() : null;
+    this.entregada = vianda.isEntregada();
+    this.fechaDonacion = vianda.getFechaDonacion();
     this.personaHumanaId = vianda.getPersonaHumana() != null ? vianda.getPersonaHumana().getId() : null;
   }
 
   @Override
   public void obtenerFormulario(Context context) {
-    this.fechaCaducidad = context.formParam("fechaCaducidad");
-    this.entregada = false;
     this.comida = context.formParam("comida");
-    this.caloriasEnKcal = Float.parseFloat(context.formParam("caloriasEnKcal"));
-    this.pesoEnGramos = Float.parseFloat(context.formParam("pesoEnGramos"));
-    this.fechaDonacion = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    this.personaHumanaId = Long.parseLong(context.sessionAttribute("idUsuario"));
+    this.entregada = false;
+    this.caloriasEnKcal = context.formParam("caloriasEnKcal");
+    this.pesoEnGramos = context.formParam("pesoEnGramos");
+    this.fechaCaducidad = LocalDate.parse(context.formParam("fechaCaducidad"));
+    this.fechaDonacion = LocalDate.now();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    ViandaDTO that = (ViandaDTO) obj;
+    return that.caloriasEnKcal.equals(caloriasEnKcal) &&
+        that.pesoEnGramos.equals(pesoEnGramos) &&
+        entregada == that.entregada &&
+        Objects.equals(comida, that.comida) &&
+        Objects.equals(fechaCaducidad, that.fechaCaducidad) &&
+        Objects.equals(fechaDonacion, that.fechaDonacion) &&
+        Objects.equals(personaHumanaId, that.personaHumanaId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(comida, caloriasEnKcal, pesoEnGramos, fechaCaducidad, entregada, fechaDonacion, personaHumanaId);
   }
 }
-

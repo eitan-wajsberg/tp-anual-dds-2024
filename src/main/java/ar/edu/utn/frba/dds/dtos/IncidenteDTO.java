@@ -34,10 +34,9 @@ public class IncidenteDTO implements DTO {
 
     @Override
     public void obtenerFormulario(Context context) {
-        this.heladeraId = Long.parseLong(context.formParam("heladeraId"));
-        this.colaboradorId = Long.parseLong(context.formParam("colaboradorId"));
+        this.heladeraId = Long.parseLong(context.pathParam("heladeraId"));
+        this.colaboradorId = Long.parseLong(context.pathParam("personaId"));
         this.tipoIncidente = context.formParam("tipoFalla");
-        this.tipoAlerta = context.formParam("tipoAlerta");
         this.descripcionDelColaborador = context.formParam("descripcion");
     }
 

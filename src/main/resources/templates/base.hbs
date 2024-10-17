@@ -40,23 +40,23 @@
                     <button onclick="window.location.href='/tipoCuenta';">Registrarse</button>
                 {{/if}}
                 {{#if mostrarAdmin}}
-                    <span class="fw-bold fs-6">{{nombreAdmin}}</span>
+                    <span class="fw-bold fs-6">{{nombreUsuario}}</span>
                     <button class="btn btn-dark p-2">
                         <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
                     </button>
                 {{/if}}
                 {{#if mostrarPersonaJuridica}}
-                    <span class="fw-bold fs-6">{{razonSocial}}</span>
+                    <span class="fw-bold fs-6">{{nombreUsuario}}</span>
                     <button class="btn btn-dark p-2" onclick="window.location.href='/personaJuridica/{{id}}/edicion'">
                         <span class="iconify" data-icon="mingcute:building-2-line" data-width="24" data-height="24"></span>
                     </button> <!-- TODO: INDICAR EL ID DEL USUARIO EN CUESTION -->
                 {{/if}}
                 {{#if mostrarPersonaHumana}}
-                    <span class="fw-bold fs-6">{{nombre}}</span>
+                    <span class="fw-bold fs-6">{{nombreUsuario}}</span>
                     {{#if pantallaOfertas}}
                         <span class="fw-bold fs-6 pe-2">
-                        <strong>{{puntos}}</strong> <span style="color: #888;">puntos</span>
-                    </span>
+                            <strong>{{puntos}}</strong><span style="color: #888;">puntos</span>
+                        </span>
                     {{/if}}
                     <button onclick="window.location.href='/personaHumana/{{id}}/edicion'">
                         <span class="iconify" data-icon="iconoir:user" data-width="24" data-height="24"></span>

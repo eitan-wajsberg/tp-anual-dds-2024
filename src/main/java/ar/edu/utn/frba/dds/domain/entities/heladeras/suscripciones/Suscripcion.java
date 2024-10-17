@@ -22,6 +22,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import static com.github.jknack.handlebars.helper.ConditionalHelpers.and;
+
 @Getter @Setter
 @Entity
 @Table(name="suscripcion")
@@ -82,14 +85,12 @@ public static Suscripcion fromDTO(SuscripcionDTO dto) {
     // Condicional según el tipo de suscripción
     if ("FALTAN_N_VIANDAS".equals(dto.getTipoSuscripcion())) {
       FaltanNViandas faltanNViandas = new FaltanNViandas();
-      faltanNViandas.setCantidadViandasParaLlenarse(dto.getCantidadViandasFaltantes());
       faltanNViandas.setSuscriptor(suscriptor);
       faltanNViandas.setHeladera(heladera);
       return faltanNViandas;
 
     } else if ("QUEDAN_N_VIANDAS".equals(dto.getTipoSuscripcion())) {
       QuedanNViandas quedanNViandas = new QuedanNViandas();
-      quedanNViandas.setCantidadViandasDisponibles(dto.getCantidadViandasQueQuedan());
       quedanNViandas.setSuscriptor(suscriptor);
       quedanNViandas.setHeladera(heladera);
       return quedanNViandas;
@@ -114,17 +115,14 @@ public static Suscripcion fromDTO(SuscripcionDTO dto) {
     if (dto.getIdPersonaHumana() == null || dto.getIdHeladera() == null) {
       throw new IllegalArgumentException("La persona humana y la heladera son campos obligatorios.");
     }
-    if (dto.getCantidadViandasFaltantes() == null || dto.getCantidadViandasQueQuedan() == null) {
-      throw new IllegalArgumentException("Las cantidades de viandas faltantes y que quedan son campos obligatorios.");
-    }
   }
 
   // Validar que los valores numéricos sean válidos
   static void validarValoresNumericos(SuscripcionDTO dto) {
-    if (dto.getCantidadViandasFaltantes() < 0) {
+    if (dto.getCantidadViandasFaltantes() != null && dto.getCantidadViandasFaltantes() < 0  ) {
       throw new IllegalArgumentException("La cantidad de viandas faltantes no puede ser negativa.");
     }
-    if (dto.getCantidadViandasQueQuedan() < 0) {
+    if (dto.getCantidadViandasQueQuedan() != null &&dto.getCantidadViandasQueQuedan() < 0) {
       throw new IllegalArgumentException("La cantidad de viandas que quedan no puede ser negativa.");
     }
   }
