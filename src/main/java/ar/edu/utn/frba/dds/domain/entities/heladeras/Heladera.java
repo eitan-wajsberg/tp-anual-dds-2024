@@ -208,13 +208,26 @@ public class Heladera implements Contribucion {
     }
 
     this.solicitudesDeApertura.add(solicitud);
-    PublicadorSolicitudApertura
+    // TODO: levantar mqtt
+    /*PublicadorSolicitudApertura
         .getInstance()
         .publicarSolicitudApertura(solicitud.getTarjeta().getCodigo(), solicitud.getFechaSolicitud(), this.id);
+        */
   }
 
   public int cantidadViandas() {
-    return this.viandas.size();
+    return this.cantidadViandasIngresadas() - this.cantidadViandasRetiradas();
+    //return this.viandas.size(); //FIXME hay que ver qué hacer con esto
+  }
+
+  public int cantidadViandasIngresadas(){
+    Stream<SolicitudApertura> ingresadas = this.solicitudesDeApertura.stream().filter(SolicitudApertura::esIngresadaRealmente);
+    return ingresadas.mapToInt(SolicitudApertura::getCantidadViandas).sum();
+  }
+
+  public int cantidadViandasRetiradas(){
+    Stream<SolicitudApertura> quitadas = this.solicitudesDeApertura.stream().filter(SolicitudApertura::esQuitadaRealmente);
+    return quitadas.mapToInt(SolicitudApertura::getCantidadViandas).sum();
   }
 
   public int cantidadViandasVirtuales() {
