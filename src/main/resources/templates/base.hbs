@@ -24,7 +24,7 @@
                     </a>
                 {{/if}}
                 <div class="fw-bold fs-4 d-inline-block d-flex align-items-center">
-                    <a href="{{paginaSeccion}}" class="dark-text">SMAACVS</a>
+                    <a href="/" class="dark-text">SMAACVS</a>
                     {{#if mostrarSeccion}}
                         <span class="fw-normal ms-2">|</span>
                         <span class="fw-medium fs-5 ms-2">{{seccion}}</span>
@@ -40,19 +40,19 @@
                     <button onclick="window.location.href='/tipoCuenta';">Registrarse</button>
                 {{/if}}
                 {{#if mostrarAdmin}}
-                    <span class="fw-bold fs-6">{{nombreUsuario}}</span>
+                    <span class="fw-bold fs-6">{{usuario}}</span>
                     <button class="btn btn-dark p-2">
                         <span class="iconify" data-icon="material-symbols:admin-panel-settings-outline" data-width="24" data-height="24"></span>
                     </button>
                 {{/if}}
                 {{#if mostrarPersonaJuridica}}
-                    <span class="fw-bold fs-6">{{nombreUsuario}}</span>
+                    <span class="fw-bold fs-6">{{usuario}}</span>
                     <button class="btn btn-dark p-2" onclick="window.location.href='/personaJuridica/{{id}}/edicion'">
                         <span class="iconify" data-icon="mingcute:building-2-line" data-width="24" data-height="24"></span>
                     </button> <!-- TODO: INDICAR EL ID DEL USUARIO EN CUESTION -->
                 {{/if}}
                 {{#if mostrarPersonaHumana}}
-                    <span class="fw-bold fs-6">{{nombreUsuario}}</span>
+                    <span class="fw-bold fs-6">{{usuario}}</span>
                     {{#if pantallaOfertas}}
                         <span class="fw-bold fs-6 pe-2">
                             <strong>{{puntos}}</strong><span style="color: #888;">puntos</span>
