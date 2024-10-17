@@ -20,13 +20,12 @@ import java.util.Set;
 public class Initializer implements WithSimplePersistenceUnit {
 
   public static void init() {
-    Initializer initializer = new Initializer();
-    initializer.iniciar();
+    // Initializer initializer = new Initializer();
+    // initializer.iniciar();
   }
 
   public void iniciar() {
-
-    withTransaction(()->{iniciarRubros();});
+    withTransaction(this::iniciarRubros);
   }
 
   private void iniciarRubros() {
@@ -40,5 +39,4 @@ public class Initializer implements WithSimplePersistenceUnit {
     repositorioRubro.guardar(turismo);
     repositorioRubro.guardar(electrodomesticos);
   }
-
 }

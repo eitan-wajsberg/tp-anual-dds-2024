@@ -57,7 +57,6 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
       usuario.setRol(rol.get());
 
       withTransaction(() -> repositorioUsuario.guardar(usuario));
-
       context.redirect("/");
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();

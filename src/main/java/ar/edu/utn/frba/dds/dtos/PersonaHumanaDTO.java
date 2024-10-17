@@ -27,10 +27,18 @@ public class PersonaHumanaDTO implements DTO {
     this.id = personaHumana.getId();
     this.nombre = personaHumana.getNombre();
     this.apellido = personaHumana.getApellido();
-    this.fechaNacimiento = personaHumana.getFechaNacimiento().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    this.direccionDTO = new DireccionDTO(personaHumana.getDireccion());
-    this.documentoDTO = new DocumentoDTO(personaHumana.getDocumento());
-    this.contactoDTO = new ContactoDTO(personaHumana.getContacto());
+    if (personaHumana.getFechaNacimiento() != null) {
+      this.fechaNacimiento = personaHumana.getFechaNacimiento().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+    if (personaHumana.getDireccion() != null) {
+      this.direccionDTO = new DireccionDTO(personaHumana.getDireccion());
+    }
+    if (personaHumana.getDocumento() != null) {
+      this.documentoDTO = new DocumentoDTO(personaHumana.getDocumento());
+    }
+    if (personaHumana.getContacto() != null) {
+      this.contactoDTO = new ContactoDTO(personaHumana.getContacto());
+    }
   }
 
   @Override

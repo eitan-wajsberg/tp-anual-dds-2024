@@ -38,9 +38,9 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   @Override
   public void index(Context context) {
     String nombre = context.sessionAttribute("nombre");
-    String id = context.sessionAttribute("id");
+    Long id = context.sessionAttribute("id");
 
-    Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(Long.valueOf(id));
+    Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(id);
 
     Map<String, Object> model = new HashMap<>();
     model.put("nombre", nombre);
@@ -65,10 +65,11 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   public void save(Context context) {
     PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
     dto.obtenerFormulario(context);
+    String nombre = context.sessionAttribute("nombre");
+    Long id = context.sessionAttribute("id");
 
     try {
-      // FIXME: Quitar la persona hardcodeada y obtener el id de la sesion
-      Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class);
+      Optional<PersonaHumana> registrador = repositorioPersonaHumana.buscarPorUsuario(id);
       if (registrador.isEmpty()) {
         throw new ValidacionFormularioException("No se ha encontrado la persona que lo está registrando. Reintentar.");
       }
@@ -97,6 +98,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", dto);
+      model.put("nombre", nombre);
+      model.put("id", id);
       context.render(rutaRegistroHbs, model);
     }
   }
@@ -175,16 +178,15 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   }
 
   public void solicitudTarjetas(Context context) {
-    // TODO: Sacar lo hardcodeado
     Long id = context.sessionAttribute("id");
-    context.render(rutaSolicitudHbs, Map.of("id", 1));
+    context.render(rutaSolicitudHbs, Map.of("id", id));
   }
 
   public void solicitarTarjetas(Context context) {
     try {
-      // TODO: Sacar lo hardcodeado
+      Long id = Long.valueOf(context.pathParam("id"));
       // Obtiene el registrador, o lanza una excepción si no se encuentra
-      PersonaHumana registrador = repositorioPersonaHumana.buscarPorId(1L, PersonaHumana.class)
+      PersonaHumana registrador = repositorioPersonaHumana.buscarPorUsuario(id)
           .orElseThrow(() -> new ValidacionFormularioException("No se ha encontrado al solicitante. Reintentar."));
 
       // Verifica si tiene demasiadas tarjetas sin entregar
@@ -226,10 +228,8 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       context.render(rutaSolicitudHbs, Map.of("success", "La solicitud fue aceptada. Se le asignaron " + cantidadTarjetas + " tarjetas. Ahora el correo argentino se encargará de enviarlas a la dirección: " + direccion.getNomenclatura()));
 
     } catch (ValidacionFormularioException e) {
-      // Renderiza el mensaje de error relacionado con la validación del formulario
       context.render(rutaSolicitudHbs, Map.of("error", e.getMessage()));
     } catch (Exception e) {
-      // Manejo de cualquier otra excepción no prevista
       context.render(rutaSolicitudHbs, Map.of("error", "Ocurrió un error inesperado. Por favor, intente nuevamente."));
     }
   }
