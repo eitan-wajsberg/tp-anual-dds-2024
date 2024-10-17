@@ -1,10 +1,12 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraVirtualmenteVaciaException;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.GsonFactory;
+import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import com.google.gson.Gson;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDistribucionVianda;
@@ -17,6 +19,7 @@ import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,16 +33,19 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
   private RepositorioDistribucionVianda repositorioDistribucion;
   private RepositorioPersonaHumana repositorioPHumana;
   private RepositorioHeladera repositorioHeladera;
+  private Repositorio repositorioSoliApe;
   private final String rutaAltaHbs = "colaboraciones/distribucionDeVianda.hbs";
   private final String rutaListadoHbs = "colaboraciones/distribucionesDeViandas.hbs";
 
   private final Gson gson = GsonFactory.createGson();
   public ControladorDistribucionVianda(RepositorioDistribucionVianda repositorioDistribucion
       , RepositorioPersonaHumana repositorioPHumana
-      , RepositorioHeladera repositorioHeladera){
+      , RepositorioHeladera repositorioHeladera
+    , Repositorio repositorioSoliApe){
     this.repositorioDistribucion = repositorioDistribucion;
     this.repositorioPHumana = repositorioPHumana;
     this.repositorioHeladera = repositorioHeladera;
+    this.repositorioSoliApe = repositorioSoliApe;
   }
 
   @Override
@@ -84,9 +90,33 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       return;
     }
 
+    // agrego solicitud de apertura para quitar viandas de origen
+    Heladera origen = dist.getHeladeraOrigen();
+    SolicitudApertura soliApertura = SolicitudApertura.builder()
+        .accion(AccionApertura.QUITAR_VIANDA)
+        .fechaSolicitud(LocalDateTime.now())
+        .tarjeta(dist.getColaborador().getTarjetaEnUso())
+        .cantidadViandas(dist.getCantidadViandas())
+        .aperturaConcretada(false)
+        .build();
+    try {
+      origen.agregarSolicitudApertura(soliApertura);
+    }catch(HeladeraVirtualmenteVaciaException e){
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", e.getMessage());
+      model.put("dto", DTOfromContext(context));
+      model.put("readonly", false);
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
+      context.render(rutaAltaHbs, model);
+      return;
+    }
     DistribucionVianda nuevaDist = dist;
 
-    withTransaction(() -> this.repositorioDistribucion.guardar(nuevaDist));
+    withTransaction(() -> {
+      this.repositorioSoliApe.guardar(soliApertura);
+      this.repositorioDistribucion.guardar(nuevaDist);
+      this.repositorioHeladera.guardar(origen);
+    });
 
     context.redirect("/distribucionVianda");
   }
@@ -120,6 +150,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       model.put("id", context.pathParam("id"));
       model.put("jsonHeladeras", gson.toJson(heladeras));
       context.render(this.rutaAltaHbs, model);
+      return;
     } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       context.render(this.rutaListadoHbs, model);
@@ -129,9 +160,8 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
   @Override
   public void update(Context context) {
-    DistribucionVianda nuevaDist = null;
+    DistribucionVianda viejaDist = null;
     try {
-      nuevaDist = entityfromContext(context);
       Long id = Long.parseLong(context.pathParam("id"));
       Optional<DistribucionVianda> optViejaDist = this.repositorioDistribucion.buscarPorId(
           Long.valueOf(id), DistribucionVianda.class);
@@ -139,16 +169,16 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       if (optViejaDist.isEmpty()) {
         throw new ValidacionFormularioException("Distribución de vianda no encontrada.");
       }
-      DistribucionVianda viejaDist = optViejaDist.get();
-      if(!nuevaDist.getColaborador().getId().equals(viejaDist.getColaborador().getId())){
+      viejaDist = optViejaDist.get();
+      Long colaboradorId = 8L; //TODO debe tomar el dato de sesión
+      if(!colaboradorId.equals(viejaDist.getColaborador().getId())){
         throw new ValidacionFormularioException("No puede modificar las distribuciones de vianda de otros colaboradores.");
       }
 
-      nuevaDist.setId(id);
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
-      model.put("dto", DTOfromContext(context));
+      model.put("dto", fromEntity(viejaDist));
       model.put("readonly", false);
       model.put("id", context.pathParam("id"));
       model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
@@ -156,8 +186,52 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       return;
     }
 
-    DistribucionVianda distActualizar = nuevaDist;
-    withTransaction(() -> this.repositorioDistribucion.guardar(distActualizar));
+    // agrego solicitud de apertura para agregar viandas al destino
+    Heladera destino = viejaDist.getHeladeraDestino();
+    SolicitudApertura soliApertura = SolicitudApertura.builder()
+        .accion(AccionApertura.INGRESAR_VIANDA)
+        .fechaSolicitud(LocalDateTime.now())
+        .tarjeta(viejaDist.getColaborador().getTarjetaEnUso())
+        .cantidadViandas(viejaDist.getCantidadViandas())
+        .aperturaConcretada(false)
+        .build();
+
+    // actualizo solicitud anterior
+    Heladera origen = viejaDist.getHeladeraOrigen();
+    DistribucionVianda dist = viejaDist;
+    Optional<SolicitudApertura> optSolOrigen = origen.getSolicitudesDeApertura().stream().filter(c-> !c.isAperturaConcretada()
+            && c.getFechaSolicitud().isAfter(dist.getFecha().atStartOfDay())
+            && c.getAccion().equals(AccionApertura.QUITAR_VIANDA)).findFirst();
+    if(optSolOrigen.isEmpty()){
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", "No se encontró que la distribución haya sido inicializada. Contactese con el administrador del sistema.");
+      model.put("dto", fromEntity(viejaDist));
+      model.put("readonly", false);
+      model.put("id", context.pathParam("id"));
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
+      context.render(rutaAltaHbs, model);
+      return;
+    }
+    SolicitudApertura solOrigen = optSolOrigen.get();
+    solOrigen.setAperturaConcretada(true);
+
+    try {
+      destino.agregarSolicitudApertura(soliApertura);
+    }catch(HeladeraVirtualmenteVaciaException e){
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", e.getMessage());
+      model.put("dto", fromEntity(viejaDist));
+      model.put("readonly", false);
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
+      context.render(rutaAltaHbs, model);
+      return;
+    }
+
+    withTransaction(() -> {
+      this.repositorioSoliApe.actualizar(solOrigen);
+      this.repositorioSoliApe.guardar(soliApertura);
+      this.repositorioHeladera.guardar(destino);
+    });
 
     context.redirect("/distribucionVianda");
   }
@@ -267,20 +341,20 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         .cantidadViandas(entity.getCantidadViandas());
 
     Optional<SolicitudApertura> solicitudOrigen = entity.getHeladeraOrigen()
-        .getSolicitudesDeApertura().stream().filter(c-> !c.isAperturaConcretada()
-            && c.getFechaSolicitud().isAfter(entity.getFecha().atStartOfDay())
+        .getSolicitudesDeApertura().stream().filter(c->
+            c.getFechaSolicitud().isAfter(entity.getFecha().atStartOfDay())
             && c.getAccion().equals(AccionApertura.QUITAR_VIANDA)).findFirst();
-
+// TODO debería vincularse la distribución con la solicitud realmente
     if(solicitudOrigen.isPresent()){
-      dtoBuilder.horaSolicitudEnOrigen(solicitudOrigen.get().getFechaConcrecion().format(DateTimeFormatter. ofPattern("HH:mm:ss")));
+      dtoBuilder.horaSolicitudEnOrigen(solicitudOrigen.get().getFechaSolicitud().format(DateTimeFormatter. ofPattern("HH:mm:ss")));
 
-      Optional<SolicitudApertura> solicitudDestino = entity.getHeladeraOrigen()
-          .getSolicitudesDeApertura().stream().filter(c-> !c.isAperturaConcretada()
-              && c.getFechaSolicitud().isAfter(solicitudOrigen.get().getFechaConcrecion())
+      Optional<SolicitudApertura> solicitudDestino = entity.getHeladeraDestino()
+          .getSolicitudesDeApertura().stream().filter(c->
+              c.getFechaSolicitud().isAfter(solicitudOrigen.get().getFechaSolicitud())
               && c.getAccion().equals(AccionApertura.INGRESAR_VIANDA)).findFirst();
 
       if(solicitudDestino.isPresent()){
-        dtoBuilder.horaSolicitudEnDestino(solicitudDestino.get().getFechaConcrecion().format(DateTimeFormatter. ofPattern("HH:mm:ss")));
+        dtoBuilder.horaSolicitudEnDestino(solicitudDestino.get().getFechaSolicitud().format(DateTimeFormatter. ofPattern("HH:mm:ss")));
       }
     }
 

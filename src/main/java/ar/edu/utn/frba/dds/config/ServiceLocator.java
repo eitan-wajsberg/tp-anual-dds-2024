@@ -111,9 +111,10 @@ public class ServiceLocator {
         instance = new RepositorioPersonaVulnerable();
       } else if (componentName.equals(ControladorDistribucionVianda.class.getName())) {
         instance = new ControladorDistribucionVianda(
-            instanceOf(RepositorioDistribucionVianda.class),
-            instanceOf(RepositorioPersonaHumana.class),
-            instanceOf(RepositorioHeladera.class)
+            instanceOf(RepositorioDistribucionVianda.class)
+            ,instanceOf(RepositorioPersonaHumana.class)
+            ,instanceOf(RepositorioHeladera.class)
+            ,instanceOf(Repositorio.class)
         );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();

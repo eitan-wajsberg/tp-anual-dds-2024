@@ -12,8 +12,8 @@ public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     @Override
-    public void write(JsonWriter out, LocalDateTime value) throws IOException {
-        out.value(value.format(formatter));
+    public void write(JsonWriter out, LocalDateTime ldt) throws IOException {
+        out.value(ldt == null ? null : ldt.format(formatter));
     }
 
     @Override

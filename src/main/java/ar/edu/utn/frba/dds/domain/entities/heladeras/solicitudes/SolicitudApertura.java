@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +26,8 @@ import javax.persistence.Id;
 @Entity
 @Table(name = "solicitud_apertura")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class SolicitudApertura {
   @Id @GeneratedValue
   private long id;
@@ -61,6 +65,16 @@ public class SolicitudApertura {
 
   public boolean esQuitadaVirtualmente() {
     return !this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA
+        && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
+  }
+
+  public boolean esIngresadaRealmente() {
+    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.INGRESAR_VIANDA
+        && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
+  }
+
+  public boolean esQuitadaRealmente() {
+    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA
         && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
   }
 

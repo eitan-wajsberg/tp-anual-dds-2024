@@ -5,6 +5,34 @@
         <div class="pt-5 pb-2"></div> <!-- separador -->
         <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
         <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/edicion{{/if}}" {{/unless}}>
+            {{#if dto.horaSolicitudEnOrigen}}
+            <div class="row mb-2">
+                <label>Fecha: <span class="color-777">{{dto.fecha}}</span></label>
+            </div>
+            <div class="row mb-2">
+                <label>Origen: <span class="color-777">{{dto.heladeraOrigenNombre}}</span></label>
+            </div>
+            <div class="row mb-2">
+                <label>Destino: <span class="color-777">{{dto.heladeraDestinoNombre}}</span></label>
+            </div>
+            <div class="row mb-2">
+                <label>Viandas a mover: <span class="color-777">{{dto.cantidadViandas}}</span></label>
+            </div>
+            <div class="row mb-3">
+                <label>Hora en la que inició el viaje al origen: <span class="color-777">{{dto.horaSolicitudEnOrigen}}</span></label>
+            </div>
+            <div class="row mb-3 {{#unless dto.horaSolicitudEnDestino}}d-none{{/unless}}">
+                <label>Hora en la que inició el viaje al destino: <span class="color-777">{{dto.horaSolicitudEnDestino}}</span></label>
+            </div>
+            <div class="row m-1">
+                <button class="p-2">Iniciar viaje a destino</button>
+            </div>
+            <div class="row mt-3">
+                <label class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para depositar las viandas en el destino.</label>
+            </div>
+
+            {{else}}
+
             <div class="col-12 mb-2">
                 <input class="w-100" required type="text" id="heladeraOrigen" name="heladeraOrigen" data-id="heladeraOrigenId" placeholder="Seleccionar heladera de origen" value="{{dto.heladeraOrigenNombre}}">
                 <input type="hidden" name="heladeraOrigenId" id="heladeraOrigenId" value="{{dto.heladeraOrigenId}}">
@@ -14,7 +42,7 @@
                 <input type="hidden" name="heladeraDestinoId" id="heladeraDestinoId"  value="{{dto.heladeraDestinoId}}">
             </div>
             <div class="col-12 mb-2">
-                <input class="w-100" required type="number" name="cantidadViandas" placeholder="Cantidad de viandas a mover" value={{dto.cantidadViandas}}>
+                <input class="w-100" required type="number" min=1 name="cantidadViandas" placeholder="Cantidad de viandas a mover" value={{dto.cantidadViandas}}>
             </div>
             <div class="col-12 mb-3">
                 <div class="input-group">
@@ -31,6 +59,7 @@
             <div class="row">
                 <p class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para retirar las viandas del origen.</p>
             </div>
+            {{/if}}
             {{#if error}}
                 <div class="row mt-2 justify-content-center">
                     <p id="error" class="error text-center">{{error}}</p>
