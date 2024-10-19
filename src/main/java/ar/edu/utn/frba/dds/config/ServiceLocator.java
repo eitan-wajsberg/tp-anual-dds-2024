@@ -50,7 +50,7 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorReportes.class.getName())) {
         instance = new ControladorReportes();
       } else if (componentName.equals(ControladorPersonaHumana.class.getName())) {
-        instance = new ControladorPersonaHumana(instanceOf(Repositorio.class));
+        instance = new ControladorPersonaHumana(instanceOf(RepositorioPersonaHumana.class));
       } else if (componentName.equals(ControladorPersonaJuridica.class.getName())) {
         instance = new ControladorPersonaJuridica(instanceOf(RepositorioPersonaJuridica.class));
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {

@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
@@ -14,15 +16,13 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePersistenceUnit {
-
-  private Repositorio repositorioGenerico;
+  private RepositorioPersonaHumana repositorioPersonaHumana;
   private final String rutaPersonaHbs = "cuenta/formularioPersonaHumana.hbs";
-  private final String rutaPersonaHumana = "/"; // es la ruta del inicio
-  private final String rutaPantallaPrincipal = "/personasVulnerables"; //TODO: Poner ruta posta
+  private final String rutaPantallaPrincipal = "/";
   private final String ERROR = "error";
 
-  public ControladorPersonaHumana(Repositorio repositorioGenerico) {
-    this.repositorioGenerico = repositorioGenerico;
+  public ControladorPersonaHumana(RepositorioPersonaHumana repositorioPersonaHumana) {
+    this.repositorioPersonaHumana = repositorioPersonaHumana;
   }
 
   @Override
@@ -49,7 +49,7 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
       if (nuevaPersona == null) {
         throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
       }
-      withTransaction(() -> repositorioGenerico.guardar(nuevaPersona));
+      withTransaction(() -> repositorioPersonaHumana.guardar(nuevaPersona));
       context.redirect(rutaPantallaPrincipal);
 
     } catch (ValidacionFormularioException e) {
@@ -64,7 +64,8 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
   public void edit(Context context) {
     Map<String, Object> model = new HashMap<>();
     try {
-      Optional<PersonaHumana> persona = repositorioGenerico.buscarPorId(Long.valueOf(context.pathParam("id")), PersonaHumana.class);
+      Optional<PersonaHumana> persona = repositorioPersonaHumana
+          .buscarPorUsuario(Long.valueOf(context.pathParam("id")));
 
       if (persona.isEmpty()) {
         throw new ValidacionFormularioException("No existe la persona.");
@@ -89,8 +90,8 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
     dtoNuevo.obtenerFormulario(context);
 
     try {
-      Optional<PersonaHumana> personaExistente = repositorioGenerico
-          .buscarPorId(Long.valueOf(context.pathParam("id")), PersonaHumana.class);
+      Optional<PersonaHumana> personaExistente = repositorioPersonaHumana
+          .buscarPorUsuario(Long.valueOf(context.pathParam("id")));
 
       if (personaExistente.isEmpty()) {
         throw new ValidacionFormularioException("Persona no encontrada.");
@@ -102,15 +103,15 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
       }
 
       personaExistente.get().actualizarFromDto(dtoNuevo);
-      withTransaction(() -> repositorioGenerico.actualizar(personaExistente.get()));
+      withTransaction(() -> repositorioPersonaHumana.actualizar(personaExistente.get()));
       context.redirect(rutaPantallaPrincipal);
       PersonaHumana persona = personaExistente.get();
       persona.setNombre(dtoNuevo.getNombre());
       persona.setApellido(dtoNuevo.getApellido());
       persona.setFechaNacimiento(LocalDate.parse(dtoNuevo.getFechaNacimiento()));
-      repositorioGenerico.actualizar(persona);
+      repositorioPersonaHumana.actualizar(persona);
 
-      context.redirect(rutaPersonaHumana);
+      context.redirect(rutaPantallaPrincipal);
     } catch (ValidacionFormularioException e) {
       model.put(ERROR, e.getMessage());
       model.put("dto", dtoNuevo);
@@ -124,12 +125,14 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
   @Override
   public void delete(Context context) {
     Long id = Long.valueOf(context.pathParam("id"));
-    Optional<PersonaHumana> persona = repositorioGenerico.buscarPorId(id, PersonaHumana.class);
+    Optional<PersonaHumana> persona = repositorioPersonaHumana.buscarPorUsuario(id);
 
     if (persona.isPresent()) {
-      withTransaction(() -> repositorioGenerico.eliminarFisico(PersonaHumana.class, id));
-      context.redirect(rutaPersonaHumana);
-      // TODO: eliminar el usuario perteneciente a la persona
+      withTransaction(() -> {
+        repositorioPersonaHumana.eliminarFisico(PersonaHumana.class, id);
+        repositorioPersonaHumana.eliminarFisico(Usuario.class, id);
+      });
+      context.redirect(rutaPantallaPrincipal);
     } else {
       context.status(400).result("No se pudo eliminar la cuenta, reintente más tarde.");
     }
