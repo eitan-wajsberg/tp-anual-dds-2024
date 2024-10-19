@@ -88,7 +88,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       model.put("puntos", puntaje);
 
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
-      ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
+      //ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
 
     }
     else{
@@ -136,13 +136,19 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
         Long id_usuario = context.sessionAttribute("id");
         Optional<PersonaHumana> canjeador = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
         Oferta oferta = ofertaOptional.get();
-        OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now(),canjeador.get());
-        canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
-        withTransaction(()->{
-          repositorioOfertaCanjeada.guardar(ofertaCanjeada);
-          repositorioPersonaHumana.actualizar(canjeador.get());});
+        if(canjeador.get().getPuntajeActual() >= oferta.getCantidadPuntosNecesarios()) {
+          OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now(), canjeador.get());
+          canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
+          withTransaction(() -> {
+            repositorioOfertaCanjeada.guardar(ofertaCanjeada);
+            repositorioPersonaHumana.actualizar(canjeador.get());
+          });
 
-        context.status(200).result("Canje exitoso");
+          context.status(200).result("Canje exitoso");
+        }
+        else{
+          context.status(409).result("Puntos insuficientes para canjear oferta.");
+        }
       } else {
         // Manejar el caso cuando no se encuentra la oferta
         context.status(404).result("Oferta no encontrada");
