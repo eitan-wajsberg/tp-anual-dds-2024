@@ -50,7 +50,6 @@ public class ControladorInicioSesion {
       context.sessionAttribute("nombre", usuario.getNombre());
       context.sessionAttribute("rol", usuario.getRol().getTipoRol().name());
       context.redirect("/");
-
     } catch (ValidacionFormularioException e) {
       // En caso de error, renderizar la página con el mensaje de error
       Map<String, Object> model = new HashMap<>();
@@ -60,5 +59,4 @@ public class ControladorInicioSesion {
       context.render(rutaInicioSesion, model);
     }
   }
-
 }
