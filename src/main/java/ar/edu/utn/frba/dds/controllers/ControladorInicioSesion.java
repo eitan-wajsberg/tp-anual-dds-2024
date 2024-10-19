@@ -53,7 +53,7 @@ public class ControladorInicioSesion {
       // En caso de error, renderizar la página con el mensaje de error
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
-      model.put("nombre", nombreUsuario);  // Mantener el usuario en el campo de la vista
+      model.put("nombre", nombreUsuario);
       model.put("clave", clave);
       context.render(rutaInicioSesion, model);
     }

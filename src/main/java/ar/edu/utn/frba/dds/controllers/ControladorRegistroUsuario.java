@@ -8,12 +8,13 @@ import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.dtos.UsuarioDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
-import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.persistence.PersistenceException;
+import javax.validation.ConstraintViolationException;
 
 public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   private RepositorioUsuario repositorioUsuario;
@@ -48,6 +49,11 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
         throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.");
       }
 
+      if (dto.getRol() == null || !(dto.getRol().equals(TipoRol.PERSONA_HUMANA.name())
+          || dto.getRol().equals(TipoRol.PERSONA_JURIDICA.name()))) {
+        throw new ValidacionFormularioException("No se ha indicado un tipo de cuenta o se indicó uno incorrecto. Vuelve a /tipoCuenta.");
+      }
+
       Optional<Rol> rol = repositorioRol.buscarPorTipo(TipoRol.valueOf(dto.getRol()));
       if (rol.isEmpty()) {
         throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.");
@@ -65,6 +71,12 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
       model.put("error", e.getMessage());
       model.put("dto", dto);
       context.render(rutaHbs, model);
+    } catch (PersistenceException e) {
+      if (e.getCause() instanceof ConstraintViolationException) {
+        System.out.println("El usuario ya existe, no se insertará nuevamente.");
+      } else {
+        throw e;
+      }
     }
   }
 
