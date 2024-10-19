@@ -8,13 +8,13 @@ BEGIN;
 		(3, "PERSONA_JURIDICA"),
 		(4, "TECNICO");
 
--- Inserciones en la tabla 'usuario' (la clave es la misma para todos ellos es 'marge')
--- obviamente que 'marge' no es un secreto memorizado valido, pero hace mas rapido el inicio de sesion.
-INSERT INTO usuario (id, nombre, clave, rol_id) VALUES
-		(1, "admin", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 1),
-		(2, "humano", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 2),
-		(3, "empresa", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 3),
-        (4, "tecnico", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 4);
+    -- Inserciones en la tabla 'usuario' (la clave es la misma para todos ellos es 'marge')
+    -- obviamente que 'marge' no es un secreto memorizado valido, pero hace mas rapido el inicio de sesion.
+    INSERT INTO usuario (id, nombre, clave, rol_id) VALUES
+            (1, "admin", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 1),
+            (2, "humano", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 2),
+            (3, "empresa", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 3),
+            (4, "tecnico", "$2a$10$CxQui86cEpr7PRNjTwEtVujpnac8RdmBCKRQkd0KWDjBVML6Uwmb2", 4);
 
 	-- Inserción en la tabla 'persona_humana'
 	INSERT INTO persona_humana (
