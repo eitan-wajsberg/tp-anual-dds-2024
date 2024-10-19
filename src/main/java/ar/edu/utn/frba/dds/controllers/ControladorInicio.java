@@ -22,6 +22,6 @@ public class ControladorInicio {
 
     // Si no tiene rol o id, redirige a la pantalla de inicio común
     String rutaHbs = (rol == null || id == null) ? "pantallaInicio.hbs" : RUTAS.getOrDefault(rol, "pantallaInicio.hbs");
-    context.render(rutaHbs);
+    context.render(rutaHbs, Map.of("id", id == null ? "" : id));
   }
 }
