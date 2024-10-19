@@ -3,14 +3,6 @@ package ar.edu.utn.frba.dds.domain.repositories;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-import javax.persistence.metamodel.EntityType;
-import org.hibernate.Criteria;
 
 public class Repositorio implements WithSimplePersistenceUnit {
   public void guardar(Object objeto) {
