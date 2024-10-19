@@ -12,7 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class ControladorInicioSesion {
   private RepositorioUsuario repositorioUsuario;
-  private final String rutaInicioSesion = "/cuenta/login.hbs";
+  private final String rutaInicioSesion = "/cuenta/inicioSesion.hbs";
 
   public ControladorInicioSesion(RepositorioUsuario repositorioUsuario) {
     this.repositorioUsuario = repositorioUsuario;
@@ -22,7 +22,7 @@ public class ControladorInicioSesion {
     context.render(rutaInicioSesion);
   }
 
-  public void logIn(Context context) {
+  public void iniciarSesion(Context context) {
     String nombreUsuario = context.formParam("usuario");
     String clave = context.formParam("clave");
 
@@ -47,7 +47,6 @@ public class ControladorInicioSesion {
 
       // Si es válido, crear la sesión del usuario
       context.sessionAttribute("id", usuario.getId());
-      context.sessionAttribute("nombre", usuario.getNombre());
       context.sessionAttribute("rol", usuario.getRol().getTipoRol().name());
       context.redirect("/");
     } catch (ValidacionFormularioException e) {

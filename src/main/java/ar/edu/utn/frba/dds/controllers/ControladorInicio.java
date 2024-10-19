@@ -17,7 +17,10 @@ public class ControladorInicio {
 
   public void create(Context context) {
     String rol = context.sessionAttribute("rol");
-    String rutaHbs = RUTAS.getOrDefault(rol, "pantallaInicio.hbs");
+    Long id = context.sessionAttribute("id");
+
+    // Si no tiene rol o id, redirige a la pantalla de inicio común
+    String rutaHbs = (rol == null || id == null) ? "pantallaInicio.hbs" : RUTAS.getOrDefault(rol, "pantallaInicio.hbs");
     context.render(rutaHbs);
   }
 }
