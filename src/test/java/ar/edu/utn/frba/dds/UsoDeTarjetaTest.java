@@ -71,6 +71,6 @@ public class UsoDeTarjetaTest {
         .build();
   }
   private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
-    return new Vianda(LocalDateTime.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
+    return new Vianda(LocalDate.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
   }
 }

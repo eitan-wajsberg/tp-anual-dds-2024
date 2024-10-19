@@ -5,9 +5,6 @@ import ar.edu.utn.frba.dds.domain.entities.validador.ListaDePeoresClavesMemoriza
 import ar.edu.utn.frba.dds.domain.entities.validador.LongitudEstipulada;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.entities.validador.ValidadorDeClave;
-import ar.edu.utn.frba.dds.domain.entities.validador.TipoValidacion;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,51 +12,55 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ValidadorTest {
-
     private Usuario usuario;
     private ValidadorDeClave validador;
 
     @BeforeEach
-    public void antesDeTestear(){
+    public void antesDeTestear() {
         usuario = new Usuario("Juan");
 
-        validador = new ValidadorDeClave();
-        LongitudEstipulada restriccionLongitud = new LongitudEstipulada(16);
-        ListaDePeoresClavesMemorizadas restriccionLista = new ListaDePeoresClavesMemorizadas();
-        AusenciaDeCredencialesPorDefecto restriccionCredenciales = new AusenciaDeCredencialesPorDefecto("Juan");
-
-        Set<TipoValidacion> restricciones = new HashSet<>();
-        restricciones.add(restriccionLongitud);
-        restricciones.add(restriccionLista);
-        restricciones.add(restriccionCredenciales);
-        validador.setValidadores(restricciones);
+        // Inicializa el validador con las restricciones deseadas
+        validador = new ValidadorDeClave(
+            new LongitudEstipulada(16),
+            new ListaDePeoresClavesMemorizadas(),
+            new AusenciaDeCredencialesPorDefecto("Juan")
+        );
     }
 
     @Test
-    @DisplayName("El cambio de secreto falla cuando es mas corto que la longitud minima esperada")
-    public void cambioDeSecretoFalla(){
-        String secretoCorto = "corto";
-        Assertions.assertThrows(RuntimeException.class, () -> usuario.cambiarClave(secretoCorto, validador));
+    @DisplayName("El validador no falla ante una clave correcta")
+    public void claveValidaNoDeberiaFallar() {
+        String claveValida = "hola1234hola";
+        Assertions.assertTrue(validador.validar(claveValida), "La clave válida no debería generar errores.");
+        System.out.println(validador.getErroresFinales());
+        Assertions.assertEquals("", validador.getErroresFinales(), "No debería haber errores para una clave válida.");
     }
 
     @Test
-    @DisplayName("El cambio de secreto es exitoso cuando se cumplen todas las condiciones")
-    public void cambioDeSecretoExitoso(){
-        String secreto = "hoalgajr9!!!";
-        usuario.cambiarClave(secreto, validador);
-
-        Assertions.assertEquals(usuario.getClave(), secreto);
+    @DisplayName("El validador falla al ingresar una clave igual que el nombre de usuario")
+    public void claveIgualNombreDeUsuarioDeberiaFallar() {
+        String claveIgualNombre = "Juan";
+        Assertions.assertFalse(validador.validar(claveIgualNombre), "La clave igual al nombre de usuario debería generar un error.");
+        String mensajeEsperado = new AusenciaDeCredencialesPorDefecto("Juan").getMensajeError();
+        Assertions.assertTrue(validador.getErroresFinales().contains(mensajeEsperado), "El mensaje de error esperado no está presente.");
     }
 
     @Test
-    @DisplayName("El validador falla por no cumplir la longitud minima esperada")
-    public void fallaValidadorPorLongitud(){
+    @DisplayName("El validador falla al ingresar una clave perteneciente a las mil peores")
+    public void clavePeorDeberiaFallar() {
+        String clavePeor = "123456";
+        Assertions.assertFalse(validador.validar(clavePeor), "La clave de la lista de peores debería generar un error.");
+        String mensajeEsperado = new ListaDePeoresClavesMemorizadas().getMensajeError();
+        Assertions.assertTrue(validador.getErroresFinales().contains(mensajeEsperado), "El mensaje de error esperado no está presente.");
+    }
+
+    @Test
+    @DisplayName("El validador falla por no cumplir la longitud mínima esperada")
+    public void fallaValidadorPorLongitud() {
         String secretoCorto = "admin";
+        Assertions.assertFalse(validador.validar(secretoCorto), "La clave corta debería generar un error.");
         String mensajeEsperado = new LongitudEstipulada(16).getMensajeError();
-        try {
-            validador.validar(secretoCorto);
-        }catch(RuntimeException excepcion){
-            Assertions.assertTrue(excepcion.getMessage().contains(mensajeEsperado));
-        }
+        Assertions.assertTrue(validador.getErroresFinales().contains(mensajeEsperado), "El mensaje de error esperado no está presente.");
     }
+
 }

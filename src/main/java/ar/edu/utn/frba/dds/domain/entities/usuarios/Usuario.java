@@ -41,19 +41,6 @@ public class Usuario {
     this.nombre = nombre;
   }
 
-  public void cambiarClave(String clave, ValidadorDeClave validador) throws RuntimeException {
-    String hashOriginal = this.clave;
-    String claveAuxiliarB = clave;
-    this.clave = clave; // = funcionHash(this.clave)
-    if (!validador.validar(clave)) {
-      this.clave = hashOriginal; // = funcionHash(this.clave)
-    }
-  }
-
-  public void cambiarClave(String clave) {
-    this.clave = clave;
-  }
-
   public void setClaveEncriptada(String clave) {
     this.clave = BCrypt.hashpw(clave, BCrypt.gensalt());
   }
