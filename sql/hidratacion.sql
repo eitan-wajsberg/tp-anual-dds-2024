@@ -4,7 +4,7 @@ SET SQL_SAFE_UPDATES = 0;
 INSERT INTO rol (id, tipoRol) VALUES
 	(1, 'ADMIN'),
 	(2, 'PERSONA_HUMANA'),
-	(3, 'ORGANIZACION'),
+	(3, 'PERSONA_JURIDICA'),
 	(4, 'TECNICO');
 
 -- Inserciones en la tabla 'usuario' (la clave es la misma para todos ellos es 'marge')
