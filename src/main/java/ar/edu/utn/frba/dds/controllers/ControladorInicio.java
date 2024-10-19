@@ -5,6 +5,7 @@ import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.javalin.http.Context;
 import java.util.HashMap;
 import java.util.Map;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class ControladorInicio {
   private static final Map<String, String> RUTAS = new HashMap<>();
