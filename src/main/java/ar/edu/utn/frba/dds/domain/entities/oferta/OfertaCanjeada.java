@@ -37,5 +37,6 @@ public class OfertaCanjeada {
     public OfertaCanjeada(Oferta oferta, LocalDateTime fechaCanje, PersonaHumana canjeador) {
         this.oferta = oferta;
         this.fechaCanje = fechaCanje;
+        this.canjeador = canjeador;
     }
 }
