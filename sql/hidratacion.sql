@@ -8,12 +8,12 @@ BEGIN;
 		(3, "PERSONA_JURIDICA"),
 		(4, "TECNICO");
 
-	-- Inserciones en la tabla 'usuario'
-	INSERT INTO usuario (id, nombre, clave, rol_id) VALUES 
-		(1, "admin", "$10$wTygvG/trx78miGR7XRW.OQ6rEdWKqgAFn56wcxmp/rQKuqt4yqJS", 1),
-		(2, "humano", "$10$wTygvG/trx78miGR7XRW.OQ6rEdWKqgAFn56wcxmp/rQKuqt4yqJS", 2),
-		(3, "empresa", "$10$wTygvG/trx78miGR7XRW.OQ6rEdWKqgAFn56wcxmp/rQKuqt4yqJS", 3),
-		(4, "tecnico", "$10$wTygvG/trx78miGR7XRW.OQ6rEdWKqgAFn56wcxmp/rQKuqt4yqJS", 4);
+-- Inserciones en la tabla 'usuario'
+INSERT INTO usuario (id, nombre, clave, rol_id) VALUES
+		(1, "admin", "$2a$10$VuX80E4YjfzYiJZSMr1nKuUQxasb94jyptOh96aG.bf96F1dja0UO", 1),
+		(2, "humano", "$2a$10$VuX80E4YjfzYiJZSMr1nKuUQxasb94jyptOh96aG.bf96F1dja0UO", 2),
+		(3, "empresa", "$2a$10$VuX80E4YjfzYiJZSMr1nKuUQxasb94jyptOh96aG.bf96F1dja0UO", 3),
+        (4, "tecnico", "$2a$10$VuX80E4YjfzYiJZSMr1nKuUQxasb94jyptOh96aG.bf96F1dja0UO", 4);
 
 	-- Inserción en la tabla 'persona_humana'
 	INSERT INTO persona_humana (
