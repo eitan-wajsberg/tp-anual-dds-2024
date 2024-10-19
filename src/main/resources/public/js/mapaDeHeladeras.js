@@ -11,7 +11,7 @@ map.addControl(new mapboxgl.NavigationControl());
 console.log('Mapbox loaded');
 
 // Custom marker image URL
-var customMarkerImage = '/img/refrigerator.png';
+var customMarkerImage = '/img/favicon-light.png';
 
 
 // Función para agregar marcadores en el mapa
@@ -57,8 +57,8 @@ function addMarker(heladera, onMarkerClick) {
 function createCustomMarker(markerImage) {
     var img = document.createElement('img');
     img.src = markerImage;
-    img.style.width = '34px'; // Tamaño del marcador
-    img.style.height = '34px';
+    img.style.width = '40px'; // Tamaño del marcador
+    img.style.height = '40px';
 
     var customMarker = document.createElement('div');
     customMarker.appendChild(img);
