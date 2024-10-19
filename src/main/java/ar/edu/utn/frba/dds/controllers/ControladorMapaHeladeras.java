@@ -38,6 +38,10 @@ public class ControladorMapaHeladeras implements ICrudViewsHandler, WithSimplePe
         this.repositorioSuscripcion = repositorioSuscripcion;
     }
 
+    // FIXME: Funciona unicamente en el caso de agregar heladeras y nada mas.
+    // Si agregamos cambios de estado, solicitudes de apertura, sugerencias, etc., se rompe,
+    // es decir que con el initializer completo rompe, pero solo agregando heladeras no.
+
     @Override
     public void index(Context context) {
         try {
