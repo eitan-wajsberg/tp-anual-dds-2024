@@ -58,7 +58,6 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
       withTransaction(() -> repositorioUsuario.guardar(usuario));
 
       context.sessionAttribute("id", usuario.getId());
-      context.sessionAttribute("nombre", usuario.getNombre());
       context.sessionAttribute("rol", usuario.getRol().getTipoRol().name());
       context.redirect("/");
     } catch (ValidacionFormularioException e) {
