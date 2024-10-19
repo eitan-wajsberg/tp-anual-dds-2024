@@ -54,7 +54,10 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorPersonaJuridica.class.getName())) {
         instance = new ControladorPersonaJuridica(instanceOf(RepositorioPersonaJuridica.class));
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {
-        instance = new ControladorDonacionVianda(instanceOf(Repositorio.class));
+        instance = new ControladorDonacionVianda(
+            instanceOf(RepositorioPersonaHumana.class),
+            instanceOf(RepositorioDonacionVianda.class)
+        );
       } else if (componentName.equals(ControladorDonacionDinero.class.getName())) {
         instance = new ControladorDonacionDinero(instanceOf(Repositorio.class));
       } else if (componentName.equals(Repositorio.class.getName())) {
@@ -131,7 +134,10 @@ public class ServiceLocator {
         instance = new RepositorioSuscripcion();
       } else if (componentName.equals(RepositorioTarjetas.class.getName())) {
         instance = new RepositorioTarjetas();
+      } else if (componentName.equals(RepositorioDonacionVianda.class.getName())) {
+        instance = new RepositorioDonacionVianda();
       }
+
 
       instances.put(componentName, instance);
     }

@@ -1,8 +1,12 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionVianda;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.dtos.ViandaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
@@ -14,21 +18,23 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimplePersistenceUnit {
-
-  private Repositorio repositorioGenerico;
+  private RepositorioPersonaHumana repositorioPersonaHumana;
+  private RepositorioDonacionVianda repositorioDonacionVianda;
   private final String rutaDonacionHbs = "colaboraciones/donacionVianda.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesViandas.hbs";
   private final String rutaListadoDonaciones = "/donacionVianda";
   private final String ERROR = "error";
 
 
-  public ControladorDonacionVianda(Repositorio repositorioGenerico) {
-    this.repositorioGenerico = repositorioGenerico;
+  public ControladorDonacionVianda(RepositorioPersonaHumana repositorioPersonaHumana, RepositorioDonacionVianda repositorioDonacionVianda) {
+    this.repositorioPersonaHumana = repositorioPersonaHumana;
+    this.repositorioDonacionVianda = repositorioDonacionVianda;
   }
 
   @Override
   public void index(Context context) {
-    List<Vianda> donaciones = this.repositorioGenerico.buscarTodos(Vianda.class);
+    Long id = context.sessionAttribute("id");
+    List<Vianda> donaciones = this.repositorioDonacionVianda.buscarViandasDe(id);
     Map<String, Object> model = new HashMap<>();
     model.put("donacionesVianda", donaciones);
     context.render(rutaListadoHbs, model);
@@ -50,15 +56,13 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   public void save(Context context) {
     ViandaDTO dto = new ViandaDTO();
     dto.obtenerFormulario(context);
+    Long id = context.sessionAttribute("id");
 
     try {
-      //TODO: Obtener id de sesion
-      Optional<PersonaHumana> personaHumana = repositorioGenerico
-          .buscarPorId(1L, PersonaHumana.class);
-
-      /*if (personaHumana.isEmpty() || personaJuridica.isEmpty()) {
+      Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(id);
+      if (personaHumana.isEmpty()) {
           throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
-      } */
+      }
 
       Vianda nuevaDonacion = Vianda.fromDTO(dto);
       if (nuevaDonacion == null) {
@@ -66,14 +70,11 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       }
 
       personaHumana.get().sumarPuntaje(nuevaDonacion.calcularPuntaje());
-
       withTransaction(() -> {
-        repositorioGenerico.guardar(nuevaDonacion);
-        repositorioGenerico.actualizar(personaHumana);
+        repositorioDonacionVianda.guardar(nuevaDonacion);
+        repositorioPersonaHumana.actualizar(personaHumana);
       });
-
       context.redirect(rutaListadoDonaciones);
-
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put(ERROR, e.getMessage());
@@ -86,7 +87,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   public void edit(Context context) {
     Map<String, Object> model = new HashMap<>();
     try {
-      Optional<Vianda> vianda = repositorioGenerico
+      Optional<Vianda> vianda = repositorioDonacionVianda
           .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
 
       if (vianda.isEmpty()) {
@@ -103,18 +104,16 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       model.put("error", e.getMessage());
       context.render(rutaListadoHbs, model);
     }
-
   }
 
   @Override
   public void update(Context context) {
-
     Map<String, Object> model = new HashMap<>();
     ViandaDTO dtoNuevo = new ViandaDTO();
     dtoNuevo.obtenerFormulario(context);
 
     try {
-      Optional<Vianda> viandaExistente = repositorioGenerico
+      Optional<Vianda> viandaExistente = repositorioDonacionVianda
           .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
 
       if (viandaExistente.isEmpty()) {
@@ -127,7 +126,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       }
 
       viandaExistente.get().actualizarFromDto(dtoNuevo);
-      withTransaction(() -> repositorioGenerico.actualizar(viandaExistente.get()));
+      withTransaction(() -> repositorioDonacionVianda.actualizar(viandaExistente.get()));
       context.redirect(rutaListadoDonaciones);
 
     } catch (Exception e) {
@@ -142,14 +141,13 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   @Override
   public void delete(Context context) {
     Long id = Long.valueOf(context.pathParam("id"));
-    Optional<Vianda> vianda = repositorioGenerico.buscarPorId(id, Vianda.class);
+    Optional<Vianda> vianda = repositorioDonacionVianda.buscarPorId(id, Vianda.class);
 
     if (vianda.isPresent()) {
-      withTransaction(() -> this.repositorioGenerico.eliminarFisico(Vianda.class, id));
+      withTransaction(() -> this.repositorioDonacionVianda.eliminarFisico(Vianda.class, id));
       context.redirect(rutaListadoDonaciones);
     } else {
       context.status(400).result("No se puede cancelar la donación de vianda, pues no fue encontrada.");
     }
   }
-
 }
