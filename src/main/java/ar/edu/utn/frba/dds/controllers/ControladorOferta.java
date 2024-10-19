@@ -144,14 +144,14 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
             repositorioPersonaHumana.actualizar(canjeador.get());
           });
 
-          context.status(200).result("Canje exitoso");
+          context.status(200).contentType("text/plain").result("Canje exitoso");
         }
         else{
-          context.status(409).result("Puntos insuficientes para canjear oferta.");
+          context.status(403).contentType("text/plain").result("Puntos insuficientes para canjear oferta.");
         }
       } else {
         // Manejar el caso cuando no se encuentra la oferta
-        context.status(404).result("Oferta no encontrada");
+        context.status(403).result("Oferta no encontrada");
       }
 
     }
