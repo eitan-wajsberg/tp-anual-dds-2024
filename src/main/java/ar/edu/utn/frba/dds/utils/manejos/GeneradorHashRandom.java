@@ -1,9 +1,8 @@
-package ar.edu.utn.frba.dds.utils.random;
+package ar.edu.utn.frba.dds.utils.manejos;
 
 import java.security.SecureRandom;
 
-public class Random {
-
+public class GeneradorHashRandom {
   private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   private static final SecureRandom RANDOM = new SecureRandom();
 
