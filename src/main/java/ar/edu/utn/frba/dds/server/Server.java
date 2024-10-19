@@ -32,7 +32,8 @@ public class Server {
       Router.init(app);
 
       if (Boolean.parseBoolean(PrettyProperties.getInstance().propertyFromName("dev_mode"))) {
-        Initializer.init();
+        Initializer initializer = new Initializer();
+        initializer.init();
       }
     }
   }
