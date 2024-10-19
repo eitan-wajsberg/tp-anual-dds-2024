@@ -41,13 +41,11 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void index(Context context) {
-    String nombre = context.sessionAttribute("nombre");
     Long id = context.sessionAttribute("id");
 
     Optional<List<PersonaVulnerable>> vulnerables = this.repositorioPersonaVulnerable.buscarPersonasDe(id);
 
     Map<String, Object> model = new HashMap<>();
-    model.put("usuario", nombre);
     model.put("id", id);
     vulnerables.ifPresent(personaVulnerables -> model.put("personasVulnerables", personaVulnerables));
 
@@ -61,15 +59,13 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
 
   @Override
   public void create(Context context) {
-    String nombre = context.sessionAttribute("nombre");
-    context.render(rutaRegistroHbs, Map.of("usuario", nombre == null ? "" : nombre));
+    context.render(rutaRegistroHbs);
   }
 
   @Override
   public void save(Context context) {
     PersonaVulnerableDTO dto = new PersonaVulnerableDTO();
     dto.obtenerFormulario(context);
-    String nombre = context.sessionAttribute("nombre");
     Long id = context.sessionAttribute("id");
 
     try {
@@ -103,7 +99,6 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", dto);
-      model.put("usuario", nombre);
       model.put("id", id);
       context.render(rutaRegistroHbs, model);
     }
