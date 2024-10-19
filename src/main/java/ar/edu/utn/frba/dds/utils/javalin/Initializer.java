@@ -11,7 +11,7 @@ public class Initializer implements WithSimplePersistenceUnit {
     // Este método asegura que la base de datos esté correctamente inicializada.
     // Si la base de datos está vacía, se realiza la hidratación inicial ejecutando el script.
     // Si la base ya contiene datos, el script no se vuelve a ejecutar.
-    hidratarBaseConArchivo();
+    // hidratarBaseConArchivo();
   }
 
   private void hidratarBaseConArchivo() {
