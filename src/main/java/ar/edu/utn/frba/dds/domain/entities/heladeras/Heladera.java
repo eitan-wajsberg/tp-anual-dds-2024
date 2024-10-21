@@ -5,13 +5,15 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
+import ar.edu.utn.frba.dds.dtos.HeladeraDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -33,11 +35,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import kotlin.BuilderInference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Getter
+@Builder
 @Entity @Table(name="heladera")
+@AllArgsConstructor
 public class Heladera implements Contribucion {
   @Getter @Setter
   @Id @GeneratedValue
@@ -288,6 +297,46 @@ public class Heladera implements Contribucion {
   private void avisoGestorParaNotificarCantidades() {
     gestorSuscripciones.notificar(TipoSuscripcion.QUEDAN_N_VIANDAS, this);
     gestorSuscripciones.notificar(TipoSuscripcion.FALTAN_N_VIANDAS, this);
+  }
+
+  public static Heladera fromDTO(HeladeraDTO dto) {
+    validarCamposObligatorios(dto);
+    validarCapacidadMaximaViandas(dto);
+    validarTemperaturas(dto);
+
+    Direccion direccion = Direccion.fromDTO(dto.getDireccion());
+    return Heladera.builder()
+        .id(dto.getId())
+        .nombre(dto.getNombre())
+        .capacidadMaximaViandas(dto.getCapacidadMaximaViandas())
+        .temperaturaEsperada(dto.getTemperaturaEsperada())
+        .direccion(direccion)
+        .build();
+  }
+
+  private static void validarCamposObligatorios(HeladeraDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        Pair.of("nombre", dto.getNombre()),
+        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas())),
+        Pair.of("modelo", dto.getModelo()),
+        Pair.of("temperatura máxima", String.valueOf(dto.getTemperaturaMaxima())),
+        Pair.of("temperatura mínima", String.valueOf(dto.getTemperaturaMinima())),
+        Pair.of("temperatura esperada", String.valueOf(dto.getTemperaturaEsperada()))
+    );
+  }
+
+  private static void validarCapacidadMaximaViandas(HeladeraDTO dto) {
+    if (dto.getCapacidadMaximaViandas() <= 0) {
+      throw new ValidacionFormularioException("La capacidad máxima de viandas debe ser un número positivo.");
+    }
+  }
+
+  private static void validarTemperaturas(HeladeraDTO dto) {
+    if (dto.getTemperaturaMaxima() != null && dto.getTemperaturaMinima() != null) {
+      if (dto.getTemperaturaMaxima() < dto.getTemperaturaMinima()) {
+        throw new ValidacionFormularioException("La temperatura máxima no puede ser menor que la temperatura mínima.");
+      }
+    }
   }
 }
 

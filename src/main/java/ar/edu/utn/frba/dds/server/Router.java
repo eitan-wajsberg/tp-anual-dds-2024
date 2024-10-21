@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorDistribucionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
 import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
+import ar.edu.utn.frba.dds.controllers.ControladorHeladera;
 import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorInicioSesion;
@@ -113,6 +114,10 @@ public class Router {
     app.post("/ofertas/agregarOferta", ServiceLocator.instanceOf(ControladorOferta.class)::save, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.post("/ofertas/canjearOferta", ServiceLocator.instanceOf(ControladorOferta.class):: save, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.post("ofertas/{id}/eliminacion", ServiceLocator.instanceOf(ControladorOferta.class)::delete, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+
+    // Heladeras
+    app.get("/heladeras/nuevo", ServiceLocator.instanceOf(ControladorHeladera.class)::create);
+    app.post("/heladeras", ServiceLocator.instanceOf(ControladorHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
 
     // Mapa
     app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);  // Lista de heladeras en el mapa

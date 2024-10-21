@@ -87,13 +87,7 @@ public class ServiceLocator {
             ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
             ServiceLocator.instanceOf(RepositorioOfertaCanjeada.class)
         );
-      } else if (componentName.equals(ControladorIncidenteHeladeras.class.getName())) {
-        instance = new ControladorIncidenteHeladeras(
-            ServiceLocator.instanceOf(RepositorioHeladera.class),
-            ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
-            ServiceLocator.instanceOf(Repositorio.class)
-        );
-      }else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
+      } else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
         instance = new RepositorioPersonaHumana();
       } else if (componentName.equals(RepositorioPersonaJuridica.class.getName())) {
         instance = new RepositorioPersonaJuridica();
@@ -115,10 +109,14 @@ public class ServiceLocator {
         instance = new RepositorioPersonaVulnerable();
       } else if (componentName.equals(ControladorDistribucionVianda.class.getName())) {
         instance = new ControladorDistribucionVianda(
-            instanceOf(RepositorioDistribucionVianda.class)
-            ,instanceOf(RepositorioPersonaHumana.class)
-            ,instanceOf(RepositorioHeladera.class)
-            ,instanceOf(Repositorio.class)
+            instanceOf(RepositorioDistribucionVianda.class),
+            instanceOf(RepositorioPersonaHumana.class),
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(Repositorio.class)
+        );
+      } else if (componentName.equals(ControladorHeladera.class.getName())) {
+        instance = new ControladorHeladera(
+            instanceOf(RepositorioHeladera.class)
         );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
@@ -136,8 +134,7 @@ public class ServiceLocator {
         instance = new RepositorioTarjetas();
       } else if (componentName.equals(RepositorioDonacionVianda.class.getName())) {
         instance = new RepositorioDonacionVianda();
-      }
-
+      } 
 
       instances.put(componentName, instance);
     }
