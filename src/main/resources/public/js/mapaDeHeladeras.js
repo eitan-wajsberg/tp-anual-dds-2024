@@ -57,8 +57,8 @@ function addMarker(heladera, onMarkerClick) {
 function createCustomMarker(markerImage) {
     var img = document.createElement('img');
     img.src = markerImage;
-    img.style.width = '40px'; // Tamaño del marcador
-    img.style.height = '40px';
+    img.style.width = '35px'; // Tamaño del marcador
+    img.style.height = '35px';
 
     var customMarker = document.createElement('div');
     customMarker.appendChild(img);
