@@ -1,0 +1,84 @@
+{{#partial "contenido"}}
+    <section class="row flex-grow-1 mt-5 ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
+        <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4">
+            <h1 class="fs-3 mt-3 mb-5">Encargarse de heladera</h1>
+            <form class="mt-5" method="POST" action="/heladeras">
+
+                <h4 class="fw-bold fs-5 mb-2">Información básica</h4>
+                <p class="mb-2">Ingresar los datos básicos de la heladera.</p>
+                <div class="col p-2">
+                    <div class="row mb-2">
+                        <input type="text" name="nombre" placeholder="Nombre" value="{{nombre}}" required>
+                    </div>
+                    <div class="row mb-2">
+                        <input type="number" name="capacidadMaximaViandas" placeholder="Cantidad máxima de viandas" value="{{capacidadMaximaViandas}}" min="1" required>
+                    </div>
+                </div>
+
+                <h4 class="fw-bold fs-5 mt-4 mb-2">Dirección</h4>
+                <p class="mb-2">La dirección es un campo obligatorio. Por favor, asegúrese de completarlo correctamente.</p>
+                <div class="col p-2">
+                    <div class="row mb-2">
+                        <select name="provincia" class="form-select border-999 rounded-10 py-2" required>
+                            <option value="" disabled>Provincia</option>
+                        </select>
+                    </div>
+                    <div class="row mb-2">
+                        <select name="municipio" class="form-select border-999 rounded-10 py-2" required>
+                            <option value="" disabled>Municipio</option>
+                        </select>
+                    </div>
+                    <div class="row mb-2">
+                        <input type="text" name="calle" placeholder="Calle" value="{{calle}}" required>
+                    </div>
+                    <div class="row mb-2">
+                        <input type="number" name="altura" placeholder="Altura" min="1" step="1" value="{{altura}}" required>
+                    </div>
+                </div>
+
+                <h4 class="fw-bold mt-4 fs-5 mb-2">Información secundaria</h4>
+                <p class="mb-2">Por favor, asegúrese de que la temperatura esté indicada en grados Celsius.</p>
+                <div class="col p-2">
+                    <div class="row mb-2">
+                        <input type="text" name="modelo" placeholder="Modelo" value="{{modelo}}">
+                    </div>
+                    <div class="row mb-2">
+                        <input type="number" name="temperaturaMaxima" placeholder="Temperatura máxima" value="{{temperaturaMaxima}}" step="0.1">
+                    </div>
+                    <div class="row mb-2">
+                        <input type="number" name="temperaturaMinima" placeholder="Temperatura mínima" value="{{temperaturaMinima}}" step="0.1">
+                    </div>
+                    <div class="row mb-2">
+                        <input type="number" name="temperaturaEsperada" placeholder="Temperatura esperada" value="{{temperaturaEsperada}}" step="0.1">
+                    </div>
+                </div>
+
+                <div class="col p-2 mt-3">
+                    <div class="row">
+                        <button class="w-100" type="submit">Encargarse</button>
+                    </div>
+                </div>
+
+                {{#if error}}
+                    <div class="row mt-2 justify-content-center">
+                        <p id="error" class="error text-center">{{error}}</p>
+                    </div>
+                {{/if}}
+
+                <div class="row mt-3 mb-3 text-center">
+                    <hr>
+                    <label class="grey-text fw-bold">
+                        ¿No estás seguro de dónde colocar tu heladera?
+                        <a href="/heladeras/recomendacion" class="light-blue">Te sugerimos los mejores puntos</a>.
+                    </label>
+                </div>
+            </form>
+        </nav>
+
+        <main class="col-md-8 d-flex flex-column">
+            <div id="map"></div>
+        </main>
+    </section>
+{{/partial}}
+
+{{> templates/base titulo="Encargarse de una heladera" mostrarMapa=true mostrarSeccion=true seccion="Encargarse de una heladera" mostrarPersonaJuridica=true mostrarIrAtras=true paginaAtras="/" }}
