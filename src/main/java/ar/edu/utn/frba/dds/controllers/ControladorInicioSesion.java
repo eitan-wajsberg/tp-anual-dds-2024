@@ -60,4 +60,9 @@ public class ControladorInicioSesion {
       context.render(rutaInicioSesion, model);
     }
   }
+
+  public void cerrarSesion(Context context) {
+    context.req().getSession().invalidate();
+    context.redirect("/");
+  }
 }

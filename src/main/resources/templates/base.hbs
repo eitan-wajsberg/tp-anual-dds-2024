@@ -47,9 +47,15 @@
                 {{/if}}
                 {{#if mostrarPersonaJuridica}}
                     <span class="fw-bold fs-6">{{usuario}}</span>
-                    <button class="btn btn-dark p-2" onclick="window.location.href='/personaJuridica/{{id}}/edicion'">
-                        <span class="iconify" data-icon="mingcute:building-2-line" data-width="24" data-height="24"></span>
-                    </button> <!-- TODO: INDICAR EL ID DEL USUARIO EN CUESTION -->
+                    <div class="dropdown">
+                        <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton-two" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="iconify" data-icon="mingcute:building-2-line" data-width="24" data-height="24"></span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-two">
+                            <a class="dropdown-item" href="/personaJuridica/{{id}}/edicion">Perfil</a>
+                            <a class="dropdown-item" href="/cerrarSesion">Cerrar sesión</a>
+                        </div>
+                    </div>
                 {{/if}}
                 {{#if mostrarPersonaHumana}}
                     <span class="fw-bold fs-6">{{usuario}}</span>
@@ -58,9 +64,16 @@
                             <strong>{{puntos}}</strong><span style="color: #888;">puntos</span>
                         </span>
                     {{/if}}
-                    <button onclick="window.location.href='/personaHumana/{{id}}/edicion'">
-                        <span class="iconify" data-icon="iconoir:user" data-width="24" data-height="24"></span>
-                    </button> <!-- TODO: INDICAR EL ID DEL USUARIO EN CUESTION -->
+
+                    <div class="dropdown">
+                        <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton-two" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="iconify" data-icon="iconoir:user" data-width="24" data-height="24"></span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-two">
+                            <a class="dropdown-item" href="/personaHumana/{{id}}/edicion">Perfil</a>
+                            <a class="dropdown-item" href="/cerrarSesion">Cerrar sesión</a>
+                        </div>
+                    </div>
                 {{/if}}
             </div>
         </div>
@@ -98,5 +111,6 @@
         </div>
     </footer>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

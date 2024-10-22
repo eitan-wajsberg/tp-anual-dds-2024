@@ -40,6 +40,7 @@ public class Router {
     // Log in
     app.get("/inicioSesion", ServiceLocator.instanceOf(ControladorInicioSesion.class)::create);
     app.post("/inicioSesion", ServiceLocator.instanceOf(ControladorInicioSesion.class)::iniciarSesion);
+    app.get("/cerrarSesion", ServiceLocator.instanceOf(ControladorInicioSesion.class)::cerrarSesion);
 
     // Tecnico
     app.get("/tecnicos/nuevo", ServiceLocator.instanceOf(ControladorTecnicos.class)::create, TipoRol.ADMIN);
