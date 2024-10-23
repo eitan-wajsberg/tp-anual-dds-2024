@@ -16,9 +16,6 @@ public class HeladeraDTO {
   private String nombre;
   private DireccionDTO direccion;
   private int capacidadMaximaViandas;
-  private String modelo;
-  private Float temperaturaMaxima;
-  private Float temperaturaMinima;
   private Float temperaturaEsperada;
 
   public HeladeraDTO(Heladera heladera) {
@@ -26,9 +23,6 @@ public class HeladeraDTO {
     this.nombre = heladera.getNombre();
     this.direccion = new DireccionDTO(heladera.getDireccion());
     this.capacidadMaximaViandas = heladera.getCapacidadMaximaViandas();
-    this.modelo = heladera.getModelo().getModelo();
-    this.temperaturaMaxima = heladera.getModelo().getTemperaturaMaxima();
-    this.temperaturaMinima = heladera.getModelo().getTemperaturaMinima();
     this.temperaturaEsperada = heladera.getTemperaturaEsperada();
   }
 
@@ -38,17 +32,6 @@ public class HeladeraDTO {
     this.capacidadMaximaViandas = (capacidadParam != null && !capacidadParam.isEmpty())
         ? Integer.parseInt(capacidadParam)
         : 0;
-
-    this.modelo = context.formParam("modelo"); // Agregado
-    String temperaturaMaximaParam = context.formParam("temperaturaMaxima");
-    this.temperaturaMaxima = (temperaturaMaximaParam != null && !temperaturaMaximaParam.isEmpty())
-        ? Float.parseFloat(temperaturaMaximaParam)
-        : null;
-
-    String temperaturaMinimaParam = context.formParam("temperaturaMinima");
-    this.temperaturaMinima = (temperaturaMinimaParam != null && !temperaturaMinimaParam.isEmpty())
-        ? Float.parseFloat(temperaturaMinimaParam)
-        : null;
 
     String temperaturaEsperadaParam = context.formParam("temperaturaEsperada");
     this.temperaturaEsperada = (temperaturaEsperadaParam != null && !temperaturaEsperadaParam.isEmpty())
