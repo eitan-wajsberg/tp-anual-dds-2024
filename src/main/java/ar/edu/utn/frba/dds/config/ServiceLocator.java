@@ -116,7 +116,8 @@ public class ServiceLocator {
         );
       } else if (componentName.equals(ControladorHeladera.class.getName())) {
         instance = new ControladorHeladera(
-            instanceOf(RepositorioHeladera.class)
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(RepositorioGeoRef.class)
         );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
@@ -134,7 +135,9 @@ public class ServiceLocator {
         instance = new RepositorioTarjetas();
       } else if (componentName.equals(RepositorioDonacionVianda.class.getName())) {
         instance = new RepositorioDonacionVianda();
-      } 
+      } else if (componentName.equals(RepositorioGeoRef.class.getName())) {
+        instance = new RepositorioGeoRef();
+      }
 
       instances.put(componentName, instance);
     }

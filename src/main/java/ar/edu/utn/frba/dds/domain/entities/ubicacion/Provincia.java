@@ -1,20 +1,25 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.sound.sampled.Port;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
+@Entity @Table(name = "provincia")
 @NoArgsConstructor
-@Embeddable
 public class Provincia {
-    @Column(name = "provincia")
-    private String provincia;
+  @Id @GeneratedValue
+  private Long id;
 
-    public Provincia(String provincia) {
-        this.provincia = provincia;
-    }
+  @Column(name = "provincia")
+  private String provincia;
+
+  public Provincia(String nombre) {
+    this.provincia = nombre;
+  }
 }
