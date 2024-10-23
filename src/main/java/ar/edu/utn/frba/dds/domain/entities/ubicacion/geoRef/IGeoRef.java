@@ -9,4 +9,10 @@ import retrofit2.http.Query;
 public interface IGeoRef {
   @GET("direcciones")
   Call<GeoRefDirecciones> coordenadaSegunDireccion(@Query("direccion") String direccion, @Query("provincia") String provincia, @Query("departamento") String departamento, @Query("max") int max);
+
+  @GET("municipios")
+  Call<GeoRefMunicipios> obtenerMunicipios(@Query("provincia") String provincia);
+
+  @GET("provincias")
+  Call<GeoRefProvincias> obtenerProvincias();
 }
