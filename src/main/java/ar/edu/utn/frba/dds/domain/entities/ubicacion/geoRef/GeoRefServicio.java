@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef;
 
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.Coordenada;
-import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.dtos.DireccionDTO;
 import java.io.IOException;
 import lombok.Setter;
@@ -39,6 +37,28 @@ public class GeoRefServicio {
         1
     );
     Response<GeoRefDirecciones> response = request.execute();
+    if (!response.isSuccessful()) {
+      throw new IOException();
+    }
+
+    return response.body();
+  }
+
+  public GeoRefProvincias obtenerProvincias() throws IOException {
+    IGeoRef georefService = this.retrofit.create(IGeoRef.class);
+    Call<GeoRefProvincias> request = georefService.obtenerProvincias();
+    Response<GeoRefProvincias> response = request.execute();
+    if (!response.isSuccessful()) {
+      throw new IOException();
+    }
+
+    return response.body();
+  }
+
+  public GeoRefMunicipios obtenerMunicipios(String provincia) throws IOException {
+    IGeoRef georefService = this.retrofit.create(IGeoRef.class);
+    Call<GeoRefMunicipios> request = georefService.obtenerMunicipios(provincia);
+    Response<GeoRefMunicipios> response = request.execute();
     if (!response.isSuccessful()) {
       throw new IOException();
     }
