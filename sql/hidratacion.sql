@@ -84,8 +84,16 @@ INSERT INTO modelo (
 	temperaturaMaxima, temperaturaMinima
 )
 VALUES (
-	1, "Marge Master 3000x",
-	30, 14
+   1, "Marge Master 3000x",
+   30, 14
+),
+(
+   2, "Marge Master 5000x",
+   40, 10
+),
+(
+   3, "Marge Master 5000x Plus",
+   50, 8
 );
 
 -- Inserción en la tabla 'heladera'
