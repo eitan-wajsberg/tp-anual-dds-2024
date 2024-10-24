@@ -117,9 +117,9 @@ public class Router {
     app.post("ofertas/{id}/eliminacion", ServiceLocator.instanceOf(ControladorOferta.class)::delete, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
 
     // Heladeras
-    app.get("/heladeras/nuevo", ServiceLocator.instanceOf(ControladorHeladera.class)::create); // TipoRol.PERSONA_JURIDICA
+    app.get("/heladeras/nuevo", ServiceLocator.instanceOf(ControladorHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras", ServiceLocator.instanceOf(ControladorHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
-    app.post("/municipios", ServiceLocator.instanceOf(ControladorHeladera.class)::obtenerMunicipiosPorProvincia); // TipoRol.PERSONA_JURIDICA
+    app.post("/municipios", ServiceLocator.instanceOf(ControladorHeladera.class)::obtenerMunicipiosPorProvincia, TipoRol.PERSONA_JURIDICA);
 
     // Mapa
     app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);  // Lista de heladeras en el mapa

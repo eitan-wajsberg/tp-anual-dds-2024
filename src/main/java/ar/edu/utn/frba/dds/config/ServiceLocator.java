@@ -117,7 +117,8 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorHeladera.class.getName())) {
         instance = new ControladorHeladera(
             instanceOf(RepositorioHeladera.class),
-            instanceOf(RepositorioGeoRef.class)
+            instanceOf(RepositorioGeoRef.class),
+            instanceOf(RepositorioPersonaJuridica.class)
         );
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();

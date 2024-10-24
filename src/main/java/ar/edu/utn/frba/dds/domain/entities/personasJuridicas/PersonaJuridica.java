@@ -100,6 +100,13 @@ public class PersonaJuridica {
     contribuciones.add(contribucion);
   }
 
+  public void agregarHeladera(Heladera heladera) {
+    if (this.heladerasAcargo == null) {
+      this.heladerasAcargo = new HashSet<>();
+    }
+    this.heladerasAcargo.add(heladera);
+  }
+
   public static PersonaJuridica fromDTO(PersonaJuridicaDTO dto) {
     validarCamposObligatorios(dto);
     validarLongitudRazonSocial(dto);

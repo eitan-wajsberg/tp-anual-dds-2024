@@ -103,7 +103,6 @@ public class ControladorMapaHeladeras implements ICrudViewsHandler, WithSimplePe
                 String jsonHeladera = gson.toJson(heladera.get());
                 Map<String, Object> model = new HashMap<>();
                 model.put("heladeraId",context.pathParam("heladeraId"));
-                model.put("personaId",context.pathParam("personaId"));
                 model.put("heladera", heladera.get());
                 model.put("jsonHeladera", jsonHeladera);
                 context.render("/heladeras/heladeraParticularPersonaHumana.hbs", model);
@@ -115,6 +114,7 @@ public class ControladorMapaHeladeras implements ICrudViewsHandler, WithSimplePe
             context.status(500).result("Error interno del servidor");
         }
     }
+
     public void showSelect(@NotNull Context context) {
         try {
             Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("heladeraId")), Heladera.class);
@@ -161,6 +161,4 @@ public class ControladorMapaHeladeras implements ICrudViewsHandler, WithSimplePe
     public void delete(Context context) {
 
     }
-
-
 }
