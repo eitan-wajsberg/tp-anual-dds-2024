@@ -41,13 +41,15 @@
                         </div>
                     {{/each}}
                 </div>
-                <a href="/mapaHeladeras/{{heladeraId}}/suscripciones/persona/{{personaId}}/formulario" class="mt-3 mb-1 w-100">
-                    <button class="p-1 little-font" style="position: relative; width: 100%;">Suscribirme</button>
-                </a>
+                {{#if mostrarPersonaHumana}}
+                    <a href="/suscripcion/{{heladeraId}}/nuevo" class="mt-3 mb-1 w-100">
+                        <button class="p-1 little-font" style="position: relative; width: 100%;">Suscribirme</button>
+                    </a>
+                {{/if}}
             </div>
             <div class="py-2 mt-4 border-top text-center" style="font-size:0.8rem; color: #5d5d5d;">
                 <p class="mb-0">¿La Heladera tiene algún Problema?
-                    <a href="/reportarFalla/{{heladera.id}}/reportar" class="link-primary">Reportar Falla</a>
+                    <a href="/reporteFallas/{{heladera.id}}/nuevo" class="link-primary">Reportar Falla</a>
                 </p>
             </div>
         </nav>
