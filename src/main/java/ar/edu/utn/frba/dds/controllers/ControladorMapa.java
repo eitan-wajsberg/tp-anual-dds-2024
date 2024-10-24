@@ -25,7 +25,7 @@ public class ControladorMapa {
     this.repositorioSuscripcion = repositorioSuscripcion;
   }
 
-  public void index(Context context) {
+  public void mapa(Context context) {
     try {
       String terminoBusqueda = context.queryParam("q");  // El parámetro de búsqueda se espera en la query string
       List<Heladera> heladeras;

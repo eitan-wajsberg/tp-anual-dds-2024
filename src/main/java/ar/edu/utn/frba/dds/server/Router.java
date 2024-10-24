@@ -7,6 +7,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorDonacionDinero;
 import ar.edu.utn.frba.dds.controllers.ControladorDonacionVianda;
 import ar.edu.utn.frba.dds.controllers.ControladorEleccionTipoCuenta;
 import ar.edu.utn.frba.dds.controllers.ControladorHeladera;
+import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladera;
 import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorInicioSesion;
@@ -120,14 +121,9 @@ public class Router {
     app.get("/heladeras/nuevo", ServiceLocator.instanceOf(ControladorHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras", ServiceLocator.instanceOf(ControladorHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
     app.get("/heladeras/{heladeraId}", ServiceLocator.instanceOf(ControladorHeladera.class)::show, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
-    app.get("/heladeras", ServiceLocator.instanceOf(ControladorMapa.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
-
-    // Suscripciones
-    app.get("/suscripcion/{heladeraId}/nuevo", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create, TipoRol.PERSONA_HUMANA);
-    app.post("/suscripcion", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save, TipoRol.PERSONA_HUMANA);
-
-    // Reporte de Fallas
-    app.get("/reporteFallas/{heladeraId}/nuevo", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::create, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
-    app.post("/reporteFallas/{heladeraId}", ServiceLocator.instanceOf(ControladorIncidenteHeladeras.class)::save, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.get("/heladeras", ServiceLocator.instanceOf(ControladorMapa.class)::mapa, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.post("/heladeras/suscripcion", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save, TipoRol.PERSONA_HUMANA);
+    app.get("/heladeras/reporteFallas/{heladeraId}/nuevo", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::create, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.post("/heladeras/reporteFallas/{heladeraId}", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::save, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
   }
 }
