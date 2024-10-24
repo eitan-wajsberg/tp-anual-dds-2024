@@ -62,8 +62,8 @@ public class ServiceLocator {
         instance = new ControladorDonacionDinero(instanceOf(Repositorio.class));
       } else if (componentName.equals(Repositorio.class.getName())) {
         instance = new Repositorio();
-      } else if (componentName.equals(ControladorMapaHeladeras.class.getName())) {
-        instance = new ControladorMapaHeladeras(
+      } else if (componentName.equals(ControladorMapa.class.getName())) {
+        instance = new ControladorMapa(
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
                 ServiceLocator.instanceOf(RepositorioPersonaJuridica.class),
                 ServiceLocator.instanceOf(RepositorioSuscripcion.class)

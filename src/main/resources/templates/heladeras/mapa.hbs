@@ -12,10 +12,38 @@
                 </span>
             </div>
 
+            {{#if mostrarPersonaJuridica}}
+                <div class="dropdown mb-4">
+                    <button class="filter-button dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Seleccionar Filtro
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <span class="iconify me-2" data-icon="tabler:world" data-width="24"></span>
+                                <span class="text-truncate">Todas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <span class="iconify me-2" data-icon="mdi:refrigerator-outline" data-width="24"></span>
+                                <span class="text-truncate">Mis heladeras</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <span class="iconify me-2" data-icon="mingcute:alert-fill" data-width="24"></span>
+                                <span class="text-truncate">Mis heladeras con alerta</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {{/if}}
+
             <!-- Resultados de Búsqueda -->
             <div id="heladeras-list" class="scrollable-results">
                 {{#each heladeras}}
-                    <a href="/mapaHeladeras/PersonaJuridica/{{this.id}}/HeladeraParticular" class="card rounded-3 transition-card mb-2 clic-card" data-id="{{this.id}}">
+                    <a href="heladeras/{{this.id}}" class="card rounded-3 transition-card mb-2 clic-card" data-id="{{this.id}}">
                         <div class="card-result-body">
                             <h5 class="card-result-title">{{this.nombre}}</h5>
                             <p class="card-result-text">{{this.direccion.nomenclatura}}</p>
@@ -42,7 +70,7 @@
 
             // Inicializar los marcadores del mapa
             addMarkers(heladeras, function() {
-                window.location.href = `/mapaHeladeras/${this.heladera.id}/HeladeraParticular`;
+                window.location.href = `heladeras/${this.heladera.id}`;
             });
 
             // Capturar el input de búsqueda
@@ -62,7 +90,7 @@
 
                 filteredHeladeras.forEach(function(heladera) {
                     var heladeraCard = `
-                        <a href="/mapaHeladeras/PersonaJuridica/${heladera.id}/HeladeraParticular" class="card rounded-3 transition-card mb-2 clic-card" data-id="${heladera.id}">
+                        <a href="/heladeras/${heladera.id}" class="card rounded-3 transition-card mb-2 clic-card" data-id="${heladera.id}">
                             <div class="card-result-body">
                                 <h5 class="card-result-title">${heladera.nombre}</h5>
                                 <p class="card-result-text">${heladera.direccion.nomenclatura}</p>
@@ -77,11 +105,11 @@
                 // Eliminar los marcadores anteriores del mapa y agregar los nuevos
                 clearMarkers();  // Llamar a la función para limpiar los marcadores existentes
                 addMarkers(filteredHeladeras, function() {
-                    window.location.href = `/mapaHeladeras/PersonaJuridica/${this.heladera.id}/HeladeraParticular`;
+                    window.location.href = `/heladeras/${this.heladera.id}`;
                 });
             });
         });
     </script>
 
 {{/partial}}
-{{> templates/base titulo="Mapa De Heladeras" mostrarMapa= true Buscadormapa=true mostrarSeccion=true seccion="Mapa De Heladeras" mostrarPersonaJuridica =true }}
+{{> templates/base titulo="Mapa" mostrarMapa= true buscadorMapa=true mostrarSeccion=true seccion="Mapa" }}
