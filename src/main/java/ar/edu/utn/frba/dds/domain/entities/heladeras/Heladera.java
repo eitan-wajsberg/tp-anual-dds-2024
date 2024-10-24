@@ -303,7 +303,7 @@ public class Heladera implements Contribucion {
     validarCamposObligatorios(dto);
     validarCapacidadMaximaViandas(dto);
 
-    Direccion direccion = Direccion.fromDTO(dto.getDireccion());
+    Direccion direccion = Direccion.fromCoordenada(dto.getLatitud(), dto.getLongitud());
     return Heladera.builder()
         .id(dto.getId())
         .nombre(dto.getNombre())
@@ -316,8 +316,7 @@ public class Heladera implements Contribucion {
   private static void validarCamposObligatorios(HeladeraDTO dto) {
     CamposObligatoriosVacios.validarCampos(
         Pair.of("nombre", dto.getNombre()),
-        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas())),
-        Pair.of("temperatura esperada", String.valueOf(dto.getTemperaturaEsperada()))
+        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas()))
     );
   }
 

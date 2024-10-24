@@ -15,4 +15,7 @@ public interface IGeoRef {
 
   @GET("provincias")
   Call<GeoRefProvincias> obtenerProvincias();
+
+  @GET("ubicacion")
+  Call<GeoRefUbicacion> direccionSegunCoordenada(@Query("lat") String latitud, @Query("lon") String longitud, @Query("aplanar") String aplanar);
 }

@@ -65,4 +65,17 @@ public class GeoRefServicio {
 
     return response.body();
   }
+
+  public GeoRefUbicacion obtenerDireccionSegunCoordenada(String latitud, String longitud) throws IOException {
+    IGeoRef georefService = this.retrofit.create(IGeoRef.class);
+    Call<GeoRefUbicacion> request = georefService.direccionSegunCoordenada(latitud, longitud, "true");
+    Response<GeoRefUbicacion> response = request.execute();
+    if (!response.isSuccessful()) {
+      throw new IOException();
+    }
+
+    System.out.println(response.body());
+
+    return response.body();
+  }
 }

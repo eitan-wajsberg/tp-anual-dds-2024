@@ -7,35 +7,22 @@
                 <h4 class="fw-bold fs-5 mb-2">Información básica</h4>
                 <p class="mb-2">Ingresar los datos básicos de la heladera.</p>
                 <div class="col-12 mb-2">
-                    <input type="text" class="w-100" name="nombre" placeholder="Nombre" value="{{nombre}}" required>
+                    <input type="text" class="w-100" name="nombre" placeholder="Nombre" value="{{dto.nombre}}" required>
                 </div>
                 <div class="col-12 mb-2">
-                    <input type="number" class="w-100" name="capacidadMaximaViandas" placeholder="Cantidad máxima de viandas" value="{{capacidadMaximaViandas}}" min="1" required>
+                    <input type="number" class="w-100" name="capacidadMaximaViandas" placeholder="Cantidad máxima de viandas" value="{{dto.capacidadMaximaViandas}}" min="1" required>
                 </div>
 
-                <h4 class="fw-bold fs-5 mt-4 mb-2">Dirección</h4>
-                <p class="mb-2">La dirección es un campo obligatorio. Por favor, asegúrese de completarlo correctamente.</p>
+                <h4 class="fw-bold fs-5 mt-4 mb-2">Ubicación</h4>
+                <p class="mb-2">
+                    Seleccione la ubicación en el <b>mapa</b> haciendo clic sobre el lugar deseado.
+                    También puede ingresar manualmente las coordenadas de latitud y longitud.
+                </p>
                 <div class="col mb-2">
-                    <select id="provinciaSelect" name="provincia" class="form-select border-999 rounded-10 py-2 w-100 custom-select" required
-                            hx-post="/municipios"
-                            hx-target="#municipioSelect"
-                            hx-trigger="change">
-                        <option value="" selected>Provincia</option>
-                        {{#each provincias}}
-                            <option value="{{this.provincia}}" {{#ifEqual provinciaEdit this.provincia}}selected{{/ifEqual}}>{{this.provincia}}</option>
-                        {{/each}}
-                    </select>
+                    <input type="text" id="latitud" class="w-100" name="latitud" placeholder="Latitud" value="{{dto.latitud}}" required>
                 </div>
                 <div class="col mb-2">
-                    <select id="municipioSelect" name="municipio" class="form-select border-999 rounded-10 py-2 w-100 custom-select" required>
-                        <option value="" selected>Municipio</option>
-                    </select>
-                </div>
-                <div class="col mb-2">
-                    <input type="text" class="w-100" name="calle" placeholder="Calle" value="{{calle}}" required>
-                </div>
-                <div class="col mb-2">
-                    <input type="number" class="w-100" name="altura" placeholder="Altura" min="1" step="1" value="{{altura}}" required>
+                    <input type="text" id="longitud" class="w-100" name="longitud" placeholder="Longitud" value="{{dto.longitud}}" required>
                 </div>
 
                 <h4 class="fw-bold mt-4 fs-5 mb-2">Información secundaria</h4>
@@ -52,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-12 mt-2">
-                    <input type="number" name="temperaturaEsperada" class="w-100" placeholder="Temperatura esperada (en Celsius)" value="{{temperaturaEsperada}}" step="0.1">
+                    <input type="number" name="temperaturaEsperada" class="w-100" placeholder="Temperatura esperada (en Celsius)" value="{{dto.temperaturaEsperada}}" step="0.1">
                 </div>
                 <div class="col-12 mt-3">
                     <button class="w-100" type="submit">Encargarse</button>
@@ -67,7 +54,6 @@
                 <div class="col-12 mt-5 mb-3 text-center">
                     <hr>
                     <label class="grey-text fw-bold w-100">
-                        <hr>
                         ¿No estás seguro de dónde colocar tu heladera?
                         <a href="/heladeras/recomendacion" class="light-blue">Te sugerimos los mejores puntos</a>.
                     </label>
@@ -88,6 +74,22 @@
                     lv_input.val(this.heladera.nombre);
                     $("#"+lv_input.data("id")).val(this.heladera.id);
                 }
+            });
+
+            map.on('mouseenter', function () {
+                map.getCanvas().style.cursor = 'crosshair'; // Cambiar el cursor a crosshair
+            });
+
+            map.on('mouseleave', function () {
+                map.getCanvas().style.cursor = ''; // Restaurar el cursor original cuando el ratón sale del mapa
+            });
+
+            // Ejemplo de cómo capturar el evento de clic en el mapa
+            map.on('click', function (e) {
+                var lngLat = e.lngLat;
+
+                // Mover o crear un marcador en la ubicación seleccionada
+                addNewMarker(lngLat.lng, lngLat.lat);
             });
         });
     </script>

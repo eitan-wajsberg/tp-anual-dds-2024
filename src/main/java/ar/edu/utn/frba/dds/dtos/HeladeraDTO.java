@@ -14,20 +14,25 @@ import lombok.NoArgsConstructor;
 public class HeladeraDTO {
   private Long id;
   private String nombre;
-  private DireccionDTO direccion;
+  private String latitud;
+  private String longitud;
   private int capacidadMaximaViandas;
   private Float temperaturaEsperada;
 
   public HeladeraDTO(Heladera heladera) {
     this.id = heladera.getId();
     this.nombre = heladera.getNombre();
-    this.direccion = new DireccionDTO(heladera.getDireccion());
     this.capacidadMaximaViandas = heladera.getCapacidadMaximaViandas();
     this.temperaturaEsperada = heladera.getTemperaturaEsperada();
+    this.latitud = heladera.getDireccion().getCoordenada().getLatitud();
+    this.longitud = heladera.getDireccion().getCoordenada().getLongitud();
   }
 
   public void obtenerFormulario(Context context) {
     this.nombre = context.formParam("nombre");
+    this.latitud = context.formParam("latitud");
+    this.longitud = context.formParam("longitud");
+
     String capacidadParam = context.formParam("capacidadMaximaViandas");
     this.capacidadMaximaViandas = (capacidadParam != null && !capacidadParam.isEmpty())
         ? Integer.parseInt(capacidadParam)

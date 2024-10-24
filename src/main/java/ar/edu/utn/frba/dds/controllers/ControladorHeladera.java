@@ -4,12 +4,16 @@ import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Modelo;
+import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
+import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Municipio;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Provincia;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefServicio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioGeoRef;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.dtos.HeladeraDTO;
+import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import com.google.gson.Gson;
@@ -24,14 +28,16 @@ import java.util.Optional;
 
 public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioHeladera repositorioHeladera;
+  private RepositorioPersonaJuridica repositorioPersonaJuridica;
   private RepositorioGeoRef repositorioGeoRef;
   private final String rutaAltaHbs = "colaboraciones/cuidarHeladera.hbs";
   private final Gson gson = GsonFactory.createGson();
 
 
-  public ControladorHeladera(RepositorioHeladera repositoriaHeladera, RepositorioGeoRef repositorioGeoRef) {
+  public ControladorHeladera(RepositorioHeladera repositoriaHeladera, RepositorioGeoRef repositorioGeoRef, RepositorioPersonaJuridica repositorioPersonaJuridica) {
     this.repositorioHeladera = repositoriaHeladera;
     this.repositorioGeoRef = repositorioGeoRef;
+    this.repositorioPersonaJuridica = repositorioPersonaJuridica;
   }
 
   @Override
@@ -47,9 +53,10 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
   @Override
   public void create(Context context) {
     Map<String, Object> model = new HashMap<>();
+    Long id = context.sessionAttribute("id");
     model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
     model.put("modelos", this.repositorioHeladera.buscarTodos(Modelo.class));
-    model.put("provincias", this.repositorioGeoRef.buscarTodos(Provincia.class));
+    model.put("id", id);
     context.render(this.rutaAltaHbs, model);
   }
 
@@ -58,6 +65,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     HeladeraDTO dto = new HeladeraDTO();
     dto.obtenerFormulario(context);
     Heladera nuevaHeladera;
+    Long id = context.sessionAttribute("id");
 
     try {
       nuevaHeladera = Heladera.fromDTO(dto);
@@ -73,20 +81,48 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
       nuevaHeladera.setFechaRegistro(LocalDateTime.now());
       nuevaHeladera.setEstado(EstadoHeladera.ACTIVA);
-      withTransaction(() -> repositorioHeladera.guardar(nuevaHeladera));
+
+      Optional<PersonaJuridica> personaJuridica = this.repositorioPersonaJuridica.buscarPorUsuario(id);
+      if (personaJuridica.isEmpty()) {
+        throw new ValidacionFormularioException("No se ha podido encontrar la persona juridica responsable.");
+      }
+      personaJuridica.get().agregarHeladera(nuevaHeladera);
+
+      withTransaction(() -> {
+        repositorioHeladera.guardar(nuevaHeladera);
+        repositorioPersonaJuridica.actualizar(personaJuridica.get());
+      });
 
       context.redirect("/mapaHeladeras");
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", dto);
+      model.put("id", id);
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
       context.render(rutaAltaHbs, model);
     }
   }
 
   @Override
   public void edit(Context context) {
+    Map<String, Object> model = new HashMap<>();
+    try {
+      Optional<Heladera> heladera = this.repositorioHeladera.buscarPorId(Long.valueOf(context.pathParam("id")), Heladera.class);
 
+      if (heladera.isEmpty()) {
+        throw new ValidacionFormularioException("No existe un técnico con este id.");
+      }
+
+      HeladeraDTO dto = new HeladeraDTO(heladera.get());
+      model.put("dto", dto);
+      model.put("edicion", true);
+      model.put("id", context.pathParam("id"));
+      context.render(rutaAltaHbs, model);
+    } catch (ValidacionFormularioException e) {
+      model.put("error", e.getMessage());
+      context.render("", model);
+    }
   }
 
   @Override
@@ -96,7 +132,14 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
   @Override
   public void delete(Context context) {
-
+    Long id = Long.valueOf(context.pathParam("id"));
+    Optional<Heladera> heladera = this.repositorioHeladera.buscarPorId(id, Heladera.class);
+    if (heladera.isPresent()) {
+      withTransaction(() -> this.repositorioHeladera.eliminarFisico(Heladera.class, id));
+      context.redirect("/mapaHeladeras");
+    } else {
+      context.status(400).result("No se puede eliminar, la heladera no cumple con las condiciones para ser eliminada.");
+    }
   }
 
   public void obtenerMunicipiosPorProvincia(Context context) {
