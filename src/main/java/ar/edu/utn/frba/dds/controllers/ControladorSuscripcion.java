@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ControladorSuscripcion implements ICrudViewsHandler, WithSimplePersistenceUnit{
 
-    private final String rutaSuscripcion = "heladeras/SuscripcionAHeladera.hbs";
+    private final String rutaSuscripcion = "heladeras/suscripcionAHeladera.hbs";
 
     private RepositorioHeladera repositorioHeladera;
     private RepositorioSuscripcion repositorioSuscripcion;

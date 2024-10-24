@@ -9,6 +9,7 @@ import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Municipio;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Provincia;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefServicio;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioGeoRef;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
@@ -31,6 +32,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
   private RepositorioPersonaJuridica repositorioPersonaJuridica;
   private RepositorioGeoRef repositorioGeoRef;
   private final String rutaAltaHbs = "colaboraciones/cuidarHeladera.hbs";
+  private final String rutaParticularHbs = "heladeras/heladeraParticular.hbs";
   private final Gson gson = GsonFactory.createGson();
 
 
@@ -47,7 +49,29 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
   @Override
   public void show(Context context) {
+    try {
+      String rol = context.sessionAttribute("rol");
+      Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("heladeraId")), Heladera.class);
+      if (heladera.isPresent()) {
+        String jsonHeladera = gson.toJson(heladera.get());
+        Map<String, Object> model = new HashMap<>();
+        model.put("heladeraId",context.pathParam("heladeraId"));
+        model.put("heladera", heladera.get());
+        model.put("jsonHeladera", jsonHeladera);
 
+        if (TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)) {
+          model.put("mostrarPersonaHumana", true);
+        } else {
+          model.put("mostrarPersonaJuridica", true);
+        }
+        context.render(rutaParticularHbs, model);
+      } else {
+        context.status(404).result("Heladera no encontrada"); // FIXME
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.status(500).result("Error interno del servidor"); // FIXME
+    }
   }
 
   @Override

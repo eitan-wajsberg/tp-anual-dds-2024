@@ -10,7 +10,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorHeladera;
 import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladeras;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorInicioSesion;
-import ar.edu.utn.frba.dds.controllers.ControladorMapaHeladeras;
+import ar.edu.utn.frba.dds.controllers.ControladorMapa;
 import ar.edu.utn.frba.dds.controllers.ControladorOferta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
@@ -119,13 +119,9 @@ public class Router {
     // Heladeras
     app.get("/heladeras/nuevo", ServiceLocator.instanceOf(ControladorHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras", ServiceLocator.instanceOf(ControladorHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
-    app.post("/municipios", ServiceLocator.instanceOf(ControladorHeladera.class)::obtenerMunicipiosPorProvincia, TipoRol.PERSONA_JURIDICA);
-
-    // Mapa
-    app.get("/mapaHeladeras", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);  // Lista de heladeras en el mapa
-    app.get("/mapaHeladeras/{heladeraId}/HeladeraParticular", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::show, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);  // Detalle de una heladera
-    app.get("/mapaHeladeras/PersonaJuridica", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::indexFiltro, TipoRol.PERSONA_JURIDICA);
-    app.get("/mapaHeladeras/PersonaJuridica/{heladeraId}/HeladeraParticular", ServiceLocator.instanceOf(ControladorMapaHeladeras.class)::showSelect, TipoRol.PERSONA_JURIDICA);
+    // app.post("/municipios", ServiceLocator.instanceOf(ControladorHeladera.class)::obtenerMunicipiosPorProvincia, TipoRol.PERSONA_JURIDICA);
+    app.get("/heladeras/{heladeraId}", ServiceLocator.instanceOf(ControladorHeladera.class)::show, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.get("/heladeras", ServiceLocator.instanceOf(ControladorMapa.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
 
     // Suscripcion
     app.get("/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaId}/formulario", ServiceLocator.instanceOf(ControladorSuscripcion.class)::create, TipoRol.PERSONA_HUMANA);
