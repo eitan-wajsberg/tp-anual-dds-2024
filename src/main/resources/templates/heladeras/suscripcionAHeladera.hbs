@@ -1,7 +1,7 @@
 {{#partial "contenido"}}
         <div class="m-5">
             <div class="row justify-content-center">
-                <form id="subscriptionForm" method="POST" action="/mapaHeladeras/{heladeraId}/suscripciones/persona/{personaId}/suscribir">
+                <form id="subscriptionForm" method="POST" action="/mapaHeladeras/{{heladeraId}}">
                     <h4 class="fw-bold fs-5">Suscribirse a las alertas de la heladera</h4>
                     <p class="mb-3">Selecciona el tipo de alerta que deseas recibir.</p>
 
@@ -39,7 +39,6 @@
                 </form>
             </div>
         </div>
-
 {{/partial}}
 
-{{> templates/base titulo="Suscripción a Heladera" mostrarSeccion=true seccion="Suscripciones" mostrarIrAtras=true paginaAtras="/mapaHeladeras" }}
+{{> templates/base titulo="Suscripción a Heladera" mostrarSeccion=true seccion="Suscripciones" mostrarIrAtras=true paginaAtras="/heladeras" }}
