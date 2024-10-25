@@ -66,19 +66,12 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
 
       context.sessionAttribute("id", usuario.getId());
       context.sessionAttribute("rol", usuario.getRol().getTipoRol().name());
-      context.redirect("/");
+      context.redirect("/"); // FIXME: Redireccionar a formulario de humana / juridica
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", dto);
       context.render(rutaHbs, model);
-    } catch (PersistenceException e) {
-      if (e.getCause() instanceof ConstraintViolationException) {
-        System.out.println("El usuario ya existe, no se insertará nuevamente.");
-      } else {
-        throw e;
-      }
     }
   }
-
 }

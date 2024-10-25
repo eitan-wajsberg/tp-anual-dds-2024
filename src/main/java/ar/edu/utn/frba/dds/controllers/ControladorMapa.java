@@ -26,34 +26,41 @@ public class ControladorMapa {
   }
 
   public void mapa(Context context) {
+    Map<String, Object> model = new HashMap<>();
     try {
-      String terminoBusqueda = context.queryParam("q");  // El parámetro de búsqueda se espera en la query string
+      String filtro = context.queryParam("q");  // Obtener el parámetro de filtro de la query string
       List<Heladera> heladeras;
       String rol = context.sessionAttribute("rol");
+      Long idUsuario = context.sessionAttribute("id"); // Asumiendo que tienes el id del usuario en la sesión
 
-      if (terminoBusqueda != null && !terminoBusqueda.isEmpty()) {
-        // Si hay un término de búsqueda, realizar la búsqueda
-        heladeras = this.repositorioHeladera.buscarPorNombreODireccion(terminoBusqueda);
-      } else {
-        // Si no hay búsqueda, obtener todas las heladeras
-        heladeras = this.repositorioHeladera.buscarTodos(Heladera.class);
-      }
-
-      String jsonHeladeras = gson.toJson(heladeras);
-      Map<String, Object> model = new HashMap<>();
-      model.put("heladeras", heladeras);
-      model.put("jsonHeladeras", jsonHeladeras);
-      model.put("buscadorMapa", true);
-
+      // Determinar qué heladeras buscar según el rol y el filtro
       if (TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)) {
+        heladeras = this.repositorioHeladera.buscarTodos(Heladera.class);
         model.put("mostrarPersonaHumana", true);
       } else {
         model.put("mostrarPersonaJuridica", true);
+        heladeras = obtenerHeladerasPorFiltro(filtro, idUsuario);
       }
+
+      String jsonHeladeras = gson.toJson(heladeras);
+      model.put("jsonHeladeras", jsonHeladeras);
+      model.put("heladeras", heladeras);
+      model.put("buscadorMapa", true);
+
       context.render(rutaListadoHbs, model);
     } catch (Exception e) {
       e.printStackTrace();
-      context.status(500).result("Error interno del servidor");
+      context.status(500).result("Error interno del servidor"); // FIXME
     }
+  }
+
+  private List<Heladera> obtenerHeladerasPorFiltro(String filtro, Long idUsuario) {
+    if ("misHeladeras".equals(filtro)) {
+      return this.repositorioHeladera.buscarPorUsuario(idUsuario);
+    } else if ("heladerasConAlerta".equals(filtro)) {
+      return this.repositorioHeladera.buscarHeladerasConAlertaPorUsuario(idUsuario);
+    }
+    // Si no hay filtro aplicable, devolver todas las heladeras
+    return this.repositorioHeladera.buscarTodos(Heladera.class);
   }
 }
