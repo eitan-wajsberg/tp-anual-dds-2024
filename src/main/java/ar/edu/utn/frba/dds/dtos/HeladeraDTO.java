@@ -17,6 +17,9 @@ public class HeladeraDTO {
   private String latitud;
   private String longitud;
   private int capacidadMaximaViandas;
+  private String modelo;
+  private float temperaturaMinima;
+  private float temperaturaMaxima;
   private Float temperaturaEsperada;
 
   public HeladeraDTO(Heladera heladera) {
