@@ -19,19 +19,19 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <a class="dropdown-item d-flex align-items-center" href="/heladeras?q=">
                                 <span class="iconify me-2" data-icon="tabler:world" data-width="24"></span>
                                 <span class="text-truncate">Todas</span>
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <a class="dropdown-item d-flex align-items-center" href="/heladeras?q=misHeladeras">
                                 <span class="iconify me-2" data-icon="mdi:refrigerator-outline" data-width="24"></span>
                                 <span class="text-truncate">Mis heladeras</span>
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <a class="dropdown-item d-flex align-items-center" href="/heladeras?q=heladerasConAlerta">
                                 <span class="iconify me-2" data-icon="mingcute:alert-fill" data-width="24"></span>
                                 <span class="text-truncate">Mis heladeras con alerta</span>
                             </a>
@@ -47,8 +47,8 @@
                         <div class="card-result-body">
                             <h5 class="card-result-title">{{this.nombre}}</h5>
                             <p class="card-result-text">{{this.direccion.nomenclatura}}</p>
-                            <p class="card-result-text">Tiene {{this.cantidadViandas}} viandas</p>
-                            <p class="card-result-text">Capacidad de {{this.capacidadMaximaViandas}} viandas</p>
+                            <p class="card-result-text">{{this.cantidadViandas}} viandas dentro de la heladera</p>
+                            <p class="card-result-text">Capacidad máxima de {{this.capacidadMaximaViandas}} viandas</p>
                         </div>
                     </a>
                 {{/each}}
