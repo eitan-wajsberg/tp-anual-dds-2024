@@ -120,6 +120,8 @@ public class ServiceLocator {
             instanceOf(RepositorioGeoRef.class),
             instanceOf(RepositorioPersonaJuridica.class)
         );
+      } else if (componentName.equals(ControladorModeloHeladera.class.getName())) {
+        instance = new ControladorModeloHeladera(instanceOf(Repositorio.class));
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
       } else if (componentName.equals(ControladorInicioSesion.class.getName())) {

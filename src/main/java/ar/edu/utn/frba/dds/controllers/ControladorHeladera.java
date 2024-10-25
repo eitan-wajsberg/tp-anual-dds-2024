@@ -35,7 +35,6 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
   private final String rutaParticularHbs = "heladeras/heladeraParticular.hbs";
   private final Gson gson = GsonFactory.createGson();
 
-
   public ControladorHeladera(RepositorioHeladera repositoriaHeladera, RepositorioGeoRef repositorioGeoRef, RepositorioPersonaJuridica repositorioPersonaJuridica) {
     this.repositorioHeladera = repositoriaHeladera;
     this.repositorioGeoRef = repositorioGeoRef;
@@ -88,41 +87,45 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
   public void save(Context context) {
     HeladeraDTO dto = new HeladeraDTO();
     dto.obtenerFormulario(context);
-    Heladera nuevaHeladera;
     Long id = context.sessionAttribute("id");
 
     try {
-      nuevaHeladera = Heladera.fromDTO(dto);
-      if (nuevaHeladera == null) {
-        throw new ValidacionFormularioException("Los datos de la heladera son inválidos.");
-      }
-
       String idModelo = context.formParam("modelo");
-      if (idModelo != null && !idModelo.isEmpty()) {
-        Optional<Modelo> modelo = this.repositorioHeladera.buscarPorId(Long.parseLong(idModelo), Modelo.class);
-        modelo.ifPresent(nuevaHeladera::setModelo);
+      if (idModelo == null || idModelo.isEmpty()) {
+        throw new ValidacionFormularioException("El modelo de la heladera es obligatorio y determina el rango de temperaturas válidas.");
       }
 
+      Modelo modelo = this.repositorioHeladera
+          .buscarPorId(Long.parseLong(idModelo), Modelo.class)
+          .orElseThrow(() -> new ValidacionFormularioException("No se ha encontrado el modelo indicado."));
+
+      dto.setTemperaturaMinima(modelo.getTemperaturaMinima());
+      dto.setTemperaturaMaxima(modelo.getTemperaturaMaxima());
+
+      Heladera nuevaHeladera = Heladera.fromDTO(dto);
       nuevaHeladera.setFechaRegistro(LocalDateTime.now());
       nuevaHeladera.setEstado(EstadoHeladera.ACTIVA);
+      nuevaHeladera.setModelo(modelo);
 
-      Optional<PersonaJuridica> personaJuridica = this.repositorioPersonaJuridica.buscarPorUsuario(id);
-      if (personaJuridica.isEmpty()) {
-        throw new ValidacionFormularioException("No se ha podido encontrar la persona juridica responsable.");
-      }
-      personaJuridica.get().agregarHeladera(nuevaHeladera);
+      PersonaJuridica personaJuridica = this.repositorioPersonaJuridica
+          .buscarPorUsuario(id)
+          .orElseThrow(() -> new ValidacionFormularioException("No se ha podido encontrar la persona jurídica responsable."));
+
+      personaJuridica.agregarHeladera(nuevaHeladera);
 
       withTransaction(() -> {
         repositorioHeladera.guardar(nuevaHeladera);
-        repositorioPersonaJuridica.actualizar(personaJuridica.get());
+        repositorioPersonaJuridica.actualizar(personaJuridica);
       });
 
-      context.redirect("/mapaHeladeras");
+      context.redirect("/heladeras");
+
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", dto);
       model.put("id", id);
+      model.put("modelos", this.repositorioHeladera.buscarTodos(Modelo.class));
       model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
       context.render(rutaAltaHbs, model);
     }
@@ -160,7 +163,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     Optional<Heladera> heladera = this.repositorioHeladera.buscarPorId(id, Heladera.class);
     if (heladera.isPresent()) {
       withTransaction(() -> this.repositorioHeladera.eliminarFisico(Heladera.class, id));
-      context.redirect("/mapaHeladeras");
+      context.redirect("/heladeras");
     } else {
       context.status(400).result("No se puede eliminar, la heladera no cumple con las condiciones para ser eliminada.");
     }

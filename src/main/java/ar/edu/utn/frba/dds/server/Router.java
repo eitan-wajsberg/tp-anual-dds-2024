@@ -11,6 +11,7 @@ import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladera;
 import ar.edu.utn.frba.dds.controllers.ControladorInicio;
 import ar.edu.utn.frba.dds.controllers.ControladorInicioSesion;
 import ar.edu.utn.frba.dds.controllers.ControladorMapa;
+import ar.edu.utn.frba.dds.controllers.ControladorModeloHeladera;
 import ar.edu.utn.frba.dds.controllers.ControladorOferta;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaHumana;
 import ar.edu.utn.frba.dds.controllers.ControladorPersonaJuridica;
@@ -124,5 +125,7 @@ public class Router {
     app.post("/heladeras/suscripcion", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save, TipoRol.PERSONA_HUMANA);
     app.get("/heladeras/reporteFallas/{heladeraId}/nuevo", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::create, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras/reporteFallas/{heladeraId}", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::save, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.get("/heladeras/modelos/nuevo", ServiceLocator.instanceOf(ControladorModeloHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
+    app.post("/heladeras/modelos", ServiceLocator.instanceOf(ControladorModeloHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
   }
 }

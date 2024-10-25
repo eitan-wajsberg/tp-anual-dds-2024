@@ -30,13 +30,14 @@
                 <div class="col-12 mt-2">
                     <div class="input-group">
                         <div class="input-group-text selection">Modelo</div>
-                        <select name="modelo" class="custom-select">
+                        <select name="modelo" class="custom-select" required>
                             <option value="" selected>Desconocido</option>>
                             {{#each modelos}}
                                 <option value="{{this.id}}" {{#ifEqual modeloEdit this.modelo}}selected{{/ifEqual}}>{{this.modelo}}</option>
                             {{/each}}
                         </select>
                     </div>
+                    <p class="mt-1 grey-text">¿No encuentras el modelo? <a href="/heladeras/modelos/nuevo" class="light-blue">Agrega uno nuevo aquí</a>.</p>
                 </div>
                 <div class="col-12 mt-2">
                     <input type="number" name="temperaturaEsperada" class="w-100" placeholder="Temperatura esperada (en Celsius)" value="{{dto.temperaturaEsperada}}" step="0.1">

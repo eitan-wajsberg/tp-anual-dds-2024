@@ -301,7 +301,7 @@ public class Heladera implements Contribucion {
 
   public static Heladera fromDTO(HeladeraDTO dto) {
     validarCamposObligatorios(dto);
-    validarCapacidadMaximaViandas(dto);
+    validarRangoTemperaturaEsperada(dto);
 
     Direccion direccion = Direccion.fromCoordenada(dto.getLatitud(), dto.getLongitud());
     return Heladera.builder()
@@ -316,13 +316,18 @@ public class Heladera implements Contribucion {
   private static void validarCamposObligatorios(HeladeraDTO dto) {
     CamposObligatoriosVacios.validarCampos(
         Pair.of("nombre", dto.getNombre()),
-        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas()))
+        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas())),
+        Pair.of("temperatura esperada", dto.getTemperaturaEsperada())
     );
+
+    if (dto.getCapacidadMaximaViandas() <= 0) {
+      throw new ValidacionFormularioException("La capacidad máxima de viandas debe ser mayor a cero.");
+    }
   }
 
-  private static void validarCapacidadMaximaViandas(HeladeraDTO dto) {
-    if (dto.getCapacidadMaximaViandas() <= 0) {
-      throw new ValidacionFormularioException("La capacidad máxima de viandas debe ser un número positivo.");
+  private static void validarRangoTemperaturaEsperada(HeladeraDTO dto) {
+    if (dto.getTemperaturaEsperada() < dto.getTemperaturaMinima() || dto.getTemperaturaEsperada() > dto.getTemperaturaMaxima()) {
+      throw new ValidacionFormularioException("La temperatura esperada debe estar dentro del rango mínimo y máximo permitido para el modelo.");
     }
   }
 }
