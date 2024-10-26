@@ -54,8 +54,8 @@ function addMarker(heladera, onMarkerClick) {
 var singleMarker = null;
 
 // Función para agregar o mover el marcador en el mapa
-function addNewMarker(lng, lat) {
-    var customMarkerImage = '/img/favicon-dark.png';
+function addNewMarker(lng, lat, rutaMarker) {
+    var customMarkerImage = rutaMarker;
     // Si ya existe un marcador, removerlo antes de crear uno nuevo
     if (currentMarkers.length > 0) {
         currentMarkers[0].remove();  // Remover el marcador anterior

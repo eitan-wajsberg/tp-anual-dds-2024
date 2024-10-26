@@ -3,7 +3,6 @@
         <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4">
             <h1 class="fs-3 mt-3 mb-5">Encargarse de heladera</h1>
             <form class="mt-5" method="POST" action="/heladeras">
-
                 <h4 class="fw-bold fs-5 mb-2">Información básica</h4>
                 <p class="mb-2">Ingresar los datos básicos de la heladera.</p>
                 <div class="col-12 mb-2">
@@ -56,7 +55,7 @@
                     <hr>
                     <label class="grey-text fw-bold w-100">
                         ¿No estás seguro de dónde colocar tu heladera?
-                        <a href="/heladeras/recomendacion" class="light-blue">Te sugerimos los mejores puntos</a>.
+                        <a href="/heladeras/nuevo/recomendacion" class="light-blue">Te sugerimos los mejores puntos</a>.
                     </label>
                 </div>
             </form>
@@ -90,7 +89,7 @@
                 var lngLat = e.lngLat;
 
                 // Mover o crear un marcador en la ubicación seleccionada
-                addNewMarker(lngLat.lng, lngLat.lat);
+                addNewMarker(lngLat.lng, lngLat.lat, '/img/favicon-dark.png');
             });
         });
     </script>

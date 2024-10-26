@@ -119,6 +119,7 @@ public class Router {
 
     // Heladeras - No se asusten si no lo ven como antes, hubo mejoras que evitaron repeticiones de codigo
     app.get("/heladeras/nuevo", ServiceLocator.instanceOf(ControladorHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
+    app.get("/heladeras/nuevo/recomendacion", ServiceLocator.instanceOf(ControladorHeladera.class)::recomendacion, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras", ServiceLocator.instanceOf(ControladorHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
     app.get("/heladeras/{heladeraId}", ServiceLocator.instanceOf(ControladorHeladera.class)::show, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.get("/heladeras", ServiceLocator.instanceOf(ControladorMapa.class)::mapa, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
