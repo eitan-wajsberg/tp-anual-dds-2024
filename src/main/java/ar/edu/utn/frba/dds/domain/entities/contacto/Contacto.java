@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 import javax.mail.MessagingException;
@@ -110,7 +111,7 @@ public class Contacto {
   }
 
   @Override
-  public boolean equals(Object o){
+  public boolean equals(Object o) {
     if (o == this) {
       return true;
     }
@@ -121,8 +122,9 @@ public class Contacto {
 
     Contacto contacto = (Contacto) o;
 
-    return this.whatsapp.equals(contacto.whatsapp)
-        && this.mail.equals(contacto.mail)
-        && this.telegramChatId.equals(contacto.telegramChatId);
+    return (Objects.equals(this.whatsapp, contacto.whatsapp)) &&
+        (Objects.equals(this.mail, contacto.mail)) &&
+        (Objects.equals(this.telegramChatId, contacto.telegramChatId));
   }
+
 }

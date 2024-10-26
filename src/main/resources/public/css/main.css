@@ -301,6 +301,7 @@ select:focus {
 
 .dropdown-item:focus {
     background: #e8e8e8;
+    color: #222222;
 }
 
 .wrapper {
@@ -784,4 +785,9 @@ input[type="radio"]:focus {
 #loader.show {
     display: block;
     opacity: 1;
+}
+
+.custom-small-button {
+    padding: 0.25rem 0.5rem; /* Ajusta el padding según lo necesites */
+    font-size: 0.875rem; /* Cambia el tamaño de la fuente si es necesario */
 }
