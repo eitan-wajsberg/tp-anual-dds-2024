@@ -32,6 +32,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
   private RepositorioPersonaJuridica repositorioPersonaJuridica;
   private RepositorioGeoRef repositorioGeoRef;
   private final String rutaAltaHbs = "colaboraciones/cuidarHeladera.hbs";
+  private final String rutaRecomendacionHbs = "colaboraciones/recomendacionDePuntos.hbs";
   private final String rutaParticularHbs = "heladeras/heladeraParticular.hbs";
   private final Gson gson = GsonFactory.createGson();
 
@@ -204,5 +205,13 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     }
 
     context.result(municipiosHtml.toString());
+  }
+
+  public void recomendacion(Context context) {
+    Map<String, Object> model = new HashMap<>();
+    Long id = context.sessionAttribute("id");
+    model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
+    model.put("id", id);
+    context.render(this.rutaRecomendacionHbs, model);
   }
 }
