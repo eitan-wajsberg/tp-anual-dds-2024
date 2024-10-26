@@ -34,14 +34,14 @@ function addMarker(heladera, onMarkerClick) {
 
         marker.getElement().addEventListener('click', onMarkerClick.bind({ "heladera": heladera }));
 
-        if (document.querySelector(`[data-id="${heladera.id}"]`) != undefined) {
+        /*if (document.querySelector(`[data-id="${heladera.id}"]`) != undefined) {
             document.querySelector(`[data-id="${heladera.id}"]`).addEventListener('click', function () {
                 map.flyTo({
                     center: [lng, lat],
                     zoom: 15
                 });
             });
-        }
+        }*/
     } else {
         console.log(`Coordenadas inválidas para heladera con id: ${heladera.id}`);
     }

@@ -46,30 +46,42 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     // tiene sentido? si ya estan plasmadas en el mapa
   }
 
-  @Override
   public void show(Context context) {
     try {
+      // Obtener el ID de la heladera y rol del usuario
+      Long heladeraId = Long.parseLong(context.pathParam("heladeraId"));
       String rol = context.sessionAttribute("rol");
-      Optional<Heladera> heladera = repositorioHeladera.buscarPorId(Long.parseLong(context.pathParam("heladeraId")), Heladera.class);
-      if (heladera.isPresent()) {
-        String jsonHeladera = gson.toJson(heladera.get());
-        Map<String, Object> model = new HashMap<>();
-        model.put("heladeraId",context.pathParam("heladeraId"));
-        model.put("heladera", heladera.get());
-        model.put("jsonHeladera", jsonHeladera);
 
-        if (TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)) {
-          model.put("mostrarPersonaHumana", true);
-        } else {
-          model.put("mostrarPersonaJuridica", true);
-        }
-        context.render(rutaParticularHbs, model);
-      } else {
-        context.status(404).result("Heladera no encontrada"); // FIXME
+      // Buscar la heladera en el repositorio
+      Optional<Heladera> heladeraOpt = repositorioHeladera.buscarPorId(heladeraId, Heladera.class);
+
+      // Verificar si la heladera existe
+      if (heladeraOpt.isEmpty()) {
+        context.status(404).result("Heladera no encontrada");
+        return;
       }
+
+      // Preparar el modelo para la vista
+      Heladera heladera = heladeraOpt.get();
+      Map<String, Object> model = new HashMap<>();
+      model.put("heladera", heladera);
+      model.put("jsonHeladera", gson.toJson(heladera));
+
+      // Configurar la visualización según el rol
+      if (TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)) {
+        model.put("mostrarPersonaHumana", true);
+      } else {
+        model.put("mostrarPersonaJuridica", true);
+      }
+
+      // Renderizar la vista con el modelo preparado
+      context.render(rutaParticularHbs, model);
+
+    } catch (NumberFormatException e) {
+      context.status(400).result("ID de heladera inválido");
     } catch (Exception e) {
       e.printStackTrace();
-      context.status(500).result("Error interno del servidor"); // FIXME
+      context.status(500).result("Error interno del servidor");
     }
   }
 

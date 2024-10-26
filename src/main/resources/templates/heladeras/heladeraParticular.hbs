@@ -1,53 +1,54 @@
 {{#partial "contenido"}}
     <section class="row g-2 gx-4 flex-grow-1 mt-5 ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
-        <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4">
-            <h1 class="fs-3 mt-3 mb-3">{{heladera.nombre}}</h1>
-            <p class="mb-2">{{heladera.direccion.nomenclatura}}.</p>
-            <p class="mb-5">Capacidad total: {{heladera.capacidadMaximaViandas}} viandas.</p>
+        <nav class="col-md-4 sidebar">
+            <div class="row p-4 border border-color-999 rounded-4">
+                <h1 class="fs-3 mt-3 mb-3">{{heladera.nombre}}</h1>
+                <p class="mb-2">{{heladera.direccion.nomenclatura}}.</p>
+                <p class="mb-5">Capacidad total: {{heladera.capacidadMaximaViandas}} viandas.</p>
 
-            {{#if hayViandas}}
-                <p class="mt-5 mb-5">Viandas disponibles ({{heladera.viandas.length}})</p>
-                <hr>
-                <div class="scrollable-Items">
-                    {{#each heladera.viandas}}
-                        <div class="card rounded-3 mt-2 mb-2">
-                            <div class="card-Item-body">
-                                <h5 class="mb-2">{{this.comida}}</h5>
-                                <p class="mb-2">Fecha de vencimiento: {{this.fechaCaducidad}}</p>
-                                <p class="mb-2">{{this.caloriasEnKcal}} kcal</p>
-                                <p class="mb-2">Peso: {{this.pesoEnGramos}} g</p>
+                {{#if hayViandas}}
+                    <p class="mt-5 mb-5">Viandas disponibles ({{heladera.viandas.length}})</p>
+                    <hr>
+                    <div class="scrollable-Items">
+                        {{#each heladera.viandas}}
+                            <div class="card rounded-3 mt-2 mb-2">
+                                <div class="card-Item-body">
+                                    <h5 class="mb-2">{{this.comida}}</h5>
+                                    <p class="mb-2">Fecha de vencimiento: {{this.fechaCaducidad}}</p>
+                                    <p class="mb-2">{{this.caloriasEnKcal}} kcal</p>
+                                    <p class="mb-2">Peso: {{this.pesoEnGramos}} g</p>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                {{/if}}
+
+                {{#if mostrarPersonaHumana}}
+                    <hr>
+                    <form method="POST" action="heladeras/suscripcion/{{heladera.id}}/nuevo" class="mt-5 mb-5 w-100">
+                        <h4 class="fw-bold fs-5 mb-2">Suscripción a la heladera</h4>
+                        <p class="mb-2">Seleccione cómo desea recibir notificaciones sobre la heladera:</p>
+                        <div class="col-12 mt-2">
+                            <div class="input-group">
+                                <div class="input-group-text selection">Tipo</div>
+                                <select name="unidadFrecuencia" class="custom-select">
+                                    <option value="FALTAN_N_VIANDAS">Faltan N viandas</option>
+                                    <option value="QUEDAN_N_VIANDAS"> Quedan N viandas</option>
+                                    <option value="DESPERFECTO">Desperfecto</option>
+                                </select>
                             </div>
                         </div>
-                    {{/each}}
-                </div>
-            {{/if}}
-
-            {{#if mostrarPersonaHumana}}
-                <hr>
-                <form method="POST" action="heladeras/suscripcion/{{heladeraId}}/nuevo" class="mt-5 mb-5 w-100">
-                    <h4 class="fw-bold fs-5 mb-2">Suscripción a la heladera</h4>
-                    <p class="mb-2">Seleccione cómo desea recibir notificaciones sobre la heladera:</p>
-                    <div class="col-12 mt-2">
-                        <div class="input-group">
-                            <div class="input-group-text selection">Tipo</div>
-                            <select name="unidadFrecuencia" class="custom-select">
-                                <option value="FALTAN_N_VIANDAS">Faltan N viandas</option>
-                                <option value="QUEDAN_N_VIANDAS"> Quedan N viandas</option>
-                                <option value="DESPERFECTO">Desperfecto</option>
-                            </select>
+                        <div class="col-12 mt-2">
+                            <button class="p-2 w-100">Suscribirme</button>
                         </div>
-                    </div>
-                    <div class="col-12 mt-2">
-                        <button class="p-2 w-100">Suscribirme</button>
-                    </div>
-                </form>
-            {{/if}}
-
-            <div class="col-12 mt-5 mb-3 text-center">
+                    </form>
+                {{/if}}
+            </div>
+            <div class="row mt-5 mb-3 text-center">
                 <hr>
                 <label class="grey-text fw-bold w-100">
                     ¿La heladera presenta algún problema?
-                    <a href="heladeras/reporteFallas/{{heladera.id}}/nuevo" class="light-blue">Reportar una falla</a>.
+                    <a href="/heladeras/reporteFallas/{{heladera.id}}/nuevo" class="light-blue">Reportar una falla</a>.
                 </label>
             </div>
         </nav>
@@ -58,10 +59,28 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var heladera = {{{jsonHeladera}}};  // Triple mustache para evitar escaping y pasar datos correctamente
-            console.log(heladera);  // Verifica los datos en la consola
-            addMarker(heladera);   // Llama a la función para agregar marcadores
+
+            if (heladera && heladera.direccion && heladera.direccion.coordenada) {
+                // Obtén las coordenadas de la heladera
+                var lat = parseFloat(heladera.direccion.coordenada.latitud);
+                var lng = parseFloat(heladera.direccion.coordenada.longitud);
+
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    // Agrega un marcador y enfoca el mapa en la heladera
+                    addMarker(heladera, function() {
+                        map.flyTo({ center: [lng, lat], zoom: 15 });
+                    });
+
+                    // Enfoca el mapa cuando se carga
+                    map.flyTo({ center: [lng, lat], zoom: 15 });
+                } else {
+                    console.log("Coordenadas inválidas para la heladera");
+                }
+            } else {
+                console.log("Datos de heladera incompletos");
+            }
         });
     </script>
 {{/partial}}
 
-{{> templates/base titulo=heladera.nombre mostrarMapa=true buscadorMapa=true mostrarSeccion=true seccion=heladera.nombre mostrarPaginaAtras=true paginaAtras="/heladeras"}}
+{{> templates/base titulo=heladera.nombre mostrarMapa=true buscadorMapa=true mostrarSeccion=true seccion=heladera.nombre mostrarIrAtras=true paginaAtras="/heladeras"}}
