@@ -285,7 +285,7 @@ public class PersonaHumana extends IObserverNotificacion {
   }
 
   private static void validarFormasContribucion(PersonaHumanaDTO dto) {
-    if (dto.getFormasContribucionHumanasSet() == null || dto.getFormasContribucionHumanasSet().isEmpty()) {
+    if (!(dto.isDonacionDinero() || dto.isRedistribucionViandas() || dto.isDonacionViandas() || dto.isEntregaTarjetas())) {
       throw new ValidacionFormularioException("Al menos una forma de contribución debe ser seleccionada.");
     }
   }

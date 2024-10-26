@@ -2,10 +2,8 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
-import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
-import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;

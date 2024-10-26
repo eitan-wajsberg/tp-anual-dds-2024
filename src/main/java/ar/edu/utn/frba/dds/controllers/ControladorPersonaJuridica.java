@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
+import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.dtos.PersonaJuridicaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
@@ -16,7 +17,7 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
   private RepositorioPersonaJuridica repositorioPersonaJuridica;
   private final String rutaPersonaJuridicaHbs = "cuenta/formularioPersonaJuridica.hbs";
   private final String rutaPersonaJuridica = "/personaJuridica";
-  private final String rutaPantallaPrincipal = "/personasVulnerables"; //TODO: Poner ruta posta
+  private final String rutaPantallaPrincipal = "/";
   private final String ERROR = "error";
 
   public ControladorPersonaJuridica(RepositorioPersonaJuridica repositorioPersonaJuridica) {
@@ -48,12 +49,20 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       if (nuevaPersona == null) {
         throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
       }
+
+      Optional<Rubro> rubro = this.repositorioPersonaJuridica.buscarPorId(Long.parseLong(dto.getRubro()), Rubro.class);
+      if (rubro.isEmpty()) {
+        throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
+      }
+      nuevaPersona.setRubro(rubro.get());
+
       withTransaction(() -> repositorioPersonaJuridica.guardar(nuevaPersona));
       context.redirect(rutaPantallaPrincipal);
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put(ERROR, e.getMessage());
       model.put("dto", dto);
+      model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
       context.render(rutaPersonaJuridicaHbs, model);
     }
   }
@@ -72,10 +81,15 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put("dto", dto);
       model.put("edicion", true);
       model.put("editado", false);
+      model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaJuridicaHbs, model);
     } catch (ValidacionFormularioException e) {
       model.put(ERROR, e.getMessage());
+      model.put("edicion", true);
+      model.put("editado", false);
+      model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
+      model.put("id", context.pathParam("id"));
       context.render(rutaPersonaJuridicaHbs, model);
     }
   }
@@ -92,6 +106,7 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       if (personaExistente.isEmpty()) {
         throw new ValidacionFormularioException("Persona jurídica no encontrada.");
       }
+      dtoNuevo.setId(personaExistente.get().getId());
 
       PersonaJuridicaDTO dtoExistente = new PersonaJuridicaDTO(personaExistente.get());
       if (dtoExistente.equals(dtoNuevo)) {
@@ -106,6 +121,7 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put("dto", dtoNuevo);
       model.put("edicion", true);
       model.put("editado", true);
+      model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaJuridicaHbs, model);
     }

@@ -114,16 +114,13 @@ public class PersonaJuridica {
 
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
-    Rubro rubro = new Rubro(dto.getRubro()); //TODO: FIXME
 
     return PersonaJuridica.builder()
         .razonSocial(dto.getRazonSocial())
         .tipo(TipoPersonaJuridica.valueOf(dto.getTipo()))
         .contacto(contacto)
         .direccion(direccion)
-        .rubro(rubro)
         .contribucionesElegidas(dto.getContribucionesElegidas())
-        .rubro(rubro)
         .build();
   }
 
@@ -137,7 +134,6 @@ public class PersonaJuridica {
 
     Contacto contacto = Contacto.fromDTO(dto.getContactoDTO());
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
-    Rubro rubro = new Rubro(dto.getRubro()); //TODO: FIXME
 
     if (!this.contacto.equals(contacto)) {
       this.setContacto(contacto);
@@ -155,7 +151,8 @@ public class PersonaJuridica {
   private static void validarCamposObligatorios(PersonaJuridicaDTO dto) {
     CamposObligatoriosVacios.validarCampos(
         Pair.of("razón social", dto.getRazonSocial()),
-        Pair.of("tipo", dto.getTipo())
+        Pair.of("tipo", dto.getTipo()),
+        Pair.of("rubro", dto.getRubro())
     );
   }
 
@@ -165,9 +162,12 @@ public class PersonaJuridica {
     }
   }
   private static void validarFormasContribucion(PersonaJuridicaDTO dto) {
-    if (dto.getContribucionesElegidas() == null || dto.getContribucionesElegidas().isEmpty()) {
+    boolean algunaContribucionSeleccionada =
+        dto.isDonacionDinero() || dto.isEncargarseHeladera() || dto.isOfrecerOferta();
+
+    if ((dto.getContribucionesElegidas() == null || dto.getContribucionesElegidas().isEmpty())
+        && !algunaContribucionSeleccionada) {
       throw new ValidacionFormularioException("Al menos una forma de contribución debe ser seleccionada.");
     }
   }
-
 }
