@@ -4,7 +4,11 @@ import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.UnidadFrecuencia;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionDinero;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.dtos.DonacionDineroDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
@@ -18,20 +22,33 @@ import java.util.Optional;
 
 public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private Repositorio repositorioGenerico;
+  private RepositorioPersonaJuridica repositorioPersonaJuridica;
+  private RepositorioPersonaHumana repositorioPersonaHumana;
+  private RepositorioDonacionDinero repositorioDonacionDinero;
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesDinero.hbs";
   private final String rutaDonacionHbs = "colaboraciones/donacionDinero.hbs";
   private final String rutaListadoDonaciones = "/donacionDinero";
-  private final String ERROR = "error";
 
-  public ControladorDonacionDinero(Repositorio repositorioGenerico) {
+  public ControladorDonacionDinero(Repositorio repositorioGenerico, RepositorioPersonaJuridica repositorioPersonaJuridica, RepositorioPersonaHumana repositorioPersonaHumana, RepositorioDonacionDinero repositorioDonacionDinero) {
     this.repositorioGenerico = repositorioGenerico;
+    this.repositorioPersonaHumana = repositorioPersonaHumana;
+    this.repositorioPersonaJuridica = repositorioPersonaJuridica;
+    this.repositorioDonacionDinero = repositorioDonacionDinero;
   }
 
   @Override
   public void index(Context context) {
-    List<DonacionDinero> donacionesDeDinero = this.repositorioGenerico.buscarTodos(DonacionDinero.class);
+    String rol = context.sessionAttribute("rol");
+    Long id = context.sessionAttribute("id");
+
+    List<DonacionDinero> donacionesDeDinero = this.repositorioDonacionDinero.buscarDonacionesDeDineroDe(id, TipoRol.valueOf(rol));
     Map<String, Object> model = new HashMap<>();
     model.put("donacionDinero", donacionesDeDinero);
+
+    model.put(TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)
+        ? "mostrarPersonaHumana"
+        : "mostrarPersonaJuridica", true);
+
     context.render(rutaListadoHbs, model);
   }
 
@@ -43,6 +60,12 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
   public void create(Context context) {
     Map<String, Object> model = new HashMap<>();
     model.put("title", "Donar dinero");
+
+    String rol = context.sessionAttribute("rol");
+    model.put(TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)
+        ? "mostrarPersonaHumana"
+        : "mostrarPersonaJuridica", true);
+
     context.render(rutaDonacionHbs, model);
   }
 
@@ -50,46 +73,61 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
   public void save(Context context) {
     DonacionDineroDTO dto = new DonacionDineroDTO();
     dto.obtenerFormulario(context);
+    String rol = context.sessionAttribute("rol");
+    Long id = context.sessionAttribute("id");
 
     try {
-      Optional<PersonaHumana> personaHumana = repositorioGenerico
-          .buscarPorId(1L, PersonaHumana.class);
-      Optional<PersonaJuridica> personaJuridica = repositorioGenerico
-          .buscarPorId(dto.getPersonaJuridicaId(), PersonaJuridica.class);
-
-      /*
-      if (personaHumana.isEmpty() || personaJuridica.isEmpty()) {
-        throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
-      }
-      */
-
+      // Crea la donación a partir del DTO
       DonacionDinero nuevaDonacion = DonacionDinero.fromDTO(dto);
       if (nuevaDonacion == null) {
         throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la donación.");
       }
 
-      personaHumana.ifPresent(nuevaDonacion::setPersonaHumana);
-      personaJuridica.ifPresent(nuevaDonacion::setPersonaJuridica);
+      // Determina el tipo de persona y establece la asignación y transacción adecuada
+      if (TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)) {
+        Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(id);
+        personaHumana.orElseThrow(() -> new ValidacionFormularioException("Persona humana no encontrada. Error en servidor."));
 
-      if (personaHumana.isPresent()) {
-        personaHumana.get().sumarPuntaje(nuevaDonacion.calcularPuntaje());
+        // Asigna la persona y calcula puntaje
+        personaHumana.ifPresent(p -> {
+          nuevaDonacion.setPersonaHumana(p);
+          p.sumarPuntaje(nuevaDonacion.calcularPuntaje());
+        });
+
+        withTransaction(() -> {
+          repositorioGenerico.guardar(nuevaDonacion);
+          personaHumana.ifPresent(repositorioGenerico::actualizar);
+        });
+
+      } else {
+        Optional<PersonaJuridica> personaJuridica = repositorioPersonaJuridica.buscarPorUsuario(id);
+        personaJuridica.orElseThrow(() -> new ValidacionFormularioException("Persona jurídica no encontrada. Error en servidor."));
+
+        // Asigna la persona jurídica
+        personaJuridica.ifPresent(nuevaDonacion::setPersonaJuridica);
+
+        withTransaction(() -> {
+          repositorioGenerico.guardar(nuevaDonacion);
+          personaJuridica.ifPresent(repositorioGenerico::actualizar);
+        });
       }
 
-      withTransaction(() -> {
-        repositorioGenerico.guardar(nuevaDonacion);
-        repositorioGenerico.actualizar(personaHumana.get());
-      });
       context.redirect(rutaListadoDonaciones);
 
     } catch (ValidacionFormularioException e) {
+      // Prepara modelo para la vista en caso de error
       Map<String, Object> model = new HashMap<>();
-      model.put(ERROR, e.getMessage());
+      model.put("error", e.getMessage());
       model.put("dto", dto);
+      model.put(TipoRol.valueOf(rol).equals(TipoRol.PERSONA_HUMANA)
+          ? "mostrarPersonaHumana"
+          : "mostrarPersonaJuridica", true);
+
       context.render(rutaDonacionHbs, model);
     }
   }
 
-   @Override
+  @Override
   public void edit(Context context) {
     Map<String, Object> model = new HashMap<>();
     try {
@@ -142,7 +180,6 @@ public class ControladorDonacionDinero implements ICrudViewsHandler, WithSimpleP
       model.put("id", context.pathParam("id"));
       context.render(rutaDonacionHbs, model);
     }
-
   }
 
   @Override
