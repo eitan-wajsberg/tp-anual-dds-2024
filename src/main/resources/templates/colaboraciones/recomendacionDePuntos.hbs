@@ -55,20 +55,17 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var heladeras = {{{this.jsonHeladeras}}}
-                    addMarkers(heladeras, function(){
-                        // llena nombre e id en el campo de la heladera que tenga focus
-                        var lv_input = $(":focus[id^='heladera']");
-                        if (lv_input !== undefined) {
-                            lv_input.val(this.heladera.nombre);
-                            $("#"+lv_input.data("id")).val(this.heladera.id);
-                        }
-                    });
+            addMarkers(heladeras, function() {
+                // llena nombre e id en el campo de la heladera que tenga focus
+                var lv_input = $("[id^='heladera']");
+                if (lv_input !== undefined) {
+                    lv_input.val(this.heladera.nombre);
+                    $("#"+lv_input.data("id")).val(this.heladera.id);
+                }
+            });
 
             // Ejemplo de cómo capturar el evento de clic en el mapa
             map.on('click', function (e) {
-                var lngLat = e.lngLat;
-
-                // Mover o crear un marcador en la ubicación seleccionada
                 addNewMarker(lngLat.lng, lngLat.lat, '/img/location-icon.png');
             });
         });
