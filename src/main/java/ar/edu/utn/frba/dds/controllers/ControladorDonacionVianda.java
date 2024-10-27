@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import ar.edu.utn.frba.dds.domain.GsonFactory;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
@@ -10,6 +12,7 @@ import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.dtos.ViandaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
+import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.HashMap;
@@ -24,7 +27,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesViandas.hbs";
   private final String rutaListadoDonaciones = "/donacionVianda";
   private final String ERROR = "error";
-
+  private final Gson gson = GsonFactory.createGson();
 
   public ControladorDonacionVianda(RepositorioPersonaHumana repositorioPersonaHumana, RepositorioDonacionVianda repositorioDonacionVianda) {
     this.repositorioPersonaHumana = repositorioPersonaHumana;
@@ -49,6 +52,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   public void create(Context context) {
     Map<String, Object> model = new HashMap<>();
     model.put("title", "Donar vianda");
+    model.put("jsonHeladeras", gson.toJson(this.repositorioDonacionVianda.buscarTodos(Heladera.class)));
     context.render(rutaDonacionHbs, model);
   }
 
@@ -78,6 +82,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put(ERROR, e.getMessage());
+      model.put("jsonHeladeras", gson.toJson(this.repositorioDonacionVianda.buscarTodos(Heladera.class)));
       model.put("dto", dto);
       context.render(rutaDonacionHbs, model);
     }

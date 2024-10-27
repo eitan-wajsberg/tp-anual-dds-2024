@@ -791,3 +791,8 @@ input[type="radio"]:focus {
     padding: 0.25rem 0.5rem; /* Ajusta el padding según lo necesites */
     font-size: 0.875rem; /* Cambia el tamaño de la fuente si es necesario */
 }
+
+.warning {
+    color: #b05252;
+    border-radius: 10px;
+}

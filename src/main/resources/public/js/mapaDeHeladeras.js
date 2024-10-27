@@ -104,3 +104,27 @@ function clearMarkers() {
     currentMarkers.forEach(marker => marker.remove());
     currentMarkers = [];
 }
+
+var selectedMarker = null; // Variable para almacenar el marcador actualmente seleccionado
+
+function selectMarker(heladera, inputId) {
+    // Cambia el icono del marcador previamente seleccionado, si existe
+    if (selectedMarker) {
+        selectedMarker.getElement().querySelector('img').src = '/img/favicon-light.png';
+    }
+
+    // Encuentra el nuevo marcador en base a la heladera seleccionada
+    var marker = currentMarkers.find(m => m.getLngLat().lng === parseFloat(heladera.direccion.coordenada.longitud) &&
+        m.getLngLat().lat === parseFloat(heladera.direccion.coordenada.latitud));
+
+    if (marker) {
+        // Cambia el icono del marcador seleccionado
+        marker.getElement().querySelector('img').src = '/img/selected-marker.png';
+        selectedMarker = marker;
+
+        // Coloca el nombre de la heladera en el input
+        document.getElementById(inputId).value = heladera.nombre;
+    } else {
+        console.log("Marcador no encontrado para la heladera seleccionada.");
+    }
+}
