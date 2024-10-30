@@ -75,6 +75,10 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
         model.put("mostrarPersonaJuridica", true);
       }
 
+      if (!heladera.getViandas().isEmpty()) {
+        model.put("hayViandas", true);
+      }
+
       // Renderizar la vista con el modelo preparado
       context.render(rutaParticularHbs, model);
 

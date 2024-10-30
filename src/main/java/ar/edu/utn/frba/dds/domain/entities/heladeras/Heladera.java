@@ -14,6 +14,7 @@ import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.dtos.HeladeraDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
+import com.google.gson.annotations.Expose;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -48,42 +49,42 @@ import org.apache.commons.lang3.tuple.Pair;
 @Entity @Table(name="heladera")
 @AllArgsConstructor
 public class Heladera implements Contribucion {
-  @Getter @Setter
+  @Getter @Setter @Expose
   @Id @GeneratedValue
   private Long id;
 
-  @Setter
+  @Setter @Expose
   @Column(name="nombre", nullable = false)
   private String nombre;
 
-  @Setter
+  @Setter @Expose
   @Embedded
   private Direccion direccion;
 
-  @Setter
+  @Setter @Expose
   @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fechaRegistro", nullable = false)
   private LocalDateTime fechaRegistro;
 
-  @Setter
+  @Setter @Expose
   @Column(name = "capacidadMaximaVianda", nullable = false)
   private int capacidadMaximaViandas;
 
-  @Setter
+  @Setter @Expose
   @ManyToOne
   @JoinColumn(name = "modelo_id", referencedColumnName = "id", nullable = false)
   private Modelo modelo;
 
-  @OneToMany
+  @OneToMany @Expose
   @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private Set<Vianda> viandas;
 
-  @Setter
+  @Setter @Expose
   @Enumerated(EnumType.STRING)
   @Column(name="estadoHeladera", nullable = false)
   private EstadoHeladera estado;
 
-  @Setter
+  @Setter @Expose
   @Column(name="temperaturaEsperada")
   private float temperaturaEsperada;
 
