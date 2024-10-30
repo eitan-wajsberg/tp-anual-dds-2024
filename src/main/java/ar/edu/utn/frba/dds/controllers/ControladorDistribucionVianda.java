@@ -69,9 +69,6 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
   @Override
   public void create(Context context) {
-    // FIXME: Funciona unicamente en el caso de agregar heladeras y nada mas.
-    // Si agregamos cambios de estado, solicitudes de apertura, sugerencias, etc., se rompe,
-    // es decir que con el initializer completo rompe, pero solo agregando heladeras no.
     Map<String, Object> model = new HashMap<>();
     model.put("readonly", false);
     model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));

@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefMunicipios;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefProvincias;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefServicio;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -17,7 +18,8 @@ public class Initializer implements WithSimplePersistenceUnit {
     // Este método asegura que la base de datos esté correctamente inicializada.
     // Si la base de datos está vacía, se realiza la hidratación inicial ejecutando el script.
     // Si la base ya contiene datos, el script no se vuelve a ejecutar.
-    // hidratarBaseConArchivo();
+    // ACLARACION: ES NECESARIO COMENZAR CON LA BASE DE DATOS VACIA
+    hidratarBaseConArchivo();
   }
 
   private void hidratarBaseConArchivo() {
@@ -36,7 +38,7 @@ public class Initializer implements WithSimplePersistenceUnit {
         System.out.println("\u001B[32mLos datos ya han sido insertados previamente.\u001B[0m");
       }
 
-      // Inicializamos los datos de Provincias y Municipios de GeoRef
+      // Inicializamos los datos de Provincias y Municipios de GeoRef dentro de la misma transacción
       inicializarDatosGeoRef();
 
       transaction.commit();
@@ -91,26 +93,20 @@ public class Initializer implements WithSimplePersistenceUnit {
     ).executeUpdate();
   }
 
-  public void inicializarDatosGeoRef() {
-    try {
-      List<GeoRefProvincias.Provincia> provincias = GeoRefServicio.getInstancia().obtenerProvincias().getProvincias();
-      List<GeoRefMunicipios.Municipio> municipios;
+  private void inicializarDatosGeoRef() throws IOException {
+    List<GeoRefProvincias.Provincia> provincias = GeoRefServicio.getInstancia().obtenerProvincias().getProvincias();
+    List<GeoRefMunicipios.Municipio> municipios;
 
-      for (GeoRefProvincias.Provincia provincia : provincias) {
-        // Crea una instancia de la provincia para persistir
-        Provincia provinciaAPersistir = new Provincia(provincia.getNombre());
-        withTransaction(() -> entityManager().persist(provinciaAPersistir));  // Asegúrate de persistir el objeto correcto
+    for (GeoRefProvincias.Provincia provincia : provincias) {
+      // Crea y persiste la provincia en la transacción principal
+      Provincia provinciaAPersistir = new Provincia(provincia.getNombre());
+      entityManager().persist(provinciaAPersistir);
 
-        // Ahora obtiene los municipios de esta provincia
-        municipios = GeoRefServicio.getInstancia().obtenerMunicipios(provincia.getNombre()).getMunicipios();
-        for (GeoRefMunicipios.Municipio municipio : municipios) {
-          // Inserta en la tabla de municipios
-          withTransaction(() -> entityManager().persist(new Municipio(municipio.getNombre(), provinciaAPersistir)));
-        }
+      // Ahora obtiene y persiste los municipios de esta provincia
+      municipios = GeoRefServicio.getInstancia().obtenerMunicipios(provincia.getNombre()).getMunicipios();
+      for (GeoRefMunicipios.Municipio municipio : municipios) {
+        entityManager().persist(new Municipio(municipio.getNombre(), provinciaAPersistir));
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
   }
-
 }

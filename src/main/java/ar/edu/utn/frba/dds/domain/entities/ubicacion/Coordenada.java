@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.domain.entities.ubicacion;
 
+import com.google.gson.annotations.Expose;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -12,9 +13,9 @@ import lombok.Setter;
 @Embeddable
 @NoArgsConstructor
 public class Coordenada {
-  @Column(name = "latitud")
+  @Column(name = "latitud") @Expose
   public String latitud;
-  @Column(name = "longitud")
+  @Column(name = "longitud") @Expose
   public String longitud;
 
   public Coordenada(String latitud, String longitud) {

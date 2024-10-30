@@ -8,6 +8,7 @@ import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import ar.edu.utn.frba.dds.utils.manejos.ManejoDistancias;
+import com.google.gson.annotations.Expose;
 import java.io.IOException;
 import java.util.stream.Stream;
 import javax.persistence.Column;
@@ -22,9 +23,9 @@ import org.apache.commons.lang3.tuple.Pair;
 @Embeddable
 @NoArgsConstructor
 public class Direccion {
-  @Column(name = "direccion")
+  @Column(name = "direccion") @Expose
   private String nomenclatura;
-  @Embedded
+  @Embedded @Expose
   private Coordenada coordenada;
 
   public boolean estaCercaDe(Direccion direccion) {
