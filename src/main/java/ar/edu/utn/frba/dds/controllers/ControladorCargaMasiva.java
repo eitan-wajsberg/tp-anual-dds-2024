@@ -66,7 +66,7 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
       rutaDestino = carga.obtenerRutaDestino(archivo);
 
       // Obtiene el usuario responsable
-      Usuario usuarioEmisor = obtenerUsuarioEmisorResponsable();
+      Usuario usuarioEmisor = obtenerUsuarioEmisorResponsable(context);
       try (Reader reader = new InputStreamReader(new FileInputStream(rutaDestino))) {
         CSVParser parser = carga.crearParserDeCsv(reader);
         for (CSVRecord record : parser) {
@@ -101,8 +101,9 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
     return carga;
   }
 
-  private Usuario obtenerUsuarioEmisorResponsable() {
-    Optional<Usuario> usuarioEmisor = repositorioUsuario.buscarPorId(1L, Usuario.class);
+  private Usuario obtenerUsuarioEmisorResponsable(Context context) {
+    Long id = context.sessionAttribute("id");
+    Optional<Usuario> usuarioEmisor = repositorioUsuario.buscarPorId(id, Usuario.class);
     return usuarioEmisor.orElseThrow(() -> new ValidacionFormularioException("No se ha encontrado al usuario responsable."));
   }
 
