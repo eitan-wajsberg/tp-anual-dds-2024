@@ -32,14 +32,12 @@ public class Initializer implements WithSimplePersistenceUnit {
 
       if (!datosExistentes) {
         ejecutarScriptSQL();
+        inicializarDatosGeoRef();
         marcarScriptEjecutado();
         System.out.println("\u001B[32mDatos insertados correctamente.\u001B[0m");
       } else {
         System.out.println("\u001B[32mLos datos ya han sido insertados previamente.\u001B[0m");
       }
-
-      // Inicializamos los datos de Provincias y Municipios de GeoRef dentro de la misma transacción
-      inicializarDatosGeoRef();
 
       transaction.commit();
     } catch (Exception e) {

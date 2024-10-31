@@ -22,12 +22,12 @@ public class PersonaHumanaDTO implements DTO {
   private DireccionDTO direccionDTO;
 
   // Campos booleanos para las formas de colaboración
+  private Set<FormasContribucionHumanas> contribucionesElegidas = new HashSet<>();
   private boolean donacionDinero;
   private boolean redistribucionViandas;
   private boolean donacionViandas;
   private boolean entregaTarjetas;
 
-  private Set<FormasContribucionHumanas> formasContribucionHumanasSet = new HashSet<>();
 
   public PersonaHumanaDTO(PersonaHumana personaHumana) {
     this.id = personaHumana.getId();
@@ -46,13 +46,23 @@ public class PersonaHumanaDTO implements DTO {
       this.contactoDTO = new ContactoDTO(personaHumana.getContacto());
     }
 
-    // Asignar valores a los campos booleanos basados en `formasContribucionHumanasSet`
     for (FormasContribucionHumanas contribucion : personaHumana.getContribucionesElegidas()) {
+      contribucionesElegidas.add(contribucion);
       switch (contribucion) {
-        case DONACION_DINERO -> this.donacionDinero = true;
-        case REDISTRIBUCION_VIANDAS -> this.redistribucionViandas = true;
-        case DONACION_VIANDAS -> this.donacionViandas = true;
-        case ENTREGA_TARJETAS -> this.entregaTarjetas = true;
+        case DONACION_DINERO:
+          this.donacionDinero = true;
+          break;
+        case REDISTRIBUCION_VIANDAS:
+          this.redistribucionViandas = true;
+          break;
+        case DONACION_VIANDAS:
+          this.donacionViandas = true;
+          break;
+        case ENTREGA_TARJETAS:
+          this.entregaTarjetas = true;
+          break;
+        default:
+          break; // No se necesita manejar otros casos
       }
     }
   }
@@ -70,11 +80,26 @@ public class PersonaHumanaDTO implements DTO {
     this.documentoDTO.obtenerFormulario(context);
 
     // Obtener contribuciones seleccionadas y asignar valores booleanos
-    Set<String> contribucionesSeleccionadas = new HashSet<>(context.formParams("formaColaboracion"));
-    this.donacionDinero = contribucionesSeleccionadas.contains("DONACION_DINERO");
-    this.redistribucionViandas = contribucionesSeleccionadas.contains("REDISTRIBUCION_VIANDAS");
-    this.donacionViandas = contribucionesSeleccionadas.contains("DONACION_VIANDAS");
-    this.entregaTarjetas = contribucionesSeleccionadas.contains("ENTREGA_TARJETAS");
+    String[] contribucionesSeleccionadas = context.formParams("formaColaboracion").toArray(new String[0]);
+    for (String contribucion : contribucionesSeleccionadas) {
+      contribucionesElegidas.add(FormasContribucionHumanas.valueOf(contribucion));
+      switch (contribucion) {
+        case "DONACION_DINERO":
+          this.donacionDinero = true;
+          break;
+        case "REDISTRIBUCION_VIANDAS":
+          this.redistribucionViandas = true;
+          break;
+        case "DONACION_VIANDAS":
+          this.donacionViandas = true;
+          break;
+        case "ENTREGA_TARJETAS":
+          this.entregaTarjetas = true;
+          break;
+        default:
+          break; // No se necesita manejar otros casos
+      }
+    }
   }
 
   @Override

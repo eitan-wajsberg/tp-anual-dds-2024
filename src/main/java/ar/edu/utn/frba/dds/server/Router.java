@@ -77,8 +77,7 @@ public class Router {
     app.post("/personaHumana/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update, TipoRol.PERSONA_HUMANA);
 
     // Personas jurídicas
-    app.get("/personaJuridica/nuevo", context -> context.render("cuenta/formularioPersonaJuridica.hbs"), TipoRol.PERSONA_JURIDICA);
-    //app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create, TipoRol.PERSONA_JURIDICA);
+    app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save, TipoRol.PERSONA_JURIDICA);
     app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit, TipoRol.PERSONA_JURIDICA);
     app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update, TipoRol.PERSONA_JURIDICA);

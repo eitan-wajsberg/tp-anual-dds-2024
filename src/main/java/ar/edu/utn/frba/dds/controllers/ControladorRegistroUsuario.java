@@ -66,7 +66,11 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
 
       context.sessionAttribute("id", usuario.getId());
       context.sessionAttribute("rol", usuario.getRol().getTipoRol().name());
-      context.redirect("/"); // FIXME: Redireccionar a formulario de humana / juridica
+      if (usuario.getRol().getTipoRol().equals(TipoRol.PERSONA_HUMANA)) {
+        context.redirect("/personaHumana/nuevo");
+      } else {
+        context.redirect("/personaJuridica/nuevo");
+      }
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
