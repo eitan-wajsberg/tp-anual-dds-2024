@@ -47,9 +47,15 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
       if (nuevaPersona == null) {
         throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
       }
+
+      Long id = context.sessionAttribute("id");
+      Usuario usuario = this.repositorioPersonaHumana.buscarPorId(id, Usuario.class).orElseThrow(() ->
+          new ValidacionFormularioException("No se ha encontrado tu usuario.")
+      );
+      nuevaPersona.setUsuario(usuario);
+
       withTransaction(() -> repositorioPersonaHumana.guardar(nuevaPersona));
       context.redirect(rutaPantallaPrincipal);
-
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put(ERROR, e.getMessage());
@@ -73,6 +79,9 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
       model.put("dto", dto);
       model.put("edicion", true);
       model.put("editado", false);
+      model.put("mostrarPersonaHumana", true);
+      model.put("mostrarIrAtras", true);
+      model.put("paginaAtras", "/");
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaHbs, model);
     } catch (ValidacionFormularioException e) {
@@ -115,6 +124,9 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
       model.put("dto", dtoNuevo);
       model.put("edicion", true);
       model.put("editado", true);
+      model.put("mostrarPersonaHumana", true);
+      model.put("mostrarIrAtras", true);
+      model.put("paginaAtras", "/");
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaHbs, model);
     }

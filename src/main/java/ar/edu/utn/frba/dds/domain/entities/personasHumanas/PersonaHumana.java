@@ -255,7 +255,8 @@ public class PersonaHumana extends IObserverNotificacion {
         .direccion(direccion)
         .contacto(contacto)
         .documento(documento)
-        .contribucionesElegidas(dto.getFormasContribucionHumanasSet())
+        .puntajeActual(0f)
+        .contribucionesElegidas(dto.getContribucionesElegidas())
         .build();
   }
 
@@ -316,8 +317,8 @@ public class PersonaHumana extends IObserverNotificacion {
       this.setContacto(contacto);
     }
 
-    if (this.contribucionesElegidas == null || !this.contribucionesElegidas.equals(dto.getFormasContribucionHumanasSet())) {
-      contribucionesElegidas.addAll(dto.getFormasContribucionHumanasSet());
+    if (this.contribucionesElegidas == null || !this.contribucionesElegidas.equals(dto.getContribucionesElegidas())) {
+      contribucionesElegidas.addAll(dto.getContribucionesElegidas());
     }
   }
 
@@ -327,8 +328,8 @@ public class PersonaHumana extends IObserverNotificacion {
     }
     this.puntajeActual += puntaje;
   }
-  public Float getPuntajeActual(){
-    if(this.puntajeActual == null){
+  public Float getPuntajeActual() {
+    if (this.puntajeActual == null) {
       return 0F;
     }
     return this.puntajeActual;

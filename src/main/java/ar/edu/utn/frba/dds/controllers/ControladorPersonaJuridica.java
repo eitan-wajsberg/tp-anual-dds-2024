@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.Rubro;
+import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.dtos.PersonaJuridicaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
@@ -36,7 +37,9 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
 
   @Override
   public void create(Context context) {
-    context.render(rutaPersonaJuridicaHbs);
+    Map<String, Object> model = new HashMap<>();
+    model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
+    context.render(rutaPersonaJuridicaHbs, model);
   }
 
   @Override
@@ -54,6 +57,12 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       if (rubro.isEmpty()) {
         throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
       }
+
+      Long id = context.sessionAttribute("id");
+      Usuario usuario = this.repositorioPersonaJuridica.buscarPorId(id, Usuario.class).orElseThrow(() ->
+          new ValidacionFormularioException("No se ha encontrado tu usuario.")
+      );
+      nuevaPersona.setUsuario(usuario);
       nuevaPersona.setRubro(rubro.get());
 
       withTransaction(() -> repositorioPersonaJuridica.guardar(nuevaPersona));
@@ -81,6 +90,9 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put("dto", dto);
       model.put("edicion", true);
       model.put("editado", false);
+      model.put("mostrarPersonaJuridica", true);
+      model.put("mostrarIrAtras", true);
+      model.put("paginaAtras", "/");
       model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaJuridicaHbs, model);
@@ -88,6 +100,9 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put(ERROR, e.getMessage());
       model.put("edicion", true);
       model.put("editado", false);
+      model.put("mostrarPersonaJuridica", true);
+      model.put("mostrarIrAtras", true);
+      model.put("paginaAtras", "/");
       model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaJuridicaHbs, model);
@@ -121,6 +136,9 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put("dto", dtoNuevo);
       model.put("edicion", true);
       model.put("editado", true);
+      model.put("mostrarPersonaJuridica", true);
+      model.put("mostrarIrAtras", true);
+      model.put("paginaAtras", "/");
       model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
       model.put("id", context.pathParam("id"));
       context.render(rutaPersonaJuridicaHbs, model);
