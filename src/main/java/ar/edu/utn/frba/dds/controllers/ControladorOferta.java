@@ -136,8 +136,13 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
         Long id_usuario = context.sessionAttribute("id");
         Optional<PersonaHumana> canjeador = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
         Oferta oferta = ofertaOptional.get();
-        if(canjeador.get().getPuntajeActual() >= oferta.getCantidadPuntosNecesarios()) {
-          OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now(), canjeador.get());
+        if(oferta.puedeCanjear(canjeador.get())) {
+          OfertaCanjeada ofertaCanjeada = OfertaCanjeada
+              .builder()
+              .oferta(oferta)
+              .fechaCanje(LocalDateTime.now())
+              .build();
+          canjeador.get().agregarOfertaCanjeada(ofertaCanjeada);
           canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
           withTransaction(() -> {
             repositorioOfertaCanjeada.guardar(ofertaCanjeada);
@@ -230,7 +235,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Mis ofertas canjeadas");
-    model.put("ofertas canjeadas", ofertasCanjeadas);
+    model.put("ofertasCanjeadas", ofertasCanjeadas);
     model.put("puntos", personaHumana.get().getPuntajeActual());
 
     // Asumiendo que tienes un método para renderizar la vista de ofertas canjeadas

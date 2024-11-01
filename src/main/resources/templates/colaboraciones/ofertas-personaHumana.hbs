@@ -39,7 +39,7 @@
                             <h4>{{this.nombre}}</h4>
                             <p><strong>Puntos Requeridos:</strong>{{this.cantidadPuntosNecesarios}}</p>
                             <button class="btn btn-dark text-white btn-canjear"
-                                    onclick="canjearOferta({{this.id}}, '{{this.nombre}}', {{this.cantidadPuntosNecesarios}})"
+                                    onclick="canjearOferta({{this.id}})"
                                     data-bs-toggle="modal" data-bs-target="#confirmar_canje">Canjear</button>
                         </div>
                     </div>
@@ -92,7 +92,8 @@
             });
         }
 
-        function canjearOferta(id, nombreOferta, puntosNecesarios) {
+        function canjearOferta(id) {
+            console.log("entrando a funcion");
             const modalBody = document.querySelector('#confirmar_canje .modal-body');
             modalBody.innerHTML = 'Desea canjear la oferta?';
 
