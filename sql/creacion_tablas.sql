@@ -1,4 +1,5 @@
 create database `2024-tpa-mi-no-grupo-08`;
+use `2024-tpa-mi-no-grupo-08`;
 
 create table cambio_estado (
        id bigint not null,
@@ -76,7 +77,7 @@ create table hibernate_sequence (
    next_val bigint
 ) engine=InnoDB;
 
-insert into hibernate_sequence values ( 1 )
+insert into hibernate_sequence values ( 1 );
 
 create table incidente (
    id bigint not null,
