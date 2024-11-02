@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.receptores;
 
+import ar.edu.utn.frba.dds.config.ServiceLocator;
+import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import java.util.Optional;
@@ -7,21 +9,15 @@ import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class ReceptorMovimiento implements IMqttMessageListener {
-  RepositorioHeladera repositorioHeladeras;
-
-  public ReceptorMovimiento(RepositorioHeladera repositorioHeladeras) {
-    this.repositorioHeladeras = repositorioHeladeras;
-  }
-
-  public void messageArrived(String topic, MqttMessage mensaje){ // formato: idHeladera | fraude
+  @Override
+  public void messageArrived(String topic, MqttMessage mensaje) throws Exception{ // formato: idHeladera | "fraude"
         try{
           String[] payload = dividirPayload(mensaje.toString());
           if(payload != null){
             Long idHeladera = Long.parseLong(payload[0]);
             String tipoMensaje = payload[1];
-            Boolean valor = Boolean.parseBoolean(payload[2]);
-
-            procesarMensaje(idHeladera, tipoMensaje, valor);
+            System.out.println("se recibió el mensaje correctamente");
+            procesarMensaje(idHeladera, tipoMensaje);
           }
         } catch (NumberFormatException e) {
           System.err.println("Error al convertir el valor a entero: " + e.getMessage());
@@ -45,17 +41,15 @@ public class ReceptorMovimiento implements IMqttMessageListener {
     return null;
   }
 
-  private void procesarMensaje(Long idHeladera, String tipoMensaje, Boolean valor) {
-    Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera, Heladera.class);
-    if (optionalHeladera.isPresent()) {
-      Heladera heladera = optionalHeladera.get();
+  private void procesarMensaje(Long idHeladera, String tipoMensaje) {
+
       if (!tipoMensaje.equals("Fraude")) {
         System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
-      } else if (valor) {
-        heladera.recibirAlertaFraude();
-      }
     } else {
-      System.err.println("Heladera no encontrada para el ID: " + idHeladera);
+        ControladorIncidenteHeladera controlador = ServiceLocator.instanceOf(ControladorIncidenteHeladera.class);
+        controlador.procesarFraude(idHeladera);
     }
   }
+
+
 }
