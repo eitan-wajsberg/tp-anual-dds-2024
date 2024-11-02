@@ -104,6 +104,7 @@ public class Router {
     app.get("/distribucionVianda", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::index, TipoRol.PERSONA_HUMANA);
     app.get("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit, TipoRol.PERSONA_HUMANA);
     app.post("/distribucionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::update, TipoRol.PERSONA_HUMANA);
+    app.post("/distribucionVianda/{id}/finalizacion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::finish, TipoRol.PERSONA_HUMANA);
     app.post("/distribucionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDistribucionVianda.class)::edit, TipoRol.PERSONA_HUMANA);
 
     // Ofertas. Persona humana: ver ofertas, canjear oferta

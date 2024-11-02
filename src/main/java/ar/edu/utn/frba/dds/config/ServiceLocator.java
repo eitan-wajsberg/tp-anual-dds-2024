@@ -117,7 +117,7 @@ public class ServiceLocator {
             instanceOf(RepositorioDistribucionVianda.class),
             instanceOf(RepositorioPersonaHumana.class),
             instanceOf(RepositorioHeladera.class),
-            instanceOf(Repositorio.class)
+            instanceOf(RepositorioSolicitudApertura.class)
         );
       } else if (componentName.equals(ControladorHeladera.class.getName())) {
         instance = new ControladorHeladera(
@@ -147,6 +147,8 @@ public class ServiceLocator {
         instance = new RepositorioGeoRef();
       } else if (componentName.equals(RepositorioDonacionDinero.class.getName())) {
         instance = new RepositorioDonacionDinero();
+      } else if (componentName.equals(RepositorioSolicitudApertura.class.getName())) {
+        instance = new RepositorioSolicitudApertura();
       }
 
       instances.put(componentName, instance);
