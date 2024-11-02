@@ -7,6 +7,7 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertu
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioSolicitudApertura;
 import com.google.gson.Gson;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDistribucionVianda;
@@ -33,7 +34,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
   private RepositorioDistribucionVianda repositorioDistribucion;
   private RepositorioPersonaHumana repositorioPHumana;
   private RepositorioHeladera repositorioHeladera;
-  private Repositorio repositorioSoliApe;
+  private RepositorioSolicitudApertura repositorioSoliApe;
   private final String rutaAltaHbs = "colaboraciones/distribucionDeVianda.hbs";
   private final String rutaListadoHbs = "colaboraciones/distribucionesDeViandas.hbs";
   private final Gson gson = GsonFactory.createGson();
@@ -41,7 +42,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
   public ControladorDistribucionVianda(RepositorioDistribucionVianda repositorioDistribucion,
                                        RepositorioPersonaHumana repositorioPHumana,
                                        RepositorioHeladera repositorioHeladera,
-                                       Repositorio repositorioSoliApe) {
+                                       RepositorioSolicitudApertura repositorioSoliApe) {
     this.repositorioDistribucion = repositorioDistribucion;
     this.repositorioPHumana = repositorioPHumana;
     this.repositorioHeladera = repositorioHeladera;
@@ -54,7 +55,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
     List<DistribucionVianda> distribuciones = this.repositorioDistribucion.buscarDistribuciones(colaboradorId);
 
-    List<DistribucionViandaDTO> distDTOs = distribuciones.stream().map(dist -> fromEntity(dist)).collect(Collectors.toList());
+    List<DistribucionViandaDTO> distDTOs = distribuciones.stream().map(dist -> fromEntity(dist, this.repositorioSoliApe)).collect(Collectors.toList());
 
     Map<String, Object> model = new HashMap<>();
     model.put("distribuciones", distDTOs);
@@ -98,6 +99,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         .tarjeta(dist.getColaborador().getTarjetaEnUso())
         .cantidadViandas(dist.getCantidadViandas())
         .aperturaConcretada(false)
+        .distribucion(dist)
         .build();
     try {
       origen.agregarSolicitudApertura(soliApertura);
@@ -144,7 +146,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       List<Heladera> heladeras = new ArrayList<>();
       heladeras.add(distribucion.getHeladeraOrigen());
       heladeras.add(distribucion.getHeladeraDestino());
-      DistribucionViandaDTO dto = fromEntity(distribucion);
+      DistribucionViandaDTO dto = fromEntity(distribucion, this.repositorioSoliApe);
       model.put("dto", dto);
       model.put("readonly", distribucion.isTerminada() || readonly);
       model.put("id", context.pathParam("id"));
@@ -172,11 +174,10 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       if (!colaboradorId.equals(viejaDist.getColaborador().getId())) {
         throw new ValidacionFormularioException("No puede modificar las distribuciones de vianda de otros colaboradores.");
       }
-
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
-      model.put("dto", fromEntity(viejaDist));
+      model.put("dto", fromEntity(viejaDist, this.repositorioSoliApe));
       model.put("readonly", false);
       model.put("id", context.pathParam("id"));
       model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
@@ -192,18 +193,29 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         .tarjeta(viejaDist.getColaborador().getTarjetaEnUso())
         .cantidadViandas(viejaDist.getCantidadViandas())
         .aperturaConcretada(false)
+        .distribucion(viejaDist)
         .build();
 
+    try {
+      destino.agregarSolicitudApertura(soliApertura);
+    } catch (HeladeraVirtualmenteVaciaException e) {
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", e.getMessage());
+      model.put("dto", fromEntity(viejaDist, this.repositorioSoliApe));
+      model.put("readonly", false);
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
+      context.render(rutaAltaHbs, model);
+      return;
+    }
+
     // actualizo solicitud anterior
-    Heladera origen = viejaDist.getHeladeraOrigen();
-    DistribucionVianda dist = viejaDist;
-    Optional<SolicitudApertura> optSolOrigen = origen.getSolicitudesDeApertura().stream().filter(c-> !c.isAperturaConcretada()
-            && c.getFechaSolicitud().isAfter(dist.getFecha().atStartOfDay())
+    List<SolicitudApertura> solicitudes = this.repositorioSoliApe.listarRecientes(viejaDist.getId());
+    Optional<SolicitudApertura> optSolOrigen = solicitudes.stream().filter(c-> !c.isAperturaConcretada()
             && c.getAccion().equals(AccionApertura.QUITAR_VIANDA)).findFirst();
     if (optSolOrigen.isEmpty()) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", "No se encontró que la distribución haya sido inicializada. Contactese con el administrador del sistema.");
-      model.put("dto", fromEntity(viejaDist));
+      model.put("dto", fromEntity(viejaDist, this.repositorioSoliApe));
       model.put("readonly", false);
       model.put("id", context.pathParam("id"));
       model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
@@ -213,22 +225,66 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     SolicitudApertura solOrigen = optSolOrigen.get();
     solOrigen.setAperturaConcretada(true);
 
+    withTransaction(() -> {
+      this.repositorioSoliApe.actualizar(solOrigen);
+      this.repositorioSoliApe.guardar(soliApertura);
+      this.repositorioHeladera.guardar(destino);
+    });
+
+    context.redirect("/distribucionVianda");
+  }
+
+  public void finish(Context context){
+    DistribucionVianda viejaDist = null;
     try {
-      destino.agregarSolicitudApertura(soliApertura);
-    } catch (HeladeraVirtualmenteVaciaException e) {
+      Long id = Long.parseLong(context.pathParam("id"));
+      Optional<DistribucionVianda> optViejaDist = this.repositorioDistribucion.buscarPorId(
+          id, DistribucionVianda.class);
+
+      if (optViejaDist.isEmpty()) {
+        throw new ValidacionFormularioException("Distribución de vianda no encontrada.");
+      }
+      viejaDist = optViejaDist.get();
+      Long colaboradorId = context.sessionAttribute("id");
+      if (!colaboradorId.equals(viejaDist.getColaborador().getId())) {
+        throw new ValidacionFormularioException("No puede modificar las distribuciones de vianda de otros colaboradores.");
+      }
+    } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
-      model.put("dto", fromEntity(viejaDist));
+      model.put("dto", fromEntity(viejaDist, this.repositorioSoliApe));
       model.put("readonly", false);
+      model.put("id", context.pathParam("id"));
       model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
       context.render(rutaAltaHbs, model);
       return;
     }
 
+    // distribución finalizada
+    viejaDist.setTerminada(true);
+
+    // actualizo la 2da solicitud de apertura
+    // actualizo solicitud anterior
+    List<SolicitudApertura> solicitudes = this.repositorioSoliApe.listarRecientes(viejaDist.getId());
+    Optional<SolicitudApertura> optSolDest = solicitudes.stream().filter(c-> !c.isAperturaConcretada()
+        && c.getAccion().equals(AccionApertura.INGRESAR_VIANDA)).findFirst();
+    if (optSolDest.isEmpty()) {
+      Map<String, Object> model = new HashMap<>();
+      model.put("error", "No se encontró que se haya iniciado el tramo a la healdera destino previamente. Contactese con el administrador del sistema.");
+      model.put("dto", fromEntity(viejaDist, this.repositorioSoliApe));
+      model.put("readonly", false);
+      model.put("id", context.pathParam("id"));
+      model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
+      context.render(rutaAltaHbs, model);
+      return;
+    }
+    SolicitudApertura solDest = optSolDest.get();
+    solDest.setAperturaConcretada(true);
+
+    DistribucionVianda dist = viejaDist;
     withTransaction(() -> {
-      this.repositorioSoliApe.actualizar(solOrigen);
-      this.repositorioSoliApe.guardar(soliApertura);
-      this.repositorioHeladera.guardar(destino);
+      this.repositorioDistribucion.actualizar(dist);
+      this.repositorioSoliApe.actualizar(solDest);
     });
 
     context.redirect("/distribucionVianda");
@@ -328,7 +384,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     return distribucionVianda;
   }
 
-  public static DistribucionViandaDTO fromEntity(DistribucionVianda entity) {
+  public static DistribucionViandaDTO fromEntity(DistribucionVianda entity, RepositorioSolicitudApertura repoSoli) {
     DistribucionViandaDTO.DistribucionViandaDTOBuilder dtoBuilder = DistribucionViandaDTO.builder()
         .id(entity.getId())
         .fecha(entity.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yy")))
@@ -340,19 +396,13 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         .motivo(entity.getMotivo())
         .cantidadViandas(entity.getCantidadViandas());
 
-    Optional<SolicitudApertura> solicitudOrigen = entity.getHeladeraOrigen()
-        .getSolicitudesDeApertura().stream().filter(c->
-            c.getFechaSolicitud().isAfter(entity.getFecha().atStartOfDay())
-            && c.getAccion().equals(AccionApertura.QUITAR_VIANDA)).findFirst();
-    // TODO debería vincularse la distribución con la solicitud realmente
+    List<SolicitudApertura> solicitudes = repoSoli.listarRecientes(entity.getId());
+    Optional<SolicitudApertura> solicitudOrigen = solicitudes.stream().filter(c-> c.getAccion().equals(AccionApertura.QUITAR_VIANDA)).findFirst();
 
     if (solicitudOrigen.isPresent()) {
       dtoBuilder.horaSolicitudEnOrigen(solicitudOrigen.get().getFechaSolicitud().format(DateTimeFormatter. ofPattern("HH:mm:ss")));
 
-      Optional<SolicitudApertura> solicitudDestino = entity.getHeladeraDestino()
-          .getSolicitudesDeApertura().stream().filter(c->
-              c.getFechaSolicitud().isAfter(solicitudOrigen.get().getFechaSolicitud())
-              && c.getAccion().equals(AccionApertura.INGRESAR_VIANDA)).findFirst();
+      Optional<SolicitudApertura> solicitudDestino = solicitudes.stream().filter(c-> c.getAccion().equals(AccionApertura.INGRESAR_VIANDA)).findFirst();
 
       if (solicitudDestino.isPresent()) {
         dtoBuilder.horaSolicitudEnDestino(solicitudDestino.get().getFechaSolicitud().format(DateTimeFormatter. ofPattern("HH:mm:ss")));

@@ -4,7 +4,7 @@
     <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4 my-4">
         <div class="pt-5 pb-2"></div> <!-- separador -->
         <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
-        <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/edicion{{/if}}" {{/unless}}>
+        <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/edicion{{/if}}{{#if dto.horaSolicitudEnDestino}}/finalizacion{{/if}}" {{/unless}}>
             {{#if dto.horaSolicitudEnOrigen}}
             <div class="row mb-2">
                 <label>Fecha: <span class="color-777">{{dto.fecha}}</span></label>
@@ -24,11 +24,13 @@
             <div class="row mb-3 {{#unless dto.horaSolicitudEnDestino}}d-none{{/unless}}">
                 <label>Hora en la que inició el viaje al destino: <span class="color-777">{{dto.horaSolicitudEnDestino}}</span></label>
             </div>
-            <div class="row m-1">
-                <button class="p-2">Iniciar viaje a destino</button>
-            </div>
-            <div class="row mt-3">
-                <label class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para depositar las viandas en el destino.</label>
+            <div class="{{#if dto.terminada}}invisible{{/if}}">
+                <div class="row m-1">
+                    <button class="p-2">{{#if dto.horaSolicitudEnDestino}}Finalizar{{else}}Iniciar viaje a destino{{/if}}</button>
+                </div>
+                <div class="row mt-3">
+                    <label class="text-center fs-09 color-cc0808 fw-600">Tendrá 3 horas para depositar las viandas en el destino.</label>
+                </div>
             </div>
 
             {{else}}
