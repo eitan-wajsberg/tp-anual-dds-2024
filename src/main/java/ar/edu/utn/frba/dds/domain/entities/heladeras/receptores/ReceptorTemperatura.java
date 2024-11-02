@@ -15,7 +15,7 @@ public class ReceptorTemperatura implements IMqttMessageListener {
     //TODO sacar repo heladeras.
     public ReceptorTemperatura(String brokerUrl, String clientId) throws MqttException {
         this.client = new MqttClient(brokerUrl, clientId);
-        this.client.setCallback(this);
+        //this.client.setCallback(this);
         this.client.connect();
     }
 
@@ -23,7 +23,7 @@ public class ReceptorTemperatura implements IMqttMessageListener {
         client.subscribe(topic);
     }
 
-    @Override
+    //@Override
     public void connectionLost(Throwable cause) {
         //controlador.ProcesarFallaDeconexion()
     }
@@ -84,7 +84,7 @@ public class ReceptorTemperatura implements IMqttMessageListener {
         }
     }
 
-    @Override
+    //@Override
     public void deliveryComplete(IMqttDeliveryToken token) {
         // Lógica para manejar la confirmación de entrega de un mensaje publicado
     }

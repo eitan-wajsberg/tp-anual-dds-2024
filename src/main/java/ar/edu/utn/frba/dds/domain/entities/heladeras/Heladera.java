@@ -211,6 +211,7 @@ public class Heladera implements Contribucion {
         && solicitud.getAccion() == AccionApertura.INGRESAR_VIANDA) {
       throw new HeladeraVirtualmenteLlenaException();
     }
+
     if (this.cantidadViandasQuitadasVirtualmente() + solicitud.getCantidadViandas() >= this.cantidadViandas()
         && solicitud.getAccion() == AccionApertura.QUITAR_VIANDA) {
       throw new HeladeraVirtualmenteVaciaException();

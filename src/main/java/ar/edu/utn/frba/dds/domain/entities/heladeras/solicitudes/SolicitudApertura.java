@@ -70,23 +70,21 @@ public class SolicitudApertura {
   private Vianda vianda;
 
   public boolean esIngresadaVirtualmente() {
-    return !this.isAperturaConcretada()  && this.getAccion() == AccionApertura.INGRESAR_VIANDA
+    return !this.isAperturaConcretada() && this.getAccion() == AccionApertura.INGRESAR_VIANDA
         && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
   }
 
   public boolean esQuitadaVirtualmente() {
-    return !this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA
+    return !this.isAperturaConcretada() && this.getAccion() == AccionApertura.QUITAR_VIANDA
         && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
   }
 
   public boolean esIngresadaRealmente() {
-    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.INGRESAR_VIANDA
-        && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
+    return this.isAperturaConcretada() && this.getAccion() == AccionApertura.INGRESAR_VIANDA;
   }
 
   public boolean esQuitadaRealmente() {
-    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA
-        && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
+    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA;
   }
 
   public boolean esValida(Tarjeta tarjeta) {
