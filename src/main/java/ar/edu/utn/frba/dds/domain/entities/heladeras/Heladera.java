@@ -171,7 +171,6 @@ public class Heladera implements Contribucion {
     if (this.estado != nuevoEstado) {
       this.estado = nuevoEstado;
       this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now())); //TODO cambioEstado tiene constructor vacio, setear params.
-
     }
   }
 

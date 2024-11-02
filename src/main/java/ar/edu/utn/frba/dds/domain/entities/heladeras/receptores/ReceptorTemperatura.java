@@ -8,13 +8,12 @@ import org.eclipse.paho.client.mqttv3.*;
 import java.util.Optional;
 
 @Getter
-public class ReceptorTemperatura implements MqttCallback {
+public class ReceptorTemperatura implements IMqttMessageListener {
 
     private MqttClient client;
-    private RepositorioHeladera repositorioHeladeras;
 
-    public ReceptorTemperatura(String brokerUrl, String clientId, RepositorioHeladera repositorioHeladeras) throws MqttException {
-        this.repositorioHeladeras = repositorioHeladeras;
+    //TODO sacar repo heladeras.
+    public ReceptorTemperatura(String brokerUrl, String clientId) throws MqttException {
         this.client = new MqttClient(brokerUrl, clientId);
         this.client.setCallback(this);
         this.client.connect();
@@ -26,7 +25,14 @@ public class ReceptorTemperatura implements MqttCallback {
 
     @Override
     public void connectionLost(Throwable cause) {
+        //controlador.ProcesarFallaDeconexion()
     }
+
+    public void heladeraConexionPerdida(){
+        
+        //controlador.ProcesarFallaDeconexion()
+    }
+
 
     // FORMATO DE MENSAJE: [IdHeladera,TipoDeMensaje:Valor]
     @Override
@@ -40,8 +46,8 @@ public class ReceptorTemperatura implements MqttCallback {
                 Long idHeladera = Long.parseLong(partes[0]);
                 String tipoMensaje = partes[1];
                 int valor = Integer.parseInt(partes[2]);
-
-                procesarMensaje(idHeladera, tipoMensaje, valor);
+                System.out.println("Se recibió exitosamente el mensaje");
+                //procesarMensaje(idHeladera, tipoMensaje, valor);
             }
         } catch (NumberFormatException e) {
             System.err.println("Error al convertir el valor a entero: " + e.getMessage());
@@ -65,11 +71,9 @@ public class ReceptorTemperatura implements MqttCallback {
         return null;
     }
 
-
-    private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor) {
-        Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera, Heladera.class);
-        if (optionalHeladera.isPresent()) {
-            Heladera heladera = optionalHeladera.get();
+    private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor, Optional<Heladera> optHeladera) {
+        if (optHeladera.isPresent()) {
+            Heladera heladera = optHeladera.get();
             if (tipoMensaje.equals("Temperatura")) {
                 heladera.cambiarTemperatura(valor);
             } else {
