@@ -6,8 +6,8 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.GsonFactory;
-import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioSolicitudApertura;
+import ar.edu.utn.frba.dds.exceptions.SinTarjetaException;
 import com.google.gson.Gson;
 import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDistribucionVianda;
@@ -51,9 +51,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
   @Override
   public void index(Context context) {
-    Long colaboradorId = context.sessionAttribute("id");
-
-    List<DistribucionVianda> distribuciones = this.repositorioDistribucion.buscarDistribuciones(colaboradorId);
+    List<DistribucionVianda> distribuciones = this.repositorioDistribucion.buscarDistribuciones(context.sessionAttribute("id"));
 
     List<DistribucionViandaDTO> distDTOs = distribuciones.stream().map(dist -> fromEntity(dist, this.repositorioSoliApe)).collect(Collectors.toList());
 
@@ -81,8 +79,10 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     DistribucionVianda dist = null;
     try {
       dist = entityfromContext(context);
-    } catch (ValidacionFormularioException e) {
-      System.out.println(e);
+      if(dist.getColaborador().getTarjetaEnUso() == null){
+        throw new SinTarjetaException("No puede distribuir viandas sin antes solicitar una tarjeta.");
+      }
+    } catch (RuntimeException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("jsonHeladeras", gson.toJson(this.repositorioHeladera.buscarTodos(Heladera.class)));
@@ -138,8 +138,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       }
 
       DistribucionVianda distribucion = optDistribucion.get();
-      Long colaboradorId = context.sessionAttribute("id");
-      if (!distribucion.getColaborador().getId().equals(colaboradorId)) {
+      if (!distribucion.getColaborador().getUsuario().getId().equals(context.sessionAttribute("id"))) {
         throw new ValidacionFormularioException("No tiene permiso para acceder a este recurso.");
       }
 
@@ -170,8 +169,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         throw new ValidacionFormularioException("Distribución de vianda no encontrada.");
       }
       viejaDist = optViejaDist.get();
-      Long colaboradorId = context.sessionAttribute("id");
-      if (!colaboradorId.equals(viejaDist.getColaborador().getId())) {
+      if (!context.sessionAttribute("id").equals(viejaDist.getColaborador().getUsuario().getId())) {
         throw new ValidacionFormularioException("No puede modificar las distribuciones de vianda de otros colaboradores.");
       }
     } catch (ValidacionFormularioException e) {
@@ -245,8 +243,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         throw new ValidacionFormularioException("Distribución de vianda no encontrada.");
       }
       viejaDist = optViejaDist.get();
-      Long colaboradorId = context.sessionAttribute("id");
-      if (!colaboradorId.equals(viejaDist.getColaborador().getId())) {
+      if (!context.sessionAttribute("id").equals(viejaDist.getColaborador().getUsuario().getId())) {
         throw new ValidacionFormularioException("No puede modificar las distribuciones de vianda de otros colaboradores.");
       }
     } catch (ValidacionFormularioException e) {
@@ -321,8 +318,6 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       throw new ValidacionFormularioException("Cantidad de viandas inválida.");
     }
 
-    Long colaboradorId = context.sessionAttribute("id");
-
     Long helOrigenId = Long.parseLong(context.formParam("heladeraOrigenId") == "" ? "0" : context.formParam("heladeraOrigenId"));
     Long helDestinoId = Long.parseLong(context.formParam("heladeraDestinoId") == "" ? "0" : context.formParam("heladeraDestinoId"));
 
@@ -330,15 +325,14 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         Pair.of("Cantidad de viandas", cantidadViandas),
         Pair.of("Motivo", context.formParam("motivo")),
         Pair.of("Heladera origen", helOrigenId),
-        Pair.of("Heladera destino", helDestinoId),
-        Pair.of("Colaborador", colaboradorId)
+        Pair.of("Heladera destino", helDestinoId)
     );
 
     if (cantidadViandas <= 0) {
       throw new ValidacionFormularioException("Cantidad de viandas inválida.");
     }
 
-    Optional<PersonaHumana> optPHumana = this.repositorioPHumana.buscarPorUsuario(colaboradorId);
+    Optional<PersonaHumana> optPHumana = this.repositorioPHumana.buscarPorUsuario(context.sessionAttribute("id"));
     if (optPHumana.isEmpty()) {
       throw new ValidacionFormularioException("Colaborador inválido.");
     }
@@ -376,9 +370,6 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
     optPHumana.get().sumarPuntaje(distribucionVianda.calcularPuntaje());
 
-    System.out.println(optPHumana.get().getPuntajeActual());
-    System.out.println(distribucionVianda.calcularPuntaje());
-    System.out.println(optPHumana.get().getPuntajeActual());
     withTransaction(() -> repositorioPHumana.actualizar(optPHumana.get()));
 
     return distribucionVianda;

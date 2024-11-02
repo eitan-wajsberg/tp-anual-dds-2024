@@ -4,7 +4,7 @@
     <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4 my-4">
         <div class="pt-5 pb-2"></div> <!-- separador -->
         <h1 class="fs-4 text-center mb-5">Distribuir viandas</h1>
-        <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/edicion{{/if}}{{#if dto.horaSolicitudEnDestino}}/finalizacion{{/if}}" {{/unless}}>
+        <form {{#unless readonly}}  method="POST" action="/distribucionVianda/{{#if id}}{{id}}/{{#if dto.horaSolicitudEnDestino}}finalizacion{{else}}edicion{{/if}}{{/if}}" {{/unless}}>
             {{#if dto.horaSolicitudEnOrigen}}
             <div class="row mb-2">
                 <label>Fecha: <span class="color-777">{{dto.fecha}}</span></label>
@@ -82,13 +82,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         var heladeras = {{{this.jsonHeladeras}}};  // Triple mustache para evitar escaping y pasar datos correctamente
 
-        console.log(heladeras);  // Verifica los datos en la consola
         addMarkers(heladeras, function(){
             // llena nombre e id en el campo de la heladera que tenga focus
-            var lv_input = $("[id^='heladera']");
+            var lv_input = $(":focus[id^='heladera']");
             if(lv_input != undefined){
                 lv_input.val(this.heladera.nombre);
                 $("#"+lv_input.data("id")).val(this.heladera.id);
+                $(document.activeElement).parent().next().children(":not([type=hidden])").trigger("focus");
             }
         });
 
