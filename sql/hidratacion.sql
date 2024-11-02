@@ -360,6 +360,10 @@ VALUES (
 (
 	3, "QUITAR_VIANDA", 1, 10,
 	'2024-10-18', '2024-10-18', 2, 1
+),
+(
+	4, "INGRESAR_VIANDA", 1, 50,
+	'2024-10-18', '2024-10-18', 2, 1
 );
 
 -- Inserción en la tabla 'oferta'
