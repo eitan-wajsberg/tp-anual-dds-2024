@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.GsonFactory;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
@@ -61,7 +62,7 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
         // Guardar el incidente
         withTransaction( () -> repositorioIncidente.guardar(incidente));
         // Redirigir a la página de detalles de la heladera
-        ctx.redirect("/mapaHeladeras/" + dto.getHeladeraId() + "/HeladeraParticular");
+        ctx.redirect("/heladeras/" + dto.getHeladeraId());
       } else {
         ctx.status(404).result("Heladera o colaborador no encontrado");
       }
@@ -72,5 +73,19 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
       model.put("dto", dto);
       ctx.render(rutaReporteIncidente, model);
     }
+  }
+
+  public void procesarFraude(Long idHeladera) {
+    Heladera heladera = this.repositorioHeladera.buscarPorId(idHeladera).orElseThrow(() ->
+      new IllegalArgumentException("Heladera no encontrada al procesar fraude.")
+    );
+
+    heladera.cambiarEstado(EstadoHeladera.FRAUDE);
+    withTransaction(() -> this.repositorioHeladera.actualizar(heladera));
+
+    // avisar a los suscritos a la heladera por fraude
+    // cambiar el estado de la heladera
+    // crear incidente
+    // avisar al tecnico mas cercano a la heladera
   }
 }
