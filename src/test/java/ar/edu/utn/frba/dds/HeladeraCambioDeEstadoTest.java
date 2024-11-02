@@ -22,7 +22,6 @@ public class HeladeraCambioDeEstadoTest {
   private ReceptorMovimiento receptorMovimiento;
   private final Modelo modelo = new Modelo("ModeloTest", 2.0f, 8.0f);
 
-  private RepositorioHeladera repositorioHeladeraMock = mock(RepositorioHeladera.class);
   private MqttClient mqttClientMock = mock(MqttClient.class);
 
   @BeforeEach
@@ -31,20 +30,17 @@ public class HeladeraCambioDeEstadoTest {
     heladera.setModelo(modelo);
     heladera.setId(1L);
 
-    when(repositorioHeladeraMock.buscarPorId(1L, Heladera.class)).thenReturn(Optional.of(heladera));
-
     try (MockedConstruction<MqttClient> mocked = mockConstruction(MqttClient.class, (mock, context) -> {
       doNothing().when(mock).connect();
       doNothing().when(mock).subscribe(any(String.class));
     })) {
-      receptorTemperatura = new ReceptorTemperatura("tcp://broker.hivemq.com:1883", "client-id", repositorioHeladeraMock);
-      receptorMovimiento = new ReceptorMovimiento(repositorioHeladeraMock);
+      receptorTemperatura = new ReceptorTemperatura("tcp://broker.hivemq.com:1883", "client-id");
     }
   }
 
   @Test
   @DisplayName("Cuando el Sensor de Movimiento detecta un posible Fraude el Estado cambia a FRAUDE")
-  void testRecalcularEstadoFraude() {
+  void testRecalcularEstadoFraude() throws Exception {
     MqttMessage mqttMessage = new MqttMessage("1,Fraude:true".getBytes());
     receptorMovimiento.messageArrived("test/topic", mqttMessage);
 

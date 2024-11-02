@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.server;
 
+import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorMovimiento;
 import ar.edu.utn.frba.dds.middlewares.AuthMiddleware;
 import ar.edu.utn.frba.dds.server.handlers.AppHandlers;
 import ar.edu.utn.frba.dds.utils.javalin.Initializer;
@@ -35,6 +36,7 @@ public class Server {
         Initializer initializer = new Initializer();
         initializer.init();
       }
+
     }
   }
 

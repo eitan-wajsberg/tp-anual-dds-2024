@@ -45,7 +45,7 @@ public class ControladorSuscripcion implements WithSimplePersistenceUnit {
       withTransaction( () -> repositorioSuscripcion.guardar(suscripcion));
 
       // Redirigir de nuevo a la heladera particular
-      context.redirect("/mapaHeladeras/" + dto.getIdHeladera() + "/HeladeraParticular");
+      context.redirect("/heladeras/" + dto.getIdHeladera());
 
     } catch (Exception e) {
       e.printStackTrace();
