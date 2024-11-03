@@ -47,7 +47,9 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     // tiene sentido? si ya estan plasmadas en el mapa
   }
 
+  @Override
   public void show(Context context) {
+    // TODO: Buscar si ya tiene suscripciones y cargarlas de ser el caso
     try {
       // Obtener el ID de la heladera y rol del usuario
       Long heladeraId = Long.parseLong(context.pathParam("heladeraId"));
@@ -81,11 +83,9 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
       // Renderizar la vista con el modelo preparado
       context.render(rutaParticularHbs, model);
-
     } catch (NumberFormatException e) {
       context.status(400).result("ID de heladera inválido");
     } catch (Exception e) {
-      e.printStackTrace();
       context.status(500).result("Error interno del servidor");
     }
   }
