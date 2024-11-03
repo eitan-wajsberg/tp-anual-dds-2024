@@ -6,9 +6,20 @@ import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import java.util.Optional;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-public class ReceptorMovimiento implements IMqttMessageListener {
+public class ReceptorMovimiento implements IMqttMessageListener, Runnable {
+  private MqttClient client;
+  private String brokerUrl;
+  private String topic;
+  public ReceptorMovimiento(String brokerUrl, String clientId) throws MqttException {
+    this.client = new MqttClient(brokerUrl, clientId);
+    this.client.connect();
+  }
   @Override
   public void messageArrived(String topic, MqttMessage mensaje) throws Exception{ // formato: idHeladera | "fraude"
         try{
@@ -25,6 +36,23 @@ public class ReceptorMovimiento implements IMqttMessageListener {
           System.err.println("Error al procesar el mensaje: " + e.getMessage());
         }
 
+  }
+  @Override
+  public void run() {
+      try {
+        client = new MqttClient(brokerUrl, MqttClient.generateClientId(), new MemoryPersistence());
+        MqttConnectOptions connOpts = new MqttConnectOptions();
+        connOpts.setCleanSession(true);
+
+        client.connect(connOpts);
+        System.out.println("Connected to broker: " + brokerUrl);
+
+        // Suscribirse al topic usando esta clase como listener
+        client.subscribe(topic, this);
+        System.out.println("MQTT Receiver is running and listening to topic: " + topic);
+      } catch (MqttException e) {
+        e.printStackTrace();
+      }
   }
   private String[] dividirPayload(String payload) {
     String[] partes = payload.split(",");

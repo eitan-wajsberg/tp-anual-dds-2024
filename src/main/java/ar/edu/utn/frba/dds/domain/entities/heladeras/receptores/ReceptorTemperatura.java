@@ -1,38 +1,58 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.receptores;
 
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
+import java.util.Timer;
+import java.util.TimerTask;
 import lombok.Getter;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.Optional;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 @Getter
-public class ReceptorTemperatura implements IMqttMessageListener {
+public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
 
     private MqttClient client;
+    private String brokerUrl;
+    private String topic;
+    private Timer timer;
+    private final int TIMEOUT_MS = 5 * 60 * 1000;
 
-    //TODO sacar repo heladeras.
     public ReceptorTemperatura(String brokerUrl, String clientId) throws MqttException {
         this.client = new MqttClient(brokerUrl, clientId);
-        //this.client.setCallback(this);
         this.client.connect();
     }
+    @Override
+    public void run() {
+        try {
+            client = new MqttClient(brokerUrl, MqttClient.generateClientId(), new MemoryPersistence());
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
 
-    public void subscribe(String topic) throws MqttException {
-        client.subscribe(topic);
+            client.connect(connOpts);
+            System.out.println("Connected to broker: " + brokerUrl);
+
+            // Suscribirse al topic usando esta clase como listener
+            client.subscribe(topic, this);
+            System.out.println("MQTT Receiver is running and listening to topic: " + topic);
+            resetTimer();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
-    //@Override
-    public void connectionLost(Throwable cause) {
-        //controlador.ProcesarFallaDeconexion()
-    }
+    private void resetTimer() {
+        // Cancela cualquier tarea de alerta previa y programa una nueva
+        timer.cancel(); // Cancela el temporizador anterior
+        timer = new Timer(true); // Crear un nuevo temporizador en modo daemon
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
 
-    public void heladeraConexionPerdida(){
-        
-        //controlador.ProcesarFallaDeconexion()
+               //alertar a controlador
+            }
+        }, TIMEOUT_MS);
     }
-
 
     // FORMATO DE MENSAJE: [IdHeladera,TipoDeMensaje:Valor]
     @Override
@@ -47,7 +67,7 @@ public class ReceptorTemperatura implements IMqttMessageListener {
                 String tipoMensaje = partes[1];
                 int valor = Integer.parseInt(partes[2]);
                 System.out.println("Se recibió exitosamente el mensaje");
-                //procesarMensaje(idHeladera, tipoMensaje, valor);
+                procesarMensaje(idHeladera, tipoMensaje, valor);
             }
         } catch (NumberFormatException e) {
             System.err.println("Error al convertir el valor a entero: " + e.getMessage());
@@ -71,22 +91,11 @@ public class ReceptorTemperatura implements IMqttMessageListener {
         return null;
     }
 
-    private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor, Optional<Heladera> optHeladera) {
-        if (optHeladera.isPresent()) {
-            Heladera heladera = optHeladera.get();
-            if (tipoMensaje.equals("Temperatura")) {
-                heladera.cambiarTemperatura(valor);
-            } else {
+    private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor) {
+        if (!tipoMensaje.equals("Temperatura")) {
                 System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
-            }
-        } else {
-            System.err.println("Heladera no encontrada para el ID: " + idHeladera);
         }
-    }
-
-    //@Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-        // Lógica para manejar la confirmación de entrega de un mensaje publicado
+        // controlador
     }
 
 }
