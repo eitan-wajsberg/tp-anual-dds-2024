@@ -32,7 +32,7 @@ public class Initializer implements WithSimplePersistenceUnit {
       e.printStackTrace();
       System.exit(-1);
     }
-    
+
     EntityTransaction transaction = em.getTransaction();
     try {
       transaction.begin();

@@ -50,13 +50,15 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorReportes.class.getName())) {
         instance = new ControladorReportes();
       } else if (componentName.equals(ControladorPersonaHumana.class.getName())) {
-        instance = new ControladorPersonaHumana(instanceOf(RepositorioPersonaHumana.class));
+        instance = new ControladorPersonaHumana(instanceOf(RepositorioPersonaHumana.class), instanceOf(RepositorioTarjetas.class));
       } else if (componentName.equals(ControladorPersonaJuridica.class.getName())) {
         instance = new ControladorPersonaJuridica(instanceOf(RepositorioPersonaJuridica.class));
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {
         instance = new ControladorDonacionVianda(
             instanceOf(RepositorioPersonaHumana.class),
-            instanceOf(RepositorioDonacionVianda.class)
+            instanceOf(RepositorioDonacionVianda.class),
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(RepositorioSolicitudApertura.class)
         );
       } else if (componentName.equals(ControladorDonacionDinero.class.getName())) {
         instance = new ControladorDonacionDinero(
