@@ -47,6 +47,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     // tiene sentido? si ya estan plasmadas en el mapa
   }
 
+  @Override
   public void show(Context context) {
     try {
       // Obtener el ID de la heladera y rol del usuario
@@ -81,7 +82,6 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
       // Renderizar la vista con el modelo preparado
       context.render(rutaParticularHbs, model);
-
     } catch (NumberFormatException e) {
       context.status(400).result("ID de heladera inválido");
     } catch (Exception e) {

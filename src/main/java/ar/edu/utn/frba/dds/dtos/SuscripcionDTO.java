@@ -1,4 +1,5 @@
 package ar.edu.utn.frba.dds.dtos;
+
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
 import io.javalin.http.Context;
 import lombok.Data;
@@ -8,33 +9,48 @@ import lombok.Setter;
 ;
 
 import java.util.Objects;
+
 @Getter @Setter
 @Data
 @NoArgsConstructor
 public class SuscripcionDTO implements DTO {
-    private String tipoSuscripcion;
-    private Long id; // El ID de la suscripción
+    private Long id;
+    private Boolean desperfecto;
     private Integer cantidadViandasFaltantes;
     private Integer cantidadViandasQueQuedan;
-    private Long idHeladera; // ID de la heladera asociada
-    private Long idPersonaHumana; // ID del suscriptor (persona humana)
 
-    // Constructor que toma una entidad Suscripcion
-    public SuscripcionDTO(Suscripcion suscripcion,String tipoSuscripcion) {
-        this.tipoSuscripcion = tipoSuscripcion;
+    public SuscripcionDTO(Suscripcion suscripcion) {
         this.id = suscripcion.getId();
+        // this.desperfecto = suscripcion.get
         this.cantidadViandasFaltantes = suscripcion.getHeladera().getCapacidadMaximaViandas() - suscripcion.getHeladera().cantidadViandasVirtuales();
         this.cantidadViandasQueQuedan = suscripcion.getHeladera().cantidadViandas();
-        this.idHeladera = suscripcion.getHeladera().getId();
-        this.idPersonaHumana = suscripcion.getSuscriptor().getId();
     }
 
-    // Método para obtener datos del formulario desde el contexto de Javalin
     @Override
     public void obtenerFormulario(Context context) {
-        this.tipoSuscripcion = context.formParam("tipoSuscripcion");
-        this.idHeladera = Long.parseLong(Objects.requireNonNull(context.formParam("heladeraId")));
-        this.idPersonaHumana = Long.parseLong(Objects.requireNonNull(context.formParam("personaId")));
+        // Comprobar el parámetro "desperfecto" y asignar a la variable booleana
+        String desperfectoParam = context.formParam("desperfecto");
+        this.desperfecto = "true".equals(desperfectoParam);
+
+        // Manejo de cantidadViandasQueQuedan
+        String quedanNViandasParam = context.formParam("quedanNViandas");
+        this.cantidadViandasQueQuedan = parseCantidad(quedanNViandasParam);
+
+        // Manejo de cantidadViandasFaltantes
+        String faltanNViandasParam = context.formParam("faltanNViandas");
+        this.cantidadViandasFaltantes = parseCantidad(faltanNViandasParam);
+    }
+
+    // Método auxiliar para parsear la cantidad
+    private Integer parseCantidad(String param) {
+        if (param == null || param.isEmpty()) {
+            return null; // Retornar null si el parámetro es nulo o vacío
+        }
+        try {
+            return Integer.parseInt(param); // Intentar parsear a Integer
+        } catch (NumberFormatException e) {
+            return null; // Retornar null si ocurre un error al parsear
+        }
     }
 
     @Override
@@ -42,15 +58,13 @@ public class SuscripcionDTO implements DTO {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         SuscripcionDTO that = (SuscripcionDTO) obj;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(cantidadViandasFaltantes, that.cantidadViandasFaltantes) &&
-                Objects.equals(cantidadViandasQueQuedan, that.cantidadViandasQueQuedan) &&
-                Objects.equals(idHeladera, that.idHeladera) &&
-                Objects.equals(idPersonaHumana, that.idPersonaHumana);
+        return Objects.equals(id, that.id)
+            && Objects.equals(cantidadViandasFaltantes, that.cantidadViandasFaltantes)
+            && Objects.equals(cantidadViandasQueQuedan, that.cantidadViandasQueQuedan);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cantidadViandasFaltantes, cantidadViandasQueQuedan, idHeladera, idPersonaHumana);
+        return Objects.hash(id, cantidadViandasFaltantes, cantidadViandasQueQuedan);
     }
 }
