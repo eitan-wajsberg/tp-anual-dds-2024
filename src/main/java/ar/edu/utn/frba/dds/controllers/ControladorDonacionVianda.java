@@ -12,6 +12,7 @@ import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.*;
+import ar.edu.utn.frba.dds.dtos.DistribucionViandaDTO;
 import ar.edu.utn.frba.dds.dtos.ViandaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioPersonaHumana repositorioPersonaHumana;
@@ -48,7 +50,14 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   @Override
   public void index(Context context) {
     Long id = context.sessionAttribute("id");
-    List<Vianda> donaciones = this.repositorioDonacionVianda.buscarViandasDe(id);
+    List<Object[]> donaciones = this.repositorioDonacionVianda.buscarViandasDe(id);
+    for(int i=0;i<donaciones.size();i++){
+      for(int j=0;j<donaciones.get(i).length;j++) {
+        System.out.println(donaciones.get(i)[j]);
+      }
+    }
+    //List<ViandaDTO> donacionesDTO = donaciones.stream().map(donacion -> new ViandaDTO(donacion)).collect(Collectors.toList());
+
     Map<String, Object> model = new HashMap<>();
     model.put("donacionesVianda", donaciones);
     context.render(rutaListadoHbs, model);
