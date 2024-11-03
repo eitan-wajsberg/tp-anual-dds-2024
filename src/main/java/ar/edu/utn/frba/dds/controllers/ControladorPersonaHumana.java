@@ -80,7 +80,7 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
     Map<String, Object> model = new HashMap<>();
     try {
       Optional<PersonaHumana> persona = repositorioPersonaHumana
-          .buscarPorUsuario(Long.valueOf(context.pathParam("id")));
+          .buscarPorUsuario(context.sessionAttribute("id"));
 
       if (persona.isEmpty()) {
         throw new ValidacionFormularioException("No existe la persona.");
@@ -93,7 +93,7 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
       model.put("mostrarPersonaHumana", true);
       model.put("mostrarIrAtras", true);
       model.put("paginaAtras", "/");
-      model.put("id", context.pathParam("id"));
+      model.put("id", context.sessionAttribute("id"));
       context.render(rutaPersonaHbs, model);
     } catch (ValidacionFormularioException e) {
       model.put(ERROR, e.getMessage());
@@ -109,7 +109,7 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
 
     try {
       Optional<PersonaHumana> personaExistente = repositorioPersonaHumana
-          .buscarPorUsuario(Long.valueOf(context.pathParam("id")));
+          .buscarPorUsuario(context.sessionAttribute("id"));
 
       if (personaExistente.isEmpty()) {
         throw new ValidacionFormularioException("Persona no encontrada.");
@@ -140,14 +140,14 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
       model.put("mostrarPersonaHumana", true);
       model.put("mostrarIrAtras", true);
       model.put("paginaAtras", "/");
-      model.put("id", context.pathParam("id"));
+      model.put("id", context.sessionAttribute("id"));
       context.render(rutaPersonaHbs, model);
     }
   }
 
   @Override
   public void delete(Context context) {
-    Long id = Long.valueOf(context.pathParam("id"));
+    Long id = context.sessionAttribute("id");
     Optional<PersonaHumana> persona = repositorioPersonaHumana.buscarPorUsuario(id);
 
     if (persona.isPresent()) {
