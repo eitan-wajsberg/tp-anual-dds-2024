@@ -123,7 +123,7 @@ public class Router {
     app.post("/heladeras", ServiceLocator.instanceOf(ControladorHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
     app.get("/heladeras/{heladeraId}", ServiceLocator.instanceOf(ControladorHeladera.class)::show, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.get("/heladeras", ServiceLocator.instanceOf(ControladorMapa.class)::mapa, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
-    app.post("/heladeras/suscripcion/{heladeraId}", ServiceLocator.instanceOf(ControladorSuscripcion.class)::save, TipoRol.PERSONA_HUMANA);
+    app.post("/heladeras/suscripcion/{heladeraId}", ServiceLocator.instanceOf(ControladorSuscripcion.class)::suscribir, TipoRol.PERSONA_HUMANA);
     app.get("/heladeras/reporteFallas/{heladeraId}/nuevo", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::create, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras/reporteFallas/{heladeraId}", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::save, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.get("/heladeras/modelos/nuevo", ServiceLocator.instanceOf(ControladorModeloHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
