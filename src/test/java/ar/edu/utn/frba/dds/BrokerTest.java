@@ -32,7 +32,7 @@ public class BrokerTest {
 
     sampleClient = new MqttClient(broker, clientId, persistence);
     connOpts = new MqttConnectOptions();
-    this.receptorMovimiento = new ReceptorMovimiento();
+    this.receptorMovimiento = new ReceptorMovimiento(broker, clientId);
 
   }
 
