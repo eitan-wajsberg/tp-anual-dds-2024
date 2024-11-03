@@ -2,19 +2,23 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraVirtualmenteLlenaException;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraVirtualmenteVaciaException;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioDonacionVianda;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
+import ar.edu.utn.frba.dds.domain.repositories.imp.*;
 import ar.edu.utn.frba.dds.dtos.ViandaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +27,22 @@ import java.util.Optional;
 public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioPersonaHumana repositorioPersonaHumana;
   private RepositorioDonacionVianda repositorioDonacionVianda;
+  private RepositorioHeladera repositorioHeladera;
+  private RepositorioSolicitudApertura repositorioSolicitud;
   private final String rutaDonacionHbs = "colaboraciones/donacionVianda.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesViandas.hbs";
   private final String rutaListadoDonaciones = "/donacionVianda";
   private final String ERROR = "error";
   private final Gson gson = GsonFactory.createGson();
 
-  public ControladorDonacionVianda(RepositorioPersonaHumana repositorioPersonaHumana, RepositorioDonacionVianda repositorioDonacionVianda) {
+  public ControladorDonacionVianda(RepositorioPersonaHumana repositorioPersonaHumana
+                                  , RepositorioDonacionVianda repositorioDonacionVianda
+                                  , RepositorioHeladera repositorioHeladera
+                                  , RepositorioSolicitudApertura repositorioSolicitud) {
     this.repositorioPersonaHumana = repositorioPersonaHumana;
     this.repositorioDonacionVianda = repositorioDonacionVianda;
+    this.repositorioHeladera = repositorioHeladera;
+    this.repositorioSolicitud = repositorioSolicitud;
   }
 
   @Override
@@ -63,25 +74,47 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     Long id = context.sessionAttribute("id");
 
     try {
-      Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(id);
-      if (personaHumana.isEmpty()) {
+      Optional<PersonaHumana> optPersona = repositorioPersonaHumana.buscarPorUsuario(id);
+      if (optPersona.isEmpty()) {
           throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
       }
-
+      PersonaHumana persona = optPersona.get();
       Vianda nuevaDonacion = Vianda.fromDTO(dto);
       if (nuevaDonacion == null) {
         throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la donación.");
       }
+      nuevaDonacion.setPersonaHumana(persona);
 
-      personaHumana.get().sumarPuntaje(nuevaDonacion.calcularPuntaje());
+      // agrego solicitud de apertura para ingresar viandas
+      Optional<Heladera> optHeladera = this.repositorioHeladera.buscarPorId(Long.valueOf(context.formParam("heladeraId")));
+      if(optHeladera.isEmpty()){
+        throw new ValidacionFormularioException("Debe especificar una heladera");
+      }
+
+      Heladera heladera = optHeladera.get();
+      heladera.ingresarVianda(nuevaDonacion);
+      SolicitudApertura soliApertura = SolicitudApertura.builder()
+          .accion(AccionApertura.INGRESAR_VIANDA)
+          .fechaSolicitud(LocalDateTime.now())
+          .tarjeta(persona.getTarjetaEnUso())
+          .cantidadViandas(1)
+          .aperturaConcretada(false)
+          .vianda(nuevaDonacion)
+          .build();
+
+      heladera.agregarSolicitudApertura(soliApertura);
+
+      persona.sumarPuntaje(nuevaDonacion.calcularPuntaje());
       withTransaction(() -> {
+        this.repositorioSolicitud.guardar(soliApertura);
         repositorioDonacionVianda.guardar(nuevaDonacion);
-        repositorioPersonaHumana.actualizar(personaHumana);
+        this.repositorioHeladera.actualizar(heladera);
+        repositorioPersonaHumana.actualizar(persona);
       });
       context.redirect(rutaListadoDonaciones);
-    } catch (ValidacionFormularioException e) {
+    } catch (RuntimeException e) {
       Map<String, Object> model = new HashMap<>();
-      model.put(ERROR, e.getMessage());
+      model.put("error", e.getMessage());
       model.put("jsonHeladeras", gson.toJson(this.repositorioDonacionVianda.buscarTodos(Heladera.class)));
       model.put("dto", dto);
       context.render(rutaDonacionHbs, model);

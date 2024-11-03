@@ -56,7 +56,9 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {
         instance = new ControladorDonacionVianda(
             instanceOf(RepositorioPersonaHumana.class),
-            instanceOf(RepositorioDonacionVianda.class)
+            instanceOf(RepositorioDonacionVianda.class),
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(RepositorioSolicitudApertura.class)
         );
       } else if (componentName.equals(ControladorDonacionDinero.class.getName())) {
         instance = new ControladorDonacionDinero(
