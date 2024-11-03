@@ -15,6 +15,7 @@ import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
+import ar.edu.utn.frba.dds.exceptions.SinTarjetaException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.io.UnsupportedEncodingException;
@@ -288,6 +289,9 @@ public class PersonaHumana extends IObserverNotificacion {
   private static void validarFormasContribucion(PersonaHumanaDTO dto) {
     if (!(dto.isDonacionDinero() || dto.isRedistribucionViandas() || dto.isDonacionViandas() || dto.isEntregaTarjetas())) {
       throw new ValidacionFormularioException("Al menos una forma de contribución debe ser seleccionada.");
+    }
+    if(!dto.isDonacionDinero()){
+      dto.getDireccionDTO().setObligatoria(true);
     }
   }
 
