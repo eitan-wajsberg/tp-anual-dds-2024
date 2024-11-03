@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import org.hibernate.service.spi.ServiceException;
 
 public class Initializer implements WithSimplePersistenceUnit {
   public void init() {
@@ -23,7 +25,15 @@ public class Initializer implements WithSimplePersistenceUnit {
   }
 
   private void hidratarBaseConArchivo() {
-    EntityTransaction transaction = entityManager().getTransaction();
+    EntityManager em = null;
+    try {
+      em = entityManager();
+    }catch(ServiceException e){
+      e.printStackTrace();
+      System.exit(-1);
+    }
+    
+    EntityTransaction transaction = em.getTransaction();
     try {
       transaction.begin();
 
