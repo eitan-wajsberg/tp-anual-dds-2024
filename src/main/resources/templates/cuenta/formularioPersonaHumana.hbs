@@ -2,7 +2,7 @@
     <div class="m-5">
         <div class="row justify-content-center">
             <form id="uploadForm" method="POST" action="{{#if edicion}}/personaHumana/{{id}}/edicion{{else}}/personaHumana{{/if}}">
-
+                <input type="hidden" id="solicitaTarjeta" name="solicitaTarjeta" value="">
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -60,34 +60,34 @@
                 <p class="mb-3">Si lo deseás, ingresá tu domicilio. En caso de proporcionarlo, asegurate de incluir todos los datos indicados.</p>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="calle" type="text" class="w-100" placeholder="Calle" aria-label="Calle" pattern="^[A-Z][a-zA-ZáéíóúñÑ. ]{1,49}$" value="{{dto.direccionDTO.calle}}">
+                        <input name="calle" type="text" class="w-100 necesarioParaTarjeta" placeholder="Calle" aria-label="Calle" pattern="^[A-Z][a-zA-ZáéíóúñÑ. ]{1,49}$" value="{{dto.direccionDTO.calle}}">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="altura" type="number" class="w-100" placeholder="Altura" aria-label="Altura" value="{{dto.direccionDTO.altura}}">
+                        <input name="altura" type="number" class="w-100 necesarioParaTarjeta" placeholder="Altura" aria-label="Altura" value="{{dto.direccionDTO.altura}}">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="provincia" type="text" class="w-100" placeholder="Provincia" aria-label="Provincia" pattern="^[A-Za-zÀ-ÿ]+(?: [A-Za-zÀ-ÿ]+)*$" value="{{dto.direccionDTO.provincia}}">
+                        <input name="provincia" type="text" class="w-100 necesarioParaTarjeta" placeholder="Provincia" aria-label="Provincia" pattern="^[A-Za-zÀ-ÿ]+(?: [A-Za-zÀ-ÿ]+)*$" value="{{dto.direccionDTO.provincia}}">
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
-                        <input name="municipio" type="text" class="w-100" placeholder="Municipio" aria-label="Municipio" pattern="^[A-Za-zÀ-ÿ0-9]+(?: [A-Za-zÀ-ÿ0-9]+)*$" value="{{dto.direccionDTO.municipio}}">
+                        <input name="municipio" type="text" class="w-100 necesarioParaTarjeta" placeholder="Municipio" aria-label="Municipio" pattern="^[A-Za-zÀ-ÿ0-9]+(?: [A-Za-zÀ-ÿ0-9]+)*$" value="{{dto.direccionDTO.municipio}}">
                     </div>
                 </div>
 
                 <h4 class="fw-bold fs-5 mt-5">Formas de colaboración</h4>
-                <p class="mb-3">Seleccioná en qué formas deseas colaborar.</p>
-                <div class="row mb-3">
+                <p class="mb-3">Seleccioná en qué formas deseas colaborar. Para realizar algunas de ellas, necesitará una tarjeta especial que le proporcionaremos en su dirección.</p>
+                <div class="row mb-3" id="formasColaboracion">
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
                         <label class="form-check d-flex justify-content-between w-100 choice" for="donacionDinero">
                             <span class="fw-bold">Donar dinero</span>
-                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="donacionDinero" value="DONACION_DINERO" {{#if dto.donacionDinero}}checked{{/if}}>
+                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="donacionDinero" data-tarjeta="" value="DONACION_DINERO" {{#if dto.donacionDinero}}checked{{/if}}>
                         </label>
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
                         <label class="form-check d-flex justify-content-between w-100 choice" for="redistribucionViandas">
                             <span class="fw-bold">Distribuir viandas</span>
-                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="redistribucionViandas" value="REDISTRIBUCION_VIANDAS" {{#if dto.redistribucionViandas}}checked{{/if}}>
+                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="redistribucionViandas" data-tarjeta="X" value="REDISTRIBUCION_VIANDAS" {{#if dto.redistribucionViandas}}checked{{/if}}>
                         </label>
                     </div>
                 </div>
@@ -96,13 +96,13 @@
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
                         <label class="form-check d-flex justify-content-between w-100 choice" for="donacionViandas">
                             <span class="fw-bold">Donar viandas</span>
-                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="donacionViandas" value="DONACION_VIANDAS" {{#if dto.donacionViandas}}checked{{/if}}>
+                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="donacionViandas" data-tarjeta="X" value="DONACION_VIANDAS" {{#if dto.donacionViandas}}checked{{/if}}>
                         </label>
                     </div>
                     <div class="col-12 col-md-6 mb-2 mb-md-0">
                         <label class="form-check d-flex justify-content-between w-100 choice" for="entregaTarjetas">
                             <span class="fw-bold">Entregar tarjetas</span>
-                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="entregaTarjetas" value="ENTREGA_TARJETAS" {{#if dto.entregaTarjetas}}checked{{/if}}>
+                            <input class="form-check-input" type="checkbox" name="formaColaboracion" id="entregaTarjetas" data-tarjeta="X" value="ENTREGA_TARJETAS" {{#if dto.entregaTarjetas}}checked{{/if}}>
                         </label>
                     </div>
                 </div>
@@ -122,8 +122,30 @@
     </div>
     <script src="/js/manejadorFormulario.js"></script>
     <script src="/js/modalEliminacion.js"></script>
+    <script src="/js/confirmacion.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(function(){
+            if(requiereTarjeta()){
+                $(".necesarioParaTarjeta").attr("required", "required");
+            }
+        });
+
+        function requiereTarjeta(){
+            return $("[data-tarjeta='X']").is(":checked");
+        }
+
+        $("[data-tarjeta]").on("click", function(){
+            if($(this).is(":checked") && $(this).data("tarjeta")=="X"){
+                $(".necesarioParaTarjeta").attr("required", "required");
+            }
+        });
+
+        $(document).on("submit", function(){
+            $("#solicitaTarjeta").val(requiereTarjeta() ? "X" : "");
+        });
+    </script>
 {{/partial}}
 
 {{> templates/base titulo="Mis datos personales" mostrarSeccion=true seccion="Mis datos personales"}}
