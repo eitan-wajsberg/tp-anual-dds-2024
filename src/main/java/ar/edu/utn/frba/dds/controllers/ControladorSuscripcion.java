@@ -35,11 +35,15 @@ public class ControladorSuscripcion implements WithSimplePersistenceUnit {
     this.repositorioPersonaHumana = repositorioPersonaHumana;
   }
 
-  public void save(Context context) {
+  public void suscribir(Context context) {
     SuscripcionDTO dto = new SuscripcionDTO();
     dto.obtenerFormulario(context);
 
     Heladera heladera = null;
+    // TODO: Buscar si ya tiene suscripciones
+    //  si tiene actualizar en casoo de que corresponda
+    //  si no tiene guardar la suscripcion.
+
     try {
       PersonaHumana personaHumana = obtenerPersonaHumana(context);
       heladera = obtenerHeladera(context);
