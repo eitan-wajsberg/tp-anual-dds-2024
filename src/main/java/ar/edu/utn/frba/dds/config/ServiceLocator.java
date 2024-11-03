@@ -76,7 +76,8 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorSuscripcion.class.getName())) {
         instance = new ControladorSuscripcion(
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
-                ServiceLocator.instanceOf(RepositorioSuscripcion.class)
+                ServiceLocator.instanceOf(RepositorioSuscripcion.class),
+                ServiceLocator.instanceOf(RepositorioPersonaHumana.class)
         );
       } else if (componentName.equals(ControladorIncidenteHeladera.class.getName())) {
         instance = new ControladorIncidenteHeladera(
