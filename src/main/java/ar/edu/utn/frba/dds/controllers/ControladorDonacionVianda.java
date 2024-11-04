@@ -2,17 +2,11 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraVirtualmenteLlenaException;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraVirtualmenteVaciaException;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
-import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
-import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.*;
-import ar.edu.utn.frba.dds.dtos.DistribucionViandaDTO;
 import ar.edu.utn.frba.dds.dtos.ViandaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
@@ -50,16 +44,12 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   @Override
   public void index(Context context) {
     Long id = context.sessionAttribute("id");
-    List<Object[]> donaciones = this.repositorioDonacionVianda.buscarViandasDe(id);
-    for(int i=0;i<donaciones.size();i++){
-      for(int j=0;j<donaciones.get(i).length;j++) {
-        System.out.println(donaciones.get(i)[j]);
-      }
-    }
-    //List<ViandaDTO> donacionesDTO = donaciones.stream().map(donacion -> new ViandaDTO(donacion)).collect(Collectors.toList());
+    List<Vianda> donaciones = this.repositorioDonacionVianda.buscarViandasDe(id);
+    for(int i=0; i < donaciones.size(); i++){System.out.println(donaciones.get(i));}
+    List<ViandaDTO> donacionesDTO = donaciones.stream().map(donacion -> new ViandaDTO(donacion)).collect(Collectors.toList());
 
     Map<String, Object> model = new HashMap<>();
-    model.put("donacionesVianda", donaciones);
+    model.put("donacionesVianda", donacionesDTO);
     context.render(rutaListadoHbs, model);
   }
 
@@ -83,6 +73,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     Long id = context.sessionAttribute("id");
 
     try {
+      // agrego colaborador
       Optional<PersonaHumana> optPersona = repositorioPersonaHumana.buscarPorUsuario(id);
       if (optPersona.isEmpty()) {
           throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
@@ -94,14 +85,15 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       }
       nuevaDonacion.setPersonaHumana(persona);
 
-      // agrego solicitud de apertura para ingresar viandas
-      Optional<Heladera> optHeladera = this.repositorioHeladera.buscarPorId(Long.valueOf(context.formParam("heladeraId")));
-      if(optHeladera.isEmpty()){
-        throw new ValidacionFormularioException("Debe especificar una heladera");
+      // agrego heladera
+      Optional<Heladera> optHeladera = repositorioHeladera.buscarPorId(dto.getHeladeraId());
+      if (optHeladera.isEmpty()) {
+        throw new ValidacionFormularioException("Debe especificar una heladera.");
       }
-
       Heladera heladera = optHeladera.get();
-      heladera.ingresarVianda(nuevaDonacion);
+      nuevaDonacion.setHeladera(heladera);
+
+      // agrego solicitud de apertura para ingresar viandas
       SolicitudApertura soliApertura = SolicitudApertura.builder()
           .accion(AccionApertura.INGRESAR_VIANDA)
           .fechaSolicitud(LocalDateTime.now())
@@ -113,6 +105,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
 
       heladera.agregarSolicitudApertura(soliApertura);
 
+      // guardar cambios
       persona.sumarPuntaje(nuevaDonacion.calcularPuntaje());
       withTransaction(() -> {
         this.repositorioSolicitud.guardar(soliApertura);
@@ -120,6 +113,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
         this.repositorioHeladera.actualizar(heladera);
         repositorioPersonaHumana.actualizar(persona);
       });
+
       context.redirect(rutaListadoDonaciones);
     } catch (RuntimeException e) {
       Map<String, Object> model = new HashMap<>();
@@ -171,11 +165,28 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       if (dtoExistente.equals(dtoNuevo)) {
         throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
       }
+      Vianda vianda = viandaExistente.get();
+      vianda.actualizarFromDto(dtoNuevo);
 
-      viandaExistente.get().actualizarFromDto(dtoNuevo);
-      withTransaction(() -> repositorioDonacionVianda.actualizar(viandaExistente.get()));
+      // marcar vianda como entregada
+      vianda.setEntregada(true);
+
+      // cerrar solicitud de apertura
+      List<SolicitudApertura> solicitudes = this.repositorioSolicitud.listarRecientes(vianda.getId(), "vianda");
+      Optional<SolicitudApertura> optSolicitud = solicitudes.stream().filter(c-> !c.isAperturaConcretada()).findFirst();
+      if (optSolicitud.isEmpty()) {
+        throw new RuntimeException("No se encontró ninguna solicitud de apertura previa. Contactese con el administrador del sistema.");
+      }
+      SolicitudApertura solicitud = optSolicitud.get();
+      solicitud.setAperturaConcretada(true);
+
+      // guardo cambios
+      withTransaction(() -> {
+        repositorioDonacionVianda.actualizar(vianda);
+        this.repositorioSolicitud.actualizar(solicitud);
+      });
+
       context.redirect(rutaListadoDonaciones);
-
     } catch (Exception e) {
       model.put("error", e.getMessage());
       model.put("dto", dtoNuevo);
