@@ -6,12 +6,10 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import java.util.List;
 
 public class RepositorioDonacionVianda extends Repositorio {
-  public List buscarViandasDe(Long id) {
+  public List<Vianda> buscarViandasDe(Long id) {
     return entityManager()
-        .createQuery("SELECT v, h.nombre, h.id FROM " + Vianda.class.getName() + " v "
-            +", " + Heladera.class.getName() + " h "
-            +" WHERE v.personaHumana.usuario.id = :id "
-            +" and v in elements(h.viandas)")
+        .createQuery("SELECT v FROM " + Vianda.class.getName() + " v "
+            +" WHERE v.personaHumana.usuario.id = :id ")
         .setParameter("id", id)
         .getResultList();
   }

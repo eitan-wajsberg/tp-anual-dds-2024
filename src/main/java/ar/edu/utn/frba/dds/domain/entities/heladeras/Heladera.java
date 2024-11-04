@@ -75,8 +75,7 @@ public class Heladera implements Contribucion {
   @JoinColumn(name = "modelo_id", referencedColumnName = "id", nullable = false)
   private Modelo modelo;
 
-  @OneToMany @Expose
-  @JoinColumn(name="id_heladera", referencedColumnName = "id")
+  @OneToMany(mappedBy = "heladera") @Expose
   private Set<Vianda> viandas;
 
   @Setter @Expose
