@@ -28,8 +28,8 @@ public class Initializer implements WithSimplePersistenceUnit {
     EntityManager em = null;
     try {
       em = entityManager();
-    }catch(ServiceException e){
-      e.printStackTrace();
+    } catch (ServiceException e) {
+      // e.printStackTrace();
       System.exit(-1);
     }
 

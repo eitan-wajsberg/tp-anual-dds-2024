@@ -1,26 +1,20 @@
 package ar.edu.utn.frba.dds.controllers;
 
-
-import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Desperfecto;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.FaltanNViandas;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.QuedanNViandas;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
-import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioSuscripcion;
 import ar.edu.utn.frba.dds.dtos.SuscripcionDTO;
-import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class ControladorSuscripcion implements WithSimplePersistenceUnit {
   private final String rutaSuscripcionHbs = "heladeras/heladeraParticular.hbs";
