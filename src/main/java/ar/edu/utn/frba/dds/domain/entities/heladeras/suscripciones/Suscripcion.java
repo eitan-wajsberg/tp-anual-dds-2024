@@ -30,7 +30,6 @@ import static com.github.jknack.handlebars.helper.ConditionalHelpers.and;
 @Table(name="suscripcion")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="tipoSuscripcion")
-
 public abstract class Suscripcion {
   @Id
   @GeneratedValue

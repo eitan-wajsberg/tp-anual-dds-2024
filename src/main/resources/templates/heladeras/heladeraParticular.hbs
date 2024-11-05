@@ -28,12 +28,11 @@
                 {{#if mostrarPersonaHumana}}
                     <form method="POST" action="/heladeras/suscripcion/{{heladera.id}}" class="mt-2 w-100">
                         <h2 class="fw-bold fs-4 mb-2">Suscripción a la heladera</h2>
-
-                        <p class="mb-2">Seleccione las opciones por las cuales desea recibir notificaciones sobre la heladera. No es necesario completar todas; elija solo aquellas que prefiera.</p>
+                        <p class="mb-3">Seleccione las opciones por las cuales desea recibir notificaciones sobre la heladera. No es necesario completar todas; elija solo aquellas que prefiera.</p>
                         <div class="row mb-2">
                             <div class="col-12">
                                 <div class="input-group w-100">
-                                    <div class="input-group-text selection">Quedan N Viandas</div>
+                                    <div class="input-group-text selection custom-select">Quedan N Viandas</div>
                                     <input type="text" class="custom-input" id="quedanNViandas" name="quedanNViandas" placeholder="Cantidad viandas" value="{{quedanNViandas}}">
                                 </div>
                             </div>
@@ -41,7 +40,7 @@
                         <div class="row mb-2">
                             <div class="col-12">
                                 <div class="input-group">
-                                    <div class="input-group-text selection">Faltan N Viandas </div>
+                                    <div class="input-group-text selection custom-select">Faltan N Viandas</div>
                                     <input type="text" class="custom-input" id="faltanNViandas" name="faltanNViandas" placeholder="Cantidad viandas" value="{{faltanNViandas}}">
                                 </div>
                             </div>
@@ -50,12 +49,17 @@
                             <div class="col-12">
                                 <label class="form-check d-flex justify-content-between w-100 choice" for="desperfecto">
                                     <span class="fw-bold">Desperfecto</span>
-                                    <input class="form-check-input" type="checkbox" name="formaSuscripcion" id="desperfecto" value="true" {{#if dto.donacionViandas}}checked{{/if}}>
+                                    <input class="form-check-input" type="checkbox" name="formaSuscripcion" id="desperfecto" value="true" {{#if desperfecto}}checked{{/if}}>
                                 </label>
                             </div>
                         </div>
+                        {{#if actualizacion}}
+                            <div class="text-pill light-light-blue">
+                                Ya estas suscripto a esta heladera
+                            </div>
+                        {{/if}}
                         <div class="col-12 mt-2 mb-3">
-                            <button class="w-100">Suscribirme</button>
+                            <button class="w-100">{{#if actualizacion}}Editar suscripción{{else}}Suscribirme{{/if}}</button>
                         </div>
                     </form>
                 {{/if}}
