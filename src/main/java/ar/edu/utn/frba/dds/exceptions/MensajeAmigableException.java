@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AccesoDenegadoException extends RuntimeException {
+public class MensajeAmigableException extends RuntimeException {
   private int statusCode;
-  public AccesoDenegadoException(String mensaje, int statusCode) {
+  public MensajeAmigableException(String mensaje, int statusCode) {
     super(mensaje);
     this.statusCode = statusCode;
   }

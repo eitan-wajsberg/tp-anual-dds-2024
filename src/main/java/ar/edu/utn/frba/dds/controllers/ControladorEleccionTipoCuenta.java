@@ -1,8 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoCuentaRegistro;
-import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
-import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
+import ar.edu.utn.frba.dds.exceptions.MensajeAmigableException;
 import io.javalin.http.Context;
 
 public class ControladorEleccionTipoCuenta {
@@ -19,7 +18,7 @@ public class ControladorEleccionTipoCuenta {
       context.sessionAttribute("tipoCuenta", tipoCuenta);
       context.redirect("/usuarios/nuevo");
     } catch (IllegalArgumentException e) {
-      throw new AccesoDenegadoException("Se ha indicado un tipo de cuenta inválido.", 400);
+      throw new MensajeAmigableException("Se ha indicado un tipo de cuenta inválido.", 400);
     }
   }
 
