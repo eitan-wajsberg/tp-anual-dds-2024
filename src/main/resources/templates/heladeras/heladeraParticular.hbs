@@ -49,7 +49,7 @@
                             <div class="col-12">
                                 <label class="form-check d-flex justify-content-between w-100 choice" for="desperfecto">
                                     <span class="fw-bold">Desperfecto</span>
-                                    <input class="form-check-input" type="checkbox" name="formaSuscripcion" id="desperfecto" value="true" {{#if desperfecto}}checked{{/if}}>
+                                    <input class="form-check-input" type="checkbox" name="desperfecto" id="desperfecto" value="true" {{#if desperfecto}}checked{{/if}}>
                                 </label>
                             </div>
                         </div>
@@ -63,12 +63,12 @@
                         </div>
                     </form>
                 {{/if}}
+                {{#if error}}
+                    <div class="row mt-2 justify-content-center">
+                        <p class="error text-center">{{error}}</p>
+                    </div>
+                {{/if}}
             </div>
-            {{#if error}}
-                <div class="row mt-2 justify-content-center">
-                    <p class="error text-center">{{error}}</p>
-                </div>
-            {{/if}}
             <div class="row mt-4 mb-2 text-center">
                 <hr>
                 <label class="grey-text fw-bold w-100">

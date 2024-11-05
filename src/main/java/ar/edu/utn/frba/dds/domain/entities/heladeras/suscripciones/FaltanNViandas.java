@@ -3,7 +3,6 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
