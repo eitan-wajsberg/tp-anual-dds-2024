@@ -166,10 +166,10 @@ public class Heladera implements Contribucion {
     return this.fechaRegistro.toLocalDate();
   }
 
-  public void cambiarEstado(EstadoHeladera nuevoEstado) {
-    if (this.estado != nuevoEstado) {
-      this.estado = nuevoEstado;
-      this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now())); //TODO cambioEstado tiene constructor vacio, setear params.
+  public void cambiarEstado(CambioEstado cambioEstado) {
+    if (this.estado != cambioEstado.getEstado()) {
+      this.estado = cambioEstado.getEstado();
+      this.agregarCambioDeEstado(cambioEstado);
     }
   }
 
@@ -183,7 +183,7 @@ public class Heladera implements Contribucion {
 
   public void cambiarTemperatura(float nuevaTemperatura) {
     if (!temperaturaEnRango(nuevaTemperatura)) {
-      this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
+      this.cambiarEstado(new CambioEstado(EstadoHeladera.FALLA_TEMPERATURA, LocalDate.now()));
     }
 
     agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));

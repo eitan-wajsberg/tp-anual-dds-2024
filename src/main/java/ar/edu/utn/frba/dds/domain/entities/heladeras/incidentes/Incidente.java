@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes;
 import ar.edu.utn.frba.dds.domain.converters.TipoAlertaConverter;
 import ar.edu.utn.frba.dds.domain.converters.TipoIncidenteConverter;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.CambioEstado;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
@@ -13,6 +14,7 @@ import ar.edu.utn.frba.dds.dtos.IncidenteDTO;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import ar.edu.utn.frba.dds.utils.manejos.ManejoDistancias;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +92,7 @@ public class Incidente {
   public void registrarVisita(Visita visita, boolean solucionado) {
     this.visitas.add(visita);
     if (solucionado) {
-      heladera.cambiarEstado(EstadoHeladera.ACTIVA);
+      heladera.cambiarEstado(new CambioEstado(EstadoHeladera.ACTIVA, LocalDate.now()));
       this.solucionado = solucionado;
     }
   }
@@ -124,11 +126,12 @@ public class Incidente {
 
   private void enviarNotificacion(Tecnico tecnico, Heladera heladera) throws MessagingException, UnsupportedEncodingException {
     Mensaje mensaje = new Mensaje(
-        "SMAACVS: Aviso para revisar una heladera",
-        String.format("Estimado técnico,\n"
-                + "Ha sido seleccionado para revisar la heladera '%s' ubicada en la dirección '%s'.\n"
-                + "%s\n"
-                + "Saludos,\n"
+        "SMAACVS: Notificación de Revisión de Heladera",
+        String.format("Estimado/a Técnico/a,\n\n"
+                + "Se le ha asignado la tarea de revisar la heladera '%s', ubicada en la dirección '%s'.\n"
+                + "Descripción del incidente: %s.\n\n"
+                + "Le agradecemos su colaboración y compromiso con el sistema para la mejora del acceso alimentario en contextos de vulnerabilidad socioeconómica.\n\n"
+                + "Atentamente,\n"
                 + "Sistema para la Mejora del Acceso Alimentario en Contextos de Vulnerabilidad Socioeconómica",
             heladera.getNombre(),
             heladera.getDireccion().getNomenclatura(),
@@ -153,7 +156,7 @@ public class Incidente {
     }
 
     // Validar que los campos necesarios en el DTO no sean nulos
-    if (dto.getTipoIncidente() == null || dto.getTipoIncidente().isEmpty()) {
+    if (dto.getTipoAlerta() == null || dto.getTipoAlerta().isEmpty()) {
       throw new IllegalArgumentException("El tipo de incidente no puede ser nulo o vacío.");
     }
     if (dto.getDescripcionDelColaborador() == null) {
@@ -165,9 +168,8 @@ public class Incidente {
     incidente.colaborador = colaborador;
 
     // Determinar el tipo de incidente en base al DTO
-    switch (dto.getTipoIncidente()) {
+    switch (dto.getTipoAlerta()) {
       case "FALLA_TECNICA":
-      case "OTRO":
         incidente.tipoIncidente = new FallaTecnica();
         incidente.tipoAlerta = TipoAlerta.FRAUDE;
         break;
@@ -175,10 +177,10 @@ public class Incidente {
       case "FALLA_CONEXION":
       case "FALLA_TEMPERATURA":
         incidente.tipoIncidente = new Alerta();
-        incidente.tipoAlerta = TipoAlerta.valueOf(dto.getTipoIncidente());
+        incidente.tipoAlerta = TipoAlerta.valueOf(dto.getTipoAlerta());
         break;
       default:
-        throw new IllegalArgumentException("Tipo de incidente no reconocido: " + dto.getTipoIncidente());
+        throw new IllegalArgumentException("Tipo de incidente no reconocido: " + dto.getTipoAlerta());
     }
     // Asignar la descripción
     incidente.descripcionDelColaborador = dto.getDescripcionDelColaborador();
