@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.GsonFactory;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.CambioEstado;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
@@ -17,6 +18,7 @@ import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +57,8 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
   }
 
   public void save(Context ctx) {
+    // TODO: VERIFICAR PROFUNDAMENTE
+    //  CREO QUE NO PERSISTE LOS CAMBIOS EN LA HELADERA
     IncidenteDTO dto = new IncidenteDTO();
     dto.obtenerFormulario(ctx);
 
@@ -75,12 +79,14 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
       Tecnico tecnicoSeleccionado = incidente.asignarTecnico(heladera,
           this.repositorioIncidente.buscarTodos(Tecnico.class));
       incidente.setTecnicoSeleccionado(tecnicoSeleccionado);
-      heladera.setEstado(EstadoHeladera.valueOf(dto.getTipoIncidente())); // Verificar que tipoAlerta sea válido
+      CambioEstado cambio = new CambioEstado(EstadoHeladera.valueOf(dto.getTipoAlerta()), LocalDate.now());
+      heladera.cambiarEstado(cambio);
 
       // Ejecutar la transacción
       withTransaction(() -> {
-        repositorioIncidente.guardar(incidente);
+        repositorioIncidente.guardar(cambio);
         repositorioHeladera.actualizar(heladera);
+        repositorioIncidente.guardar(incidente);
       });
 
       // Renderizar mensaje de éxito
@@ -107,7 +113,7 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
       new IllegalArgumentException("Heladera no encontrada al procesar fraude.")
     );
 
-    heladera.cambiarEstado(EstadoHeladera.FRAUDE);
+    // heladera.cambiarEstado(EstadoHeladera.FRAUDE);
     withTransaction(() -> this.repositorioHeladera.actualizar(heladera));
 
     // avisar a los suscritos a la heladera por fraude
