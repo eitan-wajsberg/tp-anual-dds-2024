@@ -3,17 +3,13 @@ package ar.edu.utn.frba.dds.controllers;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.personasVulnerables.PersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
-import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
-import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaHumana;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaVulnerable;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTarjetas;
 import ar.edu.utn.frba.dds.dtos.PersonaVulnerableDTO;
-import ar.edu.utn.frba.dds.exceptions.AccesoDenegadoException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
-import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.time.LocalDate;
@@ -22,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TimeZone;
 
 public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioPersonaVulnerable repositorioPersonaVulnerable;

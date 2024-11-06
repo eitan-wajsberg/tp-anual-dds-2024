@@ -18,6 +18,8 @@ public class ViandaDTO implements DTO {
   private LocalDate fechaDonacion;
   private boolean entregada;
   private Long personaHumanaId;
+  private String heladeraNombre;
+  private Long heladeraId;
 
   public ViandaDTO(Vianda vianda) {
     this.id = vianda.getId();
@@ -28,6 +30,8 @@ public class ViandaDTO implements DTO {
     this.entregada = vianda.isEntregada();
     this.fechaDonacion = vianda.getFechaDonacion();
     this.personaHumanaId = vianda.getPersonaHumana() != null ? vianda.getPersonaHumana().getId() : null;
+    this.heladeraNombre = vianda.getHeladera().getNombre();
+    this.heladeraId = vianda.getHeladera().getId();
   }
 
   @Override
@@ -38,6 +42,8 @@ public class ViandaDTO implements DTO {
     this.pesoEnGramos = context.formParam("pesoEnGramos");
     this.fechaCaducidad = LocalDate.parse(context.formParam("fechaCaducidad"));
     this.fechaDonacion = LocalDate.now();
+    this.heladeraNombre = context.formParam("heladeraNombre");
+    this.heladeraId = context.formParam("heladeraId") != null ? Long.valueOf(context.formParam("heladeraId")) : 0L;
   }
 
   @Override

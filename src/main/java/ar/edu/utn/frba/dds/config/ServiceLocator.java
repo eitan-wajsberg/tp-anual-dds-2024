@@ -56,7 +56,9 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {
         instance = new ControladorDonacionVianda(
             instanceOf(RepositorioPersonaHumana.class),
-            instanceOf(RepositorioDonacionVianda.class)
+            instanceOf(RepositorioDonacionVianda.class),
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(RepositorioSolicitudApertura.class)
         );
       } else if (componentName.equals(ControladorDonacionDinero.class.getName())) {
         instance = new ControladorDonacionDinero(
@@ -76,7 +78,8 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorSuscripcion.class.getName())) {
         instance = new ControladorSuscripcion(
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
-                ServiceLocator.instanceOf(RepositorioSuscripcion.class)
+                ServiceLocator.instanceOf(RepositorioSuscripcion.class),
+                ServiceLocator.instanceOf(RepositorioPersonaHumana.class)
         );
       } else if (componentName.equals(ControladorIncidenteHeladera.class.getName())) {
         instance = new ControladorIncidenteHeladera(
@@ -122,8 +125,8 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorHeladera.class.getName())) {
         instance = new ControladorHeladera(
             instanceOf(RepositorioHeladera.class),
-            instanceOf(RepositorioGeoRef.class),
-            instanceOf(RepositorioPersonaJuridica.class)
+            instanceOf(RepositorioPersonaJuridica.class),
+            instanceOf(RepositorioSuscripcion.class)
         );
       } else if (componentName.equals(ControladorModeloHeladera.class.getName())) {
         instance = new ControladorModeloHeladera(instanceOf(Repositorio.class));

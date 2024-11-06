@@ -1,7 +1,6 @@
 {{#partial "contenido"}}
     <!-- Side Bar -->
     <section class="row flex-grow-1 ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
-
         <!-- Sidebar -->
         <nav class="col-md-4 pt-4 sidebar">
             <!-- Barra de Búsqueda-->
@@ -49,6 +48,7 @@
                             <p class="card-result-text">{{this.direccion.nomenclatura}}</p>
                             <p class="card-result-text">{{this.viandas.length}} viandas dentro de la heladera</p>
                             <p class="card-result-text">Capacidad máxima de {{this.capacidadMaximaViandas}} viandas</p>
+                            <p class="card-result-text">Estado actual: {{this.estado}}</p>
                         </div>
                     </a>
                 {{/each}}
@@ -96,6 +96,7 @@
                                 <p class="card-result-text">${heladera.direccion.nomenclatura}</p>
                                 <p class="card-result-text">Tiene ${heladera.cantidadViandas} viandas</p>
                                 <p class="card-result-text">Capacidad de ${heladera.capacidadMaximaViandas} viandas</p>
+                                <p class="card-result-text">Estado actual: ${heladera.estado}}</p>
                             </div>
                         </a>
                     `;

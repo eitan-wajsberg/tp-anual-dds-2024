@@ -4,6 +4,11 @@ import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Modelo;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Desperfecto;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.FaltanNViandas;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.QuedanNViandas;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
 import ar.edu.utn.frba.dds.domain.entities.personasJuridicas.PersonaJuridica;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Municipio;
@@ -13,8 +18,10 @@ import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioGeoRef;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioSuscripcion;
 import ar.edu.utn.frba.dds.dtos.HeladeraDTO;
 import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
+import ar.edu.utn.frba.dds.exceptions.MensajeAmigableException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import com.google.gson.Gson;
@@ -26,19 +33,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.persistence.NoResultException;
 
 public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioHeladera repositorioHeladera;
   private RepositorioPersonaJuridica repositorioPersonaJuridica;
-  private RepositorioGeoRef repositorioGeoRef;
+  private RepositorioSuscripcion repositorioSuscripcion;
   private final String rutaAltaHbs = "colaboraciones/cuidarHeladera.hbs";
   private final String rutaRecomendacionHbs = "colaboraciones/recomendacionDePuntos.hbs";
   private final String rutaParticularHbs = "heladeras/heladeraParticular.hbs";
   private final Gson gson = GsonFactory.createGson();
 
-  public ControladorHeladera(RepositorioHeladera repositoriaHeladera, RepositorioGeoRef repositorioGeoRef, RepositorioPersonaJuridica repositorioPersonaJuridica) {
+  public ControladorHeladera(RepositorioHeladera repositoriaHeladera, RepositorioPersonaJuridica repositorioPersonaJuridica, RepositorioSuscripcion repositorioSuscripcion) {
     this.repositorioHeladera = repositoriaHeladera;
-    this.repositorioGeoRef = repositorioGeoRef;
+    this.repositorioSuscripcion = repositorioSuscripcion;
     this.repositorioPersonaJuridica = repositorioPersonaJuridica;
   }
 
@@ -47,25 +55,41 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     // tiene sentido? si ya estan plasmadas en el mapa
   }
 
+  @Override
   public void show(Context context) {
     try {
-      // Obtener el ID de la heladera y rol del usuario
       Long heladeraId = Long.parseLong(context.pathParam("heladeraId"));
       String rol = context.sessionAttribute("rol");
+      Long usuarioId = context.sessionAttribute("id");
 
       // Buscar la heladera en el repositorio
       Optional<Heladera> heladeraOpt = repositorioHeladera.buscarPorId(heladeraId, Heladera.class);
 
-      // Verificar si la heladera existe
+      // Validar la existencia de la heladera
       if (heladeraOpt.isEmpty()) {
-        context.status(404).result("Heladera no encontrada");
-        return;
+        throw new IllegalArgumentException("Heladera no encontrada.");
       }
+
+      // Intentar obtener las suscripciones sin lanzar error si no existen
+      Desperfecto desperfecto = obtenerSuscripcionSiExiste(heladeraId, usuarioId, Desperfecto.class);
+      FaltanNViandas faltanNViandas = obtenerSuscripcionSiExiste(heladeraId, usuarioId, FaltanNViandas.class);
+      QuedanNViandas quedanNViandas = obtenerSuscripcionSiExiste(heladeraId, usuarioId, QuedanNViandas.class);
 
       // Preparar el modelo para la vista
       Heladera heladera = heladeraOpt.get();
       Map<String, Object> model = new HashMap<>();
       model.put("heladera", heladera);
+      model.put("hayViandas", !heladera.getViandas().isEmpty());
+      model.put("actualizacion", faltanNViandas != null || desperfecto != null || quedanNViandas != null);
+      if (faltanNViandas != null) {
+        model.put("faltanNViandas", faltanNViandas.getCantidadViandasParaLlenarse());
+      }
+      if (quedanNViandas != null) {
+        model.put("quedanNViandas", quedanNViandas.getCantidadViandasDisponibles());
+      }
+      if (desperfecto != null) {
+        model.put("desperfecto", desperfecto.getId());
+      }
       model.put("jsonHeladera", gson.toJson(heladera));
 
       // Configurar la visualización según el rol
@@ -75,18 +99,19 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
         model.put("mostrarPersonaJuridica", true);
       }
 
-      if (!heladera.getViandas().isEmpty()) {
-        model.put("hayViandas", true);
-      }
-
-      // Renderizar la vista con el modelo preparado
       context.render(rutaParticularHbs, model);
-
     } catch (NumberFormatException e) {
-      context.status(400).result("ID de heladera inválido");
+      throw new MensajeAmigableException("ID de heladera inválido.", 400);
     } catch (Exception e) {
-      e.printStackTrace();
-      context.status(500).result("Error interno del servidor");
+      throw new MensajeAmigableException("Operación inválida.", 400);
+    }
+  }
+
+  private <T extends Suscripcion> T obtenerSuscripcionSiExiste(Long heladeraId, Long usuarioId, Class<T> tipo) {
+    try {
+      return (T) this.repositorioSuscripcion.buscarPorTipo(heladeraId, usuarioId, tipo);
+    } catch (NoResultException e) {
+      return null;
     }
   }
 
@@ -171,7 +196,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
   @Override
   public void update(Context context) {
-
+    // TODO: Estaria bueno hacerlo ya que es una de las entidades mas importantes
   }
 
   @Override
@@ -184,31 +209,6 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     } else {
       context.status(400).result("No se puede eliminar, la heladera no cumple con las condiciones para ser eliminada.");
     }
-  }
-
-  public void obtenerMunicipiosPorProvincia(Context context) {
-    String provincia = context.formParam("provincia");
-
-    if (provincia == null || provincia.isEmpty()) {
-      context.status(400).result("La provincia es obligatoria.");
-      return;
-    }
-
-    List<Municipio> municipios = this.repositorioGeoRef.buscarMunicipiosDe(provincia);
-
-    if (municipios == null || municipios.isEmpty()) {
-      context.status(404).result("No se encontraron municipios para la provincia seleccionada.");
-      return;
-    }
-
-    StringBuilder municipiosHtml = new StringBuilder();
-    municipiosHtml.append("<option value='' selected>Municipio</option>");
-    for (Municipio municipio : municipios) {
-      municipiosHtml.append("<option value='").append(municipio.getMunicipio()).append("'>")
-          .append(municipio.getMunicipio()).append("</option>");
-    }
-
-    context.result(municipiosHtml.toString());
   }
 
   public void recomendacion(Context context) {

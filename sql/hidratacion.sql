@@ -160,7 +160,7 @@ VALUES
 INSERT INTO vianda (
 	id, caloriasEnKcal, comida,
 	entregada, fechaCaducidad, fechaDonacion,
-	pesoEnGramos, personaHumana_id, id_heladera
+	pesoEnGramos, personaHumana_id, heladera_id
 )
 VALUES (
 	1, 600, "Pollo con papas al horno",
