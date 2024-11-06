@@ -5,11 +5,14 @@ import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import java.util.List;
 
 public class RepositorioSolicitudApertura extends Repositorio {
-  public List listarRecientes(Long distribucionId) {
+  public List listarRecientes(Long distribucionId, String origen) {
+    if(!origen.equals("distribucion") && !origen.equals("vianda")){
+      return null;
+    }
     return entityManager()
-        .createQuery("SELECT d FROM " + SolicitudApertura.class.getName() + " d WHERE d.distribucion.id = :distribucionViandaId "
+        .createQuery("SELECT d FROM " + SolicitudApertura.class.getName() + " d WHERE d."+origen+".id = :origenId "
             +"order by d.fechaSolicitud desc")
-        .setParameter("distribucionViandaId", distribucionId)
+        .setParameter("origenId", distribucionId)
         .getResultList();
   }
 }

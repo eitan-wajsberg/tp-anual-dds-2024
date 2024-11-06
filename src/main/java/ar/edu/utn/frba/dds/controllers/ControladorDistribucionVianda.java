@@ -207,7 +207,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     }
 
     // actualizo solicitud anterior
-    List<SolicitudApertura> solicitudes = this.repositorioSoliApe.listarRecientes(viejaDist.getId());
+    List<SolicitudApertura> solicitudes = this.repositorioSoliApe.listarRecientes(viejaDist.getId(), "distribucion");
     Optional<SolicitudApertura> optSolOrigen = solicitudes.stream().filter(c-> !c.isAperturaConcretada()
             && c.getAccion().equals(AccionApertura.QUITAR_VIANDA)).findFirst();
     if (optSolOrigen.isEmpty()) {
@@ -262,7 +262,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
     // actualizo la 2da solicitud de apertura
     // actualizo solicitud anterior
-    List<SolicitudApertura> solicitudes = this.repositorioSoliApe.listarRecientes(viejaDist.getId());
+    List<SolicitudApertura> solicitudes = this.repositorioSoliApe.listarRecientes(viejaDist.getId(), "distribucion");
     Optional<SolicitudApertura> optSolDest = solicitudes.stream().filter(c-> !c.isAperturaConcretada()
         && c.getAccion().equals(AccionApertura.INGRESAR_VIANDA)).findFirst();
     if (optSolDest.isEmpty()) {
@@ -387,7 +387,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         .motivo(entity.getMotivo())
         .cantidadViandas(entity.getCantidadViandas());
 
-    List<SolicitudApertura> solicitudes = repoSoli.listarRecientes(entity.getId());
+    List<SolicitudApertura> solicitudes = repoSoli.listarRecientes(entity.getId(), "distribucion");
     Optional<SolicitudApertura> solicitudOrigen = solicitudes.stream().filter(c-> c.getAccion().equals(AccionApertura.QUITAR_VIANDA)).findFirst();
 
     if (solicitudOrigen.isPresent()) {

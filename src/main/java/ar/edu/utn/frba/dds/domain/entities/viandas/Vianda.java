@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.dtos.ViandaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
@@ -50,6 +51,11 @@ public class Vianda implements Contribucion {
   @ManyToOne
   @JoinColumn(name = "personaHumana_id", referencedColumnName = "id", nullable = false)
   private PersonaHumana personaHumana;
+
+  @ManyToOne
+  @JoinColumn(name = "heladera_id", referencedColumnName = "id", nullable = false)
+  private Heladera heladera;
+
 
   public Vianda(LocalDate fechaCaducidad, boolean entregada, String comida, float calorias, float pesoEnGramos, LocalDate fechaDonacion) {
     this.fechaCaducidad = fechaCaducidad;
@@ -139,7 +145,8 @@ public class Vianda implements Contribucion {
   private static void validarCamposObligatorios(ViandaDTO dto) {
     CamposObligatoriosVacios.validarCampos(
         Pair.of("comida", dto.getComida()),
-        Pair.of("fechaCaducidad", dto.getFechaCaducidad())
+        Pair.of("fechaCaducidad", dto.getFechaCaducidad()),
+        Pair.of("heladera", dto.getHeladeraId())
     );
   }
 

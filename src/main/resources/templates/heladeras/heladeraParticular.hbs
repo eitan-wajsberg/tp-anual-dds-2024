@@ -4,7 +4,8 @@
             <div class="row p-4 border border-color-999 rounded-4">
                 <h1 class="fs-3 mt-3 mb-3">{{heladera.nombre}}</h1>
                 <p class="mb-2">{{heladera.direccion.nomenclatura}}.</p>
-                <p>Capacidad total: {{heladera.capacidadMaximaViandas}} viandas.</p>
+                <p class="mb-2">Capacidad total: {{heladera.capacidadMaximaViandas}} viandas.</p>
+                <p>Estado actual: {{heladera.estado}}.</p>
 
                 {{#if hayViandas}}
                     <h4 class="fw-bold fs-5 mt-4 mb-2">Viandas disponibles ({{heladera.viandas.length}})</h4>
@@ -25,26 +26,50 @@
             </div>
             <div class="row p-4 mt-3 border border-color-999 rounded-4">
                 {{#if mostrarPersonaHumana}}
-                    <form method="POST" action="heladeras/suscripcion/{{heladera.id}}/nuevo" class="mt-2 w-100">
+                    <form method="POST" action="/heladeras/suscripcion/{{heladera.id}}" class="mt-2 w-100">
                         <h2 class="fw-bold fs-4 mb-2">Suscripción a la heladera</h2>
-                        <p class="mb-2">Seleccione cómo desea recibir notificaciones sobre la heladera:</p>
-                        <div class="col-12 mt-2">
-                            <div class="input-group">
-                                <div class="input-group-text selection">Tipo</div>
-                                <select name="unidadFrecuencia" class="custom-select">
-                                    <option value="FALTAN_N_VIANDAS">Faltan N viandas</option>
-                                    <option value="QUEDAN_N_VIANDAS"> Quedan N viandas</option>
-                                    <option value="DESPERFECTO">Desperfecto</option>
-                                </select>
+                        <p class="mb-3">Seleccione las opciones por las cuales desea recibir notificaciones sobre la heladera. No es necesario completar todas; elija solo aquellas que prefiera.</p>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div class="input-group w-100">
+                                    <div class="input-group-text selection custom-select">Quedan N Viandas</div>
+                                    <input type="text" class="custom-input" id="quedanNViandas" name="quedanNViandas" placeholder="Cantidad viandas" value="{{quedanNViandas}}">
+                                </div>
                             </div>
                         </div>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <div class="input-group-text selection custom-select">Faltan N Viandas</div>
+                                    <input type="text" class="custom-input" id="faltanNViandas" name="faltanNViandas" placeholder="Cantidad viandas" value="{{faltanNViandas}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <label class="form-check d-flex justify-content-between w-100 choice" for="desperfecto">
+                                    <span class="fw-bold">Desperfecto</span>
+                                    <input class="form-check-input" type="checkbox" name="desperfecto" id="desperfecto" value="true" {{#if desperfecto}}checked{{/if}}>
+                                </label>
+                            </div>
+                        </div>
+                        {{#if actualizacion}}
+                            <div class="text-pill light-light-blue">
+                                Ya estas suscripto a esta heladera
+                            </div>
+                        {{/if}}
                         <div class="col-12 mt-2 mb-3">
-                            <button class="p-2 w-100">Suscribirme</button>
+                            <button class="w-100">{{#if actualizacion}}Editar suscripción{{else}}Suscribirme{{/if}}</button>
                         </div>
                     </form>
                 {{/if}}
+                {{#if error}}
+                    <div class="row mt-2 justify-content-center">
+                        <p class="error text-center">{{error}}</p>
+                    </div>
+                {{/if}}
             </div>
-            <div class="row mt-4 mb-3 text-center">
+            <div class="row mt-4 mb-2 text-center">
                 <hr>
                 <label class="grey-text fw-bold w-100">
                     ¿La heladera presenta algún problema?
