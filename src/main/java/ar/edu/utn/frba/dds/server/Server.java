@@ -37,26 +37,26 @@ public class Server {
         Initializer initializer = new Initializer();
         initializer.init();
       }
-      /*try {
+      try {
         String brokerUrl = "tcp://localhost:1883";
         String topicTemperatura = "temperatura";
         String topicMovimiento = "movimiento";
 
         ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura);
-        ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
+        //ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
 
         Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
-        Thread receptorMovmientoThread = new Thread(receptorMovimiento);
+        //Thread receptorMovimientoThread = new Thread(receptorMovimiento);
 
         receptorTemperaturaThread.start();
-        receptorMovmientoThread.start();
+        //receptorMovmientoThread.start();
 
         System.out.println("Los receptores están corriendo en paralelo");
 
       } catch (Exception e) {
         e.printStackTrace();
       }
-*/
+
     }
 
   }

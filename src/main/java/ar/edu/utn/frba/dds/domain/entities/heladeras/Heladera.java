@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embedded;
@@ -88,11 +89,11 @@ public class Heladera implements Contribucion {
   @Column(name="temperaturaEsperada")
   private float temperaturaEsperada;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioEstado> historialEstados;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioTemperatura> historialTemperaturas;
 
@@ -167,10 +168,10 @@ public class Heladera implements Contribucion {
     return this.fechaRegistro.toLocalDate();
   }
 
-  public void cambiarEstado(EstadoHeladera nuevoEstado) {
-    if (this.estado != nuevoEstado) {
-      this.estado = nuevoEstado;
-      this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now())); //TODO cambioEstado tiene constructor vacio, setear params.
+  public void cambiarEstado(CambioEstado cambioEstado) {
+    if (this.estado != cambioEstado.getEstado()) {
+      this.estado = cambioEstado.getEstado();
+      this.agregarCambioDeEstado(cambioEstado);
     }
   }
 
@@ -184,13 +185,15 @@ public class Heladera implements Contribucion {
 
   public void cambiarTemperatura(float nuevaTemperatura) {
     if (!temperaturaEnRango(nuevaTemperatura)) {
-      this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
+      this.cambiarEstado(new CambioEstado(EstadoHeladera.FALLA_TEMPERATURA, LocalDate.now()));
     }
-
     agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));
   }
 
   private void agregarTemperaturaAlHistorial(CambioTemperatura temperatura) {
+    if(this.historialTemperaturas == null){
+      this.historialTemperaturas = new ArrayList<>();
+    }
     this.historialTemperaturas.add(temperatura);
   }
 
