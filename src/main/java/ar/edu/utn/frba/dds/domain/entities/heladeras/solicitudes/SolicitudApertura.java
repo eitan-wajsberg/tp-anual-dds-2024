@@ -1,7 +1,10 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes;
 
 import ar.edu.utn.frba.dds.domain.converters.LocalDateTimeAttributeConverter;
+import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
+import ar.edu.utn.frba.dds.domain.entities.viandas.DistribucionVianda;
+import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -58,24 +61,30 @@ public class SolicitudApertura {
   @Transient
   private final int horasParaEjecutarAccion = Integer.parseInt(PrettyProperties.getInstance().propertyFromName("horas_para_ejecutar_accion"));
 
+  @ManyToOne
+  @JoinColumn(name = "distribucionVianda_id", referencedColumnName = "id")
+  private DistribucionVianda distribucion;
+
+  @ManyToOne
+  @JoinColumn(name = "vianda_id", referencedColumnName = "id")
+  private Vianda vianda;
+
   public boolean esIngresadaVirtualmente() {
-    return !this.isAperturaConcretada()  && this.getAccion() == AccionApertura.INGRESAR_VIANDA
+    return !this.isAperturaConcretada() && this.getAccion() == AccionApertura.INGRESAR_VIANDA
         && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
   }
 
   public boolean esQuitadaVirtualmente() {
-    return !this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA
+    return !this.isAperturaConcretada() && this.getAccion() == AccionApertura.QUITAR_VIANDA
         && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
   }
 
   public boolean esIngresadaRealmente() {
-    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.INGRESAR_VIANDA
-        && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
+    return this.isAperturaConcretada() && this.getAccion() == AccionApertura.INGRESAR_VIANDA;
   }
 
   public boolean esQuitadaRealmente() {
-    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA
-        && LocalDateTime.now().isBefore(fechaSolicitud.plusHours(horasParaEjecutarAccion));
+    return this.isAperturaConcretada()  && this.getAccion() == AccionApertura.QUITAR_VIANDA;
   }
 
   public boolean esValida(Tarjeta tarjeta) {

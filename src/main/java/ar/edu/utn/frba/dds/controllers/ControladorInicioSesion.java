@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
@@ -8,6 +9,7 @@ import io.javalin.http.Context;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ControladorInicioSesion {
@@ -53,9 +55,14 @@ public class ControladorInicioSesion {
       // En caso de error, renderizar la página con el mensaje de error
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
-      model.put("nombre", nombreUsuario);  // Mantener el usuario en el campo de la vista
+      model.put("nombre", nombreUsuario);
       model.put("clave", clave);
       context.render(rutaInicioSesion, model);
     }
+  }
+
+  public void cerrarSesion(Context context) {
+    context.req().getSession().invalidate();
+    context.redirect("/");
   }
 }

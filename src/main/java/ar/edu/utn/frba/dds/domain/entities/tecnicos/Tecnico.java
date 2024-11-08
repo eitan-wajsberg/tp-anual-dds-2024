@@ -50,7 +50,7 @@ public class Tecnico {
   @Embedded
   private Documento documento;
 
-  @Column(name="cuil", nullable = false)
+  @Column(name="cuil", nullable = false, unique = true)
   private String cuil;
 
   @Embedded

@@ -1,12 +1,7 @@
 package ar.edu.utn.frba.dds.controllers;
 
-import static ar.edu.utn.frba.dds.utils.random.Random.generateRandomString;
-
-import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
-import ar.edu.utn.frba.dds.domain.entities.cargaMasiva.CargaMasivaColaboraciones;
-import ar.edu.utn.frba.dds.domain.entities.contacto.Mail;
+import static ar.edu.utn.frba.dds.utils.manejos.GeneradorHashRandom.generateRandomString;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
-import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;

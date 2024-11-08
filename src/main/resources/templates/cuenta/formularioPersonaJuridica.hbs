@@ -2,33 +2,40 @@
     <div class="m-5">
         <div class="row justify-content-center">
         <form id = "uploadForm" method = "POST" action="{{#if edicion}}/personaJuridica/{{id}}/edicion{{else}}/personaJuridica{{/if}}">
-            <h4 class="fw-bold fs-5">Información básica</h4>
-            <p class="mb-3">Ingresá tus datos personales</p>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="fw-bold fs-5 mb-0">Información básica</h4>
+                        <p class="mb-0">Ingresá tus datos personales</p>
+                    </div>
+                    {{#if edicion}}
+                        <button type="button" id="deleteButton" class="custom-small-button" onclick="openModal('{{dto.id}}', 'personaJuridica', '{{dto.razonSocial}}')">Eliminar mi cuenta</button>
+                    {{/if}}
+                </div>
+            </div>
 
             <div class="row mb-3">
                 <div class="col-12 col-md-6 mb-2 mb-md-0">
-                    <input name="razonSocial" type="text" class="w-100" required pattern="^[A-Z][a-zA-ZáéíóúñÑ.]{1,49}$" placeholder="Razón Social" title="La razón social debe tener entre 2 y 50 caracteres." value="{{dto.razonSocial}}">
+                    <input name="razonSocial" type="text" class="w-100" required pattern="^[A-Z][a-zA-ZáéíóúñÑ.\s]{1,49}$" placeholder="Razón Social" title="La razón social debe tener entre 2 y 50 caracteres, comenzando con una letra mayúscula." value="{{dto.razonSocial}}">
                 </div>
                 <div class="col-12 col-md-6">
                     <select name="rubro" class="custom-select w-100">
                         <option value="" disabled selected>Rubro</option>
-                        <option {{#ifEqual dto.rubro "RUBRO1"}}selected{{/ifEqual}} value="RUBRO1">Rubro1</option>
-                        <option {{#ifEqual dto.rubro "RUBRO2"}}selected{{/ifEqual}} value="RUBRO2">Rubro2</option>
-                        <option {{#ifEqual dto.rubro "RUBRO3"}}selected{{/ifEqual}} value="RUBRO3">Rubro3</option>
-                        <option {{#ifEqual dto.rubro "RUBRO4"}}selected{{/ifEqual}} value="RUBRO4">Rubro4</option>
+                        {{#each rubros}}
+                            <option value="{{this.id}}" {{#ifEqualLong dto.id this.id}}selected{{/ifEqualLong}}>{{this.nombre}}</option>
+                        {{/each}}
                     </select>
                 </div>
-
             </div>
 
             <div class="row mb-3">
                 <div class="col-12 col-md-12 mb-2 mb-md-0">
                     <select name="tipoPersonaJuridica" class="custom-select w-100" >
                         <option value="" disabled selected>Tipo de persona jurídica</option>
-                        <option {{#ifEqual dto.personaJuridicaDTO.tipo "GUBERNAMENTAL"}}selected{{/ifEqual}} value="GUBERNAMENTAL">Gubernamental</option>
-                        <option {{#ifEqual dto.personaJuridicaDTO.tipo "ONG"}}selected{{/ifEqual}} value="ONG">ONG</option>
-                        <option {{#ifEqual dto.personaJuridicaDTO.tipo "EMPRESA"}}selected{{/ifEqual}} value="EMPRESA">Empresa</option>
-                        <option {{#ifEqual dto.personaJuridicaDTO.tipo "INSTITUCION"}}selected{{/ifEqual}} value="INSTITUCION">Institución</option>
+                        <option {{#ifEqual dto.tipo "GUBERNAMENTAL"}}selected{{/ifEqual}} value="GUBERNAMENTAL">Gubernamental</option>
+                        <option {{#ifEqual dto.tipo "ONG"}}selected{{/ifEqual}} value="ONG">ONG</option>
+                        <option {{#ifEqual dto.tipo "EMPRESA"}}selected{{/ifEqual}} value="EMPRESA">Empresa</option>
+                        <option {{#ifEqual dto.tipo "INSTITUCION"}}selected{{/ifEqual}} value="INSTITUCION">Institución</option>
                     </select>
                 </div>
             </div>
@@ -52,7 +59,7 @@
             <p class="mb-3">Si lo deseás, ingresá tu domicilio. En caso de proporcionarlo, asegurate de incluir todos los datos indicados.</p>
             <div class="row mb-3">
                 <div class="col-12 col-md-6 mb-2 mb-md-0">
-                    <input name="calle" type="text" class="w-100" placeholder="Calle" aria-label="Calle" pattern="[A-Z][a-z]+{2, 50}" value="{{dto.direccionDTO.calle}}">
+                    <input name="calle" type="text" class="w-100" placeholder="Calle" aria-label="Calle" pattern="^[A-Z][a-zA-ZáéíóúñÑ. ]{1,49}$" value="{{dto.direccionDTO.calle}}">
                 </div>
                 <div class="col-12 col-md-6 mb-2 mb-md-0">
                     <input name="altura" type="number" class="w-100" placeholder="Altura" aria-label="Altura" value="{{dto.direccionDTO.altura}}">
@@ -74,19 +81,19 @@
                 <div class="col-12 col-md-4 mb-2 mb-md-0">
                     <label class="form-check d-flex justify-content-between w-100 choice" for="donacionDinero">
                         <span class="fw-bold">Donar dinero</span>
-                        <input class="form-check-input" type="checkbox" name="formaColaboracion" id="donacionDinero" value="DONACION_DINERO">
+                        <input class="form-check-input" type="checkbox" name="formaColaboracion" id="donacionDinero" value="DONACION_DINERO" {{#if dto.donacionDinero}}checked{{/if}}>
                     </label>
                 </div>
                 <div class="col-12 col-md-4 mb-2 mb-md-0">
                     <label class="form-check d-flex justify-content-between w-100 choice" for="encargarseHeladera">
                         <span class="fw-bold">Hacerse cargo de heladera</span>
-                        <input class="form-check-input" type="checkbox" name="formaColaboracion" id="encargarseHeladera" value="ENCARGARSE_DE_HELADERA">
+                        <input class="form-check-input" type="checkbox" name="formaColaboracion" id="encargarseHeladera" value="ENCARGARSE_DE_HELADERA" {{#if dto.encargarseHeladera}}checked{{/if}}>
                     </label>
                 </div>
                 <div class="col-12 col-md-4 mb-2 mb-md-0">
                     <label class="form-check d-flex justify-content-between w-100 choice" for="ofrecerOferta">
                         <span class="fw-bold">Ofrecer productos y/o servicios</span>
-                        <input class="form-check-input" type="checkbox" name="formaColaboracion" id="ofrecerOferta" value="OFRECER_OFERTA">
+                        <input class="form-check-input" type="checkbox" name="formaColaboracion" id="ofrecerOferta" value="OFRECER_OFERTA" {{#if dto.ofrecerOferta}}checked{{/if}}>
                     </label>
                 </div>
             </div>
@@ -102,11 +109,6 @@
                 </div>
             {{/if}}
             </form>
-            {{#if edicion}}
-                <div class="col-12 mt-4">
-                    <button type="button" class="btn btn-danger w-100 rounded-button" id="deleteButton" onclick="openModal('{{dto.id}}', 'personaJuridica', '{{dto.nombre}} {{dto.apellido}}')">Eliminar cuenta</button>
-                </div>
-            {{/if}}
         </div>
     </div>
     <script src="/js/manejadorFormulario.js"></script>
@@ -115,4 +117,4 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {{/partial}}
 
-{{> templates/base titulo="Mis datos personales" mostrarPersonaJuridica=true mostrarSeccion=true seccion="Mis datos personales"}}
+{{> templates/base titulo="Mis datos personales" mostrarSeccion=true seccion="Mis datos personales"}}

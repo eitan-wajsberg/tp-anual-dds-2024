@@ -5,11 +5,17 @@ import lombok.Setter;
 
 import java.awt.*;
 
-@Getter @Setter
+@Getter
+@Setter
 public class FallaTecnica implements TipoIncidente {
-     public String obtenerDescripcionIncidente(Incidente incidente) {
-       return String.format("Hubo una falla técnica reportada por %s. Descripción: %s.",
-           incidente.getColaborador().getNombre(),
-           incidente.getDescripcionDelColaborador());
-     }
+  @Override
+  public String obtenerDescripcionIncidente(Incidente incidente) {
+    String nombreColaborador = incidente.getColaborador().getNombre();
+    String descripcionFalla = incidente.getDescripcionDelColaborador();
+
+    return String.format("Se ha reportado una falla técnica por parte de %s. Descripción del incidente: %s.",
+        nombreColaborador,
+        descripcionFalla);
+  }
 }
+

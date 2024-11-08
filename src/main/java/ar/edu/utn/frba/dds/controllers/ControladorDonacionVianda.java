@@ -1,36 +1,55 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import ar.edu.utn.frba.dds.domain.GsonFactory;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
-import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
+import ar.edu.utn.frba.dds.domain.repositories.imp.*;
 import ar.edu.utn.frba.dds.dtos.ViandaDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
+import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimplePersistenceUnit {
-
-  private Repositorio repositorioGenerico;
+  private RepositorioPersonaHumana repositorioPersonaHumana;
+  private RepositorioDonacionVianda repositorioDonacionVianda;
+  private RepositorioHeladera repositorioHeladera;
+  private RepositorioSolicitudApertura repositorioSolicitud;
   private final String rutaDonacionHbs = "colaboraciones/donacionVianda.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoDonacionesViandas.hbs";
   private final String rutaListadoDonaciones = "/donacionVianda";
   private final String ERROR = "error";
+  private final Gson gson = GsonFactory.createGson();
 
-
-  public ControladorDonacionVianda(Repositorio repositorioGenerico) {
-    this.repositorioGenerico = repositorioGenerico;
+  public ControladorDonacionVianda(RepositorioPersonaHumana repositorioPersonaHumana
+                                  , RepositorioDonacionVianda repositorioDonacionVianda
+                                  , RepositorioHeladera repositorioHeladera
+                                  , RepositorioSolicitudApertura repositorioSolicitud) {
+    this.repositorioPersonaHumana = repositorioPersonaHumana;
+    this.repositorioDonacionVianda = repositorioDonacionVianda;
+    this.repositorioHeladera = repositorioHeladera;
+    this.repositorioSolicitud = repositorioSolicitud;
   }
 
   @Override
   public void index(Context context) {
-    List<Vianda> donaciones = this.repositorioGenerico.buscarTodos(Vianda.class);
+    Long id = context.sessionAttribute("id");
+    List<Vianda> donaciones = this.repositorioDonacionVianda.buscarViandasDe(id);
+    for(int i=0; i < donaciones.size(); i++){System.out.println(donaciones.get(i));}
+    List<ViandaDTO> donacionesDTO = donaciones.stream().map(donacion -> new ViandaDTO(donacion)).collect(Collectors.toList());
+
     Map<String, Object> model = new HashMap<>();
-    model.put("donacionesVianda", donaciones);
+    model.put("donacionesVianda", donacionesDTO);
     context.render(rutaListadoHbs, model);
   }
 
@@ -43,6 +62,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   public void create(Context context) {
     Map<String, Object> model = new HashMap<>();
     model.put("title", "Donar vianda");
+    model.put("jsonHeladeras", gson.toJson(this.repositorioDonacionVianda.buscarTodos(Heladera.class)));
     context.render(rutaDonacionHbs, model);
   }
 
@@ -50,33 +70,55 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   public void save(Context context) {
     ViandaDTO dto = new ViandaDTO();
     dto.obtenerFormulario(context);
+    Long id = context.sessionAttribute("id");
 
     try {
-      //TODO: Obtener id de sesion
-      Optional<PersonaHumana> personaHumana = repositorioGenerico
-          .buscarPorId(1L, PersonaHumana.class);
-
-      /*if (personaHumana.isEmpty() || personaJuridica.isEmpty()) {
+      // agrego colaborador
+      Optional<PersonaHumana> optPersona = repositorioPersonaHumana.buscarPorUsuario(id);
+      if (optPersona.isEmpty()) {
           throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
-      } */
-
+      }
+      PersonaHumana persona = optPersona.get();
       Vianda nuevaDonacion = Vianda.fromDTO(dto);
       if (nuevaDonacion == null) {
         throw new ValidacionFormularioException("Se ha ingresado información incorrecta sobre la donación.");
       }
+      nuevaDonacion.setPersonaHumana(persona);
 
-      personaHumana.get().sumarPuntaje(nuevaDonacion.calcularPuntaje());
+      // agrego heladera
+      Optional<Heladera> optHeladera = repositorioHeladera.buscarPorId(dto.getHeladeraId());
+      if (optHeladera.isEmpty()) {
+        throw new ValidacionFormularioException("Debe especificar una heladera.");
+      }
+      Heladera heladera = optHeladera.get();
+      nuevaDonacion.setHeladera(heladera);
 
+      // agrego solicitud de apertura para ingresar viandas
+      SolicitudApertura soliApertura = SolicitudApertura.builder()
+          .accion(AccionApertura.INGRESAR_VIANDA)
+          .fechaSolicitud(LocalDateTime.now())
+          .tarjeta(persona.getTarjetaEnUso())
+          .cantidadViandas(1)
+          .aperturaConcretada(false)
+          .vianda(nuevaDonacion)
+          .build();
+
+      heladera.agregarSolicitudApertura(soliApertura);
+
+      // guardar cambios
+      persona.sumarPuntaje(nuevaDonacion.calcularPuntaje());
       withTransaction(() -> {
-        repositorioGenerico.guardar(nuevaDonacion);
-        repositorioGenerico.actualizar(personaHumana);
+        this.repositorioSolicitud.guardar(soliApertura);
+        repositorioDonacionVianda.guardar(nuevaDonacion);
+        this.repositorioHeladera.actualizar(heladera);
+        repositorioPersonaHumana.actualizar(persona);
       });
 
       context.redirect(rutaListadoDonaciones);
-
-    } catch (ValidacionFormularioException e) {
+    } catch (RuntimeException e) {
       Map<String, Object> model = new HashMap<>();
-      model.put(ERROR, e.getMessage());
+      model.put("error", e.getMessage());
+      model.put("jsonHeladeras", gson.toJson(this.repositorioDonacionVianda.buscarTodos(Heladera.class)));
       model.put("dto", dto);
       context.render(rutaDonacionHbs, model);
     }
@@ -86,7 +128,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   public void edit(Context context) {
     Map<String, Object> model = new HashMap<>();
     try {
-      Optional<Vianda> vianda = repositorioGenerico
+      Optional<Vianda> vianda = repositorioDonacionVianda
           .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
 
       if (vianda.isEmpty()) {
@@ -103,18 +145,16 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       model.put("error", e.getMessage());
       context.render(rutaListadoHbs, model);
     }
-
   }
 
   @Override
   public void update(Context context) {
-
     Map<String, Object> model = new HashMap<>();
     ViandaDTO dtoNuevo = new ViandaDTO();
     dtoNuevo.obtenerFormulario(context);
 
     try {
-      Optional<Vianda> viandaExistente = repositorioGenerico
+      Optional<Vianda> viandaExistente = repositorioDonacionVianda
           .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
 
       if (viandaExistente.isEmpty()) {
@@ -125,11 +165,28 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       if (dtoExistente.equals(dtoNuevo)) {
         throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
       }
+      Vianda vianda = viandaExistente.get();
+      vianda.actualizarFromDto(dtoNuevo);
 
-      viandaExistente.get().actualizarFromDto(dtoNuevo);
-      withTransaction(() -> repositorioGenerico.actualizar(viandaExistente.get()));
+      // marcar vianda como entregada
+      vianda.setEntregada(true);
+
+      // cerrar solicitud de apertura
+      List<SolicitudApertura> solicitudes = this.repositorioSolicitud.listarRecientes(vianda.getId(), "vianda");
+      Optional<SolicitudApertura> optSolicitud = solicitudes.stream().filter(c-> !c.isAperturaConcretada()).findFirst();
+      if (optSolicitud.isEmpty()) {
+        throw new RuntimeException("No se encontró ninguna solicitud de apertura previa. Contactese con el administrador del sistema.");
+      }
+      SolicitudApertura solicitud = optSolicitud.get();
+      solicitud.setAperturaConcretada(true);
+
+      // guardo cambios
+      withTransaction(() -> {
+        repositorioDonacionVianda.actualizar(vianda);
+        this.repositorioSolicitud.actualizar(solicitud);
+      });
+
       context.redirect(rutaListadoDonaciones);
-
     } catch (Exception e) {
       model.put("error", e.getMessage());
       model.put("dto", dtoNuevo);
@@ -142,14 +199,13 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   @Override
   public void delete(Context context) {
     Long id = Long.valueOf(context.pathParam("id"));
-    Optional<Vianda> vianda = repositorioGenerico.buscarPorId(id, Vianda.class);
+    Optional<Vianda> vianda = repositorioDonacionVianda.buscarPorId(id, Vianda.class);
 
     if (vianda.isPresent()) {
-      withTransaction(() -> this.repositorioGenerico.eliminarFisico(Vianda.class, id));
+      withTransaction(() -> this.repositorioDonacionVianda.eliminarFisico(Vianda.class, id));
       context.redirect(rutaListadoDonaciones);
     } else {
       context.status(400).result("No se puede cancelar la donación de vianda, pues no fue encontrada.");
     }
   }
-
 }

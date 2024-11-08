@@ -1,7 +1,6 @@
 {{#partial "contenido"}}
     <!-- Side Bar -->
     <section class="row flex-grow-1 ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
-
         <!-- Sidebar -->
         <nav class="col-md-4 pt-4 sidebar">
             <!-- Barra de Búsqueda-->
@@ -12,15 +11,44 @@
                 </span>
             </div>
 
+            {{#if mostrarPersonaJuridica}}
+                <div class="dropdown mb-4">
+                    <button class="filter-button dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Seleccionar Filtro
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="/heladeras?q=">
+                                <span class="iconify me-2" data-icon="tabler:world" data-width="24"></span>
+                                <span class="text-truncate">Todas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="/heladeras?q=misHeladeras">
+                                <span class="iconify me-2" data-icon="mdi:refrigerator-outline" data-width="24"></span>
+                                <span class="text-truncate">Mis heladeras</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="/heladeras?q=heladerasConAlerta">
+                                <span class="iconify me-2" data-icon="mingcute:alert-fill" data-width="24"></span>
+                                <span class="text-truncate">Mis heladeras con alerta</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {{/if}}
+
             <!-- Resultados de Búsqueda -->
             <div id="heladeras-list" class="scrollable-results">
                 {{#each heladeras}}
-                    <a href="/mapaHeladeras/PersonaJuridica/{{this.id}}/HeladeraParticular" class="card rounded-3 transition-card mb-2 clic-card" data-id="{{this.id}}">
+                    <a href="heladeras/{{this.id}}" class="card rounded-3 transition-card mb-2 clic-card" data-id="{{this.id}}">
                         <div class="card-result-body">
                             <h5 class="card-result-title">{{this.nombre}}</h5>
                             <p class="card-result-text">{{this.direccion.nomenclatura}}</p>
-                            <p class="card-result-text">Tiene {{this.cantidadViandas}} viandas</p>
-                            <p class="card-result-text">Capacidad de {{this.capacidadMaximaViandas}} viandas</p>
+                            <p class="card-result-text">{{this.viandas.length}} viandas dentro de la heladera</p>
+                            <p class="card-result-text">Capacidad máxima de {{this.capacidadMaximaViandas}} viandas</p>
+                            <p class="card-result-text">Estado actual: {{this.estado}}</p>
                         </div>
                     </a>
                 {{/each}}
@@ -42,7 +70,7 @@
 
             // Inicializar los marcadores del mapa
             addMarkers(heladeras, function() {
-                window.location.href = `/mapaHeladeras/${this.heladera.id}/HeladeraParticular`;
+                window.location.href = `heladeras/${this.heladera.id}`;
             });
 
             // Capturar el input de búsqueda
@@ -62,12 +90,13 @@
 
                 filteredHeladeras.forEach(function(heladera) {
                     var heladeraCard = `
-                        <a href="/mapaHeladeras/PersonaJuridica/${heladera.id}/HeladeraParticular" class="card rounded-3 transition-card mb-2 clic-card" data-id="${heladera.id}">
+                        <a href="/heladeras/${heladera.id}" class="card rounded-3 transition-card mb-2 clic-card" data-id="${heladera.id}">
                             <div class="card-result-body">
                                 <h5 class="card-result-title">${heladera.nombre}</h5>
                                 <p class="card-result-text">${heladera.direccion.nomenclatura}</p>
                                 <p class="card-result-text">Tiene ${heladera.cantidadViandas} viandas</p>
                                 <p class="card-result-text">Capacidad de ${heladera.capacidadMaximaViandas} viandas</p>
+                                <p class="card-result-text">Estado actual: ${heladera.estado}}</p>
                             </div>
                         </a>
                     `;
@@ -77,11 +106,11 @@
                 // Eliminar los marcadores anteriores del mapa y agregar los nuevos
                 clearMarkers();  // Llamar a la función para limpiar los marcadores existentes
                 addMarkers(filteredHeladeras, function() {
-                    window.location.href = `/mapaHeladeras/PersonaJuridica/${this.heladera.id}/HeladeraParticular`;
+                    window.location.href = `/heladeras/${this.heladera.id}`;
                 });
             });
         });
     </script>
 
 {{/partial}}
-{{> templates/base titulo="Mapa De Heladeras" mostrarMapa= true Buscadormapa=true mostrarSeccion=true seccion="Mapa De Heladeras" mostrarPersonaJuridica =true }}
+{{> templates/base titulo="Mapa" mostrarMapa= true buscadorMapa=true mostrarSeccion=true seccion="Mapa" mostrarIrAtras=true paginaAtras="/" }}

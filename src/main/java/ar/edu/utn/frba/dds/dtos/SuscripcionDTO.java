@@ -1,56 +1,67 @@
 package ar.edu.utn.frba.dds.dtos;
+
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Suscripcion;
 import io.javalin.http.Context;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-;
-
 import java.util.Objects;
+
 @Getter @Setter
 @Data
 @NoArgsConstructor
 public class SuscripcionDTO implements DTO {
-    private String tipoSuscripcion;
-    private Long id; // El ID de la suscripción
-    private Integer cantidadViandasFaltantes;
-    private Integer cantidadViandasQueQuedan;
-    private Long idHeladera; // ID de la heladera asociada
-    private Long idPersonaHumana; // ID del suscriptor (persona humana)
+  private Long id;
+  private Boolean desperfecto;
+  private Integer cantidadViandasFaltantes;
+  private Integer cantidadViandasQueQuedan;
 
-    // Constructor que toma una entidad Suscripcion
-    public SuscripcionDTO(Suscripcion suscripcion,String tipoSuscripcion) {
-        this.tipoSuscripcion = tipoSuscripcion;
-        this.id = suscripcion.getId();
-        this.cantidadViandasFaltantes = suscripcion.getHeladera().getCapacidadMaximaViandas() - suscripcion.getHeladera().cantidadViandasVirtuales();
-        this.cantidadViandasQueQuedan = suscripcion.getHeladera().cantidadViandas();
-        this.idHeladera = suscripcion.getHeladera().getId();
-        this.idPersonaHumana = suscripcion.getSuscriptor().getId();
-    }
+  public SuscripcionDTO(Suscripcion suscripcion) {
+    this.id = suscripcion.getId();
+    // this.desperfecto = suscripcion.get
+    this.cantidadViandasFaltantes = suscripcion.getHeladera().getCapacidadMaximaViandas() - suscripcion.getHeladera().cantidadViandasVirtuales();
+    this.cantidadViandasQueQuedan = suscripcion.getHeladera().cantidadViandas();
+  }
 
-    // Método para obtener datos del formulario desde el contexto de Javalin
-    @Override
-    public void obtenerFormulario(Context context) {
-        this.tipoSuscripcion = context.formParam("tipoSuscripcion");
-        this.idHeladera = Long.parseLong(Objects.requireNonNull(context.formParam("heladeraId")));
-        this.idPersonaHumana = Long.parseLong(Objects.requireNonNull(context.formParam("personaId")));
-    }
+  @Override
+  public void obtenerFormulario(Context context) {
+    // Comprobar el parámetro "desperfecto" y asignar a la variable booleana
+    String desperfectoParam = context.formParam("desperfecto");
+    this.desperfecto = "true".equals(desperfectoParam);
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        SuscripcionDTO that = (SuscripcionDTO) obj;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(cantidadViandasFaltantes, that.cantidadViandasFaltantes) &&
-                Objects.equals(cantidadViandasQueQuedan, that.cantidadViandasQueQuedan) &&
-                Objects.equals(idHeladera, that.idHeladera) &&
-                Objects.equals(idPersonaHumana, that.idPersonaHumana);
-    }
+    // Manejo de cantidadViandasQueQuedan
+    String quedanNViandasParam = context.formParam("quedanNViandas");
+    this.cantidadViandasQueQuedan = parseCantidad(quedanNViandasParam);
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, cantidadViandasFaltantes, cantidadViandasQueQuedan, idHeladera, idPersonaHumana);
+    // Manejo de cantidadViandasFaltantes
+    String faltanNViandasParam = context.formParam("faltanNViandas");
+    this.cantidadViandasFaltantes = parseCantidad(faltanNViandasParam);
+  }
+
+  private Integer parseCantidad(String param) {
+    if (param == null || param.isEmpty()) {
+      return null;
     }
+    try {
+      return Integer.parseInt(param);
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    SuscripcionDTO that = (SuscripcionDTO) obj;
+    return Objects.equals(id, that.id)
+        && Objects.equals(cantidadViandasFaltantes, that.cantidadViandasFaltantes)
+        && Objects.equals(cantidadViandasQueQuedan, that.cantidadViandasQueQuedan);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, cantidadViandasFaltantes, cantidadViandasQueQuedan);
+  }
 }

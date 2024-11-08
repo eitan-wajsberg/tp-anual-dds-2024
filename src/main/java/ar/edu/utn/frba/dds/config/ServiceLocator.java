@@ -50,17 +50,27 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorReportes.class.getName())) {
         instance = new ControladorReportes();
       } else if (componentName.equals(ControladorPersonaHumana.class.getName())) {
-        instance = new ControladorPersonaHumana(instanceOf(RepositorioPersonaHumana.class));
+        instance = new ControladorPersonaHumana(instanceOf(RepositorioPersonaHumana.class), instanceOf(RepositorioTarjetas.class));
       } else if (componentName.equals(ControladorPersonaJuridica.class.getName())) {
         instance = new ControladorPersonaJuridica(instanceOf(RepositorioPersonaJuridica.class));
       } else if (componentName.equals(ControladorDonacionVianda.class.getName())) {
-        instance = new ControladorDonacionVianda(instanceOf(Repositorio.class));
+        instance = new ControladorDonacionVianda(
+            instanceOf(RepositorioPersonaHumana.class),
+            instanceOf(RepositorioDonacionVianda.class),
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(RepositorioSolicitudApertura.class)
+        );
       } else if (componentName.equals(ControladorDonacionDinero.class.getName())) {
-        instance = new ControladorDonacionDinero(instanceOf(Repositorio.class));
+        instance = new ControladorDonacionDinero(
+            instanceOf(Repositorio.class),
+            instanceOf(RepositorioPersonaJuridica.class),
+            instanceOf(RepositorioPersonaHumana.class),
+            instanceOf(RepositorioDonacionDinero.class)
+        );
       } else if (componentName.equals(Repositorio.class.getName())) {
         instance = new Repositorio();
-      } else if (componentName.equals(ControladorMapaHeladeras.class.getName())) {
-        instance = new ControladorMapaHeladeras(
+      } else if (componentName.equals(ControladorMapa.class.getName())) {
+        instance = new ControladorMapa(
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
                 ServiceLocator.instanceOf(RepositorioPersonaJuridica.class),
                 ServiceLocator.instanceOf(RepositorioSuscripcion.class)
@@ -68,10 +78,11 @@ public class ServiceLocator {
       } else if (componentName.equals(ControladorSuscripcion.class.getName())) {
         instance = new ControladorSuscripcion(
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
-                ServiceLocator.instanceOf(RepositorioSuscripcion.class)
+                ServiceLocator.instanceOf(RepositorioSuscripcion.class),
+                ServiceLocator.instanceOf(RepositorioPersonaHumana.class)
         );
-      } else if (componentName.equals(ControladorIncidenteHeladeras.class.getName())) {
-        instance = new ControladorIncidenteHeladeras(
+      } else if (componentName.equals(ControladorIncidenteHeladera.class.getName())) {
+        instance = new ControladorIncidenteHeladera(
                 ServiceLocator.instanceOf(RepositorioHeladera.class),
                 ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
                 ServiceLocator.instanceOf(Repositorio.class)
@@ -84,13 +95,7 @@ public class ServiceLocator {
             ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
             ServiceLocator.instanceOf(RepositorioOfertaCanjeada.class)
         );
-      } else if (componentName.equals(ControladorIncidenteHeladeras.class.getName())) {
-        instance = new ControladorIncidenteHeladeras(
-            ServiceLocator.instanceOf(RepositorioHeladera.class),
-            ServiceLocator.instanceOf(RepositorioPersonaHumana.class),
-            ServiceLocator.instanceOf(Repositorio.class)
-        );
-      }else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
+      } else if (componentName.equals(RepositorioPersonaHumana.class.getName())) {
         instance = new RepositorioPersonaHumana();
       } else if (componentName.equals(RepositorioPersonaJuridica.class.getName())) {
         instance = new RepositorioPersonaJuridica();
@@ -112,11 +117,19 @@ public class ServiceLocator {
         instance = new RepositorioPersonaVulnerable();
       } else if (componentName.equals(ControladorDistribucionVianda.class.getName())) {
         instance = new ControladorDistribucionVianda(
-            instanceOf(RepositorioDistribucionVianda.class)
-            ,instanceOf(RepositorioPersonaHumana.class)
-            ,instanceOf(RepositorioHeladera.class)
-            ,instanceOf(Repositorio.class)
+            instanceOf(RepositorioDistribucionVianda.class),
+            instanceOf(RepositorioPersonaHumana.class),
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(RepositorioSolicitudApertura.class)
         );
+      } else if (componentName.equals(ControladorHeladera.class.getName())) {
+        instance = new ControladorHeladera(
+            instanceOf(RepositorioHeladera.class),
+            instanceOf(RepositorioPersonaJuridica.class),
+            instanceOf(RepositorioSuscripcion.class)
+        );
+      } else if (componentName.equals(ControladorModeloHeladera.class.getName())) {
+        instance = new ControladorModeloHeladera(instanceOf(Repositorio.class));
       } else if (componentName.equals(RepositorioDistribucionVianda.class.getName())) {
         instance = new RepositorioDistribucionVianda();
       } else if (componentName.equals(ControladorInicioSesion.class.getName())) {
@@ -131,6 +144,14 @@ public class ServiceLocator {
         instance = new RepositorioSuscripcion();
       } else if (componentName.equals(RepositorioTarjetas.class.getName())) {
         instance = new RepositorioTarjetas();
+      } else if (componentName.equals(RepositorioDonacionVianda.class.getName())) {
+        instance = new RepositorioDonacionVianda();
+      } else if (componentName.equals(RepositorioGeoRef.class.getName())) {
+        instance = new RepositorioGeoRef();
+      } else if (componentName.equals(RepositorioDonacionDinero.class.getName())) {
+        instance = new RepositorioDonacionDinero();
+      } else if (componentName.equals(RepositorioSolicitudApertura.class.getName())) {
+        instance = new RepositorioSolicitudApertura();
       }
 
       instances.put(componentName, instance);

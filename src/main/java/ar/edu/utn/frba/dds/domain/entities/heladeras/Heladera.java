@@ -5,13 +5,16 @@ import ar.edu.utn.frba.dds.domain.entities.Contribucion;
 import ar.edu.utn.frba.dds.domain.entities.ReconocimientoTrabajoRealizado;
 import ar.edu.utn.frba.dds.domain.entities.TipoContribucion;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.AccionApertura;
-import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.PublicadorSolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.solicitudes.SolicitudApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.GestorSuscripciones;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.TipoSuscripcion;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
 import ar.edu.utn.frba.dds.domain.entities.viandas.Vianda;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
+import ar.edu.utn.frba.dds.dtos.HeladeraDTO;
+import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
+import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
+import com.google.gson.annotations.Expose;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -20,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embedded;
@@ -33,56 +37,62 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import kotlin.BuilderInference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Getter
+@Builder
 @Entity @Table(name="heladera")
+@AllArgsConstructor
 public class Heladera implements Contribucion {
-  @Getter @Setter
+  @Getter @Setter @Expose
   @Id @GeneratedValue
   private Long id;
 
-  @Setter
+  @Setter @Expose
   @Column(name="nombre", nullable = false)
   private String nombre;
 
-  @Setter
+  @Setter @Expose
   @Embedded
   private Direccion direccion;
 
-  @Setter
+  @Setter @Expose
   @Convert(converter = LocalDateTimeAttributeConverter.class)
   @Column(name = "fechaRegistro", nullable = false)
   private LocalDateTime fechaRegistro;
 
-  @Setter
+  @Setter @Expose
   @Column(name = "capacidadMaximaVianda", nullable = false)
   private int capacidadMaximaViandas;
 
-  @Setter
+  @Setter @Expose
   @ManyToOne
   @JoinColumn(name = "modelo_id", referencedColumnName = "id", nullable = false)
   private Modelo modelo;
 
-  @OneToMany
-  @JoinColumn(name="id_heladera", referencedColumnName = "id")
+  @OneToMany(mappedBy = "heladera") @Expose
   private Set<Vianda> viandas;
 
-  @Setter
+  @Setter @Expose
   @Enumerated(EnumType.STRING)
   @Column(name="estadoHeladera", nullable = false)
   private EstadoHeladera estado;
 
-  @Setter
+  @Setter @Expose
   @Column(name="temperaturaEsperada")
   private float temperaturaEsperada;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioEstado> historialEstados;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioTemperatura> historialTemperaturas;
 
@@ -157,11 +167,10 @@ public class Heladera implements Contribucion {
     return this.fechaRegistro.toLocalDate();
   }
 
-  public void cambiarEstado(EstadoHeladera nuevoEstado) {
-    if (this.estado != nuevoEstado) {
-      this.estado = nuevoEstado;
-      this.agregarCambioDeEstado(new CambioEstado(nuevoEstado, LocalDate.now())); //TODO cambioEstado tiene constructor vacio, setear params.
-
+  public void cambiarEstado(CambioEstado cambioEstado) {
+    if (this.estado != cambioEstado.getEstado()) {
+      this.estado = cambioEstado.getEstado();
+      this.agregarCambioDeEstado(cambioEstado);
     }
   }
 
@@ -175,13 +184,15 @@ public class Heladera implements Contribucion {
 
   public void cambiarTemperatura(float nuevaTemperatura) {
     if (!temperaturaEnRango(nuevaTemperatura)) {
-      this.cambiarEstado(EstadoHeladera.FALLA_TEMPERATURA);
+      this.cambiarEstado(new CambioEstado(EstadoHeladera.FALLA_TEMPERATURA, LocalDate.now()));
     }
-
     agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));
   }
 
   private void agregarTemperaturaAlHistorial(CambioTemperatura temperatura) {
+    if(this.historialTemperaturas == null){
+      this.historialTemperaturas = new ArrayList<>();
+    }
     this.historialTemperaturas.add(temperatura);
   }
 
@@ -202,6 +213,7 @@ public class Heladera implements Contribucion {
         && solicitud.getAccion() == AccionApertura.INGRESAR_VIANDA) {
       throw new HeladeraVirtualmenteLlenaException();
     }
+
     if (this.cantidadViandasQuitadasVirtualmente() + solicitud.getCantidadViandas() >= this.cantidadViandas()
         && solicitud.getAccion() == AccionApertura.QUITAR_VIANDA) {
       throw new HeladeraVirtualmenteVaciaException();
@@ -288,6 +300,38 @@ public class Heladera implements Contribucion {
   private void avisoGestorParaNotificarCantidades() {
     gestorSuscripciones.notificar(TipoSuscripcion.QUEDAN_N_VIANDAS, this);
     gestorSuscripciones.notificar(TipoSuscripcion.FALTAN_N_VIANDAS, this);
+  }
+
+  public static Heladera fromDTO(HeladeraDTO dto) {
+    validarCamposObligatorios(dto);
+    validarRangoTemperaturaEsperada(dto);
+
+    Direccion direccion = Direccion.fromCoordenada(dto.getLatitud(), dto.getLongitud());
+    return Heladera.builder()
+        .id(dto.getId())
+        .nombre(dto.getNombre())
+        .capacidadMaximaViandas(dto.getCapacidadMaximaViandas())
+        .temperaturaEsperada(dto.getTemperaturaEsperada())
+        .direccion(direccion)
+        .build();
+  }
+
+  private static void validarCamposObligatorios(HeladeraDTO dto) {
+    CamposObligatoriosVacios.validarCampos(
+        Pair.of("nombre", dto.getNombre()),
+        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas())),
+        Pair.of("temperatura esperada", dto.getTemperaturaEsperada())
+    );
+
+    if (dto.getCapacidadMaximaViandas() <= 0) {
+      throw new ValidacionFormularioException("La capacidad máxima de viandas debe ser mayor a cero.");
+    }
+  }
+
+  private static void validarRangoTemperaturaEsperada(HeladeraDTO dto) {
+    if (dto.getTemperaturaEsperada() < dto.getTemperaturaMinima() || dto.getTemperaturaEsperada() > dto.getTemperaturaMaxima()) {
+      throw new ValidacionFormularioException("La temperatura esperada debe estar dentro del rango mínimo y máximo permitido para el modelo.");
+    }
   }
 }
 

@@ -20,7 +20,13 @@ public class PersonaHumanaDTO implements DTO {
   private ContactoDTO contactoDTO;
   private DocumentoDTO documentoDTO;
   private DireccionDTO direccionDTO;
-  private Set<FormasContribucionHumanas> formasContribucionHumanasSet = new HashSet<>();
+
+  // Campos booleanos para las formas de colaboración
+  private Set<FormasContribucionHumanas> contribucionesElegidas = new HashSet<>();
+  private boolean donacionDinero;
+  private boolean redistribucionViandas;
+  private boolean donacionViandas;
+  private boolean entregaTarjetas;
 
 
   public PersonaHumanaDTO(PersonaHumana personaHumana) {
@@ -39,6 +45,26 @@ public class PersonaHumanaDTO implements DTO {
     if (personaHumana.getContacto() != null) {
       this.contactoDTO = new ContactoDTO(personaHumana.getContacto());
     }
+
+    for (FormasContribucionHumanas contribucion : personaHumana.getContribucionesElegidas()) {
+      contribucionesElegidas.add(contribucion);
+      switch (contribucion) {
+        case DONACION_DINERO:
+          this.donacionDinero = true;
+          break;
+        case REDISTRIBUCION_VIANDAS:
+          this.redistribucionViandas = true;
+          break;
+        case DONACION_VIANDAS:
+          this.donacionViandas = true;
+          break;
+        case ENTREGA_TARJETAS:
+          this.entregaTarjetas = true;
+          break;
+        default:
+          break; // No se necesita manejar otros casos
+      }
+    }
   }
 
   @Override
@@ -52,25 +78,50 @@ public class PersonaHumanaDTO implements DTO {
     this.contactoDTO.obtenerFormulario(context);
     this.documentoDTO = new DocumentoDTO();
     this.documentoDTO.obtenerFormulario(context);
+
+    // Obtener contribuciones seleccionadas y asignar valores booleanos
     String[] contribucionesSeleccionadas = context.formParams("formaColaboracion").toArray(new String[0]);
     for (String contribucion : contribucionesSeleccionadas) {
-      formasContribucionHumanasSet.add(FormasContribucionHumanas.valueOf(contribucion));
+      contribucionesElegidas.add(FormasContribucionHumanas.valueOf(contribucion));
+      switch (contribucion) {
+        case "DONACION_DINERO":
+          this.donacionDinero = true;
+          break;
+        case "REDISTRIBUCION_VIANDAS":
+          this.redistribucionViandas = true;
+          break;
+        case "DONACION_VIANDAS":
+          this.donacionViandas = true;
+          break;
+        case "ENTREGA_TARJETAS":
+          this.entregaTarjetas = true;
+          break;
+        default:
+          break; // No se necesita manejar otros casos
+      }
     }
   }
 
   @Override
   public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (!(obj instanceof PersonaHumanaDTO)) return false;
     PersonaHumanaDTO that = (PersonaHumanaDTO) obj;
     return Objects.equals(nombre, that.nombre) &&
         Objects.equals(apellido, that.apellido) &&
         Objects.equals(fechaNacimiento, that.fechaNacimiento) &&
         Objects.equals(documentoDTO, that.documentoDTO) &&
         Objects.equals(contactoDTO, that.contactoDTO) &&
-        Objects.equals(direccionDTO, that.direccionDTO);
+        Objects.equals(direccionDTO, that.direccionDTO) &&
+        donacionDinero == that.donacionDinero &&
+        redistribucionViandas == that.redistribucionViandas &&
+        donacionViandas == that.donacionViandas &&
+        entregaTarjetas == that.entregaTarjetas;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(nombre, apellido, fechaNacimiento, documentoDTO, contactoDTO, direccionDTO);
+    return Objects.hash(nombre, apellido, fechaNacimiento, documentoDTO, contactoDTO, direccionDTO,
+        donacionDinero, redistribucionViandas, donacionViandas, entregaTarjetas);
   }
 }

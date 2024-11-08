@@ -15,6 +15,7 @@ import ar.edu.utn.frba.dds.domain.entities.tarjetas.UsoDeTarjeta;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Direccion;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
 import ar.edu.utn.frba.dds.dtos.PersonaHumanaDTO;
+import ar.edu.utn.frba.dds.exceptions.SinTarjetaException;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.manejos.CamposObligatoriosVacios;
 import java.io.UnsupportedEncodingException;
@@ -255,7 +256,8 @@ public class PersonaHumana extends IObserverNotificacion {
         .direccion(direccion)
         .contacto(contacto)
         .documento(documento)
-        .contribucionesElegidas(dto.getFormasContribucionHumanasSet())
+        .puntajeActual(0f)
+        .contribucionesElegidas(dto.getContribucionesElegidas())
         .build();
   }
 
@@ -285,8 +287,11 @@ public class PersonaHumana extends IObserverNotificacion {
   }
 
   private static void validarFormasContribucion(PersonaHumanaDTO dto) {
-    if (dto.getFormasContribucionHumanasSet() == null || dto.getFormasContribucionHumanasSet().isEmpty()) {
+    if (!(dto.isDonacionDinero() || dto.isRedistribucionViandas() || dto.isDonacionViandas() || dto.isEntregaTarjetas())) {
       throw new ValidacionFormularioException("Al menos una forma de contribución debe ser seleccionada.");
+    }
+    if(!dto.isDonacionDinero()){
+      dto.getDireccionDTO().setObligatoria(true);
     }
   }
 
@@ -316,8 +321,8 @@ public class PersonaHumana extends IObserverNotificacion {
       this.setContacto(contacto);
     }
 
-    if (this.contribucionesElegidas == null || !this.contribucionesElegidas.equals(dto.getFormasContribucionHumanasSet())) {
-      contribucionesElegidas.addAll(dto.getFormasContribucionHumanasSet());
+    if (this.contribucionesElegidas == null || !this.contribucionesElegidas.equals(dto.getContribucionesElegidas())) {
+      contribucionesElegidas.addAll(dto.getContribucionesElegidas());
     }
   }
 
@@ -327,8 +332,8 @@ public class PersonaHumana extends IObserverNotificacion {
     }
     this.puntajeActual += puntaje;
   }
-  public Float getPuntajeActual(){
-    if(this.puntajeActual == null){
+  public Float getPuntajeActual() {
+    if (this.puntajeActual == null) {
       return 0F;
     }
     return this.puntajeActual;
