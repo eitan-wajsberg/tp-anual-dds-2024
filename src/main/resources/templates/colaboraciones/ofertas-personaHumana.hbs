@@ -38,9 +38,7 @@
                             <p><strong>Categoría:</strong>{{this.rubro.nombre}}</p>
                             <h4>{{this.nombre}}</h4>
                             <p><strong>Puntos Requeridos:</strong>{{this.cantidadPuntosNecesarios}}</p>
-                            <button class="btn btn-dark text-white btn-canjear"
-                                    onclick="canjearOferta({{this.id}})"
-                                    data-bs-toggle="modal" data-bs-target="#confirmar_canje">Canjear</button>
+                            <button class="btn btn-dark text-white btn-canjear" onclick="canjearOferta({{this.id}})" data-bs-toggle="modal" data-bs-target="#confirmar_canje">Canjear</button>
                         </div>
                     </div>
                 {{/each}}
@@ -56,7 +54,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p> </p>
+                        ¿Desea canjear esta oferta?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -85,7 +83,7 @@
             const ofertas = document.querySelectorAll('.offer-card');
             ofertas.forEach(oferta => {
                 if (oferta.getAttribute('data-rubro') === rubro) {
-                    oferta.style.display = 'flex';
+                    oferta.style.display = 'block';
                 } else {
                     oferta.style.display = 'none';
                 }
@@ -93,38 +91,29 @@
         }
 
         function canjearOferta(id) {
-            console.log("entrando a funcion");
-            const modalBody = document.querySelector('#confirmar_canje .modal-body');
-            modalBody.innerHTML = 'Desea canjear la oferta?';
-
-            const confirmarBtn = document.querySelector('#confirmar_canje .btn-primary');
-            confirmarBtn.onclick = function () {
-
-                fetch('/ofertas/canjearOferta', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({idOferta: id})
-                })
-                        .then(response => {
-                            console.log("respuesta recibida");
-                            if (!response.ok) throw new Error('Error en el canje');
-                            return response.text();
-                        })
-                        .then(data => {
-                            //alert(data);  // Mensaje de éxito desde el servidor
-                            // Redirigir a la página de colaboraciones o la que corresponda
-                            window.location.href = '/ofertas';
-                        })
-                        .catch(error => {
-                            alert(error.message);  // Manejo de errores
-                        });
-            }
-        };
+            fetch('/ofertas/canjearOferta', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idOferta: id })
+            })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error en el canje');
+                        return response.text();
+                    })
+                    .then(data => {
+                        alert(data);  // Mensaje de éxito desde el servidor
+                        // Redirigir a la página de colaboraciones o la que corresponda
+                        window.location.href = '/ofertas';
+                    })
+                    .catch(error => {
+                        alert(error.message);  // Manejo de errores
+                    });
+        }
 
     </script>
 
 {{/partial}}
 
-{{> templates/base titulo="ofertas" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="" mostrarSeccion=true seccion="ofertas" pantallaOfertas = true}}
+{{> templates/base titulo="Ofertas" mostrarPersonaHumana=true mostrarIrAtras=true paginaAtras="/" mostrarSeccion=true seccion="Ofertas" pantallaOfertas = true}}

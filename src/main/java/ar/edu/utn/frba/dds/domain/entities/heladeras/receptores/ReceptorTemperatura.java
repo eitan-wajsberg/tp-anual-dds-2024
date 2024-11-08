@@ -1,31 +1,52 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.receptores;
 
+import ar.edu.utn.frba.dds.config.ServiceLocator;
+import ar.edu.utn.frba.dds.controllers.ControladorHeladera;
+import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
-import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 import lombok.Getter;
+import lombok.Setter;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.Optional;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 @Getter
-public class ReceptorTemperatura implements MqttCallback {
-
+public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
     private MqttClient client;
-    private RepositorioHeladera repositorioHeladeras;
-
-    public ReceptorTemperatura(String brokerUrl, String clientId, RepositorioHeladera repositorioHeladeras) throws MqttException {
-        this.repositorioHeladeras = repositorioHeladeras;
-        this.client = new MqttClient(brokerUrl, clientId);
-        this.client.setCallback(this);
-        this.client.connect();
+    private String brokerUrl;
+    private String topic;
+    private Timer timer;
+    private final int TIMEOUT_MS = 1 * 60 * 1000;
+    private Map<String, Long> ultimasRecibidas = new HashMap<>();
+    private ControladorIncidenteHeladera controladorIncidenteHeladera = ServiceLocator.instanceOf(ControladorIncidenteHeladera.class);
+    private ControladorHeladera controladorHeladera = ServiceLocator.instanceOf(ControladorHeladera.class);
+    public ReceptorTemperatura(String brokerUrl, String topic) throws MqttException {
+        this.brokerUrl = brokerUrl;
+        this.topic = topic;
+        this.timer = new Timer(true);
     }
-
-    public void subscribe(String topic) throws MqttException {
-        client.subscribe(topic);
-    }
-
     @Override
-    public void connectionLost(Throwable cause) {
+    public void run() {
+        try {
+            client = new MqttClient(brokerUrl, MqttClient.generateClientId(), new MemoryPersistence());
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+
+            client.connect(connOpts);
+            System.out.println("Connected to broker: " + brokerUrl);
+
+            client.subscribe(topic, this);
+            System.out.println("MQTT Receiver is running and listening to topic: " + topic);
+            comenzarChequeoInactividad();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     // FORMATO DE MENSAJE: [IdHeladera,TipoDeMensaje:Valor]
@@ -33,14 +54,13 @@ public class ReceptorTemperatura implements MqttCallback {
     public void messageArrived(String topic, MqttMessage mqttMessage) {
         String payload = new String(mqttMessage.getPayload());
         System.out.println("Mensaje recibido: " + payload);
-
         try {
             String[] partes = dividirPayload(payload);
             if (partes != null) {
-                Long idHeladera = Long.parseLong(partes[0]);
+                String idHeladera = partes[0];
                 String tipoMensaje = partes[1];
-                int valor = Integer.parseInt(partes[2]);
-
+                String valor = partes[2];
+                System.out.println("Se recibió exitosamente el mensaje");
                 procesarMensaje(idHeladera, tipoMensaje, valor);
             }
         } catch (NumberFormatException e) {
@@ -65,24 +85,28 @@ public class ReceptorTemperatura implements MqttCallback {
         return null;
     }
 
-
-    private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor) {
-        Optional<Heladera> optionalHeladera = repositorioHeladeras.buscarPorId(idHeladera, Heladera.class);
-        if (optionalHeladera.isPresent()) {
-            Heladera heladera = optionalHeladera.get();
-            if (tipoMensaje.equals("Temperatura")) {
-                heladera.cambiarTemperatura(valor);
-            } else {
+    private void procesarMensaje(String idHeladera, String tipoMensaje, String valor) {
+        ultimasRecibidas.put(idHeladera, System.currentTimeMillis());
+        if (!tipoMensaje.equals("Temperatura")) {
                 System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
-            }
-        } else {
-            System.err.println("Heladera no encontrada para el ID: " + idHeladera);
         }
+        this.controladorHeladera.actualizarTemperatura(idHeladera, valor);
     }
+    private void comenzarChequeoInactividad() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis();
 
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-        // Lógica para manejar la confirmación de entrega de un mensaje publicado
+                for (Map.Entry<String, Long> entry : ultimasRecibidas.entrySet()) {
+                    String fridgeId = entry.getKey();
+                    long lastReceivedTime = entry.getValue();
+
+                    if (currentTime - lastReceivedTime > TIMEOUT_MS) {
+                        controladorIncidenteHeladera.procesarFallaConexion(fridgeId);
+                    }
+                }
+            }
+        }, 0, TIMEOUT_MS);
     }
-
 }

@@ -8,12 +8,14 @@ import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
 import ar.edu.utn.frba.dds.dtos.UsuarioDTO;
 import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
-import ar.edu.utn.frba.dds.utils.javalin.PrettyProperties;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import javax.persistence.PersistenceException;
+import javax.validation.ConstraintViolationException;
 
 public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   private RepositorioUsuario repositorioUsuario;
@@ -48,6 +50,11 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
         throw new ValidacionFormularioException("El nombre de usuario ya está en uso. Por favor, elige uno diferente.");
       }
 
+      if (dto.getRol() == null || !(dto.getRol().equals(TipoRol.PERSONA_HUMANA.name())
+          || dto.getRol().equals(TipoRol.PERSONA_JURIDICA.name()))) {
+        throw new ValidacionFormularioException("No se ha indicado un tipo de cuenta o se indicó uno incorrecto. Vuelve a /tipoCuenta.");
+      }
+
       Optional<Rol> rol = repositorioRol.buscarPorTipo(TipoRol.valueOf(dto.getRol()));
       if (rol.isEmpty()) {
         throw new ValidacionFormularioException("El rol indicado no existe. Por favor, elige uno diferente.");
@@ -59,7 +66,11 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
 
       context.sessionAttribute("id", usuario.getId());
       context.sessionAttribute("rol", usuario.getRol().getTipoRol().name());
-      context.redirect("/");
+      if (usuario.getRol().getTipoRol().equals(TipoRol.PERSONA_HUMANA)) {
+        context.redirect("/personaHumana/nuevo");
+      } else {
+        context.redirect("/personaJuridica/nuevo");
+      }
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
@@ -67,5 +78,4 @@ public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
       context.render(rutaHbs, model);
     }
   }
-
 }

@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.dds.server;
 
+import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorMovimiento;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorTemperatura;
 import ar.edu.utn.frba.dds.middlewares.AuthMiddleware;
 import ar.edu.utn.frba.dds.server.handlers.AppHandlers;
 import ar.edu.utn.frba.dds.utils.javalin.Initializer;
@@ -32,9 +34,31 @@ public class Server {
       Router.init(app);
 
       if (Boolean.parseBoolean(PrettyProperties.getInstance().propertyFromName("dev_mode"))) {
-        Initializer.init();
+        Initializer initializer = new Initializer();
+        initializer.init();
       }
+      try {
+        String brokerUrl = "tcp://localhost:1883";
+        String topicTemperatura = "temperatura";
+        String topicMovimiento = "movimiento";
+
+        ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura);
+        //ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
+
+        Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
+        //Thread receptorMovimientoThread = new Thread(receptorMovimiento);
+
+        receptorTemperaturaThread.start();
+        //receptorMovmientoThread.start();
+
+        System.out.println("Los receptores están corriendo en paralelo");
+
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
     }
+
   }
 
   private static Consumer<JavalinConfig> config() {

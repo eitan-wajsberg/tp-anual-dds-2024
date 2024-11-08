@@ -16,7 +16,7 @@ function crearModal(mensaje, accion, advertencia) {
                     </div>
                     <div class="modal-body">
                         <p>${mensaje}</p>
-                        <p class="light-red fw-500">${advertencia}</p>
+                        <p class="warning fw-500">Advertencia: ${advertencia}</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="modal-button" data-dismiss="modal">Cancelar</button>
@@ -36,6 +36,11 @@ function crearModal(mensaje, accion, advertencia) {
     document.getElementById('customModal').addEventListener('hidden.bs.modal', function () {
         // Eliminar el modal del DOM cuando se cierre
         document.getElementById('customModal').remove();
+    });
+
+    document.getElementById('confirm-submit').addEventListener('click', function () {
+        document.getElementById('uploadForm').submit();
+        modal.hide();
     });
 }
 
@@ -69,7 +74,7 @@ function openModal(tipoEntidad) {
     }
 
     try {
-        crearModal(entidad.mensaje, entidad.accion);
+        crearModal(entidad.mensaje, entidad.accion, entidad.advertencia);
     } catch (error) {
         console.error('Error al crear el modal:', error);
     }
