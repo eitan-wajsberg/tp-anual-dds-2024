@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embedded;
@@ -87,11 +88,11 @@ public class Heladera implements Contribucion {
   @Column(name="temperaturaEsperada")
   private float temperaturaEsperada;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioEstado> historialEstados;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name="id_heladera", referencedColumnName = "id")
   private List<CambioTemperatura> historialTemperaturas;
 
@@ -185,11 +186,13 @@ public class Heladera implements Contribucion {
     if (!temperaturaEnRango(nuevaTemperatura)) {
       this.cambiarEstado(new CambioEstado(EstadoHeladera.FALLA_TEMPERATURA, LocalDate.now()));
     }
-
     agregarTemperaturaAlHistorial(new CambioTemperatura(LocalDateTime.now(), nuevaTemperatura));
   }
 
   private void agregarTemperaturaAlHistorial(CambioTemperatura temperatura) {
+    if(this.historialTemperaturas == null){
+      this.historialTemperaturas = new ArrayList<>();
+    }
     this.historialTemperaturas.add(temperatura);
   }
 

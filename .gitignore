@@ -40,4 +40,6 @@ target/**
 .env
 
 # persitence para no pisar nuestras credenciales
-src/main/resources/META-INF/persistence.xml
+/src/main/resources/META-INF/persistence.xml
+/src/test/resources/META-INF/persistence.xml
+/JavaSample-tcplocalhost1883

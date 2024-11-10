@@ -1,9 +1,16 @@
 package ar.edu.utn.frba.dds.domain.entities.heladeras.receptores;
 
+import ar.edu.utn.frba.dds.config.ServiceLocator;
+import ar.edu.utn.frba.dds.controllers.ControladorHeladera;
+import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 import lombok.Getter;
+import lombok.Setter;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.Optional;
@@ -11,16 +18,18 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 @Getter
 public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
-
     private MqttClient client;
     private String brokerUrl;
     private String topic;
     private Timer timer;
-    private final int TIMEOUT_MS = 5 * 60 * 1000;
-
-    public ReceptorTemperatura(String brokerUrl, String clientId) throws MqttException {
-        this.client = new MqttClient(brokerUrl, clientId);
-        this.client.connect();
+    private final int TIMEOUT_MS = 1 * 60 * 1000;
+    private Map<String, Long> ultimasRecibidas = new HashMap<>();
+    private ControladorIncidenteHeladera controladorIncidenteHeladera = ServiceLocator.instanceOf(ControladorIncidenteHeladera.class);
+    private ControladorHeladera controladorHeladera = ServiceLocator.instanceOf(ControladorHeladera.class);
+    public ReceptorTemperatura(String brokerUrl, String topic) throws MqttException {
+        this.brokerUrl = brokerUrl;
+        this.topic = topic;
+        this.timer = new Timer(true);
     }
     @Override
     public void run() {
@@ -32,26 +41,12 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
             client.connect(connOpts);
             System.out.println("Connected to broker: " + brokerUrl);
 
-            // Suscribirse al topic usando esta clase como listener
             client.subscribe(topic, this);
             System.out.println("MQTT Receiver is running and listening to topic: " + topic);
-            resetTimer();
+            comenzarChequeoInactividad();
         } catch (MqttException e) {
             e.printStackTrace();
         }
-    }
-
-    private void resetTimer() {
-        // Cancela cualquier tarea de alerta previa y programa una nueva
-        timer.cancel(); // Cancela el temporizador anterior
-        timer = new Timer(true); // Crear un nuevo temporizador en modo daemon
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-
-               //alertar a controlador
-            }
-        }, TIMEOUT_MS);
     }
 
     // FORMATO DE MENSAJE: [IdHeladera,TipoDeMensaje:Valor]
@@ -59,13 +54,12 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
     public void messageArrived(String topic, MqttMessage mqttMessage) {
         String payload = new String(mqttMessage.getPayload());
         System.out.println("Mensaje recibido: " + payload);
-
         try {
             String[] partes = dividirPayload(payload);
             if (partes != null) {
-                Long idHeladera = Long.parseLong(partes[0]);
+                String idHeladera = partes[0];
                 String tipoMensaje = partes[1];
-                int valor = Integer.parseInt(partes[2]);
+                String valor = partes[2];
                 System.out.println("Se recibió exitosamente el mensaje");
                 procesarMensaje(idHeladera, tipoMensaje, valor);
             }
@@ -91,11 +85,28 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
         return null;
     }
 
-    private void procesarMensaje(Long idHeladera, String tipoMensaje, int valor) {
+    private void procesarMensaje(String idHeladera, String tipoMensaje, String valor) {
+        ultimasRecibidas.put(idHeladera, System.currentTimeMillis());
         if (!tipoMensaje.equals("Temperatura")) {
                 System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
         }
-        // controlador
+        this.controladorHeladera.actualizarTemperatura(idHeladera, valor);
     }
+    private void comenzarChequeoInactividad() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                long currentTime = System.currentTimeMillis();
 
+                for (Map.Entry<String, Long> entry : ultimasRecibidas.entrySet()) {
+                    String fridgeId = entry.getKey();
+                    long lastReceivedTime = entry.getValue();
+
+                    if (currentTime - lastReceivedTime > TIMEOUT_MS) {
+                        controladorIncidenteHeladera.procesarFallaConexion(fridgeId);
+                    }
+                }
+            }
+        }, 0, TIMEOUT_MS);
+    }
 }
