@@ -1,8 +1,7 @@
 {{#partial "contenido"}}
     <section class="row g-2 gx-4 flex-grow-1 mt-5 ms-sm-5 me-sm-5 mt-3 ms-3 me-3">
         <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4">
-            <h1 class="fs-3 mt-3 mb-5">Recomendación de Puntos</h1>
-            <p>Selecciona un punto en el mapa y define un radio; así podremos recomendarte los mejores puntos disponibles.</p>
+            <h1 class="fs-3 text-center mt-3 mb-3">Recomendación de Puntos</h1>
             <form class="mt-5" method="POST" action="/heladeras/nuevo/recomendacion">
                 <h4 class="fw-bold fs-5 mt-4 mb-2">Ubicación</h4>
                 <p class="mb-2">
@@ -57,7 +56,7 @@
             var heladeras = {{{this.jsonHeladeras}}}
             addMarkers(heladeras, function() {
                 // llena nombre e id en el campo de la heladera que tenga focus
-                var lv_input = $("[id^='heladera']");
+                var lv_input = $(":focus[id^='heladera']");
                 if (lv_input !== undefined) {
                     lv_input.val(this.heladera.nombre);
                     $("#"+lv_input.data("id")).val(this.heladera.id);
@@ -66,7 +65,7 @@
 
             // Ejemplo de cómo capturar el evento de clic en el mapa
             map.on('click', function (e) {
-                addNewMarker(lngLat.lng, lngLat.lat, '/img/location-icon.png');
+                addNewMarker(e.lng, e.lat, '/img/location-icon.png');
             });
         });
     </script>

@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ControladorModeloHeladera implements WithSimplePersistenceUnit {
   private final String rutaAltaHbs = "/colaboraciones/modeloHeladera.hbs";
-  private final String rutaHeladeraHbs = "/colaboraciones/cuidarHeladera.hbs";
+  private final String rutaHeladera = "/heladeras/nuevo";
   private Repositorio repositorioModelo;
 
   public ControladorModeloHeladera(Repositorio repositorioModelo) {
@@ -30,8 +30,7 @@ public class ControladorModeloHeladera implements WithSimplePersistenceUnit {
       Modelo nuevoModelo = Modelo.fromDTO(dto);
 
       withTransaction(() -> repositorioModelo.guardar(nuevoModelo));
-      context.redirect(rutaHeladeraHbs);
-
+      context.redirect(rutaHeladera);
     } catch (ValidacionFormularioException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
