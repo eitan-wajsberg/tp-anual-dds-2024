@@ -24,8 +24,8 @@
                     </div>
                 {{/if}}
             </div>
-            <div class="row p-4 mt-3 border border-color-999 rounded-4">
-                {{#if mostrarPersonaHumana}}
+            {{#if mostrarPersonaHumana}}
+                <div class="row p-4 mt-3 border border-color-999 rounded-4">
                     <form method="POST" action="/heladeras/suscripcion/{{heladera.id}}" class="mt-2 w-100">
                         <h2 class="fw-bold fs-4 mb-2">Suscripción a la heladera</h2>
                         <p class="mb-3">Seleccione las opciones por las cuales desea recibir notificaciones sobre la heladera. No es necesario completar todas; elija solo aquellas que prefiera.</p>
@@ -62,13 +62,13 @@
                             <button class="w-100">{{#if actualizacion}}Editar suscripción{{else}}Suscribirme{{/if}}</button>
                         </div>
                     </form>
-                {{/if}}
-                {{#if error}}
-                    <div class="row mt-2 justify-content-center">
-                        <p class="error text-center">{{error}}</p>
-                    </div>
-                {{/if}}
-            </div>
+                    {{#if error}}
+                        <div class="row mt-2 justify-content-center">
+                            <p class="error text-center">{{error}}</p>
+                        </div>
+                    {{/if}}
+                </div>
+            {{/if}}
             <div class="row mt-4 mb-2 text-center">
                 <hr>
                 <label class="grey-text fw-bold w-100">
