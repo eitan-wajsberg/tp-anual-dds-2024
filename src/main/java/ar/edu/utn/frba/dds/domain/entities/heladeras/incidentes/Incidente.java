@@ -29,14 +29,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Builder
 @Entity
 @Table(name="incidente")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Incidente {
   @Id
   @GeneratedValue
@@ -88,7 +92,6 @@ public class Incidente {
   @Convert(converter= TipoAlertaConverter.class)
   @Column(name="tipo_alerta")
   private TipoAlerta tipoAlerta;
-
   public void registrarVisita(Visita visita, boolean solucionado) {
     this.visitas.add(visita);
     if (solucionado) {

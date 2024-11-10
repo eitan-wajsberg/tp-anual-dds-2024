@@ -16,26 +16,19 @@ public class ReceptorMovimiento implements IMqttMessageListener, Runnable {
   private MqttClient client;
   private String brokerUrl;
   private String topic;
-  public ReceptorMovimiento(String brokerUrl, String clientId) throws MqttException {
-    this.client = new MqttClient(brokerUrl, clientId);
-    this.client.connect();
+  public ReceptorMovimiento(String brokerUrl, String topic) throws MqttException {
+    this.brokerUrl = brokerUrl;
+    this.topic = topic;
   }
   @Override
-  public void messageArrived(String topic, MqttMessage mensaje) throws Exception{ // formato: idHeladera | "fraude"
+  public void messageArrived(String topic, MqttMessage mensaje){
         try{
-          String[] payload = dividirPayload(mensaje.toString());
-          if(payload != null){
-            Long idHeladera = Long.parseLong(payload[0]);
-            String tipoMensaje = payload[1];
+            Long idHeladera = Long.parseLong(mensaje.toString());
             System.out.println("se recibió el mensaje correctamente");
-            procesarMensaje(idHeladera, tipoMensaje);
-          }
-        } catch (NumberFormatException e) {
-          System.err.println("Error al convertir el valor a entero: " + e.getMessage());
+            procesarMensaje(idHeladera);
         } catch (Exception e) {
           System.err.println("Error al procesar el mensaje: " + e.getMessage());
         }
-
   }
   @Override
   public void run() {
@@ -54,30 +47,9 @@ public class ReceptorMovimiento implements IMqttMessageListener, Runnable {
         e.printStackTrace();
       }
   }
-  private String[] dividirPayload(String payload) {
-    String[] partes = payload.split(",");
-    if (partes.length == 2) {
-      String[] parteDivididas = partes[1].split(":");
-      if (parteDivididas.length == 2) {
-        return new String[]{partes[0], parteDivididas[0], parteDivididas[1]};
-      } else {
-        System.err.println("Formato de TipoDeMensaje:Valor incorrecto");
-      }
-    } else {
-      System.err.println("Formato de payload incorrecto");
-    }
-    return null;
-  }
-
-  private void procesarMensaje(Long idHeladera, String tipoMensaje) {
-
-      if (!tipoMensaje.equals("Fraude")) {
-        System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
-    } else {
+  private void procesarMensaje(Long idHeladera) {
         ControladorIncidenteHeladera controlador = ServiceLocator.instanceOf(ControladorIncidenteHeladera.class);
         controlador.procesarFraude(idHeladera);
-    }
   }
-
 
 }
