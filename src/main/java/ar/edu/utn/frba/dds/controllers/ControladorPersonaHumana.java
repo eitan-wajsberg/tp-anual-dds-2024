@@ -57,7 +57,6 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
           new ValidacionFormularioException("No se ha encontrado tu usuario.")
       );
       nuevaPersona.setUsuario(usuario);
-
       Tarjeta tarjeta = asignarTarjeta(nuevaPersona, context);
 
       withTransaction(() -> {
@@ -161,9 +160,9 @@ public class ControladorPersonaHumana implements ICrudViewsHandler, WithSimplePe
     }
   }
 
-  private Tarjeta asignarTarjeta(PersonaHumana p, Context context){
+  private Tarjeta asignarTarjeta(PersonaHumana p, Context context) {
     Tarjeta tarjeta;
-    if(context.formParam("solicitaTarjeta").equals("X")){
+    if (context.formParam("solicitaTarjeta").equals("X")) {
       tarjeta = new Tarjeta();
       tarjeta.setFechaRecepcionColaborador(LocalDate.now());
       p.asignarTarjetaParaColaborar(tarjeta);
