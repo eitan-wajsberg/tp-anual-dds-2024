@@ -190,6 +190,9 @@ public class PersonaHumana extends IObserverNotificacion {
     if (this.direccion == null) {
       throw new DireccionIncompletaException();
     }
+    if (this.tarjetasColaboracion == null) {
+      this.tarjetasColaboracion = new ArrayList<>();
+    }
 
     darTarjetaDeBaja();
     this.tarjetasColaboracion.add(tarjeta);
