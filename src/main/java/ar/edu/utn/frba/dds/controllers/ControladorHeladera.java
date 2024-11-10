@@ -218,9 +218,11 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     model.put("id", id);
     context.render(this.rutaRecomendacionHbs, model);
   }
-  public void actualizarTemperatura(String idHeladera, String valor){
+
+  public void actualizarTemperatura(String idHeladera, String valor) {
     Heladera heladera = repositorioHeladera.buscarPorId(Long.parseLong(idHeladera)).orElseThrow(() ->
-        new IllegalArgumentException("Heladera no encontrada al actualizar temperatura"));
+        new IllegalArgumentException("Heladera no encontrada al actualizar temperatura")
+    );
     heladera.cambiarTemperatura(Float.parseFloat(valor));
     withTransaction(()->this.repositorioHeladera.actualizar(heladera));
   }
