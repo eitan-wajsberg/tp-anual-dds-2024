@@ -39,7 +39,16 @@ target/**
 # variables de entorno
 .env
 
-# persitence para no pisar nuestras credenciales
+# credenciales de persistencia
 /src/main/resources/META-INF/persistence.xml
 /src/test/resources/META-INF/persistence.xml
 /JavaSample-tcplocalhost1883
+
+# Si los archivos de configuración de persistencia aún aparecen en Git,
+# elimínalos del seguimiento usando los siguientes comandos:
+#
+#   git rm --cached src/main/resources/META-INF/persistence.xml
+#   git rm --cached src/test/resources/META-INF/persistence.xml
+#
+# Esto eliminará los archivos del control de versiones sin borrarlos de tu sistema de archivos local.
+# Luego, realiza un commit y push para aplicar el cambio al repositorio.

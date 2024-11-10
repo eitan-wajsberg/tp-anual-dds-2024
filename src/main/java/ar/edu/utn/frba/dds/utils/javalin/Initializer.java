@@ -80,7 +80,7 @@ public class Initializer implements WithSimplePersistenceUnit {
   }
 
   private void ejecutarScriptSQL() throws Exception {
-    String sql = new String(Files.readAllBytes(Paths.get("sql/hidratacion.sql")));
+    String sql = new String(Files.readAllBytes(Paths.get("sql/inicializacion_tablas.sql")));
     String[] statements = sql.split(";");
 
     for (String statement : statements) {

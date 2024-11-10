@@ -5,6 +5,8 @@ import ar.edu.utn.frba.dds.domain.adapters.AdapterMail;
 import ar.edu.utn.frba.dds.domain.entities.cargaMasiva.CargaMasivaColaboraciones;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
 import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.DonacionDinero;
+import ar.edu.utn.frba.dds.domain.entities.donacionesDinero.UnidadFrecuencia;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.FormasContribucionHumanas;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tarjetas.Tarjeta;
@@ -81,6 +83,7 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
       context.render(rutaCargaHbs, Map.of("success", "La carga masiva se realizó con éxito."));
     } catch (Exception e) {
       context.render(rutaCargaHbs, Map.of("error", e.getMessage()));
+      e.printStackTrace();
     } finally {
       // Elimina el archivo temporal al final
       if (rutaDestino != null) {
@@ -109,7 +112,6 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
 
   private void procesarRegistroCSV(CSVRecord record, Usuario usuarioEmisor, CargaMasivaColaboraciones carga) throws MessagingException, UnsupportedEncodingException {
     Optional<PersonaHumana> posibleHumano = repositorioPersonaHumana.buscarPorDocumento(record.get(1));
-
     if (posibleHumano.isPresent()) {
       // La persona ya existe, se agrega la contribución
       withTransaction(() -> persistirContribucion(record, posibleHumano.get()));
@@ -125,6 +127,7 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
         repositorioUsuario.guardar(usuario);
         repositorioPersonaHumana.guardar(nuevoHumano);
         persistirContribucion(record, nuevoHumano);
+
 
         // Enviar mensaje de alta
         Mensaje mensaje = crearMensajeAltaPersona(carga, nuevoHumano, usuarioEmisor);
@@ -160,12 +163,15 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
   private void persistirContribucion(CSVRecord record, PersonaHumana humano) {
     int cantidad = Integer.parseInt(record.get(7));
     LocalDate fecha = LocalDate.parse(record.get(5), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
     switch (FormasContribucionHumanas.valueOf(record.get(6))) {
       case DONACION_DINERO:
         DonacionDinero donacionDinero = new DonacionDinero();
         donacionDinero.setMonto(cantidad);
         donacionDinero.setFecha(fecha);
         donacionDinero.setPersonaHumana(humano);
+        donacionDinero.setUnidadFrecuencia(UnidadFrecuencia.NINGUNA);
+        humano.sumarPuntaje(donacionDinero.calcularPuntaje());
         repositorio.guardar(donacionDinero);
         break;
       case DONACION_VIANDAS:
@@ -173,6 +179,13 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
           Vianda viandaDonada = new Vianda(fecha);
           viandaDonada.setPersonaHumana(humano);
           viandaDonada.setComida("Correspondiente a carga masiva");
+          // le pongo cualquier heladera, debido a que está como atributo no nulleable en la
+          // heladera y en el archivo de la carga masiva no la especifican.
+          Heladera heladera = this.repositorio.buscarPorId(1L, Heladera.class).orElseThrow(() ->
+              new ValidacionFormularioException("No se pudo encontrar la heladera.")
+          );
+          viandaDonada.setHeladera(heladera);
+          humano.sumarPuntaje(viandaDonada.calcularPuntaje());
           repositorio.guardar(viandaDonada);
         }
         break;
@@ -181,25 +194,34 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
         distribucion.setColaborador(humano);
         distribucion.setTerminada(true);
         distribucion.setMotivo("Carga masiva de colaboraciones");
-        // distribucion.setHeladeraDestino();
-        // distribucion.setHeladeraOrigen();
+        Heladera heladeraOrigen = this.repositorio.buscarPorId(1L, Heladera.class).orElseThrow(() ->
+            new ValidacionFormularioException("No se pudo encontrar la heladera de origen.")
+        );
+        Heladera heladeraDestino = this.repositorio.buscarPorId(2L, Heladera.class).orElseThrow(() ->
+            new ValidacionFormularioException("No se pudo encontrar la heladera de destino.")
+        );
+        distribucion.setHeladeraDestino(heladeraDestino);
+        distribucion.setHeladeraOrigen(heladeraOrigen);
+        humano.sumarPuntaje(distribucion.calcularPuntaje());
         repositorio.guardar(distribucion);
         break;
       case ENTREGA_TARJETAS:
         for (int i = 0; i < cantidad; i++) {
           Tarjeta tarjetaRepartida = new Tarjeta();
           tarjetaRepartida.setFechaRecepcionPersonaVulnerable(fecha);
-          // como registramos a quien se la dio?
+          humano.sumarPuntaje(tarjetaRepartida.calcularPuntaje());
           repositorio.guardar(tarjetaRepartida);
         }
         break;
       default:
         throw new ValidacionFormularioException("Tipo de contribución no válida: " + record.get(6));
     }
+    repositorio.actualizar(humano);
   }
 
   public Usuario cargarUsuario(CSVRecord record, Rol rol) {
-    String baseNombre = record.get(2).toLowerCase() + "." + record.get(3).toLowerCase();
+    String baseNombre = (record.get(2).toLowerCase().replace(" ", "-") + "."
+        + record.get(3).toLowerCase().replace(" ", "-"));
     String nombreUsuario = baseNombre;
     int contador = 1;
 
