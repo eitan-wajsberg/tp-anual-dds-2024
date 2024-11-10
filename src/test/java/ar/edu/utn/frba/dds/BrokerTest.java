@@ -1,6 +1,13 @@
 package ar.edu.utn.frba.dds;
 
+import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorMovimiento;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorTemperatura;
+import java.util.concurrent.CountDownLatch;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -10,6 +17,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +26,9 @@ import org.junit.jupiter.api.Test;
 
 public class BrokerTest {
   private ReceptorMovimiento receptorMovimiento;
-  String topic        = "test/topic";
+  private ReceptorTemperatura receptorTemperatura;
+  String topicMovimiento = "topicMovimiento";
+  String topicTemperatura = "test/topíc";
   String content      = "Mensaje de prueba";
   int qos             = 2;
   String broker       = "tcp://localhost:1883";
@@ -27,14 +37,18 @@ public class BrokerTest {
   MqttClient sampleClient;
   MqttConnectOptions connOpts;
 
-  @BeforeEach
-  public void antesDeTesteo() throws MqttException {
+  private EntityManagerFactory entityManagerFactory;
+  private EntityManager entityManager;
 
-    sampleClient = new MqttClient(broker, clientId, persistence);
-    connOpts = new MqttConnectOptions();
-    this.receptorMovimiento = new ReceptorMovimiento(broker, clientId);
-
-  }
+//  @BeforeEach
+//  public void antesDeTesteo() throws MqttException {
+//
+//    sampleClient = new MqttClient(broker, clientId, persistence);
+//    connOpts = new MqttConnectOptions();
+//    this.receptorMovimiento = new ReceptorMovimiento(broker, clientId);
+//    this.receptorTemperatura = new ReceptorTemperatura(broker);
+//
+//  }
 
   @Test
   void recibeTemperatura() throws MqttException {
@@ -45,13 +59,14 @@ public class BrokerTest {
     System.out.println("Build our receptor");
 
     System.out.println("Now we subscribe to the topic");
-    sampleClient.subscribe(topic, receptorMovimiento);
+    sampleClient.subscribe(topicTemperatura, receptorMovimiento);
     System.out.println("Right! We are subscribed");
 
-    MqttMessage message = new MqttMessage(content.getBytes());
-    message.setQos(qos);
-    sampleClient.publish(topic, message);
-    System.out.println("Message published: " + content);
+
+//    MqttMessage message = new MqttMessage(content.getBytes());
+//    message.setQos(qos);
+//    sampleClient.publish(topic, message);
+//    System.out.println("Message published: " + content);
 
   }
   @AfterEach
@@ -59,6 +74,12 @@ public class BrokerTest {
     if (sampleClient.isConnected()) {
       sampleClient.disconnect();
       System.out.println("Disconnected");
+    }
+    if (entityManager != null) {
+      entityManager.close();
+    }
+    if (entityManagerFactory != null) {
+      entityManagerFactory.close();
     }
   }
   @Test
@@ -82,5 +103,13 @@ public class BrokerTest {
     String receivedMessage = receptorMovimiento.getLastMessage();
     Assertions.assertEquals(testMessage, receivedMessage, "El mensaje recibido no coincide con el mensaje publicado.");*/
   }
-
+  //@Test
+//  void seRegistraLaFallaDeConexion() throws MqttException, InterruptedException {
+//    CountDownLatch latch = new CountDownLatch(2);
+//    receptorTemperatura.setTopic("test/topic");
+//    receptorTemperatura.setLatch(latch);
+//    receptorTemperatura.run();
+//    latch.await();
+//   // Assertions.assertEquals(receptorTemperatura.getUltimasRecibidas().get("1"), 12L);
+//  }
 }
