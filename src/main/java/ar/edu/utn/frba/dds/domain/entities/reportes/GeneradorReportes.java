@@ -46,7 +46,7 @@ public class GeneradorReportes {
 
     for (Reporte reporte : reportes) {
       List<String> parrafos = reporte.generarReporte(fechaInicio, fechaFin);
-      adapterPDF.exportarPDF(reporte.titulo(), reporte.nombreArchivo(), parrafos);
+      adapterPDF.exportarPDF(reporte.titulo(), reporte.nombreArchivo(), parrafos, fechaInicio.toString());
     }
   }
 }

@@ -29,7 +29,7 @@ public class ITextPDF {
     this.rutaRelativa = rutaRelativa;
   }
 
-  public void generarPDF(String titulo, String nombreArchivo, List<String> parrafos) {
+  public void generarPDF(String titulo, String nombreArchivo, List<String> parrafos, String fechaInicio) {
     try {
       // Obtener la fecha actual en formato de cadena
       String fechaActual = LocalDate.now().toString();
@@ -49,7 +49,8 @@ public class ITextPDF {
       documento.open();
       documento.addTitle(titulo);
       documento.add(new Paragraph(titulo, new Font(Font.FontFamily.TIMES_ROMAN, 25, Font.BOLDITALIC)));
-      documento.add(new Paragraph(fechaActual, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.ITALIC)));
+      String intervalo = "Desde " + fechaInicio + " hasta " + fechaActual;
+      documento.add(new Paragraph(intervalo, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.ITALIC)));
       documento.add(Chunk.NEWLINE);
 
       // Agregar los párrafos
