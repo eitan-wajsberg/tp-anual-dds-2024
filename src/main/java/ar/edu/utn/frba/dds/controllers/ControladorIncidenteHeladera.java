@@ -57,8 +57,6 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
   }
 
   public void save(Context ctx) {
-    // TODO: VERIFICAR PROFUNDAMENTE
-    //  CREO QUE NO PERSISTE LOS CAMBIOS EN LA HELADERA
     IncidenteDTO dto = new IncidenteDTO();
     dto.obtenerFormulario(ctx);
 
@@ -121,13 +119,15 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
     // crear incidente
     // avisar al tecnico mas cercano a la heladera
   }
-  public void procesarFallaConexion(String idHeladera){
+
+  public void procesarFallaConexion(String idHeladera) {
     Heladera heladera = this.repositorioHeladera.buscarPorId(Long.parseLong(idHeladera)).orElseThrow(() ->
         new IllegalArgumentException("Heladera no encontrada al procesar fraude.")
     );
     CambioEstado cambioEstado = new CambioEstado(EstadoHeladera.FALLA_CONEXION, LocalDate.now());
     heladera.cambiarEstado(cambioEstado);
     withTransaction(() -> this.repositorioHeladera.actualizar(heladera));
+
     // avisar a los suscritos a la heladera por fraude
     // crear incidente
     // avisar al tecnico mas cercano a la heladera
