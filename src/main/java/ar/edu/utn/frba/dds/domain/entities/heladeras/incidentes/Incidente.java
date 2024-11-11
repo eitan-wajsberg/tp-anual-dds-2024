@@ -56,7 +56,7 @@ public class Incidente {
   private List<Visita> visitas;
 
   @Setter
-  @Column(name="solucionado", columnDefinition = "BIT(1)", nullable = false)
+  @Column(name="solucionado", columnDefinition = "TINYINT(1)", nullable = false)
   private boolean solucionado;
 
   @Setter
@@ -65,8 +65,7 @@ public class Incidente {
   private Heladera heladera;
 
   @Setter
-  @Convert(converter= TipoIncidenteConverter.class)
-  @Column(name="tipo_incidente", nullable = false)
+  @Transient
   private TipoIncidente tipoIncidente;
 
   @Transient
@@ -85,7 +84,7 @@ public class Incidente {
   private String foto;
 
   @Setter
-  @Convert(converter= TipoAlertaConverter.class)
+  @Convert(converter = TipoAlertaConverter.class)
   @Column(name="tipo_alerta")
   private TipoAlerta tipoAlerta;
 
@@ -93,7 +92,7 @@ public class Incidente {
     this.visitas.add(visita);
     if (solucionado) {
       heladera.cambiarEstado(new CambioEstado(EstadoHeladera.ACTIVA, LocalDate.now()));
-      this.solucionado = solucionado;
+      this.setSolucionado(true);
     }
   }
 
@@ -103,8 +102,8 @@ public class Incidente {
 
     for (Tecnico tecnico : tecnicos) {
       double distanciaActual = ManejoDistancias.distanciaHaversineConCoordenadasEnKm(
-          heladera.getDireccion().getCoordenada(),
-          tecnico.getDireccion().getCoordenada()
+        heladera.getDireccion().getCoordenada(),
+        tecnico.getDireccion().getCoordenada()
       );
 
       // Verificamos si el técnico está dentro de la distancia máxima para ser avisado

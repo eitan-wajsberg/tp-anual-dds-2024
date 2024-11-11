@@ -50,6 +50,7 @@ public class Router {
     app.get("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::edit, TipoRol.ADMIN);
     app.post("/tecnicos/{id}/edicion", ServiceLocator.instanceOf(ControladorTecnicos.class)::update, TipoRol.ADMIN);
     app.post("/tecnicos/{id}/eliminacion", ServiceLocator.instanceOf(ControladorTecnicos.class)::delete, TipoRol.ADMIN);
+    app.post("/tecnicos/visita/{heladeraId}", ServiceLocator.instanceOf(ControladorTecnicos.class)::registrarVisita);
 
     // Carga masiva
     app.get("/cargaMasiva/nuevo", ServiceLocator.instanceOf(ControladorCargaMasiva.class)::create, TipoRol.ADMIN);
