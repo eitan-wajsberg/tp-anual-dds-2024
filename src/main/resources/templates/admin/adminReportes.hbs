@@ -1,8 +1,8 @@
 {{#partial "contenido"}}
     <div class="m-5">
         <h2 class="fw-bold">Reportes</h2>
-        <p class="mb-5">
-            Los reportes se generan semanalmente para hacer un seguimiento detallado del trabajo de todos los involucrados en la causa.
+        <p class="mb-4">
+            Los reportes se generan <b>semanalmente</b> para hacer un seguimiento detallado del trabajo de todos los involucrados en la causa.
         </p >
         {{#each reportes}}
             <div class="report-card mt-3">
@@ -15,7 +15,7 @@
                             <button class="btn-dropdown dropdown-toggle" type="button" id="dropdownMenuButton-two" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Ver reporte
                             </button>
-                            <div class="dropdown-menu pdfs" id="pdfs-{{this.fecha}}" aria-labelledby="dropdownMenuButton-two">
+                            <div class="dropdown-menu dropdown-menu-end pdfs" id="pdfs-{{this.fecha}}" aria-labelledby="dropdownMenuButton-two">
                                 <a class="dropdown-item" href="{{this.rutaFallas}}" target="_blank">Cantidad de fallas por Heladera</a>
                                 <a class="dropdown-item" href="{{this.rutaViandasRetiradas}}" target="_blank">Cantidad de Viandas Retiradas/Colocadas por Heladera</a>
                                 <a class="dropdown-item" href="{{this.rutaViandasDonadas}}" target="_blank">Cantidad de Viandas Donadas por colaborador</a>
@@ -26,8 +26,8 @@
             </div>
         {{/each}}
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.6/pdfobject.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.6/pdfobject.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Seleccionamos todos los botones con la clase btn-mostrar
@@ -54,6 +54,8 @@
             });
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.6/pdfobject.min.js"></script>
 {{/partial}}
 
 {{> templates/base titulo="Reportes" mostrarAdmin=true mostrarIrAtras=true paginaAtras="/" mostrarSeccion=true seccion="Reportes" }}

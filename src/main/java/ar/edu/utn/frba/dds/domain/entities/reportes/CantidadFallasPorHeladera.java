@@ -20,14 +20,14 @@ public class CantidadFallasPorHeladera implements Reporte {
 
     for (Heladera heladera : repositorioHeladera.buscarTodos(Heladera.class)) {
       cantidadFallas = cantidadFallas(heladera, fechaInicio, fechaFin);
-      parrafo = "Heladera " + heladera.getNombre() + "Id: " + heladera.getId() + ": " + cantidadFallas;
+      parrafo = heladera.getNombre() + " (Id: " + heladera.getId() + "): " + cantidadFallas;
       parrafos.add(parrafo);
     }
 
     return parrafos;
   }
 
-  private int cantidadFallas(Heladera heladera, LocalDate fechaInicio, LocalDate fechaFin){
+  private int cantidadFallas(Heladera heladera, LocalDate fechaInicio, LocalDate fechaFin) {
     return (int) heladera.getHistorialEstados().stream().filter(estado ->
         estado.esUnaFalla() && ManejoFechas.fechaEnRango(estado.getFechaCambio(), fechaInicio, fechaFin)
     ).count();
