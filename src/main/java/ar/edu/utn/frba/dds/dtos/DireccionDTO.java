@@ -15,10 +15,12 @@ public class DireccionDTO {
   private boolean obligatoria;
 
   public DireccionDTO(Direccion direccion) {
-    this.setCalle(direccion.getCalle());
-    this.setAltura(direccion.getAltura());
-    this.setProvincia(direccion.getProvincia());
-    this.setMunicipio(direccion.getMunicipio());
+    if (direccion != null) {
+      this.setCalle(direccion.getCalle());
+      this.setAltura(direccion.getAltura());
+      this.setProvincia(direccion.getProvincia());
+      this.setMunicipio(direccion.getMunicipio());
+    }
   }
 
   public void obtenerFormulario(Context context) {
