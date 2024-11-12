@@ -89,6 +89,9 @@ public class Incidente {
   private TipoAlerta tipoAlerta;
 
   public void registrarVisita(Visita visita, boolean solucionado) {
+    if (this.visitas == null) {
+      this.visitas = new ArrayList<>();
+    }
     this.visitas.add(visita);
     if (solucionado) {
       heladera.cambiarEstado(new CambioEstado(EstadoHeladera.ACTIVA, LocalDate.now()));

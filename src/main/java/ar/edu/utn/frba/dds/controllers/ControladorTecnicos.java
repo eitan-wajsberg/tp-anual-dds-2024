@@ -10,6 +10,7 @@ import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.main.GeneradorReportesMain;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
@@ -18,6 +19,7 @@ import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -244,6 +246,14 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
       this.repositorioTecnicos.guardar(visita);
       this.repositorioTecnicos.actualizar(incidente);
     });
+
+    // Según la consigna los reportes se ejecutan según una temporalidad, por ejemplo semanalmente,
+    // pero en el flujo no dan a entender eso, por eso pongo esto aquí.
+    try {
+      GeneradorReportesMain.main(null);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
     context.status(200).result("Visita registrada y heladera activada correctamente.");
   }

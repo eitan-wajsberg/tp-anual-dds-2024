@@ -66,7 +66,7 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
           .orElseThrow(() -> new ValidacionFormularioException("Heladera no encontrada."));
 
       // Buscar al colaborador usando el ID del colaborador desde el DTO
-      PersonaHumana colaborador = repositorioPersonaHumana.buscarPorUsuario(dto.getColaboradorId())
+      PersonaHumana colaborador = repositorioPersonaHumana.buscarPorUsuario(dto.getUsuarioId())
           .orElseThrow(() -> new ValidacionFormularioException("Colaborador no encontrado."));
 
       // Crear y guardar el incidente
@@ -80,7 +80,6 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
       CambioEstado cambio = new CambioEstado(EstadoHeladera.valueOf(dto.getTipoAlerta()), LocalDate.now());
       heladera.cambiarEstado(cambio);
 
-      // Ejecutar la transacción
       withTransaction(() -> {
         repositorioIncidente.guardar(cambio);
         repositorioHeladera.actualizar(heladera);

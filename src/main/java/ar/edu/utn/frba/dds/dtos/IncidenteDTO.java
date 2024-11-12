@@ -11,14 +11,14 @@ import java.util.Objects;
 public class IncidenteDTO implements DTO {
   private Long id;
   private Long heladeraId;
-  private Long colaboradorId;
+  private Long usuarioId;
   private String tipoAlerta;
   private String descripcionDelColaborador;
 
   public IncidenteDTO(Incidente incidente) {
     this.id = incidente.getId();
     this.heladeraId = incidente.getHeladera().getId();
-    this.colaboradorId = incidente.getColaborador().getId();
+    this.usuarioId = incidente.getColaborador().getId();
     this.tipoAlerta = incidente.getTipoAlerta() != null ? incidente.getTipoAlerta().name() : null;
     this.descripcionDelColaborador = incidente.getDescripcionDelColaborador();
   }
@@ -27,7 +27,7 @@ public class IncidenteDTO implements DTO {
   public void obtenerFormulario(Context context) {
     this.heladeraId = Long.parseLong(context.pathParam("heladeraId"));
     this.tipoAlerta = context.formParam("tipoFalla");
-    this.colaboradorId = context.sessionAttribute("id");
+    this.usuarioId = context.sessionAttribute("id");
     this.descripcionDelColaborador = context.formParam("descripcion");
   }
 
@@ -35,13 +35,13 @@ public class IncidenteDTO implements DTO {
   public boolean equals(Object obj) {
     IncidenteDTO that = (IncidenteDTO) obj;
     return Objects.equals(heladeraId, that.heladeraId)
-        && Objects.equals(colaboradorId, that.colaboradorId)
+        && Objects.equals(usuarioId, that.usuarioId)
         && Objects.equals(tipoAlerta, that.tipoAlerta)
         && Objects.equals(descripcionDelColaborador, that.descripcionDelColaborador);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(heladeraId, colaboradorId, tipoAlerta, descripcionDelColaborador);
+    return Objects.hash(heladeraId, usuarioId, tipoAlerta, descripcionDelColaborador);
   }
 }

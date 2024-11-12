@@ -58,6 +58,7 @@ public class Router {
 
     // Reportes
     app.get("/reportes", ServiceLocator.instanceOf(ControladorReportes.class)::index, TipoRol.ADMIN);
+    app.get("/reportes/{carpeta}/{archivo}", ServiceLocator.instanceOf(ControladorReportes.class)::verReporte, TipoRol.ADMIN);
 
     // Persona vulnerable
     app.get("/personasVulnerables/nuevo", ServiceLocator.instanceOf(ControladorPersonaVulnerable.class)::create, TipoRol.PERSONA_HUMANA);
@@ -125,8 +126,8 @@ public class Router {
     app.get("/heladeras/{heladeraId}", ServiceLocator.instanceOf(ControladorHeladera.class)::show, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.get("/heladeras", ServiceLocator.instanceOf(ControladorMapa.class)::mapa, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras/suscripcion/{heladeraId}", ServiceLocator.instanceOf(ControladorSuscripcion.class)::suscribir, TipoRol.PERSONA_HUMANA);
-    app.get("/heladeras/reporteFallas/{heladeraId}/nuevo", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::create, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
-    app.post("/heladeras/reporteFallas/{heladeraId}", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::save, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.get("/heladeras/reporteFallas/{heladeraId}/nuevo", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::create, TipoRol.PERSONA_HUMANA);
+    app.post("/heladeras/reporteFallas/{heladeraId}", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::save, TipoRol.PERSONA_HUMANA);
     app.get("/heladeras/modelos/nuevo", ServiceLocator.instanceOf(ControladorModeloHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras/modelos", ServiceLocator.instanceOf(ControladorModeloHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
   }
