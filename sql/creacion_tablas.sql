@@ -131,9 +131,8 @@ create table oferta (
 create table oferta_canjeada (
    id bigint not null,
 	fechaCanje datetime(6) not null,
-	canjeador_id bigint not null,
+    personaHumana_id bigint not null,
 	oferta_id bigint not null,
-	personaHumana_id bigint,
 	primary key (id)
 ) engine=InnoDB;
 

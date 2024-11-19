@@ -38,7 +38,7 @@
                             <p><strong>Categoría:</strong>{{this.rubro.nombre}}</p>
                             <h4>{{this.nombre}}</h4>
                             <p><strong>Puntos Requeridos:</strong>{{this.cantidadPuntosNecesarios}}</p>
-                            <button class="btn btn-dark text-white btn-canjear" onclick="canjearOferta({{this.id}})" data-bs-toggle="modal" data-bs-target="#confirmar_canje">Canjear</button>
+                            <button class="btn btn-dark text-white btn-canjear" onclick="confirmarCanje({{this.id}})" data-bs-toggle="modal" data-bs-target="#confirmar_canje">Canjear</button>
                         </div>
                     </div>
                 {{/each}}
@@ -58,7 +58,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary">Sí</button>
+                        <button type="button" class="btn btn-primary" onclick="canjearOferta()">Sí</button>
                     </div>
                 </div>
             </div>
@@ -90,28 +90,46 @@
             });
         }
 
-        function canjearOferta(id) {
-            fetch('/ofertas/canjearOferta', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ idOferta: id })
-            })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Error en el canje');
-                        return response.text();
-                    })
-                    .then(data => {
-                        alert(data);  // Mensaje de éxito desde el servidor
-                        // Redirigir a la página de colaboraciones o la que corresponda
-                        window.location.href = '/ofertas';
-                    })
-                    .catch(error => {
-                        alert(error.message);  // Manejo de errores
-                    });
+        let ofertaIdSeleccionada = null;
+
+        // Función que se llama cuando se hace clic en "Canjear"
+        function confirmarCanje(id) {
+            // Almacena el id de la oferta seleccionada
+            ofertaIdSeleccionada = id;
+
+            // Muestra el modal
+            $('#confirmar_canje').modal('show');
         }
 
+        // Función que se llama cuando se hace clic en "Sí" en el modal
+        function canjearOferta() {
+            if (ofertaIdSeleccionada !== null) {
+                fetch('/ofertas/canjearOferta', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ idOferta: ofertaIdSeleccionada })
+                })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Error en el canje');
+                            return response.text();
+                        })
+                        .then(data => {
+                            alert("canje exitoso");  // Mensaje de éxito desde el servidor
+                            // Redirigir a la página de colaboraciones o la que corresponda
+                            window.location.href = '/ofertas';
+                        })
+                        .catch(error => {
+                            alert(error.message);  // Manejo de errores
+                        });
+            } else {
+                alert("Error: No se ha seleccionado ninguna oferta.");
+            }
+
+            // Cierra el modal después de la acción
+            $('#confirmar_canje').modal('hide');
+        }
     </script>
 
 {{/partial}}
