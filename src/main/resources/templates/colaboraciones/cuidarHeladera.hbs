@@ -29,7 +29,7 @@
                 <div class="col-12 mt-2">
                     <div class="input-group">
                         <div class="input-group-text selection">Modelo</div>
-                        <select name="modelo" class="custom-select" required>
+                        <select name="modelo" id="modelo" class="custom-select" required>
                             <option value="" selected>Desconocido</option>>
                             {{#each modelos}}
                                 <option value="{{this.id}}" {{#ifEqual modeloEdit this.modelo}}selected{{/ifEqual}}>{{this.modelo}}</option>
@@ -67,14 +67,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var heladeras = {{{this.jsonHeladeras}}}
-            addMarkers(heladeras, function(){
-                // llena nombre e id en el campo de la heladera que tenga focus
-                var lv_input = $(":focus[id^='heladera']");
-                if (lv_input !== undefined) {
-                    lv_input.val(this.heladera.nombre);
-                    $("#"+lv_input.data("id")).val(this.heladera.id);
-                }
-            });
+            var nuevaHeladera = null;
+
+            addMarkers(heladeras);
 
             map.on('mouseenter', function () {
                 map.getCanvas().style.cursor = 'crosshair'; // Cambiar el cursor a crosshair
@@ -84,13 +79,52 @@
                 map.getCanvas().style.cursor = ''; // Restaurar el cursor original cuando el ratón sale del mapa
             });
 
-            // Ejemplo de cómo capturar el evento de clic en el mapa
+            if(document.getElementById('longitud').value && document.getElementById('latitud').value){
+                agregarNuevaHeladera(document.getElementById('latitud').value
+                    , document.getElementById('longitud').value, '/img/favicon-dark.png');
+            }
+
+            document.querySelector("#modelo option[value='{{dto.modelo}}']").setAttribute("selected", "selected");
+
             map.on('click', function (e) {
                 var lngLat = e.lngLat;
+                let customMarkerImage = '/img/favicon-dark.png';
 
-                // Mover o crear un marcador en la ubicación seleccionada
-                addNewMarker(lngLat.lng, lngLat.lat, '/img/favicon-dark.png');
+                if(nuevaHeladera == null){
+                    agregarNuevaHeladera(lngLat.lat, lngLat.lng, '/img/favicon-dark.png');
+                }else{
+                    moverHeladeraA(nuevaHeladera, lngLat.lat, lngLat.lng);
+                }
             });
+
+            function agregarNuevaHeladera(lat, lng, rutaMarker) {
+                let customMarkerImage = '/img/favicon-dark.png';
+
+                nuevaHeladera = new mapboxgl.Marker({
+                    element: createCustomMarker(customMarkerImage),
+                    draggable: true // Permitir que el marcador sea arrastrable
+                })
+                    .setLngLat([lng, lat])
+                    .addTo(map);
+
+                // Evento 'dragend' para actualizar los campos de latitud y longitud al arrastrar el marcador
+                nuevaHeladera.on('dragend', function () {
+                    var lngLat = this.getLngLat();
+                    actualizarCoordenadas(lngLat.lat, lngLat.lng);
+                });
+
+                actualizarCoordenadas(lat, lng);
+            }
+
+            function actualizarCoordenadas(lat, lng){
+                document.getElementById('latitud').value = lat;
+                document.getElementById('longitud').value = lng;
+            }
+
+            function moverHeladeraA(heladera, lat, lng){
+                heladera.setLngLat([lng, lat]);
+                actualizarCoordenadas(coordenadas.lat, coordenadas.lng);
+            }
         });
     </script>
     <script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
