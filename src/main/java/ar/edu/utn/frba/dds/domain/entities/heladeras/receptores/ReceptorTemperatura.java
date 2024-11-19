@@ -133,7 +133,7 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
                 e.printStackTrace();
             }
         }
-        this.controladorHeladera.actualizarTemperatura(idHeladera, valor);
+        this.controladorHeladera.actualizarTemperatura(idHeladera, valor, this);
     }
     public void actualizarTimestamp(String idHeladera) {
         JobKey jobKey = heladerasJobs.get(idHeladera);
@@ -148,6 +148,22 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
             } catch (SchedulerException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void eliminarJobDeHeladera(String idHeladera){
+        JobKey jobKey = heladerasJobs.get(idHeladera);
+        if (jobKey != null) {
+            try {
+                scheduler.deleteJob(jobKey);
+                heladerasJobs.remove(idHeladera);
+                System.out.println("Job eliminado para heladera: " + idHeladera);
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Error al intentar eliminar el job de la heladera: " + idHeladera, e);
+            }
+        } else {
+            System.err.println("No se encontró job asociado a la heladera: " + idHeladera);
         }
     }
 
