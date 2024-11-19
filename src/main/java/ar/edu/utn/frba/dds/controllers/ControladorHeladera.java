@@ -143,6 +143,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
       dto.setTemperaturaMinima(modelo.getTemperaturaMinima());
       dto.setTemperaturaMaxima(modelo.getTemperaturaMaxima());
+      dto.setModelo(idModelo);
 
       Heladera nuevaHeladera = Heladera.fromDTO(dto);
       nuevaHeladera.setFechaRegistro(LocalDateTime.now());
