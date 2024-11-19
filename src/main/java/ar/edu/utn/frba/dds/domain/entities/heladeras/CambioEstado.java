@@ -20,9 +20,11 @@ import javax.persistence.Enumerated;
 public class CambioEstado {
   @Id @GeneratedValue
   private long id;
-  @Enumerated (EnumType.STRING)
-  @Column(name="estado",nullable = false)
+
+  @Enumerated(EnumType.STRING)
+  @Column(name="estado", nullable = false)
   private EstadoHeladera estado;
+
   @Convert(converter = LocalDateAttributeConverter.class)
   @Column(name = "fechaCambio")
   private LocalDate fechaCambio;
@@ -31,6 +33,7 @@ public class CambioEstado {
     this.estado = estado;
     this.fechaCambio = fechaCambio;
   }
+
   public boolean esUnaFalla() {
     return !this.estado.equals(EstadoHeladera.ACTIVA);
   }

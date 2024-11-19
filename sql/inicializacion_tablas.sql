@@ -290,27 +290,27 @@ UPDATE tarjeta SET personaVulnerable_id = 1;
 -- Inserción en la tabla 'incidente'
 INSERT INTO incidente (
 	id, descripcion_del_colaborador, fecha,
-	ruta_foto, solucionado, tipo_alerta, tipo_incidente,
+	ruta_foto, solucionado, tipo_alerta,
 	id_personaHumana, id_heladera, id_tecnico
 )
 VALUES (
 	1, "Un fraude muy tenebroso", '2024-10-18',
-	null, 1, "FRAUDE", "",
+	null, 1, "FRAUDE",
 	1, 1, 1
 ),
 (
 	2, "La heladera no enfría adecuadamente", '2024-10-18',
-	null, 0, "FALLA_TEMPERATURA", "",
+	null, 1, "FALLA_TEMPERATURA",
 	1, 1, 1
 ),
 (
 	3, "Problemas de conexión con la heladera", '2024-10-19',
-	null, 0, "FALLA_CONEXION", "",
+	null, 1, "FALLA_CONEXION",
 	1, 2, 1
 ),
 (
 	4, "Temperatura muy baja en la heladera", '2024-10-19',
-	null, 0, "FALLA_TEMPERATURA", "",
+	null, 1, "FALLA_TEMPERATURA",
 	1, 1, 1
 );
 

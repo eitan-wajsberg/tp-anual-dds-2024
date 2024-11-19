@@ -13,16 +13,16 @@ import lombok.Setter;
 public class MovimientoViandasPorHeladera implements Reporte {
   @Getter @Setter
   private RepositorioHeladera repositorioHeladera;
-
   public List<String> generarReporte(LocalDate fechaInicio, LocalDate fechaFin) {
     List<String> parrafos = new ArrayList<>();
     for (Heladera heladera : this.repositorioHeladera.buscarTodos(Heladera.class)) {
       int cantidadViandasRetiradas = cantidadViandasSegunAccion(heladera, AccionApertura.QUITAR_VIANDA, fechaInicio, fechaFin);
       int cantidadViandasColocadas = cantidadViandasSegunAccion(heladera, AccionApertura.INGRESAR_VIANDA, fechaInicio, fechaFin);
-      String parrafo = heladera.getNombre() + ": "
-          + "\n   - Viandas retiradas: " + cantidadViandasRetiradas
-          + "\n   - Viandas colocadas: " + cantidadViandasColocadas;
+      String parrafo = heladera.getNombre() + " (Id: " + heladera.getId() + "): "
+          + "\n   - Viandas retiradas: " + cantidadViandasRetiradas + "."
+          + "\n   - Viandas colocadas: " + cantidadViandasColocadas + ".";
       parrafos.add(parrafo);
+      parrafos.add("\n");
     }
 
     return parrafos;
