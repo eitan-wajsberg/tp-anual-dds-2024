@@ -68,14 +68,14 @@
                         </div>
                     {{/if}}
                 </div>
+                <div class="row mt-4 mb-2 text-center">
+                    <hr>
+                    <label class="grey-text fw-bold w-100">
+                        ¿La heladera presenta algún problema?
+                        <a href="/heladeras/reporteFallas/{{heladera.id}}/nuevo" class="light-blue">Reportar una falla</a>.
+                    </label>
+                </div>
             {{/if}}
-            <div class="row mt-4 mb-2 text-center">
-                <hr>
-                <label class="grey-text fw-bold w-100">
-                    ¿La heladera presenta algún problema?
-                    <a href="/heladeras/reporteFallas/{{heladera.id}}/nuevo" class="light-blue">Reportar una falla</a>.
-                </label>
-            </div>
         </nav>
         <main class="col-md-8 d-flex flex-column">
             <div id="map"></div>

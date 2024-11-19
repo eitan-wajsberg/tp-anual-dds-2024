@@ -21,14 +21,18 @@ public class CantidadViandasPorColaborador implements Reporte {
 
     for (PersonaHumana persona : repositorioColaboradores.buscarTodos(PersonaHumana.class)) {
       cantidadViandas = cantidadViandasDonadadas(persona, fechaInicio, fechaFin);
-      parrafo = "Cantidad de viandas donadas de " + persona.getNombre() + ": " + cantidadViandas;
+      parrafo = "Cantidad de viandas donadas de "
+          + persona.getNombre() + " "
+          + persona.getApellido()
+          + " (Id: " + persona.getId()
+          + "): " + cantidadViandas;
       parrafos.add(parrafo);
     }
 
     return parrafos;
   }
 
-  private int cantidadViandasDonadadas(PersonaHumana persona, LocalDate fechaInicio, LocalDate fechaFin){
+  private int cantidadViandasDonadadas(PersonaHumana persona, LocalDate fechaInicio, LocalDate fechaFin) {
     return (int) persona.getContribuciones().stream().filter(con ->
         con.obtenerTipoContribucion() == TipoContribucion.DONACION_VIANDA
             && ManejoFechas.fechaEnRango(con.obtenerFechaRegistro(), fechaInicio, fechaFin)

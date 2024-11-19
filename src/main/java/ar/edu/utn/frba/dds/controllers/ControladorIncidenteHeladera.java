@@ -60,8 +60,6 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
   }
 
   public void save(Context ctx) {
-    // TODO: VERIFICAR PROFUNDAMENTE
-    //  CREO QUE NO PERSISTE LOS CAMBIOS EN LA HELADERA
     IncidenteDTO dto = new IncidenteDTO();
     dto.obtenerFormulario(ctx);
 
@@ -71,7 +69,7 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
           .orElseThrow(() -> new ValidacionFormularioException("Heladera no encontrada."));
 
       // Buscar al colaborador usando el ID del colaborador desde el DTO
-      PersonaHumana colaborador = repositorioPersonaHumana.buscarPorUsuario(dto.getColaboradorId())
+      PersonaHumana colaborador = repositorioPersonaHumana.buscarPorUsuario(dto.getUsuarioId())
           .orElseThrow(() -> new ValidacionFormularioException("Colaborador no encontrado."));
 
       // Crear y guardar el incidente
@@ -85,7 +83,6 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
       CambioEstado cambio = new CambioEstado(EstadoHeladera.valueOf(dto.getTipoAlerta()), LocalDate.now());
       heladera.cambiarEstado(cambio);
 
-      // Ejecutar la transacción
       withTransaction(() -> {
         repositorioIncidente.guardar(cambio);
         repositorioHeladera.actualizar(heladera);
@@ -136,6 +133,8 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
       System.out.println("Ocurrió un error al procesar alerta por fraude");
     }
     // avisar a los suscritos a la heladera por fraude
+    // cambiar el estado de la heladera
+    // crear incidente
     // avisar al tecnico mas cercano a la heladera
   }
   public void procesarFallaConexion(String idHeladera){
@@ -167,6 +166,7 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
       System.out.println("Ocurrió un error al registrar la falla de conexión");
     }
     // avisar a los suscritos a la heladera por fraude
+    // crear incidente
     // avisar al tecnico mas cercano a la heladera
   }
 }

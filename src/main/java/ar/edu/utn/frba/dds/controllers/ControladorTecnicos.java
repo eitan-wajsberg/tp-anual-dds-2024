@@ -2,10 +2,15 @@ package ar.edu.utn.frba.dds.controllers;
 
 import static ar.edu.utn.frba.dds.utils.manejos.GeneradorHashRandom.generateRandomString;
 import ar.edu.utn.frba.dds.domain.entities.contacto.Mensaje;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
+import ar.edu.utn.frba.dds.domain.entities.tecnicos.Visita;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Rol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.Usuario;
+import ar.edu.utn.frba.dds.domain.main.GeneradorReportesMain;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioRol;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioUsuario;
@@ -14,6 +19,7 @@ import ar.edu.utn.frba.dds.exceptions.ValidacionFormularioException;
 import ar.edu.utn.frba.dds.utils.javalin.ICrudViewsHandler;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -21,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.mail.MessagingException;
-import org.apache.commons.csv.CSVRecord;
 
 public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioTecnicos repositorioTecnicos;
@@ -200,5 +205,56 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
     usuario.setRol(rol.get());
 
     return usuario;
+  }
+
+  public void registrarVisita(Context context) {
+    Long heladeraId = Long.valueOf(context.pathParam("heladeraId"));
+
+    // Buscar la heladera
+    Heladera heladera = this.repositorioTecnicos.buscarPorId(heladeraId, Heladera.class).orElse(null);
+    if (heladera == null) {
+      context.status(404).result("No se encontró una heladera con el ID proporcionado.");
+      return;
+    }
+    System.out.println(heladera.getEstado());
+    System.out.println(heladera.getNombre());
+
+    // Verificar si la heladera está activa
+    if (heladera.estaActiva()) {
+      context.status(400).result("La heladera ya está activa. No es necesaria una nueva visita.");
+      return;
+    }
+
+    // Buscar incidente relacionado con la heladera
+    Incidente incidente = this.repositorioTecnicos.buscarIncidente(heladeraId).orElse(null);
+    if (incidente == null) {
+      context.status(404).result("No se ha registrado un incidente para la heladera: " + heladera.getNombre());
+      return;
+    }
+
+    // Crear y registrar la visita
+    Visita visita = new Visita();
+    visita.setDescripcion("Se ha solucionado el incidente en " + heladera.getNombre());
+
+    // Actualizar estado de la heladera y registrar la visita en el incidente
+    heladera.setEstado(EstadoHeladera.ACTIVA);
+    incidente.registrarVisita(visita, true);
+
+    // Persistir cambios en la base de datos
+    withTransaction(() -> {
+      this.repositorioTecnicos.actualizar(heladera);
+      this.repositorioTecnicos.guardar(visita);
+      this.repositorioTecnicos.actualizar(incidente);
+    });
+
+    // Según la consigna los reportes se ejecutan según una temporalidad, por ejemplo semanalmente,
+    // pero en el flujo no dan a entender eso, por eso pongo esto aquí.
+    try {
+      GeneradorReportesMain.main(null);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    context.status(200).result("Visita registrada y heladera activada correctamente.");
   }
 }

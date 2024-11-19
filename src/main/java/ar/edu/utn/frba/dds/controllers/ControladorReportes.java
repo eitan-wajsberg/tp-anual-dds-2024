@@ -1,6 +1,11 @@
 package ar.edu.utn.frba.dds.controllers;
 
+import ar.edu.utn.frba.dds.exceptions.MensajeAmigableException;
 import io.javalin.http.Context;
+import java.io.FileInputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +40,23 @@ public class ControladorReportes {
     model.put("reportes", reportes);
 
     context.render(rutaReportes, model);
+  }
+
+  public void verReporte(Context context) {
+    String carpeta = context.pathParam("carpeta");
+    String archivo = context.pathParam("archivo");
+    File file = new File(rutaBaseReportes + "/" + carpeta + "/" + archivo);
+
+    if (!file.exists()) {
+      throw new MensajeAmigableException("No existe un archivo en el sistema con ese nombre.", 400);
+    }
+
+    context.contentType("application/pdf");
+    try {
+      context.result(new FileInputStream(file));
+    } catch (Exception e) {
+      throw new MensajeAmigableException("No se pudo mostrar el archivo.", 400);
+    }
   }
 
   @Data

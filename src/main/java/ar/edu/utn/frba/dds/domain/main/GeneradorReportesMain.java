@@ -19,7 +19,7 @@ import java.io.IOException;
 public class GeneradorReportesMain {
   public static void main(String[] args) throws IOException {
     // configuro generador de reportes
-    /*String rutaReportes = "src/main/resources/public/reportes/";
+    String rutaReportes = "src/main/resources/reportes/";
     AdapterPDFiText adaptador = new AdapterPDFiText(new ITextPDF(rutaReportes));
     GeneradorReportes.getInstance().setAdapterPDF(adaptador);
     GeneradorReportes.getInstance().setTemporalidad(Temporalidad.SEMANAL);
@@ -35,18 +35,6 @@ public class GeneradorReportesMain {
     movimientosHeladera.setRepositorioHeladera(new RepositorioHeladera());
 
     GeneradorReportes.getInstance().agregarReportes(fallasHeladeras, viandasPorColaborador, movimientosHeladera);
-    GeneradorReportes.getInstance().generarReportes();*/
-
-    GeoRefUbicacion.Ubicacion ubicacion = GeoRefServicio.getInstancia()
-        .obtenerDireccionSegunCoordenada("-34.8465881", "-58.5411804")
-        .getUbicacion();
-
-    if (ubicacion == null) {
-      throw new ValidacionFormularioException("No se pudo obtener la ubicación.");
-    }
-
-    // Imprimir los valores deserializados
-    System.out.println("Municipio: " + ubicacion.municipio_nombre);
-    System.out.println("Provincia: " + ubicacion.provincia_nombre);
+    GeneradorReportes.getInstance().generarReportes();
   }
 }
