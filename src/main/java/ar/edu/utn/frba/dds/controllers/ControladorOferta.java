@@ -89,7 +89,6 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
       //ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
-
     }
     else{
       Optional<PersonaJuridica> idJuridica = this.repositorioJuridica.buscarPorUsuario(id_usuario);
@@ -204,9 +203,9 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
           .build();
 
       withTransaction(()-> repositorioOferta.guardar(oferta));
+      context.status(HttpStatus.CREATED_201).result("Oferta creada");
     }
 
-    context.status(HttpStatus.CREATED_201).result("Oferta creada");
     context.redirect("/ofertas");
 
   }
