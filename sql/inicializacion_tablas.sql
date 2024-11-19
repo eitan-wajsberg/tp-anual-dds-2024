@@ -383,12 +383,12 @@ INSERT INTO oferta (
 	(10, 220, null, "Kit de Herramientas de Jardinería", 1, 7);
 
 -- Inserción en la tabla 'oferta_canjeada'
-INSERT INTO oferta_canjeada (id, fechaCanje, canjeador_id, oferta_id, personaHumana_id)
+INSERT INTO oferta_canjeada (id, fechaCanje, oferta_id, personaHumana_id)
 VALUES
-	(1, '2024-10-19', 1, 1, 1),
-	(2, '2024-10-20', 1, 2, 1),
-	(3, '2024-10-21', 1, 3, 1),
-	(4, '2024-10-22', 1, 4, 1);
+	(1, '2024-10-19', 1, 1),
+	(2, '2024-10-20', 2, 1),
+	(3, '2024-10-21', 3, 1),
+	(4, '2024-10-22', 4, 1);
 
 -- TODO: Falta agregar:
 --  - Permisos, lo vamos a usar?
