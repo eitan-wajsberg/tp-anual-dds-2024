@@ -178,7 +178,7 @@ public class Heladera implements Contribucion {
     this.historialEstados.add(cambioEstado);
   }
 
-  private boolean temperaturaEnRango(float temperatura) {
+  public boolean temperaturaEnRango(float temperatura) {
     return temperatura >= modelo.getTemperaturaMinima() && temperatura <= modelo.getTemperaturaMaxima();
   }
 

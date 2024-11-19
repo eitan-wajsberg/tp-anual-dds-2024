@@ -43,13 +43,13 @@ public class Server {
         String topicMovimiento = "movimiento";
 
         ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura);
-        //ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
+        ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
 
         Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
-        //Thread receptorMovimientoThread = new Thread(receptorMovimiento);
+        Thread receptorMovimientoThread = new Thread(receptorMovimiento);
 
         receptorTemperaturaThread.start();
-        //receptorMovmientoThread.start();
+        receptorMovimientoThread.start();
 
         System.out.println("Los receptores están corriendo en paralelo");
 
