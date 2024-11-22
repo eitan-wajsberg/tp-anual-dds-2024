@@ -4,29 +4,53 @@
         <nav class="col-md-4 p-4 sidebar border border-color-999 rounded-4 my-4">
             <div class="pt-4 pb-2"></div> <!-- separador -->
             <h1 class="title text-center mb-5">{{title}}</h1>
-            <form class="p-3" id="uploadForm" method="POST" action="{{#if edicion}}/donacionVianda/{{id}}{{else}}/donacionVianda{{/if}}">
-                <div class="row mb-2">
-                    <input type="text" name="comida" placeholder="Descripción de la comida" value="{{dto.descripcion}}">
-                </div>
-                <div class="row mb-2">
-                    <input type="text" id="heladeraSeleccionada" id="heladeraNombre" placeholder="Seleccionar heladera en el mapa" value="{{dto.heladeraNombre}}">
-                    <input type="hidden" name="heladeraId" id="heladeraId" value="{{dto.heladeraId}}">
-                </div>
-                <div class="row mb-2 w-110">
-                    <input name="fechaCaducidad" type="text" id="fechaCaducidad" placeholder="Fecha de caducidad" onfocus="(this.type='date')" onfocusout="(this.type='text' )" min="1910-01-01" max="2024-12-31" value="{{dto.fechaDeCaducidad}}">
-                </div>
-                <div class="row mb-2">
-                    <input type="number" name="calorias" placeholder="Calorias (opcional)" value="{{dto.caloriasEnKcl}}">
-                </div>
-                <div class="row mb-2">
-                    <input type="number" name="peso" placeholder="Peso en gramos (opcional)" value="{{dto.pesoEnGramos}}">
-                </div>
-                <div class="row mb-2">
-                    <button onclick="openModal('donacionVianda')" id="submitButton" class="w-100 button" >{{#if edicion}}Guardar cambios{{else}}Donar vianda{{/if}}</button>
-                </div>
-                <div class="row">
-                    <p class="text-center fs-09 color-cc0808 fw-600 mt-2">Tenés 3 horas para ingresar la vianda en la heladera</p>
-                </div>
+            <form class="p-3" id="uploadForm" method="POST" action="/donacionVianda">
+                {{#if readonly}}
+
+                    <div class="row mb-2">
+                        <label>Comida: <span class="color-777" id="heladeraSeleccionada">{{dto.comida}}</span></label>
+                        <input type="hidden" id="heladeraId" value="{{dto.heladeraId}}">
+                    </div>
+                    <div class="row mb-2">
+                        <label>Heladera: <span class="color-777">{{dto.heladeraNombre}}</span></label>
+                    </div>
+                    <div class="row mb-2">
+                        <label>Fecha de caducidad: <span class="color-777">{{dto.fechaDeCaducidad}}</span></label>
+                    </div>
+                    <div class="row mb-2">
+                        <label>Calorías en kcal: <span class="color-777">{{dto.caloriasEnKcl}}</span></label>
+                    </div>
+                    <div class="row mb-2">
+                        <label>Peso en gramos: <span class="color-777">{{dto.pesoEnGramos}}</span></label>
+                    </div>
+
+                {{else}}
+
+                    <div class="row mb-2">
+                        <input type="text" name="comida" placeholder="Descripción de la comida" value="{{dto.descripcion}}">
+                    </div>
+                    <div class="row mb-2">
+                        <input type="text" id="heladeraSeleccionada" id="heladeraNombre" placeholder="Seleccionar heladera en el mapa" value="{{dto.heladeraNombre}}">
+                        <input type="hidden" name="heladeraId" id="heladeraId" value="{{dto.heladeraId}}">
+                    </div>
+                    <div class="row mb-2 w-110">
+                        <input name="fechaCaducidad" type="text" id="fechaCaducidad" placeholder="Fecha de caducidad" onfocus="(this.type='date')" onfocusout="(this.type='text' )" min="1910-01-01" max="2024-12-31" value="{{dto.fechaDeCaducidad}}">
+                    </div>
+                    <div class="row mb-2">
+                        <input type="number" name="calorias" placeholder="Calorias (opcional)" value="{{dto.caloriasEnKcl}}">
+                    </div>
+                    <div class="row mb-2">
+                        <input type="number" name="peso" placeholder="Peso en gramos (opcional)" value="{{dto.pesoEnGramos}}">
+                    </div>
+                    <div class="row mb-2">
+                        <button onclick="openModal('donacionVianda')" id="submitButton" class="w-100 button" >{{#if edicion}}Guardar cambios{{else}}Donar vianda{{/if}}</button>
+                    </div>
+                    <div class="row">
+                        <p class="text-center fs-09 color-cc0808 fw-600 mt-2">Tenés 3 horas para ingresar la vianda en la heladera</p>
+                    </div>
+
+                {{/if}}
+
                 {{#if error}}
                     <div class="row mt-2 justify-content-center text-break">
                         <p id="error" class="error text-center">{{error}}</p>
@@ -50,18 +74,25 @@
             var heladeras = {{{this.jsonHeladeras}}}
 
             addMarkers(heladeras, function(){
-                // llena nombre e id en el campo de la heladera que tenga focus
-                selectMarker(this.heladera, "heladeraSeleccionada");
-                $("#heladeraNombre").val(this.heladera.nombre);
-                $("#heladeraId").val(this.heladera.id);
+                {{#unless readonly}}
+                    // llena nombre e id en el campo de la heladera que tenga focus
+                    selectMarker(this.heladera, "heladeraSeleccionada");
+                    $("#heladeraNombre").val(this.heladera.nombre);
+                    $("#heladeraId").val(this.heladera.id);
+                {{/unless}}
             });
 
 
-            $("#heladeraNombre").on("change", function(){
-                if($(this).val() == ""){
-                    $("#heladeraId").val("");
-                }
-            });
+
+            {{#if readonly}}
+                selectMarker(heladeras.find(h => h.id == document.getElementById('heladeraId').value), "heladeraSeleccionada");
+            {{else}}
+                $("#heladeraNombre").on("change", function(){
+                    if($(this).val() == ""){
+                        $("#heladeraId").val("");
+                    }
+                });
+            {{/if}}
         });
     </script>
 {{/partial}}

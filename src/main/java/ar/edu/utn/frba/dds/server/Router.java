@@ -96,8 +96,8 @@ public class Router {
     app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index, TipoRol.PERSONA_HUMANA);
     app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save, TipoRol.PERSONA_HUMANA);
     app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create, TipoRol.PERSONA_HUMANA);
-    app.get("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::edit, TipoRol.PERSONA_HUMANA);
-    app.post("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::update, TipoRol.PERSONA_HUMANA);
+    app.get("/donacionVianda/{id}", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::show, TipoRol.PERSONA_HUMANA);
+    // app.get("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::edit, TipoRol.PERSONA_HUMANA);
     app.post("/donacionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::delete, TipoRol.PERSONA_HUMANA);
 
     // Distribución de viandas
