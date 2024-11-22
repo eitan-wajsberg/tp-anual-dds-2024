@@ -55,7 +55,25 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
 
   @Override
   public void show(Context context) {
-    // No specific show method needed.
+    Map<String, Object> model = new HashMap<>();
+    try {
+      Optional<Vianda> vianda = repositorioDonacionVianda
+          .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
+
+      if (vianda.isEmpty()) {
+        throw new ValidacionFormularioException("No existe la donación de vianda.");
+      }
+
+      ViandaDTO dto = new ViandaDTO(vianda.get());
+      model.put("dto", dto);
+      model.put("readonly", true);
+      model.put("id", context.pathParam("id"));
+      model.put("title", "Ver donacion");
+      context.render(rutaDonacionHbs, model);
+    } catch (ValidacionFormularioException e) {
+      model.put("error", e.getMessage());
+      context.render(rutaListadoHbs, model);
+    }
   }
 
   @Override
@@ -106,7 +124,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       heladera.agregarSolicitudApertura(soliApertura);
 
       // guardar cambios
-      persona.sumarPuntaje(nuevaDonacion.calcularPuntaje());
+      //persona.sumarPuntaje(nuevaDonacion.calcularPuntaje());
       withTransaction(() -> {
         this.repositorioSolicitud.guardar(soliApertura);
         repositorioDonacionVianda.guardar(nuevaDonacion);
@@ -124,8 +142,8 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     }
   }
 
-  @Override
-  public void edit(Context context) {
+  @Override // No usa. TODO: quitar comentario dentro de función
+  public void edit(Context context) { /*
     Map<String, Object> model = new HashMap<>();
     try {
       Optional<Vianda> vianda = repositorioDonacionVianda
@@ -144,56 +162,53 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
       context.render(rutaListadoHbs, model);
-    }
+    } */
   }
 
-  @Override
+  @Override // No usa
   public void update(Context context) {
-    Map<String, Object> model = new HashMap<>();
-    ViandaDTO dtoNuevo = new ViandaDTO();
-    dtoNuevo.obtenerFormulario(context);
 
-    try {
-      Optional<Vianda> viandaExistente = repositorioDonacionVianda
-          .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
+  }
 
-      if (viandaExistente.isEmpty()) {
-        throw new ValidacionFormularioException("Donación de vianda no encontrada.");
-      }
-
-      ViandaDTO dtoExistente = new ViandaDTO(viandaExistente.get());
-      if (dtoExistente.equals(dtoNuevo)) {
-        throw new ValidacionFormularioException("No se detectaron cambios en el formulario.");
-      }
-      Vianda vianda = viandaExistente.get();
-      vianda.actualizarFromDto(dtoNuevo);
-
-      // marcar vianda como entregada
-      vianda.setEntregada(true);
-
-      // cerrar solicitud de apertura
-      List<SolicitudApertura> solicitudes = this.repositorioSolicitud.listarRecientes(vianda.getId(), "vianda");
-      Optional<SolicitudApertura> optSolicitud = solicitudes.stream().filter(c-> !c.isAperturaConcretada()).findFirst();
-      if (optSolicitud.isEmpty()) {
-        throw new RuntimeException("No se encontró ninguna solicitud de apertura previa. Contactese con el administrador del sistema.");
-      }
-      SolicitudApertura solicitud = optSolicitud.get();
-      solicitud.setAperturaConcretada(true);
-
-      // guardo cambios
-      withTransaction(() -> {
-        repositorioDonacionVianda.actualizar(vianda);
-        this.repositorioSolicitud.actualizar(solicitud);
-      });
-
-      context.redirect(rutaListadoDonaciones);
-    } catch (Exception e) {
-      model.put("error", e.getMessage());
-      model.put("dto", dtoNuevo);
-      model.put("edicion", true);
-      model.put("id", context.pathParam("id"));
-      context.render(rutaDonacionHbs, model);
+  public void procesarIngresoDeViandaEnHeladera(Long idHeladera, Long idHumano, Long idVianda) {
+    Optional<Vianda> viandaExistente = repositorioDonacionVianda.buscarPorId(idVianda, Vianda.class);
+    if (viandaExistente.isEmpty()) {
+      throw new ValidacionFormularioException("Donación de vianda no encontrada.");
     }
+    // marcar vianda como entregada
+    //FIXME: broker y sumar puntaje acá y no cuando se crea la solicitud
+    Optional<PersonaHumana> optPersona = repositorioPersonaHumana.buscarPorUsuario(idHumano);
+    if (optPersona.isEmpty()) {
+      throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
+    }
+
+    PersonaHumana persona = optPersona.get();
+    persona.sumarPuntaje(viandaExistente.get().calcularPuntaje());
+    viandaExistente.get().setEntregada(true);
+
+    // cerrar solicitud de apertura
+    List<SolicitudApertura> solicitudes = this.repositorioSolicitud.listarRecientes(viandaExistente.get().getId(), "vianda");
+    Optional<SolicitudApertura> optSolicitud = solicitudes.stream().filter(c-> !c.isAperturaConcretada()).findFirst();
+    if (optSolicitud.isEmpty()) {
+      throw new RuntimeException("No se encontró ninguna solicitud de apertura previa. Contactese con el administrador del sistema.");
+    }
+    SolicitudApertura solicitud = optSolicitud.get();
+    solicitud.setAperturaConcretada(true);
+
+    // agrego vianda a la heladera una vez que realmente es ingresada
+    Optional<Heladera> optHeladera = repositorioHeladera.buscarPorId(idHeladera);
+    if (optHeladera.isEmpty()) {
+      throw new ValidacionFormularioException("Debe especificar una heladera.");
+    }
+    Heladera heladera = optHeladera.get();
+    viandaExistente.get().setHeladera(heladera);
+
+    // guardo cambios
+    withTransaction(() -> {
+      repositorioDonacionVianda.actualizar(viandaExistente.get());
+      this.repositorioHeladera.actualizar(heladera);
+      this.repositorioSolicitud.actualizar(solicitud);
+    });
   }
 
   @Override
