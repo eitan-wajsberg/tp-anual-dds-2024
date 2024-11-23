@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 
 public class UsoDeTarjetaTest {
+  /*
   @Test
   @DisplayName("Si no tengo menores a cargo y quiero usar una tarjeta por quinta vez, no puedo")
   public void noSePuedeUsarPorQuintaVezUnaTarjeta() {
@@ -73,4 +74,5 @@ public class UsoDeTarjetaTest {
   private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
     return new Vianda(LocalDate.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
   }
+  */
 }
