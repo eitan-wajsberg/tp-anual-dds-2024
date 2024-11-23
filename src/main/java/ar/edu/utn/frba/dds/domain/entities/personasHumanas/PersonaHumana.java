@@ -305,6 +305,7 @@ public class PersonaHumana extends IObserverNotificacion {
     validarFormasContribucion(dto);
 
     this.nombre = dto.getNombre();
+    System.out.println(dto.getNombre());
     this.apellido = dto.getApellido();
     this.fechaNacimiento = LocalDate.parse(dto.getFechaNacimiento());
 

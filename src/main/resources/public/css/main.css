@@ -814,3 +814,19 @@ input[type="radio"]:focus {
     font-size: 1.5rem;
     color: #ab1f1f;
 }
+
+.card-activada {
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.card-desactivada {
+    background-color: #f5f5f5; /* Gris claro */
+    border: 1px solid #ccc;
+    opacity: 0.7; /* Semi-transparente para dar indicación visual */
+}
+.card-desactivada.no-pointer {
+    pointer-events: none; /* Desactiva clics, desplazamiento, etc. */
+    cursor: default;      /* Cambia el cursor a uno estándar */
+    opacity: 0.7;         /* Estilo adicional para indicar que está inactiva */
+}

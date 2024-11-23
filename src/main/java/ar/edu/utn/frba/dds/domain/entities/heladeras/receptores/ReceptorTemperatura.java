@@ -36,7 +36,7 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
     private String brokerUrl;
     private String topic;
     private Timer timer;
-    private final int TIMEOUT_MS = 1000 * 60 * 1000;
+    private final int TIMEOUT_MS = 10 * 60 * 1000;
     private Map<String, Long> ultimasRecibidas = new HashMap<>();
     private Map<String, JobKey> heladerasJobs = new HashMap<>();
     private ControladorIncidenteHeladera controladorIncidenteHeladera = ServiceLocator.instanceOf(ControladorIncidenteHeladera.class);

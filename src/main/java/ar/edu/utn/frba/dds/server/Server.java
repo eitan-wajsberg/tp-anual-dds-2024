@@ -39,7 +39,7 @@ public class Server {
         initializer.init();
       }
       try {
-        String brokerUrl = "tcp://localhost:1883";
+        String brokerUrl = "tcp://broker.hivemq.com:1883";
         String topicTemperatura = "temperatura";
         String topicMovimiento = "movimiento";
         String topicApertura = "apertura";
