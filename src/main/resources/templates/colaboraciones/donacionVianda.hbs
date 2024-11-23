@@ -12,13 +12,10 @@
                         <input type="hidden" id="heladeraId" value="{{dto.heladeraId}}">
                     </div>
                     <div class="row mb-2">
-                        <label>Heladera: <span class="color-777">{{dto.heladeraNombre}}</span></label>
+                        <label>Fecha de caducidad: <span class="color-777">{{dto.fechaCaducidad}}</span></label>
                     </div>
                     <div class="row mb-2">
-                        <label>Fecha de caducidad: <span class="color-777">{{dto.fechaDeCaducidad}}</span></label>
-                    </div>
-                    <div class="row mb-2">
-                        <label>Calorías en kcal: <span class="color-777">{{dto.caloriasEnKcl}}</span></label>
+                        <label>Calorías en kcal: <span class="color-777">{{dto.caloriasEnKcal}}</span></label>
                     </div>
                     <div class="row mb-2">
                         <label>Peso en gramos: <span class="color-777">{{dto.pesoEnGramos}}</span></label>
@@ -34,10 +31,10 @@
                         <input type="hidden" name="heladeraId" id="heladeraId" value="{{dto.heladeraId}}">
                     </div>
                     <div class="row mb-2 w-110">
-                        <input name="fechaCaducidad" type="text" id="fechaCaducidad" placeholder="Fecha de caducidad" onfocus="(this.type='date')" onfocusout="(this.type='text' )" min="1910-01-01" max="2024-12-31" value="{{dto.fechaDeCaducidad}}">
+                        <input name="fechaCaducidad" type="text" id="fechaCaducidad" placeholder="Fecha de caducidad" onfocus="(this.type='date')" onfocusout="(this.type='text' )" min="1910-01-01" max="2024-12-31" value="{{dto.fechaCaducidad}}">
                     </div>
                     <div class="row mb-2">
-                        <input type="number" name="calorias" placeholder="Calorias (opcional)" value="{{dto.caloriasEnKcl}}">
+                        <input type="number" name="calorias" placeholder="Calorias (opcional)" value="{{dto.caloriasEnKcal}}">
                     </div>
                     <div class="row mb-2">
                         <input type="number" name="peso" placeholder="Peso en gramos (opcional)" value="{{dto.pesoEnGramos}}">

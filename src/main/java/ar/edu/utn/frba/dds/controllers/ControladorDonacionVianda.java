@@ -45,7 +45,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
   public void index(Context context) {
     Long id = context.sessionAttribute("id");
     List<Vianda> donaciones = this.repositorioDonacionVianda.buscarViandasDe(id);
-    for(int i=0; i < donaciones.size(); i++){System.out.println(donaciones.get(i));}
+
     List<ViandaDTO> donacionesDTO = donaciones.stream().map(donacion -> new ViandaDTO(donacion)).collect(Collectors.toList());
 
     Map<String, Object> model = new HashMap<>();
@@ -68,7 +68,8 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
       model.put("dto", dto);
       model.put("readonly", true);
       model.put("id", context.pathParam("id"));
-      model.put("title", "Ver donacion");
+      model.put("title", "Vianda para "+dto.getHeladeraNombre());
+      model.put("jsonHeladeras", gson.toJson(this.repositorioDonacionVianda.buscarTodos(Heladera.class)));
       context.render(rutaDonacionHbs, model);
     } catch (ValidacionFormularioException e) {
       model.put("error", e.getMessage());
@@ -142,33 +143,11 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     }
   }
 
-  @Override // No usa. TODO: quitar comentario dentro de función
-  public void edit(Context context) { /*
-    Map<String, Object> model = new HashMap<>();
-    try {
-      Optional<Vianda> vianda = repositorioDonacionVianda
-          .buscarPorId(Long.valueOf(context.pathParam("id")), Vianda.class);
-
-      if (vianda.isEmpty()) {
-        throw new ValidacionFormularioException("No existe la donación de vianda.");
-      }
-
-      ViandaDTO dto = new ViandaDTO(vianda.get());
-      model.put("dto", dto);
-      model.put("edicion", true);
-      model.put("id", context.pathParam("id"));
-      model.put("title", "Editar donacion");
-      context.render(rutaDonacionHbs, model);
-    } catch (ValidacionFormularioException e) {
-      model.put("error", e.getMessage());
-      context.render(rutaListadoHbs, model);
-    } */
-  }
+  @Override // No usa.
+  public void edit(Context context) {}
 
   @Override // No usa
-  public void update(Context context) {
-
-  }
+  public void update(Context context) { }
 
   public void procesarIngresoDeViandaEnHeladera(Long idHeladera, Long idHumano, Long idVianda) {
     Optional<Vianda> viandaExistente = repositorioDonacionVianda.buscarPorId(idVianda, Vianda.class);
