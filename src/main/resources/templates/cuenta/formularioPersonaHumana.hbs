@@ -137,8 +137,10 @@
         }
 
         $("[data-tarjeta]").on("click", function(){
-            if($(this).is(":checked") && $(this).data("tarjeta")=="X"){
+            if($("[data-tarjeta='X']:checked").length){
                 $(".necesarioParaTarjeta").attr("required", "required");
+            }else{
+                $(".necesarioParaTarjeta").removeAttr("required");
             }
         });
 
