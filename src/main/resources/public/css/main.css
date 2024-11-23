@@ -805,6 +805,12 @@ input[type="radio"]:focus {
 }
 
 .warning {
-    color: #b05252;
-    border-radius: 10px;
+    border-left: 4px solid #ab1f1f;
+    padding: 5px;
+    color: #ab1f1f;
+}
+
+.warning-icon {
+    font-size: 1.5rem;
+    color: #ab1f1f;
 }
