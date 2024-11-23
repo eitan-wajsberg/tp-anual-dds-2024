@@ -92,7 +92,7 @@ public class Router {
     // Personas jurídicas
     app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save, TipoRol.PERSONA_JURIDICA);
-    
+
     // Donacion dinero
     app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
     app.get("/donacionDinero/nuevo", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::create, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
