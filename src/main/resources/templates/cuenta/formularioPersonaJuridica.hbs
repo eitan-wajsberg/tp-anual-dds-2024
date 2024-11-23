@@ -19,7 +19,7 @@
                     <input name="razonSocial" type="text" class="w-100" required pattern="^[A-Z][a-zA-ZáéíóúñÑ.\s]{1,49}$" placeholder="Razón Social" title="La razón social debe tener entre 2 y 50 caracteres, comenzando con una letra mayúscula." value="{{dto.razonSocial}}">
                 </div>
                 <div class="col-12 col-md-6">
-                    <select name="rubro" class="custom-select w-100">
+                    <select name="rubro" id="rubro" class="custom-select w-100">
                         <option value="" disabled selected>Rubro</option>
                         {{#each rubros}}
                             <option value="{{this.id}}" {{#ifEqualLong dto.id this.id}}selected{{/ifEqualLong}}>{{this.nombre}}</option>
@@ -115,6 +115,11 @@
     <script src="/js/modalEliminacion.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector("#rubro option[value='{{dto.rubro}}']").setAttribute("selected", "selected");
+        });
+    </script>
 {{/partial}}
 
 {{> templates/base titulo="Mis datos personales" mostrarSeccion=true seccion="Mis datos personales"}}
