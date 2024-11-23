@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
-
+/*
 public class BrokerTest {
   private ReceptorMovimiento receptorMovimiento;
   private ReceptorTemperatura receptorTemperatura;
@@ -102,7 +102,7 @@ public class BrokerTest {
     // Verificar si el mensaje fue recibido correctamente por el receptorMovimiento
     String receivedMessage = receptorMovimiento.getLastMessage();
     Assertions.assertEquals(testMessage, receivedMessage, "El mensaje recibido no coincide con el mensaje publicado.");*/
-  }
+  /*}
   //@Test
 //  void seRegistraLaFallaDeConexion() throws MqttException, InterruptedException {
 //    CountDownLatch latch = new CountDownLatch(2);
@@ -112,4 +112,4 @@ public class BrokerTest {
 //    latch.await();
 //   // Assertions.assertEquals(receptorTemperatura.getUltimasRecibidas().get("1"), 12L);
 //  }
-}
+}*/

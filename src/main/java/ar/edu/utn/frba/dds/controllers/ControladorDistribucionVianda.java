@@ -158,16 +158,16 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
   }
 
   @Override
-  public void update(Context context) {
+  public void update(Context context) {System.out.println("prboandooooooo");
     DistribucionVianda viejaDist = null;
     try {
       Long id = Long.parseLong(context.pathParam("id"));
       Optional<DistribucionVianda> optViejaDist = this.repositorioDistribucion.buscarPorId(
           id, DistribucionVianda.class);
-
+      System.out.println("prboandooooooo");
       if (optViejaDist.isEmpty()) {
         throw new ValidacionFormularioException("Distribución de vianda no encontrada.");
-      }
+      }System.out.println("prboandooooooo");
       viejaDist = optViejaDist.get();
       if (!context.sessionAttribute("id").equals(viejaDist.getColaborador().getUsuario().getId())) {
         throw new ValidacionFormularioException("No puede modificar las distribuciones de vianda de otros colaboradores.");
@@ -182,7 +182,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       context.render(rutaAltaHbs, model);
       return;
     }
-
+    System.out.println("prboandooooooo");
     // agrego solicitud de apertura para agregar viandas al destino
     Heladera destino = viejaDist.getHeladeraDestino();
     SolicitudApertura soliApertura = SolicitudApertura.builder()
