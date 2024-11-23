@@ -80,7 +80,7 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
   public void edit(Context context) {
     Map<String, Object> model = new HashMap<>();
     try {
-      Optional<PersonaJuridica> persona = repositorioPersonaJuridica.buscarPorUsuario(Long.valueOf(context.pathParam("id")));
+      Optional<PersonaJuridica> persona = repositorioPersonaJuridica.buscarPorUsuario(context.sessionAttribute("id"));
 
       if (persona.isEmpty()) {
         throw new ValidacionFormularioException("No existe la persona jurídica.");
@@ -94,7 +94,7 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put("mostrarIrAtras", true);
       model.put("paginaAtras", "/");
       model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
-      model.put("id", context.pathParam("id"));
+      model.put("id", context.sessionAttribute("id"));
       context.render(rutaPersonaJuridicaHbs, model);
     } catch (ValidacionFormularioException e) {
       model.put(ERROR, e.getMessage());
@@ -104,7 +104,7 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put("mostrarIrAtras", true);
       model.put("paginaAtras", "/");
       model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
-      model.put("id", context.pathParam("id"));
+      model.put("id", context.sessionAttribute("id"));
       context.render(rutaPersonaJuridicaHbs, model);
     }
   }
@@ -116,7 +116,7 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
     dtoNuevo.obtenerFormulario(context);
 
     try {
-      Optional<PersonaJuridica> personaExistente = repositorioPersonaJuridica.buscarPorUsuario(Long.valueOf(context.pathParam("id")));
+      Optional<PersonaJuridica> personaExistente = repositorioPersonaJuridica.buscarPorUsuario(context.sessionAttribute("id"));
 
       if (personaExistente.isEmpty()) {
         throw new ValidacionFormularioException("Persona jurídica no encontrada.");
@@ -140,14 +140,14 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       model.put("mostrarIrAtras", true);
       model.put("paginaAtras", "/");
       model.put("rubros", this.repositorioPersonaJuridica.buscarTodos(Rubro.class));
-      model.put("id", context.pathParam("id"));
+      model.put("id", context.sessionAttribute("id"));
       context.render(rutaPersonaJuridicaHbs, model);
     }
   }
 
   @Override
   public void delete(Context context) {
-    Long id = Long.valueOf(context.pathParam("id"));
+    Long id = context.sessionAttribute("id");
     Optional<PersonaJuridica> persona = repositorioPersonaJuridica.buscarPorUsuario(id);
 
     if (persona.isPresent()) {
