@@ -57,13 +57,13 @@ public class ControladorPersonaJuridica implements ICrudViewsHandler, WithSimple
       if (rubro.isEmpty()) {
         throw new ValidacionFormularioException("Se han ingresado datos incorrectos.");
       }
+      nuevaPersona.setRubro(rubro.get());
 
       Long id = context.sessionAttribute("id");
       Usuario usuario = this.repositorioPersonaJuridica.buscarPorId(id, Usuario.class).orElseThrow(() ->
           new ValidacionFormularioException("No se ha encontrado tu usuario.")
       );
       nuevaPersona.setUsuario(usuario);
-      nuevaPersona.setRubro(rubro.get());
 
       withTransaction(() -> repositorioPersonaJuridica.guardar(nuevaPersona));
       context.redirect(rutaPantallaPrincipal);
