@@ -25,9 +25,11 @@
                             <div class="row mb-2">
                                 <span class="d-flex fw-bold fs-5">{{this.nombre}} {{this.apellido}}</span>
                             </div>
+                            {{#if this.documento.numero}}
                             <div class="row mb-2">
                                 <span><strong>{{this.documento.tipo}}:</strong> {{this.documento.numero}}</span>
                             </div>
+                            {{/if}}
                             <div class="row mb-2">
                                 <span><strong>Fecha nacimiento:</strong> {{this.fechaDeNacimiento}}</span>
                             </div>
