@@ -137,6 +137,7 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     } catch (RuntimeException e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
+      model.put("title", "Donar vianda");
       model.put("jsonHeladeras", gson.toJson(this.repositorioDonacionVianda.buscarTodos(Heladera.class)));
       model.put("dto", dto);
       context.render(rutaDonacionHbs, model);
@@ -154,8 +155,8 @@ public class ControladorDonacionVianda implements ICrudViewsHandler, WithSimpleP
     if (viandaExistente.isEmpty()) {
       throw new ValidacionFormularioException("Donación de vianda no encontrada.");
     }
-    // marcar vianda como entregada
-    //FIXME: broker y sumar puntaje acá y no cuando se crea la solicitud
+
+    // marcar vianda como entregad
     Optional<PersonaHumana> optPersona = repositorioPersonaHumana.buscarPorUsuario(idHumano);
     if (optPersona.isEmpty()) {
       throw new ValidacionFormularioException("No se ha encontrado el id del usuario. Error en servidor.");
