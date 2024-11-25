@@ -14,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class ControladorInicioSesion {
   private RepositorioUsuario repositorioUsuario;
-  private final String rutaInicioSesion = "/cuenta/inicioSesion.hbs";
+  private final String rutaInicioSesion = "cuenta/inicioSesion.hbs";
 
   public ControladorInicioSesion(RepositorioUsuario repositorioUsuario) {
     this.repositorioUsuario = repositorioUsuario;
