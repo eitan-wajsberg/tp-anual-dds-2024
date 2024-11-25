@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.server;
 
+import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorApertura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorMovimiento;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorTemperatura;
 import ar.edu.utn.frba.dds.middlewares.AuthMiddleware;
@@ -38,18 +39,22 @@ public class Server {
         initializer.init();
       }
       try {
-        String brokerUrl = "tcp://localhost:1883";
+        String brokerUrl = "tcp://broker.hivemq.com:1883";
         String topicTemperatura = "temperatura";
         String topicMovimiento = "movimiento";
+        String topicApertura = "apertura";
 
         ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura);
         ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
+        ReceptorApertura receptorApertura = new ReceptorApertura(brokerUrl, topicApertura);
 
         Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
         Thread receptorMovimientoThread = new Thread(receptorMovimiento);
+        Thread receptorAperturaThread = new Thread(receptorApertura);
 
         receptorTemperaturaThread.start();
         receptorMovimientoThread.start();
+        receptorAperturaThread.start();
 
         System.out.println("Los receptores están corriendo en paralelo");
 

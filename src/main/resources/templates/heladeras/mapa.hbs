@@ -42,7 +42,9 @@
             <!-- Resultados de Búsqueda -->
             <div id="heladeras-list" class="scrollable-results">
                 {{#each heladeras}}
-                    <a href="heladeras/{{this.id}}" class="card rounded-3 transition-card mb-2 clic-card" data-id="{{this.id}}">
+                    <a class="card rounded-3 transition-card mb-2 clic-card {{#if this.estaActiva}}card-activada{{else}}card-desactivada no-pointer{{/if}}"
+                       {{#if this.estaActiva}}href="heladeras/{{this.id}}"{{/if}}
+                       data-id="{{this.id}}">
                         <div class="card-result-body">
                             <h5 class="card-result-title">{{this.nombre}}</h5>
                             <p class="card-result-text">{{this.direccion.nomenclatura}}</p>

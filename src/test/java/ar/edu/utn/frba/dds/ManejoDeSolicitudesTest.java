@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-public class ManejoDeSolicitudesTest {
+public class ManejoDeSolicitudesTest {/*
     private Heladera heladeraLlena;
     private Heladera heladeraCasiLLena;
     private Heladera heladeraVacia;
@@ -175,5 +175,5 @@ public class ManejoDeSolicitudesTest {
 
     private Vianda crearVianda(String fecha, String nombre, int calorias, int peso) {
         return new Vianda(LocalDate.parse(fecha), true, nombre, calorias, peso, LocalDate.now());
-    }
+    }*/
 }

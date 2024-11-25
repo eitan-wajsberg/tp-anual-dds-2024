@@ -276,6 +276,7 @@ VALUES (
 
 -- Actualizo persona_vulnerable con su tarjeta
 UPDATE persona_vulnerable SET tarjeta_id = 1;
+UPDATE persona_humana SET tarjeta_id = 2;
 
 -- Inserción en la tabla 'uso_de_tarjeta'
 INSERT INTO uso_de_tarjeta (id, fechaDeUso, heladera_id, tarjeta_id) VALUES
