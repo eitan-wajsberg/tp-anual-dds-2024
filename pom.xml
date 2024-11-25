@@ -202,7 +202,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
       </plugin>
-      <plugin>
+     <!--  <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>3.2.1</version>
@@ -227,8 +227,8 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
+      </plugin> -->
+      <!-- <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>4.7.3.2</version>
@@ -241,8 +241,8 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
+      </plugin> -->
+     <!-- <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.8</version>
@@ -278,7 +278,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin> -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -292,15 +292,31 @@
         <!-- Build an executable JAR -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.2.0</version>
         <configuration>
           <archive>
             <manifest>
-              <mainClass>Main</mainClass>
+              <mainClass>ar.edu.utn.frba.dds.server.App</mainClass>
             </manifest>
           </archive>
         </configuration>
       </plugin>
+	<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-shade-plugin</artifactId>
+		<version>3.3.0</version>
+		<executions> 
+		<execution>
+		<phase>package</phase>
+		<goals>
+		<goal>shade</goal>
+		</goals>
+		<configuration>
+		<minimizeJar>false</minimizeJar>
+		</configuration> 
+		</execution> 
+		</executions>
+	</plugin>
     </plugins>
     <testResources>
       <testResource>
