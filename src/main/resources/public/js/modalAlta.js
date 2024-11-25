@@ -9,7 +9,7 @@ function crearModal(mensaje, accion, advertencia) {
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="customModalLabel">Confirmación de eliminación</h5>
+                        <h5 class="modal-title" id="customModalLabel">Confirmación de donación de vianda</h5>
                         <button type="button" class="modal-close position-absolute top-0 end-0 me-2 close" data-dismiss="modal" aria-label="Close">
                             <span class="iconify" data-icon="mdi:remove" data-width="18" data-height="18"></span>
                         </button>

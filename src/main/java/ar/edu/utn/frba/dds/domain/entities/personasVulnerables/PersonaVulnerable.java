@@ -114,7 +114,7 @@ public class PersonaVulnerable {
     validarFechaDeNacimiento(dto);
 
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
-    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO(), false);
 
     return PersonaVulnerable.builder()
         .nombre(dto.getNombre())
@@ -175,7 +175,7 @@ public class PersonaVulnerable {
     validarFechaDeNacimiento(dto);
 
     Direccion direccion = Direccion.fromDTO(dto.getDireccionDTO());
-    Documento documento = Documento.fromDTO(dto.getDocumentoDTO());
+    Documento documento = Documento.fromDTO(dto.getDocumentoDTO(), false);
 
     if (!this.nombre.equals(dto.getNombre())) {
       this.setNombre(dto.getNombre());
@@ -185,11 +185,11 @@ public class PersonaVulnerable {
       this.setApellido(dto.getApellido());
     }
 
-    if (!this.direccion.equals(direccion)) {
+    if (this.direccion!=null && !this.direccion.equals(direccion)) {
       this.setDireccion(direccion);
     }
 
-    if (!this.documento.equals(documento)) {
+    if (this.documento!=null && !this.documento.equals(documento)) {
       this.setDocumento(documento);
     }
 
