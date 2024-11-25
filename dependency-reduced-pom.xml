@@ -7,6 +7,14 @@
   <version>1.0-SNAPSHOT</version>
   <url>https://github.com/dds-utn</url>
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>sql</directory>
+      </resource>
+    </resources>
     <testResources>
       <testResource>
         <filtering>true</filtering>

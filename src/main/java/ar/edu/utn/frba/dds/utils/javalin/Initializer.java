@@ -7,6 +7,8 @@ import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefProvincias;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefServicio;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -80,7 +82,12 @@ public class Initializer implements WithSimplePersistenceUnit {
   }
 
   private void ejecutarScriptSQL() throws Exception {
-    String sql = new String(Files.readAllBytes(Paths.get("sql/inicializacion_tablas.sql")));
+	InputStream inputStream = getClass().getClassLoader().getResourceAsStream("inicializacion_tablas.sql");
+    if (inputStream == null) {
+        throw new RuntimeException("Archivo SQL no encontrado en el classpath: sql/inicializacion_tablas.sql");
+    }
+  String sql = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);  
+//String sql = new String(Files.readAllBytes(Paths.get("sql/inicializacion_tablas.sql")));
     String[] statements = sql.split(";");
 
     for (String statement : statements) {
