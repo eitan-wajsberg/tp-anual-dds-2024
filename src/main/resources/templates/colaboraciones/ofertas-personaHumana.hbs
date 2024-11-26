@@ -96,9 +96,6 @@
         function confirmarCanje(id) {
             // Almacena el id de la oferta seleccionada
             ofertaIdSeleccionada = id;
-
-            // Muestra el modal
-            $('#confirmar_canje').modal('show');
         }
 
         // Función que se llama cuando se hace clic en "Sí" en el modal
@@ -112,23 +109,24 @@
                     body: JSON.stringify({ idOferta: ofertaIdSeleccionada })
                 })
                         .then(response => {
-                            if (!response.ok) throw new Error('Error en el canje');
+                            if (!response.ok) {
+                                return response.text().then(errorMessage => {
+                                    throw new Error(errorMessage); // Lanza el mensaje de error recibido del servidor
+                                });
+                            }
                             return response.text();
                         })
                         .then(data => {
-                            alert("canje exitoso");  // Mensaje de éxito desde el servidor
-                            // Redirigir a la página de colaboraciones o la que corresponda
+                            alert(data);
                             window.location.href = '/ofertas';
                         })
                         .catch(error => {
-                            alert(error.message);  // Manejo de errores
+                            alert(`Error: ${error.message}`);
+                            window.location.href = '/ofertas';// Manejo de errores
                         });
             } else {
                 alert("Error: No se ha seleccionado ninguna oferta.");
             }
-
-            // Cierra el modal después de la acción
-            $('#confirmar_canje').modal('hide');
         }
     </script>
 
