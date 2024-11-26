@@ -89,7 +89,6 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
       //ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
-
     }
     else{
       Optional<PersonaJuridica> idJuridica = this.repositorioJuridica.buscarPorUsuario(id_usuario);
@@ -122,45 +121,47 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     context.render(rutaForm, model);
 
   }
+  public Map<String, Object> procesarCanjeHumano(OfertaDTO ofertaDTO, Long id_usuario) {
+    Long idOferta = ofertaDTO.getIdOferta();
+    Optional<Oferta> ofertaOptional = repositorioOferta.buscarPorId(idOferta, Oferta.class);
+
+    if (ofertaOptional.isPresent()) {
+      Optional<PersonaHumana> canjeador = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
+      Oferta oferta = ofertaOptional.get();
+      if (oferta.puedeCanjear(canjeador.get())) {
+        OfertaCanjeada ofertaCanjeada = OfertaCanjeada
+            .builder()
+            .oferta(oferta)
+            .fechaCanje(LocalDateTime.now())
+            .build();
+        canjeador.get().agregarOfertaCanjeada(ofertaCanjeada);
+        canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
+        withTransaction(() -> {
+          repositorioOfertaCanjeada.guardar(ofertaCanjeada);
+          repositorioPersonaHumana.actualizar(canjeador.get());
+        });
+        return Map.of("statusCode", 200, "message", "Canje exitoso");
+      } else {
+        return Map.of("statusCode", 403, "message", "Puntos insuficientes para canjear oferta.");
+      }
+    } else {
+      return Map.of("statusCode", 404, "message", "Oferta no encontrada");
+    }
+  }
 
   @Override
   public void save(Context context) {
+    Long id_usuario = context.sessionAttribute("id");
     String rol = context.sessionAttribute("rol");
     String pathImagen = null;
     if(TipoRol.PERSONA_HUMANA.name().equals(rol)){
       OfertaDTO ofertaDTO = context.bodyAsClass(OfertaDTO.class);
-      Long idOferta = ofertaDTO.getIdOferta();
-      Optional<Oferta> ofertaOptional = repositorioOferta.buscarPorId(idOferta, Oferta.class);
-
-      if (ofertaOptional.isPresent()) {
-        Long id_usuario = context.sessionAttribute("id");
-        Optional<PersonaHumana> canjeador = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
-        Oferta oferta = ofertaOptional.get();
-        if(oferta.puedeCanjear(canjeador.get())) {
-          OfertaCanjeada ofertaCanjeada = OfertaCanjeada
-              .builder()
-              .oferta(oferta)
-              .fechaCanje(LocalDateTime.now())
-              .build();
-          canjeador.get().agregarOfertaCanjeada(ofertaCanjeada);
-          canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
-          withTransaction(() -> {
-            repositorioOfertaCanjeada.guardar(ofertaCanjeada);
-            repositorioPersonaHumana.actualizar(canjeador.get());
-          });
-
-          context.status(200).contentType("text/plain").result("Canje exitoso");
-        }
-        else{
-          context.status(403).contentType("text/plain").result("Puntos insuficientes para canjear oferta.");
-        }
-      } else {
-        // Manejar el caso cuando no se encuentra la oferta
-        context.status(403).result("Oferta no encontrada");
-      }
-
+      Map<String, Object> resultado = procesarCanjeHumano(ofertaDTO, id_usuario);
+      context.status((int)resultado.get("statusCode"))
+          .contentType("text/plain")
+          .result((String) resultado.get("message"));
     }
-    else{
+    else if(TipoRol.PERSONA_JURIDICA.name().equals(rol)){
       UploadedFile uploadedFile = context.uploadedFile("imagen");
       System.out.println("Uploaded file: " + uploadedFile);
       System.out.println("TAMAÑO DEL ARCHIVO SUBIDO " + uploadedFile.size());
@@ -204,10 +205,11 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
           .build();
 
       withTransaction(()-> repositorioOferta.guardar(oferta));
+      context.status(HttpStatus.CREATED_201).result("Oferta creada");
+      context.redirect("/ofertas");
     }
 
-    context.status(HttpStatus.CREATED_201).result("Oferta creada");
-    context.redirect("/ofertas");
+
 
   }
 
@@ -240,6 +242,25 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
     // Asumiendo que tienes un método para renderizar la vista de ofertas canjeadas
     context.render("colaboraciones/ofertasCanjeadas.hbs", model);
+  }
+
+
+  public class ResultadoOperacion {
+    private int statusCode;
+    private String message;
+
+    public ResultadoOperacion(int statusCode, String message) {
+      this.statusCode = statusCode;
+      this.message = message;
+    }
+
+    public int getStatusCode() {
+      return statusCode;
+    }
+
+    public String getMessage() {
+      return message;
+    }
   }
 
 }
