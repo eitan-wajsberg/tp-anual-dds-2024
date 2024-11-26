@@ -6,9 +6,11 @@
             <div class="col-md-12">
                 {{#each ofertasCanjeadas}}
                     <div class="offer-card">
-                        <h4>{{this.oferta.nombre}}</h4>
-                        <p><strong>Fecha de Canje:</strong> {{this.fechaCanje}}</p>
-                        <p><strong>Puntos Gastados:</strong> {{this.oferta.cantidadPuntosNecesarios}}</p>
+                        <div class = "offer-details">
+                            <h4>{{this.oferta.nombre}}</h4>
+                            <p><strong>Fecha de Canje:</strong> {{this.fechaCanjeFormateada}}</p>
+                            <p><strong>Puntos Gastados:</strong> {{this.oferta.cantidadPuntosNecesarios}}</p>
+                        </div>
                     </div>
                 {{else}}
                     <p>No has canjeado ninguna oferta.</p>

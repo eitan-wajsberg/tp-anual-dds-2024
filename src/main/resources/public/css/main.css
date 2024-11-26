@@ -682,13 +682,15 @@ input[type="radio"]:focus {
     padding: 0;
     margin-bottom: 20px;
     display: flex;
+    flex-wrap: nowrap; /* Asegúrate de que no se colapsen los elementos */
     align-items: stretch;
+    width: 100%; /* Fuerza que la tarjeta ocupe el ancho completo disponible */
 }
 .offer-card img {
-    width: 165px;
-    height: 150px;
-    object-fit: contain;
-    border-radius: 8px 0 0 8px; /* Bordes redondeados solo en la esquina superior izquierda e inferior izquierda */
+    max-width: 165px; /* Ajusta las imágenes sin distorsionarlas */
+    height: auto; /* Deja que el navegador ajuste la altura proporcional */
+    object-fit: cover; /* Asegúrate de que la imagen cubra el espacio */
+    border-radius: 8px 0 0 8px;
     flex-shrink: 0;
 }
 .offer-details {
