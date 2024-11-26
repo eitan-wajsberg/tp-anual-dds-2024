@@ -44,17 +44,17 @@ public class Server {
         String topicMovimiento = "movimiento";
         String topicApertura = "apertura";
 
-        ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura);
-        ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
-        ReceptorApertura receptorApertura = new ReceptorApertura(brokerUrl, topicApertura);
-
-        Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
-        Thread receptorMovimientoThread = new Thread(receptorMovimiento);
-        Thread receptorAperturaThread = new Thread(receptorApertura);
-
-        receptorTemperaturaThread.start();
-        receptorMovimientoThread.start();
-        receptorAperturaThread.start();
+//        ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura);
+//        ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
+//        ReceptorApertura receptorApertura = new ReceptorApertura(brokerUrl, topicApertura);
+//
+//        Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
+//        Thread receptorMovimientoThread = new Thread(receptorMovimiento);
+//        Thread receptorAperturaThread = new Thread(receptorApertura);
+//
+//        receptorTemperaturaThread.start();
+//        receptorMovimientoThread.start();
+//        receptorAperturaThread.start();
 
         System.out.println("Los receptores están corriendo en paralelo");
 
