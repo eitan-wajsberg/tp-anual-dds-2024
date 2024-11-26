@@ -30,9 +30,11 @@
                 {{#each ofertas}}
                     <div class="offer-card" data-rubro="{{this.rubro.nombre}}">
                         {{#if this.imagen}}
-                            <img src="/{{this.imagen}}" alt="Imagen Oferta 1">
+                            <img src="/{{this.imagen}}" alt="Imagen Oferta 1" class="offer-image">
                         {{else}}
-                            <p>No hay imagen disponible</p>
+                            <div class="offer-image">
+                                <span>No hay imagen disponible</span>
+                            </div>
                         {{/if}}
                         <div class="offer-details">
                             <p><strong>Categoría:</strong>{{this.rubro.nombre}}</p>
@@ -83,7 +85,7 @@
             const ofertas = document.querySelectorAll('.offer-card');
             ofertas.forEach(oferta => {
                 if (oferta.getAttribute('data-rubro') === rubro) {
-                    oferta.style.display = 'block';
+                    oferta.style.display = 'flex';
                 } else {
                     oferta.style.display = 'none';
                 }
