@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.domain.entities.oferta;
 
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
+import java.time.format.DateTimeFormatter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,5 +37,9 @@ public class OfertaCanjeada {
     public OfertaCanjeada(Oferta oferta, LocalDateTime fechaCanje) {
         this.oferta = oferta;
         this.fechaCanje = fechaCanje;
+    }
+    public String getFechaCanjeFormateada() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return fechaCanje.format(dateFormatter);
     }
 }
