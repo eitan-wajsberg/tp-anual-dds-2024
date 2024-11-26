@@ -234,7 +234,6 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
     Long idUsuario = context.sessionAttribute("id");
     Optional<PersonaHumana> personaHumana = repositorioPersonaHumana.buscarPorUsuario(idUsuario);
     List<OfertaCanjeada> ofertasCanjeadas = repositorioOfertaCanjeada.buscarPorPersonaHumana(personaHumana.get().getId());
-
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Mis ofertas canjeadas");
     model.put("ofertasCanjeadas", ofertasCanjeadas);
