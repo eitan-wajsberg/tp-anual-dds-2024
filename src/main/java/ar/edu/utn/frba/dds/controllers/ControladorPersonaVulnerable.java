@@ -23,9 +23,9 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
   private RepositorioPersonaVulnerable repositorioPersonaVulnerable;
   private RepositorioPersonaHumana repositorioPersonaHumana;
   private RepositorioTarjetas repositorioTarjetas;
-  private final String rutaRegistroHbs = "/colaboraciones/registroPersonaVulnerable.hbs";
+  private final String rutaRegistroHbs = "colaboraciones/registroPersonaVulnerable.hbs";
   private final String rutaListadoHbs = "colaboraciones/listadoPersonasVulnerables.hbs";
-  private final String rutaSolicitudHbs = "/colaboraciones/solicitudTarjetas.hbs";
+  private final String rutaSolicitudHbs = "colaboraciones/solicitudTarjetas.hbs";
   private final Integer CANTIDAD_TARJETAS_SIN_ENTREGAR_MAXIMAS = 20;
 
   public ControladorPersonaVulnerable(RepositorioPersonaVulnerable repositorioPersonaVulnerable, RepositorioPersonaHumana repositorioPersonaHumana, RepositorioTarjetas repositorioTarjetas) {

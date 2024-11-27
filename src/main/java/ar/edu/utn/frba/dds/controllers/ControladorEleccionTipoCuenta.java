@@ -5,7 +5,7 @@ import ar.edu.utn.frba.dds.exceptions.MensajeAmigableException;
 import io.javalin.http.Context;
 
 public class ControladorEleccionTipoCuenta {
-  private final String rutaHbs = "/cuenta/eleccionTipoDeCuenta.hbs";
+  private final String rutaHbs = "cuenta/eleccionTipoDeCuenta.hbs";
 
   public void create(Context context) {
     context.render(rutaHbs);

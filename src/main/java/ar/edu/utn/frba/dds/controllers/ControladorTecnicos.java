@@ -32,7 +32,7 @@ public class ControladorTecnicos implements ICrudViewsHandler, WithSimplePersist
   private RepositorioTecnicos repositorioTecnicos;
   private RepositorioUsuario repositorioUsuario;
   private RepositorioRol repositorioRol;
-  private final String rutaAltaHbs = "/admin/adminAltaTecnicos.hbs";
+  private final String rutaAltaHbs = "admin/adminAltaTecnicos.hbs";
   private final String rutaListadoHbs = "admin/adminListadoTecnicos.hbs";
 
   public ControladorTecnicos(RepositorioTecnicos repositorioTecnico, RepositorioUsuario repositorioUsuario, RepositorioRol repositorioRol) {
