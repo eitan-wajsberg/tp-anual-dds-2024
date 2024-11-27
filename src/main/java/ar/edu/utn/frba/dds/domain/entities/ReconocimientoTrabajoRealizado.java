@@ -27,7 +27,7 @@ public class ReconocimientoTrabajoRealizado {
 
   public static void cargarCoeficientesDesdeArchivo() {
     Properties propiedades = new Properties();
-    try (InputStream input = Files.newInputStream(Paths.get(path))) {
+    try (InputStream input = ReconocimientoTrabajoRealizado.class.getClassLoader().getResourceAsStream("properties/coeficientesPuntaje.properties")) {
       propiedades.load(input);
       for (String nombreClave : propiedades.stringPropertyNames()) {
         String valor = propiedades.getProperty(nombreClave);
