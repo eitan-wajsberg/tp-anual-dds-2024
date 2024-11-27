@@ -11,7 +11,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 
 public class FallaConexionJob implements Job {
-  private final double tiempoMaximoInactividad = 1.5 * 60 * 1000;
+  private final double tiempoMaximoInactividad = 1 * 60 * 1000;
   private ControladorIncidenteHeladera controladorIncidenteHeladera = ServiceLocator.instanceOf(ControladorIncidenteHeladera.class);
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {

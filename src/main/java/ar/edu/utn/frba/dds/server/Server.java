@@ -39,22 +39,25 @@ public class Server {
         initializer.init();
       }
       try {
-        String brokerUrl = "tcp://broker.hivemq.com:1883";
+        String brokerUrl = "ssl://cbe982e8817b43de91fde7fa8b4efb03.s1.eu.hivemq.cloud";
+        String username = System.getenv("broker_usr");
+        String password= System.getenv("broker_pass");
+
         String topicTemperatura = "temperatura";
         String topicMovimiento = "movimiento";
         String topicApertura = "apertura";
 
-//        ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura);
-//        ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento);
-//        ReceptorApertura receptorApertura = new ReceptorApertura(brokerUrl, topicApertura);
-//
-//        Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
-//        Thread receptorMovimientoThread = new Thread(receptorMovimiento);
-//        Thread receptorAperturaThread = new Thread(receptorApertura);
-//
-//        receptorTemperaturaThread.start();
-//        receptorMovimientoThread.start();
-//        receptorAperturaThread.start();
+        //ReceptorTemperatura receptorTemperatura = new ReceptorTemperatura(brokerUrl, topicTemperatura, username, password);
+        ReceptorMovimiento receptorMovimiento = new ReceptorMovimiento(brokerUrl, topicMovimiento, username, password);
+        //ReceptorApertura receptorApertura = new ReceptorApertura(brokerUrl, topicApertura, username, password);
+
+        //Thread receptorTemperaturaThread = new Thread(receptorTemperatura);
+        Thread receptorMovimientoThread = new Thread(receptorMovimiento);
+        //Thread receptorAperturaThread = new Thread(receptorApertura);
+
+        //receptorTemperaturaThread.start();
+        receptorMovimientoThread.start();
+        //receptorAperturaThread.start();
 
         System.out.println("Los receptores están corriendo en paralelo");
 
