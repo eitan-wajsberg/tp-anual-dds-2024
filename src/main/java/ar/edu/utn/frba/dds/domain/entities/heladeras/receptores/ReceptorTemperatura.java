@@ -4,7 +4,10 @@ import ar.edu.utn.frba.dds.config.ServiceLocator;
 import ar.edu.utn.frba.dds.controllers.ControladorHeladera;
 import ar.edu.utn.frba.dds.controllers.ControladorIncidenteHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,6 +18,17 @@ import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.Optional;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.SimpleScheduleBuilder;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
 
 @Getter
 public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
@@ -22,10 +36,13 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
     private String brokerUrl;
     private String topic;
     private Timer timer;
-    private final int TIMEOUT_MS = 1 * 60 * 1000;
+    private final int TIMEOUT_MS = 100 * 60 * 1000;
     private Map<String, Long> ultimasRecibidas = new HashMap<>();
+    private Map<String, JobKey> heladerasJobs = new HashMap<>();
     private ControladorIncidenteHeladera controladorIncidenteHeladera = ServiceLocator.instanceOf(ControladorIncidenteHeladera.class);
     private ControladorHeladera controladorHeladera = ServiceLocator.instanceOf(ControladorHeladera.class);
+    private RepositorioHeladera repositorioHeladera = ServiceLocator.instanceOf(RepositorioHeladera.class);
+    private Scheduler scheduler;
     public ReceptorTemperatura(String brokerUrl, String topic) throws MqttException {
         this.brokerUrl = brokerUrl;
         this.topic = topic;
@@ -43,8 +60,44 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
 
             client.subscribe(topic, this);
             System.out.println("MQTT Receiver is running and listening to topic: " + topic);
-            comenzarChequeoInactividad();
+
+            this.iniciarJobParaHeladeras();
+
         } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+    private void iniciarJobParaHeladeras() {
+       try{
+           List<Heladera> heladeras = repositorioHeladera.buscarTodos(Heladera.class);
+           SchedulerFactory sf = new StdSchedulerFactory();
+           this.scheduler = sf.getScheduler();
+           heladeras.forEach(h -> iniciarJob(h));
+       }catch(SchedulerException e){
+
+       }
+    }
+
+    private void iniciarJob(Heladera heladera){
+        String idHeladera = String.valueOf(heladera.getId());
+        try {
+            JobDetail job = JobBuilder.newJob(FallaConexionJob.class)
+                .withIdentity(idHeladera)
+                .usingJobData("idHeladera", idHeladera) // Pasar el idHeladera
+                .usingJobData("timestamp", System.currentTimeMillis()) // Pasar el timestamp
+                .build();
+            Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity(idHeladera + "_trigger")
+                .startNow()
+                .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+                    .withIntervalInSeconds(90)
+                    .repeatForever())
+                .build();
+
+            scheduler.scheduleJob(job, trigger);
+            scheduler.start();
+            this.heladerasJobs.put(idHeladera, job.getKey());
+        } catch (SchedulerException e) {
             e.printStackTrace();
         }
     }
@@ -90,23 +143,63 @@ public class ReceptorTemperatura implements IMqttMessageListener, Runnable {
         if (!tipoMensaje.equals("Temperatura")) {
                 System.err.println("Tipo de mensaje no reconocido: " + tipoMensaje);
         }
-        this.controladorHeladera.actualizarTemperatura(idHeladera, valor);
-    }
-    private void comenzarChequeoInactividad() {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                long currentTime = System.currentTimeMillis();
+        if (heladerasJobs.containsKey(idHeladera)) {
+            actualizarTimestamp(idHeladera);
+        }
+        else{
+            try {
+                JobDetail job = JobBuilder.newJob(FallaConexionJob.class)
+                    .withIdentity(idHeladera)
+                    .usingJobData("idHeladera", idHeladera) // Pasar el idHeladera
+                    .usingJobData("timestamp", System.currentTimeMillis()) // Pasar el timestamp
+                    .build();
+                Trigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity(idHeladera + "_trigger")
+                    .startNow()
+                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+                        .withIntervalInSeconds(90)
+                        .repeatForever())
+                    .build();
 
-                for (Map.Entry<String, Long> entry : ultimasRecibidas.entrySet()) {
-                    String fridgeId = entry.getKey();
-                    long lastReceivedTime = entry.getValue();
-
-                    if (currentTime - lastReceivedTime > TIMEOUT_MS) {
-                        controladorIncidenteHeladera.procesarFallaConexion(fridgeId);
-                    }
-                }
+                scheduler.scheduleJob(job, trigger);
+                scheduler.start();
+                this.heladerasJobs.put(idHeladera, job.getKey());
+            } catch (SchedulerException e) {
+                e.printStackTrace();
             }
-        }, 0, TIMEOUT_MS);
+        }
+        this.controladorHeladera.actualizarTemperatura(idHeladera, valor, this);
     }
+    public void actualizarTimestamp(String idHeladera) {
+        JobKey jobKey = heladerasJobs.get(idHeladera);
+        if (jobKey != null) {
+            try {
+                JobDetail jobDetail = scheduler.getJobDetail(jobKey); // Obtiene el JobDetail por su JobKey
+                if (jobDetail != null) {
+                    JobDataMap dataMap = jobDetail.getJobDataMap(); // Accede al JobDataMap
+                    dataMap.put("timestamp", System.currentTimeMillis()); // Actualiza el timestamp
+                    System.out.println("Timestamp actualizado para heladera: " + idHeladera);
+                }
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void eliminarJobDeHeladera(String idHeladera){
+        JobKey jobKey = heladerasJobs.get(idHeladera);
+        if (jobKey != null) {
+            try {
+                scheduler.deleteJob(jobKey);
+                heladerasJobs.remove(idHeladera);
+                System.out.println("Job eliminado para heladera: " + idHeladera);
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Error al intentar eliminar el job de la heladera: " + idHeladera, e);
+            }
+        } else {
+            System.err.println("No se encontró job asociado a la heladera: " + idHeladera);
+        }
+    }
+
 }

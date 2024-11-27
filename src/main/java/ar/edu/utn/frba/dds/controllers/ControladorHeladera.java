@@ -4,6 +4,10 @@ import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Modelo;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Alerta;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.TipoAlerta;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.receptores.ReceptorTemperatura;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Desperfecto;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.FaltanNViandas;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.QuedanNViandas;
@@ -15,10 +19,12 @@ import ar.edu.utn.frba.dds.domain.entities.ubicacion.Municipio;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.Provincia;
 import ar.edu.utn.frba.dds.domain.entities.ubicacion.geoRef.GeoRefServicio;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
+import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioGeoRef;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioHeladera;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioPersonaJuridica;
 import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioSuscripcion;
+import ar.edu.utn.frba.dds.domain.repositories.imp.RepositorioTecnicos;
 import ar.edu.utn.frba.dds.dtos.HeladeraDTO;
 import ar.edu.utn.frba.dds.dtos.TecnicoDTO;
 import ar.edu.utn.frba.dds.exceptions.MensajeAmigableException;
@@ -28,26 +34,34 @@ import com.google.gson.Gson;
 import io.github.flbulgarelli.jpa.extras.simple.WithSimplePersistenceUnit;
 import io.javalin.http.Context;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.mail.MessagingException;
 import javax.persistence.NoResultException;
 
 public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersistenceUnit {
   private RepositorioHeladera repositorioHeladera;
   private RepositorioPersonaJuridica repositorioPersonaJuridica;
   private RepositorioSuscripcion repositorioSuscripcion;
+  private Repositorio repositorioIncidente;
+  private RepositorioTecnicos repositorioTecnicos;
   private final String rutaAltaHbs = "colaboraciones/cuidarHeladera.hbs";
   private final String rutaRecomendacionHbs = "colaboraciones/recomendacionDePuntos.hbs";
   private final String rutaParticularHbs = "heladeras/heladeraParticular.hbs";
   private final Gson gson = GsonFactory.createGson();
 
-  public ControladorHeladera(RepositorioHeladera repositoriaHeladera, RepositorioPersonaJuridica repositorioPersonaJuridica, RepositorioSuscripcion repositorioSuscripcion) {
+  public ControladorHeladera(RepositorioHeladera repositoriaHeladera, RepositorioPersonaJuridica repositorioPersonaJuridica,
+                             RepositorioSuscripcion repositorioSuscripcion, Repositorio repositorioIncidente,
+                             RepositorioTecnicos repositorioTecnicos) {
     this.repositorioHeladera = repositoriaHeladera;
     this.repositorioSuscripcion = repositorioSuscripcion;
     this.repositorioPersonaJuridica = repositorioPersonaJuridica;
+    this.repositorioIncidente = repositorioIncidente;
+    this.repositorioTecnicos = repositorioTecnicos;
   }
 
   @Override
@@ -143,6 +157,7 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
 
       dto.setTemperaturaMinima(modelo.getTemperaturaMinima());
       dto.setTemperaturaMaxima(modelo.getTemperaturaMaxima());
+      dto.setModelo(idModelo);
 
       Heladera nuevaHeladera = Heladera.fromDTO(dto);
       nuevaHeladera.setFechaRegistro(LocalDateTime.now());
@@ -219,12 +234,40 @@ public class ControladorHeladera implements ICrudViewsHandler, WithSimplePersist
     context.render(this.rutaRecomendacionHbs, model);
   }
 
-  public void actualizarTemperatura(String idHeladera, String valor) {
+  public void actualizarTemperatura(String idHeladera, String valor, ReceptorTemperatura receptor) {
     Heladera heladera = repositorioHeladera.buscarPorId(Long.parseLong(idHeladera)).orElseThrow(() ->
         new IllegalArgumentException("Heladera no encontrada al actualizar temperatura")
     );
-    heladera.cambiarTemperatura(Float.parseFloat(valor));
-    withTransaction(()->this.repositorioHeladera.actualizar(heladera));
+
+    float temperatura = Float.parseFloat(valor);
+    heladera.cambiarTemperatura(temperatura);
+    withTransaction(()-> this.repositorioHeladera.actualizar(heladera));
+
+    if(!heladera.temperaturaEnRango(temperatura)){
+      receptor.eliminarJobDeHeladera(idHeladera);
+      Incidente incidente = Incidente.builder()
+          .fecha(LocalDateTime.now())
+          .solucionado(false)
+          .heladera(heladera)
+          .tipoIncidente(new Alerta())
+          .tipoAlerta(TipoAlerta.FALLA_TEMPERATURA)
+          .build();
+      withTransaction(()->repositorioIncidente.guardar(incidente));
+      try {
+        Tecnico tecnicoSeleccionado = incidente.asignarTecnico(heladera, repositorioTecnicos.buscarTodos(Tecnico.class));
+        incidente.setTecnicoSeleccionado(tecnicoSeleccionado);
+        withTransaction(()->repositorioIncidente.actualizar(incidente));
+      }
+      catch (IllegalStateException e){
+        throw new RuntimeException(e);
+      } catch (MessagingException e) {
+        throw new RuntimeException(e);
+      } catch (UnsupportedEncodingException e) {
+        throw new RuntimeException(e);
+      }
+
+    }
+
   }
 
 }

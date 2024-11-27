@@ -202,6 +202,7 @@ public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
         );
         distribucion.setHeladeraDestino(heladeraDestino);
         distribucion.setHeladeraOrigen(heladeraOrigen);
+        distribucion.setTerminada(true);
         humano.sumarPuntaje(distribucion.calcularPuntaje());
         repositorio.guardar(distribucion);
         break;

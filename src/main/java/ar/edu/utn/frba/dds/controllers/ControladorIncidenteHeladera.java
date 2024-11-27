@@ -4,7 +4,10 @@ import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.CambioEstado;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.EstadoHeladera;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Alerta;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.Incidente;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.TipoAlerta;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes.TipoIncidente;
 import ar.edu.utn.frba.dds.domain.entities.personasHumanas.PersonaHumana;
 import ar.edu.utn.frba.dds.domain.entities.tecnicos.Tecnico;
 import ar.edu.utn.frba.dds.domain.repositories.Repositorio;
@@ -106,27 +109,62 @@ public class ControladorIncidenteHeladera implements WithSimplePersistenceUnit {
   }
 
   public void procesarFraude(Long idHeladera) {
-    Heladera heladera = this.repositorioHeladera.buscarPorId(idHeladera).orElseThrow(() ->
-      new IllegalArgumentException("Heladera no encontrada al procesar fraude.")
-    );
+    try{
+    Heladera heladera = this.repositorioHeladera.buscarPorId(idHeladera)
+        .orElseThrow(() -> new IllegalArgumentException("Heladera no encontrada al procesar fraude."));
     CambioEstado cambioEstado = new CambioEstado(EstadoHeladera.FRAUDE, LocalDate.now());
     heladera.cambiarEstado(cambioEstado);
     withTransaction(() -> this.repositorioHeladera.actualizar(heladera));
 
+    Incidente incidente = Incidente.builder()
+        .fecha(LocalDateTime.now())
+        .solucionado(false)
+        .heladera(heladera)
+        .tipoIncidente(new Alerta())
+        .tipoAlerta(TipoAlerta.FALLA_CONEXION)
+        .build();
+
+    withTransaction(() -> repositorioIncidente.guardar(incidente));
+    }
+    catch(IllegalArgumentException e){
+      System.out.println("Heladera no encontrada al procesar fraude.");
+    }
+    catch(Exception e){
+      System.out.println("Ocurrió un error al procesar alerta por fraude");
+    }
     // avisar a los suscritos a la heladera por fraude
     // cambiar el estado de la heladera
     // crear incidente
     // avisar al tecnico mas cercano a la heladera
   }
+  public void procesarFallaConexion(String idHeladera){
+    try {
+      Heladera heladera = this.repositorioHeladera.buscarPorId(Long.parseLong(idHeladera))
+          .orElseThrow(() -> new IllegalArgumentException("Heladera no encontrada al procesar falla de conexión."));
+      CambioEstado cambioEstado = new CambioEstado(EstadoHeladera.FALLA_CONEXION, LocalDate.now());
+      heladera.cambiarEstado(cambioEstado);
+      withTransaction(() -> this.repositorioHeladera.actualizar(heladera));
 
-  public void procesarFallaConexion(String idHeladera) {
-    Heladera heladera = this.repositorioHeladera.buscarPorId(Long.parseLong(idHeladera)).orElseThrow(() ->
-        new IllegalArgumentException("Heladera no encontrada al procesar fraude.")
-    );
-    CambioEstado cambioEstado = new CambioEstado(EstadoHeladera.FALLA_CONEXION, LocalDate.now());
-    heladera.cambiarEstado(cambioEstado);
-    withTransaction(() -> this.repositorioHeladera.actualizar(heladera));
+      Incidente incidente = Incidente.builder()
+          .fecha(LocalDateTime.now())
+          .solucionado(false)
+          .heladera(heladera)
+          .tipoIncidente(new Alerta())
+          .tipoAlerta(TipoAlerta.FALLA_CONEXION)
+          .build();
 
+//        Tecnico tecnicoSeleccionado = incidente.asignarTecnico(heladera,
+//            this.repositorioIncidente.buscarTodos(Tecnico.class));
+//        incidente.setTecnicoSeleccionado(tecnicoSeleccionado);
+
+      withTransaction(() -> repositorioIncidente.guardar(incidente));
+    }
+    catch(IllegalArgumentException e){
+      //manejar logica de heladera no encontrada en bd.
+    }
+    catch (Exception e){
+      System.out.println("Ocurrió un error al registrar la falla de conexión");
+    }
     // avisar a los suscritos a la heladera por fraude
     // crear incidente
     // avisar al tecnico mas cercano a la heladera

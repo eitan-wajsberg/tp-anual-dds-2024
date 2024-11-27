@@ -178,7 +178,7 @@ public class Heladera implements Contribucion {
     this.historialEstados.add(cambioEstado);
   }
 
-  private boolean temperaturaEnRango(float temperatura) {
+  public boolean temperaturaEnRango(float temperatura) {
     return temperatura >= modelo.getTemperaturaMinima() && temperatura <= modelo.getTemperaturaMaxima();
   }
 
@@ -307,20 +307,23 @@ public class Heladera implements Contribucion {
     validarRangoTemperaturaEsperada(dto);
 
     Direccion direccion = Direccion.fromCoordenada(dto.getLatitud(), dto.getLongitud());
-    return Heladera.builder()
+    HeladeraBuilder heladeraBuilder = Heladera.builder()
         .id(dto.getId())
         .nombre(dto.getNombre())
         .capacidadMaximaViandas(dto.getCapacidadMaximaViandas())
-        .temperaturaEsperada(dto.getTemperaturaEsperada())
-        .direccion(direccion)
-        .build();
+        .direccion(direccion);
+
+    if (dto.getTemperaturaEsperada() != null) {
+      heladeraBuilder.temperaturaEsperada(dto.getTemperaturaEsperada());
+    }
+
+    return heladeraBuilder.build();
   }
 
   private static void validarCamposObligatorios(HeladeraDTO dto) {
     CamposObligatoriosVacios.validarCampos(
         Pair.of("nombre", dto.getNombre()),
-        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas())),
-        Pair.of("temperatura esperada", dto.getTemperaturaEsperada())
+        Pair.of("capacidad máxima de viandas", String.valueOf(dto.getCapacidadMaximaViandas()))
     );
 
     if (dto.getCapacidadMaximaViandas() <= 0) {
@@ -329,8 +332,10 @@ public class Heladera implements Contribucion {
   }
 
   private static void validarRangoTemperaturaEsperada(HeladeraDTO dto) {
-    if (dto.getTemperaturaEsperada() < dto.getTemperaturaMinima() || dto.getTemperaturaEsperada() > dto.getTemperaturaMaxima()) {
-      throw new ValidacionFormularioException("La temperatura esperada debe estar dentro del rango mínimo y máximo permitido para el modelo.");
+    if (dto.getTemperaturaEsperada() != null) {
+      if (dto.getTemperaturaEsperada() < dto.getTemperaturaMinima() || dto.getTemperaturaEsperada() > dto.getTemperaturaMaxima()) {
+        throw new ValidacionFormularioException("La temperatura esperada debe estar dentro del rango mínimo y máximo permitido para el modelo.");
+      }
     }
   }
 }

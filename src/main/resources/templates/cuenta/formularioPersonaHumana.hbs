@@ -1,7 +1,7 @@
 {{#partial "contenido"}}
     <div class="m-5">
         <div class="row justify-content-center">
-            <form id="uploadForm" method="POST" action="{{#if edicion}}/personaHumana/perfil{{else}}/personaHumana{{/if}}">
+            <form id="uploadForm" method="POST" action="{{#if edicion}}/perfil{{else}}/personaHumana{{/if}}">
                 <input type="hidden" id="solicitaTarjeta" name="solicitaTarjeta" value="">
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-center">
@@ -137,8 +137,10 @@
         }
 
         $("[data-tarjeta]").on("click", function(){
-            if($(this).is(":checked") && $(this).data("tarjeta")=="X"){
+            if($("[data-tarjeta='X']:checked").length){
                 $(".necesarioParaTarjeta").attr("required", "required");
+            }else{
+                $(".necesarioParaTarjeta").removeAttr("required");
             }
         });
 

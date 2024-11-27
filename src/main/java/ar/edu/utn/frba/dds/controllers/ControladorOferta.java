@@ -88,7 +88,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
       model.put("puntos", puntaje);
 
       ofertas = this.repositorioOferta.buscarTodos(Oferta.class);
-      ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
+      //ofertas.removeIf(oferta -> !oferta.puedeCanjear(personaHumana.get()));
 
     }
     else{
@@ -136,16 +136,27 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
         Long id_usuario = context.sessionAttribute("id");
         Optional<PersonaHumana> canjeador = repositorioPersonaHumana.buscarPorUsuario(id_usuario);
         Oferta oferta = ofertaOptional.get();
-        OfertaCanjeada ofertaCanjeada = new OfertaCanjeada(oferta, LocalDateTime.now(),canjeador.get());
-        canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
-        withTransaction(()->{
-          repositorioOfertaCanjeada.guardar(ofertaCanjeada);
-          repositorioPersonaHumana.actualizar(canjeador.get());});
+        if(oferta.puedeCanjear(canjeador.get())) {
+          OfertaCanjeada ofertaCanjeada = OfertaCanjeada
+              .builder()
+              .oferta(oferta)
+              .fechaCanje(LocalDateTime.now())
+              .build();
+          canjeador.get().agregarOfertaCanjeada(ofertaCanjeada);
+          canjeador.get().sumarPuntaje(-oferta.getCantidadPuntosNecesarios());
+          withTransaction(() -> {
+            repositorioOfertaCanjeada.guardar(ofertaCanjeada);
+            repositorioPersonaHumana.actualizar(canjeador.get());
+          });
 
-        context.status(200).result("Canje exitoso");
+          context.status(200).contentType("text/plain").result("Canje exitoso");
+        }
+        else{
+          context.status(403).contentType("text/plain").result("Puntos insuficientes para canjear oferta.");
+        }
       } else {
         // Manejar el caso cuando no se encuentra la oferta
-        context.status(404).result("Oferta no encontrada");
+        context.status(403).result("Oferta no encontrada");
       }
 
     }
@@ -224,7 +235,7 @@ public class ControladorOferta implements WithSimplePersistenceUnit, ICrudViewsH
 
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Mis ofertas canjeadas");
-    model.put("ofertas canjeadas", ofertasCanjeadas);
+    model.put("ofertasCanjeadas", ofertasCanjeadas);
     model.put("puntos", personaHumana.get().getPuntajeActual());
 
     // Asumiendo que tienes un método para renderizar la vista de ofertas canjeadas
