@@ -157,38 +157,6 @@ VALUES
 	(4, 15, '2024-10-21', 4);
 
 -- Inserción en la tabla 'vianda'
-INSERT INTO vianda (
-	id, caloriasEnKcal, comida,
-	entregada, fechaCaducidad, fechaDonacion,
-	pesoEnGramos, personaHumana_id, heladera_id
-)
-VALUES (
-	1, 600, "Pollo con papas al horno",
-	true, '2024-12-18', '2024-10-18',
-	300, 1, 1
-),
-(
-	2, 450, "Pollo con ensalada fresca",
-	true, '2024-12-20', '2024-10-18',
-	300, 1, 1
-),
-(
-	3, 700, "Milanesa napolitana con puré",
-	true, '2024-12-22', '2024-10-18',
-	300, 1, 1
-),
-(
-	4, 550, "Ravioles de verdura con salsa",
-	true, '2024-12-19', '2024-10-18',
-	300, 1, 1
-),
-(
-	5, 500, "Tarta de espinaca y queso",
-	true, '2024-12-21', '2024-10-18',
-	300, 1, 1
-);
-
--- Inserción en la tabla 'donacion_dinero'
 INSERT INTO donacion_dinero (
 	id, fecha, monto,
 	unidadFrecuencia, id_personaHumana, id_personaJuridica
@@ -210,36 +178,108 @@ VALUES (
 	"MENSUAL", null, 1
 );
 
--- Inserción en la tabla 'distribucion_vianda'
-INSERT INTO distribucion_vianda (
-	id, cantidadViandas, fecha,
-	motivo, terminada,
-	id_personaHumana, id_heladeraDestino, id_heladeraOrigen
+-- Inserción en la tabla 'donacion_dinero'
+INSERT INTO vianda (
+    id, caloriasEnKcal, comida,
+    entregada, fechaCaducidad, fechaDonacion,
+    pesoEnGramos, personaHumana_id, heladera_id
 )
 VALUES (
-	1, 1000, '2024-12-18',
-	"Desperfecto en la heladera de origen", true,
-	1, 1, 2
+   1, 600, "Pollo con papas al horno",
+   true, '2024-12-18', '2024-10-18',
+   300, 1, 2
 ),
 (
-	2, 1000, '2024-12-18',
-	"Falta de viandas en la heladera destino", false,
-	1, 1, 2
+   2, 450, "Pollo con ensalada fresca",
+   true, '2024-12-20', '2024-10-18',
+   300, 1, 2
 ),
 (
-	3, 1000, '2024-12-18',
-	"Desperfecto en la heladera de origen", false,
-	1, 1, 2
+   3, 700, "Milanesa napolitana con puré",
+   true, '2024-12-22', '2024-10-18',
+   300, 1, 2
 ),
 (
-	4, 1000, '2024-12-18',
-	"Falta de viandas en la heladera destino", true,
-	1, 1, 2
+   4, 550, "Ravioles de verdura con salsa",
+   true, '2024-12-19', '2024-10-18',
+   300, 1, 4
+),
+(
+   5, 500, "Tarta de espinaca y queso",
+   true, '2024-12-21', '2024-10-18',
+   300, 1, 4
+),
+(
+   6, 400, "Ensalada César con pollo grillado",
+   true, '2024-12-18', '2024-10-18',
+   250, 1, 3
+),
+(
+   7, 800, "Lasagna de carne y vegetales",
+   true, '2024-12-24', '2024-10-19',
+   350, 1, 5
+),
+(
+   8, 300, "Sopa crema de calabaza",
+   true, '2024-12-17', '2024-10-18',
+   200, 1, 1
+),
+(
+   9, 600, "Empanadas de carne al horno",
+   true, '2024-12-20', '2024-10-20',
+   250, 1, 1
+),
+(
+   10, 450, "Pastel de papas",
+   true, '2024-12-21', '2024-10-19',
+   300, 1, 1
+),
+(
+   11, 500, "Hamburguesa casera con papas rústicas",
+   true, '2024-12-22', '2024-10-20',
+   350, 1, 3
+),
+(
+   12, 550, "Canelones de ricota y espinaca",
+   true, '2024-12-23', '2024-10-20',
+   300, 1, 4
+),
+(
+   13, 350, "Arroz con vegetales y tofu",
+   true, '2024-12-18', '2024-10-21',
+   250, 1, 2
+),
+(
+   14, 750, "Cazuela de pollo y hongos",
+   true, '2024-12-24', '2024-10-22',
+   400, 1, 5
+),
+(
+   15, 500, "Fideos con pesto de albahaca",
+   true, '2024-12-19', '2024-10-21',
+   300, 1, 4
+);
+
+-- Inserción en la tabla 'distribucion_vianda'
+INSERT INTO distribucion_vianda (
+    id, cantidadViandas, fecha,
+    motivo, terminada,
+    id_personaHumana, id_heladeraOrigen, id_heladeraDestino
+)
+VALUES (
+    1, 1000, '2024-12-18',
+    "Desperfecto en la heladera de origen", true,
+    1, 1, 2
+),
+(
+    2, 1000, '2024-12-18',
+    "Falta de viandas en la heladera destino", true,
+    1, 3, 4
 );
 
 -- Inserción en la tabla 'vianda_por_distribucion'
 INSERT INTO vianda_por_distribucion (id_distribucion_vianda, id_vianda)
-VALUES (1, 1), (2, 2), (3, 3), (4, 4), (4, 5);
+VALUES (1, 1),(1, 2), (1, 3), (2, 4), (2, 5);
 
 -- Inserción en la tabla 'persona_vulnerable'
 INSERT INTO persona_vulnerable (
@@ -347,24 +387,24 @@ VALUES (1, "Una falla muy terrible la verdad", null, 1);
 
 -- Inserción en la tabla 'solicitud_apertura'
 INSERT INTO solicitud_apertura (
-	id, accion, apreturaConcretada, cantidadViandas,
-	fechaConcrecion, fechaSolicitud, tarjeta_id, id_heladera
+    id, accion, apreturaConcretada, cantidadViandas, distribucionVianda_id,
+    fechaConcrecion, fechaSolicitud, tarjeta_id, id_heladera
 )
 VALUES (
-	1, "QUITAR_VIANDA", 1, 10,
-	'2024-10-18', '2024-10-18', 2, 1
+    1, "QUITAR_VIANDA", 1, 10, 1,
+    '2024-10-18 18:00:00.000000', '2024-10-18 17:00:00.000000', 2, 1
 ),
 (
-	2, "INGRESAR_VIANDA", 1, 10,
-	'2024-10-18', '2024-10-18', 2, 1
+    2, "INGRESAR_VIANDA", 1, 10, 1,
+    '2024-10-18 19:00:00.000000', '2024-10-18 18:30:00.000000', 2, 2
 ),
 (
-	3, "QUITAR_VIANDA", 1, 10,
-	'2024-10-18', '2024-10-18', 2, 1
+    3, "QUITAR_VIANDA", 1, 15, 2,
+    '2024-10-19 18:00:00.000000', '2024-10-18 17:00:00.000000', 2, 3
 ),
 (
-	4, "INGRESAR_VIANDA", 1, 50,
-	'2024-10-18', '2024-10-18', 2, 1
+    4, "INGRESAR_VIANDA", 1, 15, 2,
+    '2024-10-19 19:00:00.000000', '2024-10-18 18:30:00.000000', 2, 4
 );
 
 -- Inserción en la tabla 'oferta'
