@@ -4,11 +4,43 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e31de50-f3cb-42d4-9e5c-c2cb8f2ca0f8" name="Changes" comment="src: Corrijo nuelleabilidad de ciertos atributos" />
-    <list id="93000aa8-a838-4d0f-b645-d1c619dc6ac1" name="Changes by eitan" comment="" />
-    <list id="19e71be8-9958-465a-b1e7-6bf74d239f33" name="Changes by N E H" comment="" />
-    <list id="d72cec95-cfea-42da-a588-c7dc34bc2870" name="Changes by nehue" comment="" />
-    <list id="47b8d0bc-199d-405c-9897-d2523ae52502" name="Changes by ROCHI" comment="" />
+    <list default="true" id="75afa70b-7b5c-42e5-8bb7-086f8600894d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/controllers/OAuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/middleware/AuthMiddleware.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/server/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/server/Router.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/server/Server.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/utils/KeycloakKeyUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/utils/PrettyProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/properties/config.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/AppTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/controllers/OAuthController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/middleware/AuthMiddleware.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/server/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/server/Router.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/server/Server.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/utils/KeycloakKeyUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/utils/PrettyProperties.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/properties/config.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/javalin-oauth-poc-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.example.AppTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.example.AppTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/example/AppTest.class" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,123 +49,71 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
-        <option value="HTML File" />
-        <option value="Enum" />
         <option value="Class" />
-        <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="entrega4" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;facundo-gs&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "facundo-gs"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://facundo-gs@github.com/dds-utn/2024-tpa-mi-no-grupo-08.git&quot;,
-    &quot;accountId&quot;: &quot;e8c89323-e453-4493-9b57-668e02d244af&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/facundo-gs/javalin-oauth-poc.git",
+    "accountId": "e8c89323-e453-4493-9b57-668e02d244af"
   }
+}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
 }</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/ar/edu/utn/frba/dds/domain/contacto/MailSender.java" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="downloadAnnotationsAutomatically" value="true" />
-        <option name="downloadDocsAutomatically" value="true" />
-        <option name="downloadSourcesAutomatically" value="true" />
-      </MavenImportingSettings>
-    </option>
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
+  &quot;associatedIndex&quot;: 6
 }</component>
-  <component name="ProjectId" id="2fVaRNYpEQeoN32zkU2ES1azz0R" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="2pPlQJ3Jv1s9M8JiVtI6pQHyMSp" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.AdaptadaTelegramBot.executor": "Run",
     "Application.App.executor": "Run",
-    "Application.MailSender.executor": "Run",
-    "Application.MainExample.executor": "Run",
-    "Application.PersistenciaMain.executor": "Run",
-    "Application.TelegramBot.executor": "Run",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "JUnit.AdaptadaJavaXMailTest.executor": "Run",
-    "JUnit.CargaMasivaColaboracionesTest.executor": "Run",
-    "JUnit.EnvioDeMail.executor": "Run",
-    "JUnit.IntegracionRecomendacionDonacionesTest.obtenerHeladeras.executor": "Run",
-    "JUnit.MailSenderTest.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "Application.Main.executor": "Run",
+    "Maven.javalin-oauth-poc [clean].executor": "Run",
+    "Maven.javalin-oauth-poc [install].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "ignore.virus.scanning.warn.message": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_directory_selection": "C:/Users/facug/Desktop/Chicken/UTN/03_tercer_ano/Disenio/2024-tpa-mi-no-grupo-08/src/main/java/ar/edu/utn/frba/dds/domain/contacto",
-    "last_opened_file_path": "C:/Users/facug/javalin-oauth-poc",
+    "last_opened_file_path": "C:/Users/facug/javalin-oauth-poc/src/main/resources/properties",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="ar.edu.utn.frba.dds.domain.repositories" />
-      <recent name="ar.edu.utn.frba.dds.domain.entities.heladeras.incidentes" />
-      <recent name="ar.edu.utn.frba.dds.domain.adapters" />
-      <recent name="ar.edu.utn.frba.dds.domain.definirPackages" />
-      <recent name="ar.edu.utn.frba.dds.domain.colabolador" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\facug\Desktop\Chicken\UTN\03_Tercero\DdeS\TPA\2024-tpa-mi-no-grupo-08\maquetado" />
-      <recent name="C:\Users\facug\Desktop\Chicken\UTN\03_Tercero\DdeS\TPA\2024-tpa-mi-no-grupo-08\documentos" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\facug\Desktop\Chicken\UTN\03_Tercero\DdeS\TPA\2024-tpa-mi-no-grupo-08\maquetado" />
-      <recent name="C:\Users\facug\Desktop\Chicken\UTN\03_tercer_ano\Disenio\2024-tpa-mi-no-grupo-08\documentos\terceraEntrega" />
-      <recent name="C:\Users\facug\Desktop\Chicken\UTN\03_tercer_ano\Disenio\2024-tpa-mi-no-grupo-08\documentos\segundaEntrega" />
-    </key>
-    <key name="ExtractSuperBase.RECENT_KEYS">
-      <recent name="ar.edu.utn.frba.dds.domain.definirPackages" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="ar.edu.utn.frba.dds.domain.adapters" />
+      <recent name="C:\Users\facug\javalin-oauth-poc\src\main\resources\properties" />
     </key>
   </component>
   <component name="RunManager" selected="Application.App">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ar.edu.utn.frba.dds.server.App" />
-      <module name="ejercicio" />
+      <option name="MAIN_CLASS_NAME" value="com.example.server.App" />
+      <module name="javalin-oauth-poc" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ar.edu.utn.frba.dds.server.*" />
+          <option name="PATTERN" value="com.example.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -141,72 +121,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MainExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ar.edu.utn.frba.dds.domain.main.MainExample" />
-      <module name="ejercicio" />
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.Main" />
+      <module name="javalin-oauth-poc" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ar.edu.utn.frba.dds.domain.main.*" />
+          <option name="PATTERN" value="com.example.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PersistenciaMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ar.edu.utn.frba.dds.domain.main.PersistenciaMain" />
-      <module name="ejercicio" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ar.edu.utn.frba.dds.domain.main.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="EnvioDeMail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ejercicio" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ar.edu.utn.frba.dds.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ar.edu.utn.frba.dds" />
-      <option name="MAIN_CLASS_NAME" value="ar.edu.utn.frba.dds.EnvioDeMail" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="IntegracionRecomendacionDonacionesTest.obtenerHeladeras" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ejercicio" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ar.edu.utn.frba.dds.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ar.edu.utn.frba.dds" />
-      <option name="MAIN_CLASS_NAME" value="ar.edu.utn.frba.dds.IntegracionRecomendacionDonacionesTest" />
-      <option name="METHOD_NAME" value="obtenerHeladeras" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="2024-tpa-mi-no-grupo-08" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="2024-tpa-mi-no-grupo-08" />
-      <option name="filePath" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -214,10 +137,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.App" />
-        <item itemvalue="Application.PersistenciaMain" />
-        <item itemvalue="Application.MainExample" />
-        <item itemvalue="JUnit.IntegracionRecomendacionDonacionesTest.obtenerHeladeras" />
-        <item itemvalue="JUnit.EnvioDeMail" />
+        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -232,217 +152,18 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="8e31de50-f3cb-42d4-9e5c-c2cb8f2ca0f8" name="Changes" comment="" />
-      <created>1713888692852</created>
+      <changelist id="75afa70b-7b5c-42e5-8bb7-086f8600894d" name="Changes" comment="" />
+      <created>1732675574593</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1713888692852</updated>
-      <workItem from="1725827470764" duration="376000" />
-      <workItem from="1725837186237" duration="3823000" />
-      <workItem from="1725841468095" duration="2120000" />
-      <workItem from="1725855311912" duration="4204000" />
-      <workItem from="1725920194468" duration="114000" />
-      <workItem from="1725936814521" duration="761000" />
-      <workItem from="1726006465025" duration="687000" />
-      <workItem from="1726022993798" duration="3751000" />
-      <workItem from="1726088626007" duration="4676000" />
-      <workItem from="1728347596248" duration="2694000" />
-      <workItem from="1728584042637" duration="10081000" />
-      <workItem from="1728762655889" duration="25237000" />
-      <workItem from="1728871276552" duration="11971000" />
-      <workItem from="1728930291678" duration="427000" />
-      <workItem from="1728964157677" duration="13255000" />
-      <workItem from="1729009962680" duration="45024000" />
-      <workItem from="1729101205435" duration="21827000" />
-      <workItem from="1730507834795" duration="739000" />
-      <workItem from="1732031737729" duration="3234000" />
-      <workItem from="1732130260558" duration="1487000" />
-      <workItem from="1732312676249" duration="8256000" />
-      <workItem from="1732582218143" duration="918000" />
-      <workItem from="1732675538267" duration="112000" />
-      <workItem from="1732676637555" duration="122000" />
-      <workItem from="1732744279772" duration="4652000" />
+      <updated>1732675574593</updated>
+      <workItem from="1732675575814" duration="132000" />
+      <workItem from="1732675875012" duration="6990000" />
+      <workItem from="1732717237779" duration="16276000" />
     </task>
-    <task id="LOCAL-00001">
-      <option name="closed" value="true" />
-      <created>1716257801282</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1716257801282</updated>
-    </task>
-    <task id="LOCAL-00002" summary="documentos: arreglo medios de contacto">
-      <option name="closed" value="true" />
-      <created>1720032482164</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1720032482164</updated>
-    </task>
-    <task id="LOCAL-00003" summary="src: modifico MailSender">
-      <option name="closed" value="true" />
-      <created>1720042145582</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1720042145582</updated>
-    </task>
-    <task id="LOCAL-00004" summary="src: modifico AdaptadaWhatsAppTwillio">
-      <option name="closed" value="true" />
-      <created>1720042698171</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1720042698171</updated>
-    </task>
-    <task id="LOCAL-00005" summary="src: agrego Telegram como medio de contacto">
-      <option name="closed" value="true" />
-      <created>1720042756072</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1720042756072</updated>
-    </task>
-    <task id="LOCAL-00006" summary="document">
-      <option name="closed" value="true" />
-      <created>1720046399558</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1720046399558</updated>
-    </task>
-    <task id="LOCAL-00007" summary="document: Agrego relacion P.Vulnerable -&gt; Tarjeta">
-      <option name="closed" value="true" />
-      <created>1720047104175</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1720047104175</updated>
-    </task>
-    <task id="LOCAL-00008" summary="src: agrego comentario Telegram">
-      <option name="closed" value="true" />
-      <created>1720047189311</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1720047189311</updated>
-    </task>
-    <task id="LOCAL-00009" summary="src: corrijo/agrego tipo de data Usuario">
-      <option name="closed" value="true" />
-      <created>1724021074096</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1724021074096</updated>
-    </task>
-    <task id="LOCAL-00010" summary="document: agrego atributo Usuario a técnico">
-      <option name="closed" value="true" />
-      <created>1724021155927</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1724021155927</updated>
-    </task>
-    <task id="LOCAL-00011" summary="src: agrego atributo Usuario a Persona Jurídica">
-      <option name="closed" value="true" />
-      <created>1724625484973</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1724625484973</updated>
-    </task>
-    <task id="LOCAL-00012" summary="document: modifico atributo de ofertasCanjeadas a ofertas en personaJuridica y quito atributo duplicado en personaHumana">
-      <option name="closed" value="true" />
-      <created>1725415586606</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1725415586608</updated>
-    </task>
-    <task id="LOCAL-00013" summary="src: quito atributo ofertasCanjeadas de persona jurídica">
-      <option name="closed" value="true" />
-      <created>1725415647657</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1725415647657</updated>
-    </task>
-    <task id="LOCAL-00014" summary="src: cambio LocalDate por LocaleDateTime">
-      <option name="closed" value="true" />
-      <created>1725743655486</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1725743655486</updated>
-    </task>
-    <task id="LOCAL-00015" summary="src: Cambio detalles de espaciado">
-      <option name="closed" value="true" />
-      <created>1725743683304</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1725743683304</updated>
-    </task>
-    <task id="LOCAL-00016" summary="maquetado: agrego donacion de vianda y donacion de vianda listado">
-      <option name="closed" value="true" />
-      <created>1725743774337</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1725743774337</updated>
-    </task>
-    <task id="LOCAL-00017" summary="mapeo: mapeo de entidades - parte 01">
-      <option name="closed" value="true" />
-      <created>1725841728891</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1725841728891</updated>
-    </task>
-    <task id="LOCAL-00018" summary="src: Corrijo nuelleabilidad de ciertos atributos">
-      <option name="closed" value="true" />
-      <created>1726024523025</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1726024523025</updated>
-    </task>
-    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="documentos: arreglo medios de contacto" />
-    <MESSAGE value="Agrego clases con sus respectivos atributos y métodos" />
-    <MESSAGE value="src: modifico MailSender" />
-    <MESSAGE value="src: modifico AdaptadaWhatsAppTwillio" />
-    <MESSAGE value="src: agrego Telegram como medio de contacto" />
-    <MESSAGE value="document" />
-    <MESSAGE value="document: Agrego relacion P.Vulnerable -&gt; Tarjeta" />
-    <MESSAGE value="src: agrego comentario Telegram" />
-    <MESSAGE value="src: corrijo/agrego tipo de data Usuario" />
-    <MESSAGE value="document: agrego atributo Usuario a técnico" />
-    <MESSAGE value="document: modifico atributo de ofertasCanjeadas a ofertas en personaJuridica y quito atributo duplicado en personaHumana" />
-    <MESSAGE value="src: agrego atributo Usuario a Persona Jurídica" />
-    <MESSAGE value="src: quito atributo ofertasCanjeadas de persona jurídica" />
-    <MESSAGE value="src: cambio LocalDate por LocaleDateTime" />
-    <MESSAGE value="src: Cambio detalles de espaciado" />
-    <MESSAGE value="maquetado: agrego donacion de vianda y donacion de vianda listado" />
-    <MESSAGE value="mapeo: mapeo de entidades - parte 01" />
-    <MESSAGE value="src: Corrijo nuelleabilidad de ciertos atributos" />
-    <option name="LAST_COMMIT_MESSAGE" value="src: Corrijo nuelleabilidad de ciertos atributos" />
   </component>
 </project>
