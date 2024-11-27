@@ -22,12 +22,19 @@ import ar.edu.utn.frba.dds.controllers.ControladorSuscripcion;
 import ar.edu.utn.frba.dds.controllers.ControladorTecnicos;
 import ar.edu.utn.frba.dds.domain.entities.usuarios.TipoRol;
 import io.javalin.Javalin;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
+import io.micrometer.core.instrument.binder.system.UptimeMetrics;
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 
 public class Router {
 
   public static void init(Javalin app) {
-    // TODO: Indicar las rutas faltantes
-
     // Pantallas de inicio
     app.get("", ServiceLocator.instanceOf(ControladorInicio.class)::create);
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
@@ -76,18 +83,20 @@ public class Router {
     app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create, TipoRol.PERSONA_HUMANA);
     app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save, TipoRol.PERSONA_HUMANA);
 
-    app.get("/perfil", ctx ->{
-      if(TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
+    app.get("/perfil", ctx -> {
+      if (TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
         ServiceLocator.instanceOf(ControladorPersonaHumana.class).edit(ctx);
-      }else {
+      } else {
         ServiceLocator.instanceOf(ControladorPersonaJuridica.class).edit(ctx);
-      }}, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
-    app.post("/perfil", ctx ->{
-      if(TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
+      }
+    }, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.post("/perfil", ctx -> {
+      if (TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
         ServiceLocator.instanceOf(ControladorPersonaHumana.class).update(ctx);
-      }else {
+      } else {
         ServiceLocator.instanceOf(ControladorPersonaJuridica.class).update(ctx);
-      }}, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+      }
+    }, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
 
     // Personas jurídicas
     app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create, TipoRol.PERSONA_JURIDICA);
@@ -139,5 +148,18 @@ public class Router {
     app.post("/heladeras/reporteFallas/{heladeraId}", ServiceLocator.instanceOf(ControladorIncidenteHeladera.class)::save, TipoRol.PERSONA_HUMANA);
     app.get("/heladeras/modelos/nuevo", ServiceLocator.instanceOf(ControladorModeloHeladera.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/heladeras/modelos", ServiceLocator.instanceOf(ControladorModeloHeladera.class)::save, TipoRol.PERSONA_JURIDICA);
+
+    // Metricas
+    PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+    new ClassLoaderMetrics().bindTo(prometheusRegistry);
+    new JvmMemoryMetrics().bindTo(prometheusRegistry);
+    new JvmGcMetrics().bindTo(prometheusRegistry);
+    new JvmThreadMetrics().bindTo(prometheusRegistry);
+    new ProcessorMetrics().bindTo(prometheusRegistry);
+    new UptimeMetrics().bindTo(prometheusRegistry);
+    Gauge.builder("jvm_memory_used_bytes", Runtime.getRuntime(), Runtime::totalMemory)
+        .tag("application", "mi-aplicacion")
+        .register(prometheusRegistry);
+    app.get("/metrics", ctx -> ctx.result(prometheusRegistry.scrape()));
   }
 }
