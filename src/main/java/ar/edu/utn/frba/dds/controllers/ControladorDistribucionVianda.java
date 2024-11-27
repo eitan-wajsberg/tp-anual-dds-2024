@@ -79,7 +79,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     DistribucionVianda dist = null;
     try {
       dist = entityfromContext(context);
-      if(dist.getColaborador().getTarjetaEnUso() == null){
+      if (dist.getColaborador().getTarjetaEnUso() == null) {
         throw new SinTarjetaException("No puede distribuir viandas sin antes solicitar una tarjeta.");
       }
     } catch (RuntimeException e) {
@@ -103,7 +103,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
         .build();
     try {
       origen.agregarSolicitudApertura(soliApertura);
-    }catch(HeladeraVirtualmenteVaciaException e){
+    } catch (Exception e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", DTOfromContext(context));
@@ -128,7 +128,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     showEntity(context, false);
   }
 
-  private void showEntity(Context context, boolean readonly){
+  private void showEntity(Context context, boolean readonly) {
     Map<String, Object> model = new HashMap<>();
     try {
       Optional<DistribucionVianda> optDistribucion = this.repositorioDistribucion.buscarPorId(Long.valueOf(context.pathParam("id")), DistribucionVianda.class);
@@ -196,7 +196,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
 
     try {
       destino.agregarSolicitudApertura(soliApertura);
-    } catch (HeladeraVirtualmenteVaciaException e) {
+    } catch (Exception e) {
       Map<String, Object> model = new HashMap<>();
       model.put("error", e.getMessage());
       model.put("dto", fromEntity(viejaDist, this.repositorioSoliApe));
@@ -232,7 +232,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     context.redirect("/distribucionVianda");
   }
 
-  public void finish(Context context){
+  public void finish(Context context) {
     DistribucionVianda viejaDist = null;
     try {
       Long id = Long.parseLong(context.pathParam("id"));
@@ -299,11 +299,11 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
     }
   }
 
-  private DistribucionViandaDTO DTOfromContext(Context context){
+  private DistribucionViandaDTO DTOfromContext(Context context) {
     return DistribucionViandaDTO.builder()
-        .heladeraOrigenId(Long.parseLong(context.formParam("heladeraOrigenId") == "" ? "0": context.formParam("heladeraOrigenId")))
+        .heladeraOrigenId(Long.parseLong(context.formParam("heladeraOrigenId") == "" ? "0" : context.formParam("heladeraOrigenId")))
         .heladeraOrigenNombre(context.formParam("heladeraOrigen"))
-        .heladeraDestinoId(Long.parseLong(context.formParam("heladeraDestinoId") == "" ? "0": context.formParam("heladeraDestinoId")))
+        .heladeraDestinoId(Long.parseLong(context.formParam("heladeraDestinoId") == "" ? "0" : context.formParam("heladeraDestinoId")))
         .heladeraDestinoNombre(context.formParam("heladeraDestino"))
         .motivo(context.formParam("motivo"))
         .cantidadViandas(Integer.parseInt(context.formParam("cantidadViandas")))
@@ -347,7 +347,7 @@ public class ControladorDistribucionVianda implements ICrudViewsHandler, WithSim
       throw new ValidacionFormularioException("Heladera destino inválida.");
     }
 
-    if(helDestinoId.equals(helOrigenId)){
+    if (helDestinoId.equals(helOrigenId)) {
       throw new ValidacionFormularioException("El origen y destino deben ser distintos.");
     }
 
