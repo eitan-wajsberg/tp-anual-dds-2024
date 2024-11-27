@@ -35,8 +35,6 @@ import io.micrometer.prometheus.PrometheusMeterRegistry;
 public class Router {
 
   public static void init(Javalin app) {
-    // TODO: Indicar las rutas faltantes
-
     // Pantallas de inicio
     app.get("", ServiceLocator.instanceOf(ControladorInicio.class)::create);
     app.get("/sobreNosotros", context -> context.render("sobreNosotros.hbs"));
@@ -85,18 +83,20 @@ public class Router {
     app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create, TipoRol.PERSONA_HUMANA);
     app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save, TipoRol.PERSONA_HUMANA);
 
-    app.get("/perfil", ctx ->{
-      if(TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
+    app.get("/perfil", ctx -> {
+      if (TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
         ServiceLocator.instanceOf(ControladorPersonaHumana.class).edit(ctx);
-      }else {
+      } else {
         ServiceLocator.instanceOf(ControladorPersonaJuridica.class).edit(ctx);
-      }}, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
-    app.post("/perfil", ctx ->{
-      if(TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
+      }
+    }, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.post("/perfil", ctx -> {
+      if (TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
         ServiceLocator.instanceOf(ControladorPersonaHumana.class).update(ctx);
-      }else {
+      } else {
         ServiceLocator.instanceOf(ControladorPersonaJuridica.class).update(ctx);
-      }}, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+      }
+    }, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
 
     // Personas jurídicas
     app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create, TipoRol.PERSONA_JURIDICA);
