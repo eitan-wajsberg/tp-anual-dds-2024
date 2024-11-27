@@ -40,8 +40,8 @@ public class Server {
       }
       try {
         String brokerUrl = "ssl://cbe982e8817b43de91fde7fa8b4efb03.s1.eu.hivemq.cloud";
-        String username = System.getenv("broker_usr");
-        String password= System.getenv("broker_pass");
+        String username = "admin";
+        String password= "Dds123456";
 
         String topicTemperatura = "temperatura";
         String topicMovimiento = "movimiento";
