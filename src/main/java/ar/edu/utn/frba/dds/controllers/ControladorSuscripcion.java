@@ -2,6 +2,7 @@ package ar.edu.utn.frba.dds.controllers;
 
 import ar.edu.utn.frba.dds.domain.GsonFactory;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.Heladera;
+import ar.edu.utn.frba.dds.domain.entities.heladeras.HeladeraInactivaException;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.Desperfecto;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.FaltanNViandas;
 import ar.edu.utn.frba.dds.domain.entities.heladeras.suscripciones.QuedanNViandas;
@@ -46,7 +47,9 @@ public class ControladorSuscripcion implements WithSimplePersistenceUnit {
 
       // Validar entradas
       validarEntradas(dto);
-
+      if(!heladera.estaActiva()){
+        throw new HeladeraInactivaException();
+      }
       // Procesar suscripciones
       if (existeSuscripcion(personaHumana, heladera)) {
         // Actualizar suscripción existente
@@ -60,10 +63,19 @@ public class ControladorSuscripcion implements WithSimplePersistenceUnit {
       context.redirect("/heladeras/" + context.pathParam("heladeraId"));
     } catch (IllegalArgumentException e) {
       manejarError(context, e.getMessage(), dto, heladera, id);
+
+    } catch(HeladeraInactivaException e){
+      Map<String, Object> model = new HashMap<>();
+      model.put("heladera", heladera);
+      model.put("mostrarPersonaHumana",true);
+      model.put("error", e.getMessage());
+      context.render(rutaSuscripcionHbs, model);
+
     } catch (Exception e) {
       manejarError(context, "Ocurrió un error inesperado.", dto, heladera, id);
       e.printStackTrace();
     }
+
   }
 
   private boolean existeSuscripcion(PersonaHumana personaHumana, Heladera heladera) {

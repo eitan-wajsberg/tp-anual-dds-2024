@@ -84,14 +84,23 @@ public class Router {
     // Personas humanas
     app.get("/personaHumana/nuevo", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::create, TipoRol.PERSONA_HUMANA);
     app.post("/personaHumana", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::save, TipoRol.PERSONA_HUMANA);
-    app.get("/personaHumana/perfil", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::edit, TipoRol.PERSONA_HUMANA);
-    app.post("/personaHumana/perfil", ServiceLocator.instanceOf(ControladorPersonaHumana.class)::update, TipoRol.PERSONA_HUMANA);
+
+    app.get("/perfil", ctx ->{
+      if(TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
+        ServiceLocator.instanceOf(ControladorPersonaHumana.class).edit(ctx);
+      }else {
+        ServiceLocator.instanceOf(ControladorPersonaJuridica.class).edit(ctx);
+      }}, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
+    app.post("/perfil", ctx ->{
+      if(TipoRol.valueOf(ctx.sessionAttribute("rol")).equals(TipoRol.PERSONA_HUMANA)) {
+        ServiceLocator.instanceOf(ControladorPersonaHumana.class).update(ctx);
+      }else {
+        ServiceLocator.instanceOf(ControladorPersonaJuridica.class).update(ctx);
+      }}, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
 
     // Personas jurídicas
     app.get("/personaJuridica/nuevo", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::create, TipoRol.PERSONA_JURIDICA);
     app.post("/personaJuridica", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::save, TipoRol.PERSONA_JURIDICA);
-    app.get("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::edit, TipoRol.PERSONA_JURIDICA);
-    app.post("/personaJuridica/{id}/edicion", ServiceLocator.instanceOf(ControladorPersonaJuridica.class)::update, TipoRol.PERSONA_JURIDICA);
 
     // Donacion dinero
     app.get("/donacionDinero", ServiceLocator.instanceOf(ControladorDonacionDinero.class)::index, TipoRol.PERSONA_HUMANA, TipoRol.PERSONA_JURIDICA);
@@ -105,8 +114,8 @@ public class Router {
     app.get("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::index, TipoRol.PERSONA_HUMANA);
     app.post("/donacionVianda", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::save, TipoRol.PERSONA_HUMANA);
     app.get("/donacionVianda/nuevo", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::create, TipoRol.PERSONA_HUMANA);
-    app.get("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::edit, TipoRol.PERSONA_HUMANA);
-    app.post("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::update, TipoRol.PERSONA_HUMANA);
+    app.get("/donacionVianda/{id}", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::show, TipoRol.PERSONA_HUMANA);
+    // app.get("/donacionVianda/{id}/edicion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::edit, TipoRol.PERSONA_HUMANA);
     app.post("/donacionVianda/{id}/eliminacion", ServiceLocator.instanceOf(ControladorDonacionVianda.class)::delete, TipoRol.PERSONA_HUMANA);
 
     // Distribución de viandas

@@ -32,8 +32,9 @@ function addMarker(heladera, onMarkerClick) {
             .setLngLat([lng, lat])
             .addTo(map);
 
-        marker.getElement().addEventListener('click', onMarkerClick.bind({ "heladera": heladera }));
-
+        if(onMarkerClick !== undefined){
+            marker.getElement().addEventListener('click', onMarkerClick.bind({ "heladera": heladera }));
+        }
         /*if (document.querySelector(`[data-id="${heladera.id}"]`) != undefined) {
             document.querySelector(`[data-id="${heladera.id}"]`).addEventListener('click', function () {
                 map.flyTo({

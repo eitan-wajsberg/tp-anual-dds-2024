@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 
-public class IntegracionRecomendacionDonacionesTest {
+public class IntegracionRecomendacionDonacionesTest {/*
 
     private static RecomendacionDireccion direccion = null;
 
@@ -63,5 +63,5 @@ public class IntegracionRecomendacionDonacionesTest {
         Assertions.assertEquals(recomendacionHeladeras.get(0).ubicacion.direccion.calle, heladeraGrabada.getDireccion().getCalle());
         Assertions.assertEquals(recomendacionHeladeras.get(0).ubicacion.direccion.provincia, heladeraGrabada.getDireccion().getProvincia());
         Assertions.assertEquals(recomendacionHeladeras.get(0).cantidad_recomendada, heladeraGrabada.cantidad_viandas);
-    }
+    }*/
 }

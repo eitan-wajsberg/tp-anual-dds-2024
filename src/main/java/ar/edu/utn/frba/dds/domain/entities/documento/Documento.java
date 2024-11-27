@@ -30,7 +30,13 @@ public class Documento {
   }
   
   public static Documento fromDTO(DocumentoDTO dto) {
-    validarDocumento(dto);
+    return fromDTO(dto, true);
+  }
+
+  public static Documento fromDTO(DocumentoDTO dto, boolean validarObligatorio) {
+    if(validarObligatorio) {
+      validarDocumento(dto);
+    }
 
     Documento documento = new Documento();
     documento.setNumero(dto.getNroDocumento());

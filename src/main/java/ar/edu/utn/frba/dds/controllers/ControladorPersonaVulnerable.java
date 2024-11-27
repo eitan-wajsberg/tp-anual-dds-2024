@@ -161,7 +161,7 @@ public class ControladorPersonaVulnerable implements ICrudViewsHandler, WithSimp
     }
   }
 
-  @Override
+  @Override //TODO: no funciona porque ya tiene asignada una tarjeta. No puede ser borrado *físico*
   public void delete(Context context) {
     Long id = Long.valueOf(context.pathParam("id"));
     Optional<PersonaVulnerable> persona = this.repositorioPersonaVulnerable.buscarPorId(id, PersonaVulnerable.class);
