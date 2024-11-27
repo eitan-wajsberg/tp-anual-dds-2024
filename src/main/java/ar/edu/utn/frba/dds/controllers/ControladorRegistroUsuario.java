@@ -20,7 +20,7 @@ import javax.validation.ConstraintViolationException;
 public class ControladorRegistroUsuario implements WithSimplePersistenceUnit {
   private RepositorioUsuario repositorioUsuario;
   private RepositorioRol repositorioRol;
-  private final String rutaHbs = "/cuenta/crearCuenta.hbs";
+  private final String rutaHbs = "cuenta/crearCuenta.hbs";
 
   public ControladorRegistroUsuario(RepositorioUsuario repositorioUsuario, RepositorioRol repositorioRol) {
     this.repositorioUsuario = repositorioUsuario;
