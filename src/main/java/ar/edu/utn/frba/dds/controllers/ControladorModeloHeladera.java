@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ControladorModeloHeladera implements WithSimplePersistenceUnit {
-  private final String rutaAltaHbs = "/colaboraciones/modeloHeladera.hbs";
-  private final String rutaHeladera = "/heladeras/nuevo";
+  private final String rutaAltaHbs = "colaboraciones/modeloHeladera.hbs";
+  private final String rutaHeladera = "heladeras/nuevo";
   private Repositorio repositorioModelo;
 
   public ControladorModeloHeladera(Repositorio repositorioModelo) {

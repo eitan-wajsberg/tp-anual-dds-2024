@@ -39,7 +39,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 public class ControladorCargaMasiva implements WithSimplePersistenceUnit {
-  private final String rutaCargaHbs = "/admin/adminCargaCSV.hbs";
+  private final String rutaCargaHbs = "admin/adminCargaCSV.hbs";
   private RepositorioPersonaHumana repositorioPersonaHumana;
   private RepositorioUsuario repositorioUsuario;
   private RepositorioRol repositorioRol;
